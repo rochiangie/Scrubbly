@@ -1,10 +1,10 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 [RequireComponent(typeof(HeldItemSlot))]
 public class PickupAndCleanController : MonoBehaviour
 {
     [Header("Refs")]
-    [SerializeField] private Camera rayCamera;          // se auto-asigna a Camera.main si está null
+    [SerializeField] private Camera rayCamera;          // se auto-asigna a Camera.main si estÃ¡ null
     [SerializeField] private HeldItemSlot heldItemSlot; // se auto-asigna del mismo GameObject
 
     [Header("Pickup")]
@@ -24,7 +24,7 @@ public class PickupAndCleanController : MonoBehaviour
         {
             heldItemSlot = GetComponent<HeldItemSlot>();
             if (heldItemSlot == null)
-                Debug.LogError("[PickupAndCleanController] No encontré HeldItemSlot en el Player.");
+                Debug.LogError("[PickupAndCleanController] No encontrÃ© HeldItemSlot en el Player.");
         }
 
         if (rayCamera == null)
@@ -36,7 +36,7 @@ public class PickupAndCleanController : MonoBehaviour
 
     private void Update()
     {
-        // Si falta algo crítico, no ejecutes lógica para evitar NullRef
+        // Si falta algo crÃ­tico, no ejecutes lÃ³gica para evitar NullRef
         if (heldItemSlot == null || rayCamera == null) return;
 
         if (Input.GetKeyDown(pickupKey))
@@ -63,73 +63,62 @@ public class PickupAndCleanController : MonoBehaviour
 
     private void TryPickupTool()
     {
-        if (rayCamera == null)
+        if (rayCamera == null) { if (Camera.main != null) rayCamera = Camera.main; else { Debug.LogError("[Pickup DEBUG] No hay Camera."); return; } }
+
+        // 1) Raycast con salto de self + mÃ¡scara Tools
+        Vector3 origin = rayCamera.transform.position + rayCamera.transform.forward * 0.15f; // evita pegarte a vos
+        Vector3 dir = rayCamera.transform.forward;
+        Debug.DrawRay(origin, dir * pickupRange, Color.red);
+
+        // Raycast sin mÃ¡scara para ver el primer obstÃ¡culo real
+        if (Physics.Raycast(origin, dir, out var firstHit, pickupRange, ~0, QueryTriggerInteraction.Collide))
         {
-            if (Camera.main != null) rayCamera = Camera.main;
-            else { Debug.LogError("[Pickup DEBUG] No hay rayCamera ni Camera.main."); return; }
-        }
-
-        Ray ray = new Ray(rayCamera.transform.position, rayCamera.transform.forward);
-        Debug.DrawRay(ray.origin, ray.direction * pickupRange, Color.red);
-
-        // 1) Raycast SIN filtro de layer para ver qué hay enfrente
-        if (Physics.Raycast(ray, out var anyHit, pickupRange, ~0, QueryTriggerInteraction.Collide))
-        {
-            string layerName = LayerMask.LayerToName(anyHit.collider.gameObject.layer);
-            Debug.Log($"[Pickup DEBUG] (SIN máscara) Golpeó: {anyHit.collider.name} | Layer: {layerName}");
-
-            // Info adicional útil
-            if (anyHit.collider.gameObject.layer == LayerMask.NameToLayer("Ignore Raycast"))
-                Debug.LogWarning("[Pickup DEBUG] El objeto está en 'Ignore Raycast' (no lo vas a poder golpear con Raycast filtrado).");
-
-            // Si ve un ToolDescriptor sin filtrar, mostramos
-            if (anyHit.collider.GetComponentInParent<ToolDescriptor>() != null)
+            // saltar cualquier collider del Player
+            if (!firstHit.collider.transform.IsChildOf(transform))
             {
-                var tool = anyHit.collider.GetComponentInParent<ToolDescriptor>();
-                Debug.Log($"[Pickup DEBUG] (SIN máscara) Ese hit tiene ToolDescriptor: {tool.toolId}");
+                // si el primer hit ya es la herramienta y no hay nada delante, equipamos
+                var toolOnFirst = firstHit.collider.GetComponentInParent<ToolDescriptor>();
+                if (toolOnFirst != null && ((1 << firstHit.collider.gameObject.layer) & grabbableLayer.value) != 0)
+                {
+                    Debug.Log($"[Pickup] EQUIP (raycast): {toolOnFirst.name}");
+                    heldItemSlot.Equip(toolOnFirst);
+                    return;
+                }
             }
         }
-        else
-        {
-            Debug.Log("[Pickup DEBUG] (SIN máscara) No golpeó NADA enfrente.");
-        }
 
-        // 2) Raycast CON máscara de grabbableLayer (lo que usa tu lógica real)
-        if (Physics.Raycast(ray, out var hit, pickupRange, grabbableLayer, QueryTriggerInteraction.Collide))
+        // 2) RaycastAll por si hay varios hits alineados (saltamos self y buscamos el PRIMER Tools visible)
+        var all = Physics.RaycastAll(origin, dir, pickupRange, ~0, QueryTriggerInteraction.Collide);
+        System.Array.Sort(all, (a, b) => a.distance.CompareTo(b.distance));
+        foreach (var h in all)
         {
-            Debug.Log($"[Pickup DEBUG] (CON máscara) Golpeó: {hit.collider.name} | Layer: {LayerMask.LayerToName(hit.collider.gameObject.layer)}");
+            if (h.collider.transform.IsChildOf(transform)) continue; // saltear Player
+            if (((1 << h.collider.gameObject.layer) & grabbableLayer.value) == 0) continue; // solo Tools
 
-            // Buscar ToolDescriptor en el objeto golpeado o sus padres
-            var tool = hit.collider.GetComponentInParent<ToolDescriptor>();
+            var tool = h.collider.GetComponentInParent<ToolDescriptor>();
             if (tool != null)
             {
-                Debug.Log($"[Pickup DEBUG] Equipando herramienta: {tool.name} (ID: {tool.toolId})");
+                Debug.Log($"[Pickup] EQUIP (raycastAll): {tool.name}");
                 heldItemSlot.Equip(tool);
                 return;
             }
-            else
-            {
-                Debug.Log("[Pickup DEBUG] (CON máscara) El hit NO tiene ToolDescriptor ni en padres.");
-            }
-        }
-        else
-        {
-            Debug.Log("[Pickup DEBUG] (CON máscara) Raycast no golpeó nada en grabbableLayer.");
         }
 
-        // 3) Fallback por proximidad (SIN máscara) -> busca cualquier ToolDescriptor cerca
-        var probeCenter = rayCamera.transform.position + rayCamera.transform.forward * 1.0f;
-        var around = Physics.OverlapSphere(probeCenter, 0.9f, ~0, QueryTriggerInteraction.Collide);
-        foreach (var col in around)
+        // 3) Fallback: OverlapSphere cerca del centro de mira (solo Tools) â†’ EQUIPA
+        Vector3 probe = origin + dir * 1.0f;
+        var around = Physics.OverlapSphere(probe, 0.9f, grabbableLayer, QueryTriggerInteraction.Collide);
+        foreach (var c in around)
         {
-            var tool = col.GetComponentInParent<ToolDescriptor>();
-            if (tool != null)
+            var tool = c.GetComponentInParent<ToolDescriptor>();
+            if (tool != null && !c.transform.IsChildOf(transform))
             {
-                Debug.Log($"[Pickup DEBUG] (OVERLAP SIN máscara) Encontré ToolDescriptor cerca: {tool.name} | Layer: {LayerMask.LayerToName(col.gameObject.layer)}");
-                // Si querés, equipá igual para test:
-                // heldItemSlot.Equip(tool); return;
+                Debug.Log($"[Pickup] EQUIP (overlap): {tool.name}");
+                heldItemSlot.Equip(tool);
+                return;
             }
         }
+
+        Debug.Log("[Pickup] No encontrÃ© herramientas para equipar.");
     }
 
 
@@ -148,7 +137,7 @@ public class PickupAndCleanController : MonoBehaviour
 
         if (Physics.Raycast(ray, out var hit, cleanRange, dirtLayer, QueryTriggerInteraction.Collide))
         {
-            Debug.Log($"[Clean DEBUG] Raycast golpeó: {hit.collider.name} (Layer: {LayerMask.LayerToName(hit.collider.gameObject.layer)})");
+            Debug.Log($"[Clean DEBUG] Raycast golpeÃ³: {hit.collider.name} (Layer: {LayerMask.LayerToName(hit.collider.gameObject.layer)})");
 
             if (hit.collider.TryGetComponent<DirtSpot>(out var dirt))
             {
@@ -163,7 +152,7 @@ public class PickupAndCleanController : MonoBehaviour
         }
         else
         {
-            Debug.Log("[Clean DEBUG] Raycast no golpeó nada en la capa Dirt.");
+            Debug.Log("[Clean DEBUG] Raycast no golpeÃ³ nada en la capa Dirt.");
         }
     }
 

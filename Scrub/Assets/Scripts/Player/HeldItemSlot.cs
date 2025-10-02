@@ -11,7 +11,6 @@ public class HeldItemSlot : MonoBehaviour
     {
         CurrentTool = tool;
 
-        // Desactivar f�sicas mientras est� en la mano
         if (tool.TryGetComponent<Rigidbody>(out var rb))
         {
             rb.isKinematic = true;
@@ -20,11 +19,17 @@ public class HeldItemSlot : MonoBehaviour
         }
         SetAllCollidersTrigger(tool.gameObject, true);
 
-        // Reparent
-        tool.transform.SetParent(holdPoint);
-        tool.transform.localPosition = Vector3.zero;
-        tool.transform.localRotation = Quaternion.identity;
-        tool.transform.localScale = Vector3.one;
+        var t = tool.transform;
+
+        // 👉 Mantener escala mundial al re-parentar
+        t.SetParent(holdPoint, true); // worldPositionStays = true (conserva escala/rot/pos en mundo)
+
+        // Alinear a la mano sin tocar la escala
+        t.localPosition = Vector3.zero;
+        t.localRotation = Quaternion.identity;
+
+        // ❌ No tocar la escala:
+        // t.localScale = Vector3.one;  // <--- QUITAR ESTA LÍNEA
     }
 
     public ToolDescriptor Unequip()
@@ -32,17 +37,17 @@ public class HeldItemSlot : MonoBehaviour
         var tool = CurrentTool;
         if (tool == null) return null;
 
-        // Reactivar f�sicas
         if (tool.TryGetComponent<Rigidbody>(out var rb))
-        {
             rb.isKinematic = false;
-        }
+
         SetAllCollidersTrigger(tool.gameObject, false);
 
-        tool.transform.SetParent(null);
+        // Mantener escala al soltar
+        tool.transform.SetParent(null, true); // true = conserva escala mundial
         CurrentTool = null;
         return tool;
     }
+
 
     private void SetAllCollidersTrigger(GameObject go, bool isTrigger)
     {
