@@ -131,6 +131,7 @@ GameObject:
   - component: {fileID: 1318894}
   - component: {fileID: 1318893}
   - component: {fileID: 1318892}
+  - component: {fileID: 1318895}
   m_Layer: 3
   m_Name: PFB_DiningTableSUCIO
   m_TagString: Dirt
@@ -228,6 +229,25 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1318890}
   m_Mesh: {fileID: 4300002, guid: 461c3d4bbf4534691892261103fd5525, type: 3}
+--- !u!114 &1318895
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1318890}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aec6920b21ed8424bba0015870b75fdc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  requiredToolId: Sponge
+  dirtAmount: 3
+--- !u!4 &56474607 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 589734579951730609, guid: 4b714ebab645ff146958795b1d039263, type: 3}
+  m_PrefabInstance: {fileID: 1750209844}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &164706692
 GameObject:
   m_ObjectHideFlags: 0
@@ -315,6 +335,7 @@ GameObject:
   - component: {fileID: 318615966}
   - component: {fileID: 318615965}
   - component: {fileID: 318615964}
+  - component: {fileID: 318615967}
   m_Layer: 3
   m_Name: PFB_BedroomSofa SUCIO
   m_TagString: Dirt
@@ -412,6 +433,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 318615962}
   m_Mesh: {fileID: 4300000, guid: aa28c890d9e8b5e449d701805e420020, type: 3}
+--- !u!114 &318615967
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 318615962}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aec6920b21ed8424bba0015870b75fdc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  requiredToolId: Sponge
+  dirtAmount: 3
 --- !u!1001 &330370048
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1094,6 +1129,7 @@ GameObject:
   - component: {fileID: 456182576}
   - component: {fileID: 456182575}
   - component: {fileID: 456182574}
+  - component: {fileID: 456182577}
   m_Layer: 3
   m_Name: PFB_DiningChairSUCIO
   m_TagString: Dirt
@@ -1191,6 +1227,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 456182572}
   m_Mesh: {fileID: 4300000, guid: cfcf075e496092c489e38a82a64dd637, type: 3}
+--- !u!114 &456182577
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 456182572}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aec6920b21ed8424bba0015870b75fdc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  requiredToolId: Sponge
+  dirtAmount: 3
 --- !u!1 &626990327 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 896414966643569542, guid: 427fa345a14882d4eb769692e5e7128c, type: 3}
@@ -1234,6 +1284,7 @@ GameObject:
   - component: {fileID: 669561404}
   - component: {fileID: 669561406}
   - component: {fileID: 669561405}
+  - component: {fileID: 669561407}
   m_Layer: 3
   m_Name: BathroomSink_BottomSUCIO
   m_TagString: Dirt
@@ -1309,6 +1360,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 669561403}
   m_Mesh: {fileID: 4300010, guid: cdc73258ef2d5ee449fe6d18ccf0122f, type: 3}
+--- !u!114 &669561407
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 669561403}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aec6920b21ed8424bba0015870b75fdc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  requiredToolId: Sponge
+  dirtAmount: 3
 --- !u!1 &758089276
 GameObject:
   m_ObjectHideFlags: 0
@@ -1320,6 +1385,7 @@ GameObject:
   - component: {fileID: 758089277}
   - component: {fileID: 758089279}
   - component: {fileID: 758089278}
+  - component: {fileID: 758089280}
   m_Layer: 3
   m_Name: BathroomSink_Top SUCIO
   m_TagString: Dirt
@@ -1395,6 +1461,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 758089276}
   m_Mesh: {fileID: 4300008, guid: cdc73258ef2d5ee449fe6d18ccf0122f, type: 3}
+--- !u!114 &758089280
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 758089276}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aec6920b21ed8424bba0015870b75fdc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  requiredToolId: Sponge
+  dirtAmount: 3
 --- !u!1 &765541271
 GameObject:
   m_ObjectHideFlags: 0
@@ -1407,6 +1487,7 @@ GameObject:
   - component: {fileID: 765541275}
   - component: {fileID: 765541274}
   - component: {fileID: 765541273}
+  - component: {fileID: 765541276}
   m_Layer: 3
   m_Name: PFB_Fridge SUCIO
   m_TagString: Dirt
@@ -1504,6 +1585,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 765541271}
   m_Mesh: {fileID: 4300002, guid: 5de4dc4e4227b4ebbb0d9d8e1fc89801, type: 3}
+--- !u!114 &765541276
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 765541271}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aec6920b21ed8424bba0015870b75fdc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  requiredToolId: Sponge
+  dirtAmount: 3
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -1565,7 +1660,8 @@ GameObject:
   - component: {fileID: 844073762}
   - component: {fileID: 844073761}
   - component: {fileID: 844073760}
-  m_Layer: 6
+  - component: {fileID: 844073763}
+  m_Layer: 3
   m_Name: Base SUCIO
   m_TagString: Dirt
   m_Icon: {fileID: 0}
@@ -1662,6 +1758,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 844073758}
   m_Mesh: {fileID: 4300000, guid: 1a6cb6ae194964e949def57e23f52428, type: 3}
+--- !u!114 &844073763
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 844073758}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aec6920b21ed8424bba0015870b75fdc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  requiredToolId: Sponge
+  dirtAmount: 3
 --- !u!1 &872245060
 GameObject:
   m_ObjectHideFlags: 0
@@ -1674,6 +1784,7 @@ GameObject:
   - component: {fileID: 872245064}
   - component: {fileID: 872245063}
   - component: {fileID: 872245062}
+  - component: {fileID: 872245065}
   m_Layer: 3
   m_Name: PFB_Towel SUCIO
   m_TagString: Dirt
@@ -1771,6 +1882,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 872245060}
   m_Mesh: {fileID: 4300000, guid: c3c06bf3731094f39bb21b24568f8a72, type: 3}
+--- !u!114 &872245065
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 872245060}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aec6920b21ed8424bba0015870b75fdc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  requiredToolId: Sponge
+  dirtAmount: 3
 --- !u!1 &888805762
 GameObject:
   m_ObjectHideFlags: 0
@@ -1955,6 +2080,7 @@ GameObject:
   - component: {fileID: 895566071}
   - component: {fileID: 895566070}
   - component: {fileID: 895566069}
+  - component: {fileID: 895566072}
   m_Layer: 3
   m_Name: PFB_DiningChair SUCIO
   m_TagString: Dirt
@@ -2052,6 +2178,213 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 895566067}
   m_Mesh: {fileID: 4300000, guid: cfcf075e496092c489e38a82a64dd637, type: 3}
+--- !u!114 &895566072
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 895566067}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aec6920b21ed8424bba0015870b75fdc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  requiredToolId: Sponge
+  dirtAmount: 3
+--- !u!1 &948089749
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 948089753}
+  - component: {fileID: 948089752}
+  - component: {fileID: 948089751}
+  - component: {fileID: 948089750}
+  - component: {fileID: 948089755}
+  - component: {fileID: 948089756}
+  - component: {fileID: 948089757}
+  - component: {fileID: 948089758}
+  m_Layer: 7
+  m_Name: Cube
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!65 &948089750
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 948089749}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!23 &948089751
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 948089749}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &948089752
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 948089749}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &948089753
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 948089749}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.921, y: 1.109, z: -14.3871}
+  m_LocalScale: {x: 0.0863005, y: 0.0744794, z: 0.1979}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &948089755
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 948089749}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba0b9eb7b016d154f8f7c73224681b63, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  range: 2.2
+  cleanRate: 1
+  dirtLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  rayOrigin: {fileID: 330585546}
+  heldItemSlot: {fileID: 0}
+--- !u!65 &948089756
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 948089749}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2.09, y: 2.34, z: 1.58}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &948089757
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 948089749}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a47171b8a5e06a541b39bb59b1691d45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  toolId: Sponge
+  toolPower: 1
+--- !u!54 &948089758
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 948089749}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &1089988867
 GameObject:
   m_ObjectHideFlags: 0
@@ -2155,7 +2488,8 @@ GameObject:
   - component: {fileID: 1351133003}
   - component: {fileID: 1351133002}
   - component: {fileID: 1351133001}
-  m_Layer: 6
+  - component: {fileID: 1351133004}
+  m_Layer: 3
   m_Name: chestOfDraws_BaseSUCIO
   m_TagString: Dirt
   m_Icon: {fileID: 0}
@@ -2252,6 +2586,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1351132999}
   m_Mesh: {fileID: 4300032, guid: e41b6552046814b19a9905c4f669429b, type: 3}
+--- !u!114 &1351133004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1351132999}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aec6920b21ed8424bba0015870b75fdc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  requiredToolId: Sponge
+  dirtAmount: 3
 --- !u!1 &1377930371
 GameObject:
   m_ObjectHideFlags: 0
@@ -2264,6 +2612,7 @@ GameObject:
   - component: {fileID: 1377930375}
   - component: {fileID: 1377930374}
   - component: {fileID: 1377930373}
+  - component: {fileID: 1377930376}
   m_Layer: 3
   m_Name: PFB_Basket SUCIO
   m_TagString: Dirt
@@ -2361,6 +2710,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1377930371}
   m_Mesh: {fileID: 4300002, guid: b2faaff453e184e16b2caab0bf62ec2d, type: 3}
+--- !u!114 &1377930376
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1377930371}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aec6920b21ed8424bba0015870b75fdc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  requiredToolId: Sponge
+  dirtAmount: 3
 --- !u!1 &1429174785
 GameObject:
   m_ObjectHideFlags: 0
@@ -2373,6 +2736,7 @@ GameObject:
   - component: {fileID: 1429174789}
   - component: {fileID: 1429174788}
   - component: {fileID: 1429174787}
+  - component: {fileID: 1429174790}
   m_Layer: 3
   m_Name: PFB_SofaSUCIO
   m_TagString: Dirt
@@ -2470,6 +2834,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1429174785}
   m_Mesh: {fileID: 4300000, guid: 0cf5e90e2357e254fb0b8e86b93898a7, type: 3}
+--- !u!114 &1429174790
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1429174785}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aec6920b21ed8424bba0015870b75fdc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  requiredToolId: Sponge
+  dirtAmount: 3
 --- !u!1 &1450817752
 GameObject:
   m_ObjectHideFlags: 0
@@ -2482,6 +2860,7 @@ GameObject:
   - component: {fileID: 1450817756}
   - component: {fileID: 1450817755}
   - component: {fileID: 1450817754}
+  - component: {fileID: 1450817757}
   m_Layer: 3
   m_Name: PFB_DiningChair SUCIO
   m_TagString: Dirt
@@ -2579,6 +2958,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1450817752}
   m_Mesh: {fileID: 4300000, guid: cfcf075e496092c489e38a82a64dd637, type: 3}
+--- !u!114 &1450817757
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1450817752}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aec6920b21ed8424bba0015870b75fdc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  requiredToolId: Sponge
+  dirtAmount: 3
 --- !u!1 &1505257527
 GameObject:
   m_ObjectHideFlags: 0
@@ -2728,6 +3121,7 @@ GameObject:
   - component: {fileID: 1537447092}
   - component: {fileID: 1537447091}
   - component: {fileID: 1537447090}
+  - component: {fileID: 1537447093}
   m_Layer: 3
   m_Name: PFB_SofaSmall SUCIO
   m_TagString: Dirt
@@ -2825,6 +3219,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1537447088}
   m_Mesh: {fileID: 4300000, guid: 5ced1428a23f623448aad5b76e93dd8d, type: 3}
+--- !u!114 &1537447093
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1537447088}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aec6920b21ed8424bba0015870b75fdc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  requiredToolId: Sponge
+  dirtAmount: 3
 --- !u!1 &1565165545
 GameObject:
   m_ObjectHideFlags: 0
@@ -3066,6 +3474,37 @@ MonoBehaviour:
     RotationDamping: {x: 1, y: 1, z: 1}
     QuaternionDamping: 1
   FollowOffset: {x: -0.16, y: 0.58, z: -0.76}
+--- !u!1 &1735782627
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1735782628}
+  m_Layer: 0
+  m_Name: mano
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1735782628
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1735782627}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.7127, y: 1.3369, z: 0.2637}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 56474607}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1750209844
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3132,6 +3571,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 3984261635038645560, guid: 4b714ebab645ff146958795b1d039263, type: 3}
       insertIndex: -1
       addedObject: {fileID: 217741466}
+    - targetCorrespondingSourceObject: {fileID: 589734579951730609, guid: 4b714ebab645ff146958795b1d039263, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1735782628}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 4323772801485002626, guid: 4b714ebab645ff146958795b1d039263, type: 3}
       insertIndex: -1
@@ -3139,9 +3581,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4323772801485002626, guid: 4b714ebab645ff146958795b1d039263, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1750209850}
-    - targetCorrespondingSourceObject: {fileID: 4323772801485002626, guid: 4b714ebab645ff146958795b1d039263, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1750209849}
     - targetCorrespondingSourceObject: {fileID: 4323772801485002626, guid: 4b714ebab645ff146958795b1d039263, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1750209848}
@@ -3160,6 +3599,15 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4323772801485002626, guid: 4b714ebab645ff146958795b1d039263, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1750209857}
+    - targetCorrespondingSourceObject: {fileID: 4323772801485002626, guid: 4b714ebab645ff146958795b1d039263, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1750209858}
+    - targetCorrespondingSourceObject: {fileID: 4323772801485002626, guid: 4b714ebab645ff146958795b1d039263, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1750209861}
+    - targetCorrespondingSourceObject: {fileID: 4323772801485002626, guid: 4b714ebab645ff146958795b1d039263, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1750209862}
   m_SourcePrefab: {fileID: 100100000, guid: 4b714ebab645ff146958795b1d039263, type: 3}
 --- !u!1 &1750209845 stripped
 GameObject:
@@ -3231,24 +3679,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 64
   m_CollisionDetection: 0
---- !u!114 &1750209849
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1750209845}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b232818755d59e4489b2d74edb2c0e77, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mouseXInputName: Mouse X
-  mouseYInputName: Mouse Y
-  mouseSensitivity: 150
-  invertY: 0
-  rotateBodyWithMouse: 0
-  playerBody: {fileID: 1329810712}
 --- !u!114 &1750209850
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3321,7 +3751,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rb: {fileID: 0}
-  playerBody: {fileID: 0}
+  playerBody: {fileID: 1329810712}
   speedSmooth: 8
 --- !u!136 &1750209857
 CapsuleCollider:
@@ -3346,6 +3776,63 @@ CapsuleCollider:
   m_Height: 1
   m_Direction: 1
   m_Center: {x: 0, y: 1.26, z: 0}
+--- !u!114 &1750209858
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1750209845}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba0b9eb7b016d154f8f7c73224681b63, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  range: 2.2
+  cleanRate: 1
+  dirtLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  rayOrigin: {fileID: 330585546}
+  heldItemSlot: {fileID: 0}
+--- !u!114 &1750209861
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1750209845}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3334fb2a4773d2a4c9d26f0344bc3799, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  holdPoint: {fileID: 1735782628}
+--- !u!114 &1750209862
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1750209845}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca51f847a045b0a40bcef4462ae1c775, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rayCamera: {fileID: 330585545}
+  heldItemSlot: {fileID: 1750209861}
+  pickupKey: 101
+  pickupRange: 2.2
+  grabbableLayer:
+    serializedVersion: 2
+    m_Bits: 136
+  cleanKey: 114
+  cleanRange: 2.5
+  baseCleanRate: 1
+  dirtLayer:
+    serializedVersion: 2
+    m_Bits: 8
 --- !u!1 &1841165023
 GameObject:
   m_ObjectHideFlags: 0
@@ -3357,6 +3844,7 @@ GameObject:
   - component: {fileID: 1841165024}
   - component: {fileID: 1841165026}
   - component: {fileID: 1841165025}
+  - component: {fileID: 1841165027}
   m_Layer: 3
   m_Name: BedBase SUCIO
   m_TagString: Dirt
@@ -3432,6 +3920,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1841165023}
   m_Mesh: {fileID: 4300008, guid: 78cca8ac5dce04729af9f9377e69636c, type: 3}
+--- !u!114 &1841165027
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1841165023}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aec6920b21ed8424bba0015870b75fdc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  requiredToolId: Sponge
+  dirtAmount: 3
 --- !u!1 &1923107843
 GameObject:
   m_ObjectHideFlags: 0
@@ -3444,6 +3946,7 @@ GameObject:
   - component: {fileID: 1923107847}
   - component: {fileID: 1923107846}
   - component: {fileID: 1923107845}
+  - component: {fileID: 1923107848}
   m_Layer: 3
   m_Name: PFB_DiningChairSUCIO
   m_TagString: Dirt
@@ -3541,6 +4044,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1923107843}
   m_Mesh: {fileID: 4300000, guid: cfcf075e496092c489e38a82a64dd637, type: 3}
+--- !u!114 &1923107848
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1923107843}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aec6920b21ed8424bba0015870b75fdc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  requiredToolId: Sponge
+  dirtAmount: 3
 --- !u!1 &1982831694
 GameObject:
   m_ObjectHideFlags: 0
@@ -3553,6 +4070,7 @@ GameObject:
   - component: {fileID: 1982831698}
   - component: {fileID: 1982831697}
   - component: {fileID: 1982831696}
+  - component: {fileID: 1982831699}
   m_Layer: 3
   m_Name: PFB_FireplaceSUCIO
   m_TagString: Dirt
@@ -3650,6 +4168,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1982831694}
   m_Mesh: {fileID: 4300016, guid: 91dd9734515124a55a7601f751109097, type: 3}
+--- !u!114 &1982831699
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1982831694}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aec6920b21ed8424bba0015870b75fdc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  requiredToolId: Sponge
+  dirtAmount: 3
 --- !u!1 &2013169009
 GameObject:
   m_ObjectHideFlags: 0
@@ -3662,6 +4194,7 @@ GameObject:
   - component: {fileID: 2013169013}
   - component: {fileID: 2013169012}
   - component: {fileID: 2013169011}
+  - component: {fileID: 2013169014}
   m_Layer: 3
   m_Name: PFB_Stove SUCIO
   m_TagString: Dirt
@@ -3759,6 +4292,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2013169009}
   m_Mesh: {fileID: 4300000, guid: 22ec64bba89e94704b5b0eeee5767c9c, type: 3}
+--- !u!114 &2013169014
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2013169009}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aec6920b21ed8424bba0015870b75fdc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  requiredToolId: Sponge
+  dirtAmount: 3
 --- !u!1 &2039417559
 GameObject:
   m_ObjectHideFlags: 0
@@ -3771,6 +4318,7 @@ GameObject:
   - component: {fileID: 2039417563}
   - component: {fileID: 2039417562}
   - component: {fileID: 2039417561}
+  - component: {fileID: 2039417564}
   m_Layer: 3
   m_Name: PFB_ToiletSUCIO
   m_TagString: Dirt
@@ -3868,6 +4416,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2039417559}
   m_Mesh: {fileID: 4300002, guid: 361d39cd9e9d9495aac07c02c06df127, type: 3}
+--- !u!114 &2039417564
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2039417559}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aec6920b21ed8424bba0015870b75fdc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  requiredToolId: Sponge
+  dirtAmount: 3
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -3881,3 +4443,4 @@ SceneRoots:
   - {fileID: 1750209844}
   - {fileID: 1698021098}
   - {fileID: 1565165548}
+  - {fileID: 948089753}

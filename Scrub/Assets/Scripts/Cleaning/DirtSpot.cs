@@ -1,41 +1,20 @@
+// DirtSpot.cs (en cada objeto sucio)
 using UnityEngine;
 
 public class DirtSpot : MonoBehaviour
 {
-    [Header("Limpieza")]
-    [SerializeField] float requiredWork = 3f;   // segundos de “frote”
-    [SerializeField] ParticleSystem cleanFX;    // opcional
-    [SerializeField] Renderer targetRenderer;   // opcional: desvanecer
+    [SerializeField] string requiredToolId = "Sponge"; // debe coincidir con la herramienta
+    [SerializeField] float dirtAmount = 3f;
 
-    float workDone = 0f;
-    bool cleaned = false;
+    public bool CanBeCleanedBy(string toolId) => toolId == requiredToolId;
 
-    public bool IsClean => cleaned;
-
-    public void CleanTick(float deltaWork)
+    public void CleanTick(float amount)
     {
-        if (cleaned) return;
-        workDone += deltaWork;
-        UpdateVisuals();
-
-        if (workDone >= requiredWork)
+        dirtAmount -= amount;
+        if (dirtAmount <= 0f)
         {
-            cleaned = true;
-            if (cleanFX) cleanFX.Play();
-            GameEvents.DirtCleaned();
-            gameObject.SetActive(false); // o Destroy(gameObject);
-        }
-    }
-
-    void UpdateVisuals()
-    {
-        if (!targetRenderer) return;
-        float t = Mathf.Clamp01(workDone / requiredWork);
-        if (targetRenderer.material.HasProperty("_Color"))
-        {
-            var c = targetRenderer.material.color;
-            c.a = 1f - t;
-            targetRenderer.material.color = c;
+            Debug.Log($"{name} limpio por completo");
+            Destroy(gameObject);
         }
     }
 }
