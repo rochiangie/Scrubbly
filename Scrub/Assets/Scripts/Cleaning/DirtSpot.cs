@@ -1,19 +1,21 @@
-// DirtSpot.cs (en cada objeto sucio)
 using UnityEngine;
 
 public class DirtSpot : MonoBehaviour
 {
-    [SerializeField] string requiredToolId = "Sponge"; // debe coincidir con la herramienta
-    [SerializeField] float dirtAmount = 3f;
+    [SerializeField] private string requiredToolId = ""; // vacío = cualquiera
+    [SerializeField] private float dirtAmount = 3f;
 
-    public bool CanBeCleanedBy(string toolId) => toolId == requiredToolId;
+    public string RequiredToolId => requiredToolId;
+
+    public bool CanBeCleanedBy(string toolId)
+        => string.IsNullOrEmpty(requiredToolId) || requiredToolId == toolId;
 
     public void CleanTick(float amount)
     {
         dirtAmount -= amount;
         if (dirtAmount <= 0f)
         {
-            Debug.Log($"{name} limpio por completo");
+            Debug.Log($"{name} limpio!");
             Destroy(gameObject);
         }
     }
