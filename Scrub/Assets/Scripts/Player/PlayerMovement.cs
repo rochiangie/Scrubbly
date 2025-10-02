@@ -3,94 +3,56 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerMovement : MonoBehaviour
 {
-    public enum MovementMode { Strafe, Tank } // Strafe= A/D lateral | Tank= A/D giran el cuerpo
-    [Header("Movimiento")]
-    public MovementMode movementMode = MovementMode.Strafe;
-    public float moveSpeed = 5f;
-    public float rotationSpeed = 180f; // usado en modo Tank
-    public float jumpForce = 5f;
 
-    [Header("Ground Check")]
+    [Header("Movimiento tipo tanque")]
+    public float moveSpeed = 5f;          // velocidad al mantener W
+    public float rotationSpeed = 180f;    // grados/seg con A/D
+
+    [Header("Ground Check (opcional)")]
     public Transform groundCheck;
     public float groundRadius = 0.25f;
-    public LayerMask groundMask = ~0; // por defecto todo
+    public LayerMask groundMask = ~0;
 
-    [Header("Refs")]
-    public PlayerAnimationController animCtrl;
-
-    private Rigidbody rb;
-    private bool isGrounded;
+    Rigidbody rb;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
-        rb.freezeRotation = true; // evitamos vuelcos
+        rb.freezeRotation = true;
+
         if (!groundCheck)
         {
             var gc = new GameObject("GroundCheck").transform;
             gc.SetParent(transform);
-            gc.localPosition = new Vector3(0, -1.0f, 0);
+            gc.localPosition = new Vector3(0f, -1.0f, 0f);
             groundCheck = gc;
-        }
-        if (!animCtrl) animCtrl = GetComponentInChildren<PlayerAnimationController>();
-    }
-
-    void Update()
-    {
-        // salto
-        if (Input.GetButtonDown("Jump") && isGrounded)
-        {
-            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-            animCtrl?.TriggerJump();
         }
     }
 
     void FixedUpdate()
     {
-        // grounded
-        isGrounded = Physics.CheckSphere(groundCheck.position, groundRadius, groundMask, QueryTriggerInteraction.Ignore);
-        animCtrl?.SetGrounded(isGrounded);
-
-        // movimiento / rotaci�n
-        float x = Input.GetAxis("Horizontal");
-        float z = Input.GetAxis("Vertical");
-
-        if (movementMode == MovementMode.Tank)
+        // 1) Girar en el lugar con A/D (yaw)
+        float turn = Input.GetAxisRaw("Horizontal"); // A=-1, D=1
+        if (Mathf.Abs(turn) > 0.001f)
         {
-            // Girar con A/D, avanzar con W/S
-            if (Mathf.Abs(x) > 0.01f)
-                transform.Rotate(Vector3.up, x * rotationSpeed * Time.fixedDeltaTime);
+            var yaw = Quaternion.Euler(0f, turn * rotationSpeed * Time.fixedDeltaTime, 0f);
+            rb.MoveRotation(rb.rotation * yaw);
+        }
 
-            Vector3 forward = transform.forward * z * moveSpeed;
-            Vector3 vel = new Vector3(forward.x, rb.linearVelocity.y, forward.z);
-            rb.linearVelocity = vel;
-        }
-        else
-        {
-            // Strafe cl�sico (A/D lateral, W/S adelante/atr�s)
-            Vector3 move = (transform.right * x + transform.forward * z) * moveSpeed;
-            Vector3 vel = new Vector3(move.x, rb.linearVelocity.y, move.z);
-            rb.linearVelocity = vel;
-        }
-    }
+        // 2) Avanzar SOLO con W (S no hace nada)
+        bool forwardPressed = Input.GetKey(KeyCode.W);
+        Vector3 targetHoriz = forwardPressed ? transform.forward * moveSpeed : Vector3.zero;
 
-    void OnCollisionEnter(Collision c)
-    {
-        if (((1 << c.gameObject.layer) & groundMask) != 0 || c.gameObject.CompareTag("Ground"))
-        {
-            bool wasGrounded = isGrounded;
-            isGrounded = true;
-            animCtrl?.SetGrounded(true);
-            if (!wasGrounded) animCtrl?.TriggerLand();
-        }
-    }
+        // 3) Forzar que la velocidad horizontal NO tenga componente lateral (sin strafe)
+        //    Proyectamos la velocidad actual sobre el "forward" y la llevamos hacia el objetivo.
+        Vector3 v = rb.linearVelocity;
+        Vector3 vertical = Vector3.up * v.y;
+        Vector3 currentAlongForward = transform.forward * Vector3.Dot(new Vector3(v.x, 0f, v.z), transform.forward);
 
-    void OnCollisionExit(Collision c)
-    {
-        if (((1 << c.gameObject.layer) & groundMask) != 0 || c.gameObject.CompareTag("Ground"))
-        {
-            isGrounded = false;
-            animCtrl?.SetGrounded(false);
-        }
+        // acelera/desacelera suave hacia el objetivo (sin lateral)
+        float accel = 20f; // subí/bajá para responsividad
+        Vector3 newHoriz = Vector3.Lerp(currentAlongForward, targetHoriz, accel * Time.fixedDeltaTime);
+
+        rb.linearVelocity = newHoriz + vertical;
     }
 }
