@@ -5,7 +5,7 @@ public class PlayerAnimationController : MonoBehaviour
 {
     [Header("Refs")]
     [SerializeField] Rigidbody rb;         // del cuerpo (Capsule)
-    [SerializeField] Transform playerBody; // para transformar vel. a espacio local (strafe 2D)
+    [SerializeField] Transform playerBody; // para convertir vel. a local
 
     [Header("Tuning")]
     [SerializeField] float speedSmooth = 8f;
@@ -16,12 +16,8 @@ public class PlayerAnimationController : MonoBehaviour
     void Awake()
     {
         anim = GetComponent<Animator>();
-        if (rb == null)
-        {
-            // intenta encontrar un Rigidbody en padres
-            rb = GetComponentInParent<Rigidbody>();
-        }
-        if (playerBody == null && rb != null) playerBody = rb.transform;
+        if (!rb) rb = GetComponentInParent<Rigidbody>();
+        if (!playerBody && rb) playerBody = rb.transform;
     }
 
     void Update()
@@ -31,26 +27,22 @@ public class PlayerAnimationController : MonoBehaviour
 
     void UpdateLocomotionParams()
     {
-        if (rb == null) return;
+        if (!rb) return;
 
-        // velocidad en el plano XZ
         Vector3 v = rb.linearVelocity; v.y = 0f;
         float targetSpeed = v.magnitude;
 
-        // suavizado para evitar �parpadeo� de anim
         speedParam = Mathf.Lerp(speedParam, targetSpeed, Time.deltaTime * speedSmooth);
         anim.SetFloat("Speed", speedParam);
 
-        // Si quer�s strafe 2D:
-        if (playerBody != null)
+        if (playerBody)
         {
             Vector3 localV = playerBody.InverseTransformDirection(v);
-            anim.SetFloat("MoveX", localV.x); // izquierda/derecha
-            anim.SetFloat("MoveZ", localV.z); // adelante/atr�s
+            anim.SetFloat("MoveX", localV.x);
+            anim.SetFloat("MoveZ", localV.z);
         }
     }
 
-    // Estos los llam�s desde otros scripts:
     public void SetGrounded(bool grounded) => anim.SetBool("IsGrounded", grounded);
     public void TriggerJump() => anim.SetTrigger("Jump");
     public void TriggerLand() => anim.SetTrigger("Land");

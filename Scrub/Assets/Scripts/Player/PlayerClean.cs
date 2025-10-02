@@ -3,37 +3,41 @@ using UnityEngine;
 public class PlayerClean : MonoBehaviour
 {
     [Header("Limpieza")]
-    [SerializeField] private float range = 2.5f;       // distancia máxima de limpieza
-    [SerializeField] private float cleanRate = 1f;     // "trabajo" por segundo
-    [SerializeField] private LayerMask dirtLayer;      // capa de suciedad
-    [SerializeField] private Transform rayOrigin;      // punto desde donde mira (por defecto la cámara)
+    [SerializeField] private float range = 2.5f;
+    [SerializeField] private float cleanRate = 1f;
+    [SerializeField] private LayerMask dirtLayer;
+    [SerializeField] private Transform rayOrigin; // por defecto la cámara
+
+    [Header("Refs")]
+    [SerializeField] private PlayerAnimationController animCtrl;
+
+    private bool cleaningActive;
 
     private void Start()
     {
-        if (rayOrigin == null && Camera.main != null)
-            rayOrigin = Camera.main.transform;
+        if (!rayOrigin && Camera.main) rayOrigin = Camera.main.transform;
+        if (!animCtrl) animCtrl = GetComponentInParent<PlayerAnimationController>() ?? GetComponent<PlayerAnimationController>();
     }
 
     private void Update()
     {
-        // Click izquierdo para limpiar
+        bool wasCleaning = cleaningActive;
+        cleaningActive = false;
+
         if (Input.GetMouseButton(0))
         {
-            TryClean();
-        }
-    }
-
-    private void TryClean()
-    {
-        Ray ray = new Ray(rayOrigin.position, rayOrigin.forward);
-
-        if (Physics.Raycast(ray, out RaycastHit hit, range, dirtLayer))
-        {
-            DirtSpot dirt = hit.collider.GetComponent<DirtSpot>();
-            if (dirt != null)
+            Ray ray = new Ray(rayOrigin.position, rayOrigin.forward);
+            if (Physics.Raycast(ray, out RaycastHit hit, range, dirtLayer))
             {
-                dirt.CleanTick(cleanRate * Time.deltaTime);
+                if (hit.collider.TryGetComponent(out DirtSpot dirt))
+                {
+                    cleaningActive = true;
+                    dirt.CleanTick(cleanRate * Time.deltaTime);
+                }
             }
         }
+
+        if (cleaningActive != wasCleaning)
+            animCtrl?.SetCleaning(cleaningActive);
     }
 }

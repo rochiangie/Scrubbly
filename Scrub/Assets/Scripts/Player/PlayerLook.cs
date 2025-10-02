@@ -2,28 +2,32 @@
 
 public class PlayerLook : MonoBehaviour
 {
+    [Header("Mouse")]
     [SerializeField] private string mouseXInputName = "Mouse X";
     [SerializeField] private string mouseYInputName = "Mouse Y";
     [SerializeField] private float mouseSensitivity = 150f;
+    [SerializeField] private bool invertY = false;
+    [SerializeField] private bool rotateBodyWithMouse = false; // ⬅️ por defecto desactivado
 
-    [SerializeField] private Transform playerBody; // Asignar en Inspector
+    [Header("Refs")]
+    [SerializeField] private Transform playerBody; // arrastrá la Capsule
     private float xAxisClamp = 0f;
     private bool cursorIsLocked = true;
 
-    private void Awake()
+    void Awake()
     {
-        ApplyCursorState(); // Arranca bloqueado
+        ApplyCursorState();
+        if (!playerBody) playerBody = transform.root; // fallback
     }
 
-    private void Update()
+    void Update()
     {
-        HandleCursorToggle();  // ⬅️ ahora se chequea todas las frames
+        HandleCursorToggle();
         CameraRotation();
     }
 
     private void HandleCursorToggle()
     {
-        // Esc para liberar, clic izq para volver a bloquear
         if (Input.GetKeyDown(KeyCode.Escape))
             cursorIsLocked = false;
         else if (Input.GetMouseButtonDown(0))
@@ -41,35 +45,24 @@ public class PlayerLook : MonoBehaviour
     private void CameraRotation()
     {
         float mouseX = Input.GetAxis(mouseXInputName) * mouseSensitivity * Time.deltaTime;
-        float mouseY = Input.GetAxis(mouseYInputName) * mouseSensitivity * Time.deltaTime;
+        float mouseY = Input.GetAxis(mouseYInputName) * mouseSensitivity * Time.deltaTime * (invertY ? 1f : -1f);
 
-        // Si te queda invertido el Y, cambiá "+=" por "-="
         xAxisClamp += mouseY;
+        if (xAxisClamp > 90f) { xAxisClamp = 90f; mouseY = 0f; ClampXAxisRotationToValue(270f); }
+        if (xAxisClamp < -90f) { xAxisClamp = -90f; mouseY = 0f; ClampXAxisRotationToValue(90f); }
 
-        if (xAxisClamp > 90f)
-        {
-            xAxisClamp = 90f;
-            mouseY = 0f;
-            ClampXAxisRotationToValue(270f);
-        }
-        else if (xAxisClamp < -90f)
-        {
-            xAxisClamp = -90f;
-            mouseY = 0f;
-            ClampXAxisRotationToValue(90f);
-        }
-
+        // Cámara arriba/abajo
         transform.Rotate(Vector3.left * mouseY);
 
-        if (playerBody != null)
-            //playerBody.Rotate(Vector3.up * mouseX);
-            return;
+        // Cuerpo izquierda/derecha (opcional)
+        if (rotateBodyWithMouse && playerBody != null)
+            playerBody.Rotate(Vector3.up * mouseX);
     }
 
     private void ClampXAxisRotationToValue(float value)
     {
-        Vector3 eulerRotation = transform.eulerAngles;
-        eulerRotation.x = value;
-        transform.eulerAngles = eulerRotation;
+        Vector3 euler = transform.eulerAngles;
+        euler.x = value;
+        transform.eulerAngles = euler;
     }
 }
