@@ -1,22 +1,39 @@
-using UnityEngine;
+﻿using UnityEngine;
+using System;
+
 
 public class PlayerInteraction : MonoBehaviour
 {
-    [Header("Interacci�n")]
+    [Header("Interacción")]
     public float interactRange = 2.5f;
-    public LayerMask interactLayer = ~0;
-    public Transform rayOrigin;  // normalmente la c�mara
-    public Transform holdPoint;  // un empty en el pecho
+    [Tooltip("La máscara se usa solo para referencia visual.")]
+    public LayerMask toolsLayer;
+    public Transform rayOrigin;
+    public Transform holdPoint;
 
     [Header("Refs")]
     public PlayerAnimationController animCtrl;
 
     private Carryable carried;
+    private Transform playerRoot;
+
+    // VARIABLE DE ESTADO para interacción por TRIGGER (Puertas)
+    private IInteractable currentInteractable = null;
 
     void Awake()
     {
+        // 🛑 CRÍTICO: Asegurarse de que rayOrigin es la cámara.
         if (!rayOrigin && Camera.main) rayOrigin = Camera.main.transform;
         if (!animCtrl) animCtrl = GetComponentInChildren<PlayerAnimationController>() ?? GetComponent<PlayerAnimationController>();
+
+        playerRoot = transform;
+
+        // Inicializa toolsLayer para que sea visible en el Inspector, aunque la lógica final no la usa.
+        int toolsLayerInt = LayerMask.NameToLayer("Tools");
+        if (toolsLayerInt != -1)
+        {
+            toolsLayer = 1 << toolsLayerInt;
+        }
     }
 
     void Update()
@@ -25,9 +42,22 @@ public class PlayerInteraction : MonoBehaviour
             TryInteract();
     }
 
+    // FUNCIONES PÚBLICAS para ser llamadas por el TRIGGER de la puerta
+    public void SetCurrentInteractable(IInteractable interactable)
+    {
+        currentInteractable = interactable;
+        Debug.Log("Trigger detectado: Interacción IInteractable (Puerta) posible.");
+    }
+
+    public void ClearCurrentInteractable()
+    {
+        currentInteractable = null;
+        Debug.Log("Trigger abandonado: Interacción IInteractable finalizada.");
+    }
+
     void TryInteract()
     {
-        // Si ya llevo algo, suelto
+        // 🛑 Lógica 1: Soltar objeto
         if (carried)
         {
             carried.Drop();
@@ -37,13 +67,46 @@ public class PlayerInteraction : MonoBehaviour
             return;
         }
 
-        // Buscar algo delante
-        Ray ray = new Ray(rayOrigin.position, rayOrigin.forward);
-        if (Physics.Raycast(ray, out RaycastHit hit, interactRange, interactLayer))
+        // 🛑 Lógica 2: Interacción por TRIGGER (Puerta)
+        if (currentInteractable != null)
         {
-            // 1) Objetos cargables
-            if (hit.collider.TryGetComponent(out Carryable c))
+            Debug.Log("[Trigger Interact] Ejecutando interacción IInteractable.");
+            currentInteractable.Interact();
+            animCtrl?.TriggerInteract();
+            return;
+        }
+
+        // 🛑 Lógica 3: Interacción por RAYCASTALL (Carryable - Cubo)
+        Ray ray = new Ray(rayOrigin.position, rayOrigin.forward);
+
+        // Usamos RaycastAll con máscara ~0 (Golpea TODO)
+        RaycastHit[] hits = Physics.RaycastAll(ray, interactRange, ~0);
+
+        // Ordenamos los hits por distancia
+        Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));
+
+        foreach (var hit in hits)
+        {
+            // Debug para ver todo lo que se golpea
+            Debug.DrawRay(ray.origin, ray.direction * hit.distance, Color.cyan, 0.5f);
+
+            // Ignoramos el propio personaje
+            if (hit.collider.transform.root == playerRoot)
             {
+                continue;
+            }
+
+            // 🛑 BUSCAR Carryable en el objeto golpeado
+            Carryable c = hit.collider.GetComponent<Carryable>();
+            // Si no está en el mismo, buscamos en el padre.
+            if (c == null) c = hit.collider.GetComponentInParent<Carryable>();
+
+            if (c != null)
+            {
+                // 🛑 ¡ÉXITO! Cubo encontrado.
+                Debug.Log($"[Carryable Raycast] ¡Éxito! Recogiendo: {hit.collider.name}.");
+
+                // Asegurar HoldPoint (Se mantiene la lógica para crearlo si es null)
                 if (!holdPoint)
                 {
                     var hp = new GameObject("HoldPoint").transform;
@@ -58,16 +121,8 @@ public class PlayerInteraction : MonoBehaviour
                 animCtrl?.TriggerInteract();
                 return;
             }
-
-            // 2) Cualquier cosa que implemente IInteractable (interfaz)
-            var interactable = hit.collider.GetComponent(typeof(IInteractable)) as IInteractable;
-            if (interactable != null)
-            {
-                interactable.Interact();
-                animCtrl?.TriggerInteract();
-            }
         }
+
+        Debug.Log("[Interacción Fallida] No hay Trigger activo ni Carryable enfrente.");
     }
 }
-
-public interface IInteractable { void Interact(); }

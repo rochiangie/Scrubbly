@@ -42,17 +42,22 @@ public class MoveObjectController : MonoBehaviour
 		setupGui();
 
 	}
-		
-	void OnTriggerEnter(Collider other)
-	{		
-		if (other.gameObject == player)		//player has collided with trigger
-		{			
-			playerEntered = true;
 
-		}
-	}
+    void OnTriggerEnter(Collider other)
+    {
+        // Usa el Tag del objeto que entró, que es más seguro y no depende del FindGameObjectWithTag en Start().
+        if (other.CompareTag("Player"))
+        {
+            // Opcional: Asigna el player aquí si aún es null (para el Raycast en Update)
+            if (player == null) player = other.gameObject;
 
-	void OnTriggerExit(Collider other)
+            playerEntered = true;
+            // Aquí verías tu Log A:
+            Debug.Log("A: El jugador entró al área de la puerta.");
+        }
+    }
+
+    void OnTriggerExit(Collider other)
 	{		
 		if (other.gameObject == player)		//player has exited trigger
 		{			

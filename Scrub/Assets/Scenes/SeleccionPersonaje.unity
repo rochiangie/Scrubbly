@@ -743,6 +743,10 @@ PrefabInstance:
       propertyPath: m_StaticEditorFlags
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7276465289840044989, guid: d62efa6573b1d1d4389faff49807cb3b, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7339030724622140507, guid: d62efa6573b1d1d4389faff49807cb3b, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 0
@@ -1404,6 +1408,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5579394764581444627, guid: eed46729d2edb90448f72a6f8cbd5d57, type: 3}
       propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5590355112871320847, guid: eed46729d2edb90448f72a6f8cbd5d57, type: 3}
+      propertyPath: m_UseGravity
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5602137107650274134, guid: eed46729d2edb90448f72a6f8cbd5d57, type: 3}
@@ -2609,6 +2617,10 @@ PrefabInstance:
       propertyPath: m_StaticEditorFlags
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9162677935126176981, guid: 55a7a65203397ac4f8c63fa56c8dbecd, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2682,6 +2694,10 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -6686338990695337148, guid: 14398d2d9683cdc41b672635e201fac0, type: 3}
       propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -3085999724516933025, guid: 14398d2d9683cdc41b672635e201fac0, type: 3}
+      propertyPath: m_UseGravity
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 136976279370578323, guid: 14398d2d9683cdc41b672635e201fac0, type: 3}
@@ -3915,6 +3931,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -7323014863363009364, guid: 4b714ebab645ff146958795b1d039263, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: -2414082941149900548, guid: 4b714ebab645ff146958795b1d039263, type: 3}
       propertyPath: m_Enabled
       value: 0
@@ -4967,6 +4987,10 @@ PrefabInstance:
       propertyPath: m_StaticEditorFlags
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1241232167244424662, guid: af3476e1237e18c4b98f1de98714adf3, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1253576963713740228, guid: af3476e1237e18c4b98f1de98714adf3, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 0
@@ -5985,6 +6009,10 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -5838729563869284659, guid: 9ed5b504eb520c4439c30b9e59d319f1, type: 3}
       propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -555963101567099581, guid: 9ed5b504eb520c4439c30b9e59d319f1, type: 3}
+      propertyPath: m_UseGravity
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 13932451227597615, guid: 9ed5b504eb520c4439c30b9e59d319f1, type: 3}
@@ -7231,6 +7259,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -8829495294392689063, guid: ceefa8b3ffff2264bbbe4cb7e7533410, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 16851446864488895, guid: ceefa8b3ffff2264bbbe4cb7e7533410, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 0
@@ -8301,9 +8333,9 @@ MonoBehaviour:
   - {fileID: 8167730674303123077, guid: ceefa8b3ffff2264bbbe4cb7e7533410, type: 3}
   - {fileID: 6422002185381309941, guid: eed46729d2edb90448f72a6f8cbd5d57, type: 3}
   - {fileID: 7323757511219053547, guid: 14398d2d9683cdc41b672635e201fac0, type: 3}
-  lightOffset: {x: 0, y: 3.5, z: 1}
+  lightOffset: {x: 0, y: 3, z: 1}
   viewFromFront: 0
-  moveDuration: 0.35
+  moveDuration: 0.1
   ease:
     serializedVersion: 2
     m_Curve:
@@ -8353,6 +8385,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -3819276514375917784, guid: 976281ff04ff6ea4d941f57950adc597, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: -3267789878314547521, guid: 976281ff04ff6ea4d941f57950adc597, type: 3}
       propertyPath: m_Enabled
       value: 0
