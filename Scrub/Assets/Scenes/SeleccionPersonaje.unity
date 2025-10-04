@@ -3595,7 +3595,7 @@ Transform:
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
   m_LocalRotation: {x: -0.0014935881, y: -0.9932191, z: 0.11554116, w: -0.0128052775}
-  m_LocalPosition: {x: 2.8578322, y: 2.2326658, z: 2.8638544}
+  m_LocalPosition: {x: 3.7973843, y: 2.267999, z: 4.284229}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -8095,7 +8095,7 @@ MonoBehaviour:
   m_StreamingVersion: 20241001
   m_LegacyPriority: 0
   Target:
-    TrackingTarget: {fileID: 0}
+    TrackingTarget: {fileID: 2046273838}
     LookAtTarget: {fileID: 0}
     CustomLookAtTarget: 0
   Lens:
@@ -8126,12 +8126,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2014787205}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.0014935881, y: -0.9932191, z: 0.11554116, w: -0.0128052775}
-  m_LocalPosition: {x: 2.8578322, y: 2.2326658, z: 2.8638544}
+  m_LocalRotation: {x: 0.007998572, y: -0.62061197, z: 0.78401184, w: -0.010110824}
+  m_LocalPosition: {x: 0, y: 6.79, z: 0.11}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 2046273838}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2046273835
 GameObject:
@@ -8253,7 +8253,8 @@ Transform:
   m_LocalPosition: {x: 3.7973843, y: 2.378, z: -2.505772}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 2014787207}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!114 &2046273839
@@ -8300,19 +8301,41 @@ MonoBehaviour:
   - {fileID: 8167730674303123077, guid: ceefa8b3ffff2264bbbe4cb7e7533410, type: 3}
   - {fileID: 6422002185381309941, guid: eed46729d2edb90448f72a6f8cbd5d57, type: 3}
   - {fileID: 7323757511219053547, guid: 14398d2d9683cdc41b672635e201fac0, type: 3}
-  spotLight: {fileID: 2046273837}
-  lightOffset: {x: 0, y: 3.5, z: 0}
-  lightMoveLerp: 10
-  lightLookLerp: 15
-  vcam: {fileID: 2014787206}
-  fallbackCamera: {fileID: 330585545}
-  camMoveLerp: 6
-  camLookLerp: 10
-  cameraAnchorNames:
+  lightOffset: {x: 0, y: 3.5, z: 1}
+  viewFromFront: 0
+  moveDuration: 0.35
+  ease:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  cameraChild: {fileID: 0}
+  cameraLocalPosition: {x: 0, y: 0, z: 0}
+  cameraLocalEuler: {x: 0, y: 0, z: 0}
+  anchorNames:
   - CameraAnchor
-  - Head
+  - head
   - mixamorig:Head
-  - npc_hmn_01m_head2_lod0
+  lookAtRootWhenIdle: 1
   prev1: 276
   prev2: 97
   next1: 275
@@ -9165,14 +9188,13 @@ SceneRoots:
   - {fileID: 410087041}
   - {fileID: 832575519}
   - {fileID: 987802447}
-  - {fileID: 243899266}
   - {fileID: 839981154}
   - {fileID: 1387637186}
   - {fileID: 822733272}
+  - {fileID: 243899266}
   - {fileID: 2103982467}
   - {fileID: 24913689}
   - {fileID: 1930566066}
   - {fileID: 104419972}
   - {fileID: 253652675}
-  - {fileID: 2014787207}
   - {fileID: 2046273838}

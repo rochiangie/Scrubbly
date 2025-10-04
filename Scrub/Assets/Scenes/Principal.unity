@@ -3102,6 +3102,7 @@ GameObject:
   - component: {fileID: 1565165548}
   - component: {fileID: 1565165547}
   - component: {fileID: 1565165550}
+  - component: {fileID: 1565165551}
   m_Layer: 0
   m_Name: CinemachineCamera (1)
   m_TagString: Untagged
@@ -3129,7 +3130,7 @@ MonoBehaviour:
   m_StreamingVersion: 20241001
   m_LegacyPriority: 0
   Target:
-    TrackingTarget: {fileID: 217741466}
+    TrackingTarget: {fileID: 0}
     LookAtTarget: {fileID: 0}
     CustomLookAtTarget: 0
   Lens:
@@ -3179,7 +3180,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 625c14eee3ad46c99df7c7c891ef668a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Damping: {x: 0.1, y: 0.5, z: 0.68}
+  Damping: {x: 0, y: 0, z: 0}
   ShoulderOffset: {x: -0.01, y: -0.12, z: 0.88}
   VerticalArmLength: 0.4
   CameraSide: 1
@@ -3193,6 +3194,19 @@ MonoBehaviour:
     CameraRadius: 0.2
     DampingIntoCollision: 0
     DampingFromCollision: 0.5
+--- !u!114 &1565165551
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1565165545}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4afa82ae3200b82408d605c3dbdd1e38, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Damping: 0
 --- !u!1 &1698021094
 GameObject:
   m_ObjectHideFlags: 0
@@ -3292,8 +3306,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1698021094}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.027998786, y: 0.96658003, z: -0.12053615, w: -0.22452238}
-  m_LocalPosition: {x: 1.8076286, y: 2.319, z: -10.144067}
+  m_LocalRotation: {x: -0.031560365, y: 0.9594979, z: -0.11965291, w: -0.25308293}
+  m_LocalPosition: {x: 0.028152168, y: 2.0551999, z: -11.8764515}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

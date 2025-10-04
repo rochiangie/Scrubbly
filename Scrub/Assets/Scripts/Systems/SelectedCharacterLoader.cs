@@ -1,4 +1,4 @@
-using UnityEngine;
+Ôªøusing UnityEngine;
 using Unity.Cinemachine;
 using System.Collections;
 
@@ -6,21 +6,29 @@ public class SelectedCharacterLoader : MonoBehaviour
 {
     [SerializeField] Transform spawnPoint;
     [SerializeField] string playerTag = "Player";
-    [SerializeField] CinemachineCamera vcam; // asign· tu vcam (CM3)
+    [SerializeField] CinemachineCamera vcam; // asign√° tu vcam (CM3)
 
-    // Ajusta si es necesario, pero "head" deberÌa funcionar con la b˙squeda por patrÛn
+    // Ajusta si es necesario, pero "head" deber√≠a funcionar con la b√∫squeda por patr√≥n
     [SerializeField] string[] anchorNames = { "CameraAnchor", "head", "mixamorig:Head" };
 
     void Awake() { if (!vcam) vcam = FindObjectOfType<CinemachineCamera>(); }
 
     IEnumerator Start()
     {
-        // limpiar players preexistentes
+        // 1. LIMPIEZA INICIAL: Destruir el Player anterior y el Spot Light de la escena de selecci√≥n
         foreach (var go in GameObject.FindGameObjectsWithTag(playerTag)) Destroy(go);
+
+        // üõë NUEVO: DESTRUIR FOCOS DE LA ESCENA ANTERIOR
+        // Esto previene interferencias. Busca cualquier luz tipo Spot y la destruye.
+        foreach (var light in FindObjectsOfType<Light>())
+        {
+            if (light.type == LightType.Spot) Destroy(light.gameObject);
+        }
 
         if (CharacterSelection.Instance == null) yield break;
         if (CharacterSelection.Instance.SelectedPrefab) CharacterSelection.Instance.DestroyPersistedIfAny();
 
+        // 2. SPAWNEAR PLAYER
         Vector3 pos = spawnPoint ? spawnPoint.position : Vector3.zero;
         Quaternion rot = spawnPoint ? spawnPoint.rotation : Quaternion.identity;
 
@@ -29,11 +37,11 @@ public class SelectedCharacterLoader : MonoBehaviour
 
         player.tag = playerTag;
 
-        // Snap al piso 1 frame despuÈs (por colliders)
+        // Snap al piso 1 frame despu√©s (por colliders)
         yield return new WaitForFixedUpdate();
         SnapToGround(player.transform);
 
-        // Bind c·mara
+        // 3. CONFIGURAR C√ÅMARA
         if (vcam)
         {
             var anchor = FindAnchor(player.transform) ?? player.transform;
@@ -43,8 +51,10 @@ public class SelectedCharacterLoader : MonoBehaviour
             var tpf = vcam.GetComponent<CinemachineThirdPersonFollow>();
             if (tpf)
             {
-                tpf.Damping = new Vector3(0.2f, 0.5f, 0.3f);
-                // CORRECCI”N CLAVE: Esto asegura que la c·mara NO estÈ muy alta.
+                // üõë CAMBIO CR√çTICO: DAMPING A CERO
+                // Esto elimina el efecto de "flote" o "balanceo" al hacer que el seguimiento sea instant√°neo (r√≠gido).
+                tpf.Damping = Vector3.zero;
+
                 tpf.VerticalArmLength = 0f;
                 tpf.CameraDistance = 3.5f;
             }
@@ -53,7 +63,7 @@ public class SelectedCharacterLoader : MonoBehaviour
 
     void SnapToGround(Transform t, float skin = 0.02f)
     {
-        // (LÛgica de SnapToGround sin cambios)
+        // (L√≥gica de SnapToGround sin cambios)
         Bounds b = default; bool has = false;
         foreach (var c in t.GetComponentsInChildren<Collider>())
         {
@@ -89,7 +99,7 @@ public class SelectedCharacterLoader : MonoBehaviour
         return null;
     }
 
-    // FUNCI”N EDITADA: Busca por patrÛn (Contains) en lugar de coincidencia exacta (==)
+    // FUNCI√ìN EDITADA: Busca por patr√≥n (Contains) en lugar de coincidencia exacta (==)
     Transform FindDeep(Transform r, string name)
     {
         if (r.name.Contains(name)) return r;
