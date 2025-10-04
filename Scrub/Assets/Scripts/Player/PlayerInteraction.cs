@@ -1,22 +1,36 @@
+﻿// PlayerInteraction.cs
+
 using UnityEngine;
+using System;
+
+// Interfaz para la puerta. Puedes dejarla aquí o en su propio archivo IInteractable.cs.
+public interface IInteractable { void Interact(); }
 
 public class PlayerInteraction : MonoBehaviour
 {
-    [Header("Interacci�n")]
-    public float interactRange = 2.5f;
-    public LayerMask interactLayer = ~0;
-    public Transform rayOrigin;  // normalmente la c�mara
-    public Transform holdPoint;  // un empty en el pecho
-
-    [Header("Refs")]
+    [Header("Referencias")]
+    public Transform holdPoint;
     public PlayerAnimationController animCtrl;
 
     private Carryable carried;
+    private IInteractable currentDoorInteractable = null;
+    private Carryable nearbyCarryable = null;
+
+    private Rigidbody playerRigidbody;
+    private Collider[] playerColliders; // Array de Colliders del Player para Ignorar Colisión
 
     void Awake()
     {
-        if (!rayOrigin && Camera.main) rayOrigin = Camera.main.transform;
         if (!animCtrl) animCtrl = GetComponentInChildren<PlayerAnimationController>() ?? GetComponent<PlayerAnimationController>();
+        playerRigidbody = GetComponent<Rigidbody>();
+
+        // Obtener TODOS los colliders del Player, incluyendo hijos.
+        playerColliders = GetComponentsInChildren<Collider>();
+
+        if (playerColliders.Length == 0)
+        {
+            Debug.LogError("PlayerInteraction: No se encontraron Colliders del Player. La prevención de empuje fallará.");
+        }
     }
 
     void Update()
@@ -27,47 +41,81 @@ public class PlayerInteraction : MonoBehaviour
 
     void TryInteract()
     {
-        // Si ya llevo algo, suelto
+        // Lógica 1: Soltar objeto
         if (carried)
         {
             carried.Drop();
             carried = null;
             animCtrl?.SetHolding(false);
             animCtrl?.TriggerInteract();
+            Debug.Log("Objeto soltado.");
             return;
         }
 
-        // Buscar algo delante
-        Ray ray = new Ray(rayOrigin.position, rayOrigin.forward);
-        if (Physics.Raycast(ray, out RaycastHit hit, interactRange, interactLayer))
+        // Lógica 2: Recoger Cubo (si está cerca)
+        if (nearbyCarryable != null)
         {
-            // 1) Objetos cargables
-            if (hit.collider.TryGetComponent(out Carryable c))
+            if (!holdPoint)
             {
-                if (!holdPoint)
-                {
-                    var hp = new GameObject("HoldPoint").transform;
-                    hp.SetParent(transform);
-                    hp.localPosition = new Vector3(0, 1.2f, 0.6f);
-                    holdPoint = hp;
-                }
-
-                c.PickUp(holdPoint);
-                carried = c;
-                animCtrl?.SetHolding(true);
-                animCtrl?.TriggerInteract();
-                return;
+                var hp = new GameObject("HoldPoint").transform;
+                hp.SetParent(transform);
+                hp.localPosition = new Vector3(0, 1.2f, 0.6f);
+                holdPoint = hp;
             }
 
-            // 2) Cualquier cosa que implemente IInteractable (interfaz)
-            var interactable = hit.collider.GetComponent(typeof(IInteractable)) as IInteractable;
-            if (interactable != null)
-            {
-                interactable.Interact();
-                animCtrl?.TriggerInteract();
-            }
+            // CRÍTICO: Recoger y pasar el ARRAY de Colliders del Player.
+            nearbyCarryable.PickUp(holdPoint, playerColliders);
+
+            carried = nearbyCarryable;
+            nearbyCarryable = null;
+            animCtrl?.SetHolding(true);
+            animCtrl?.TriggerInteract();
+            Debug.Log("¡Objeto recogido con la tecla E!");
+            return;
+        }
+
+        // Lógica 3: Interacción por TRIGGER (Puerta)
+        if (currentDoorInteractable != null)
+        {
+            currentDoorInteractable.Interact();
+            animCtrl?.TriggerInteract();
+            return;
+        }
+
+        Debug.Log("[Interacción Fallida] No hay objeto que soltar, recoger (E) ni Puerta activa.");
+    }
+
+    // Detección de proximidad del cubo
+    private void OnTriggerEnter(Collider other)
+    {
+        Carryable c = other.GetComponent<Carryable>();
+        if (c == null) c = other.GetComponentInParent<Carryable>();
+
+        if (c != null && carried == null)
+        {
+            nearbyCarryable = c;
         }
     }
-}
 
-public interface IInteractable { void Interact(); }
+    private void OnTriggerExit(Collider other)
+    {
+        Carryable c = other.GetComponent<Carryable>();
+        if (c == null) c = other.GetComponentInParent<Carryable>();
+
+        if (c != null && c == nearbyCarryable)
+        {
+            nearbyCarryable = null;
+        }
+    }
+
+    // Funciones de la puerta
+    public void SetCurrentInteractable(IInteractable interactable)
+    {
+        currentDoorInteractable = interactable;
+    }
+
+    public void ClearCurrentInteractable()
+    {
+        currentDoorInteractable = null;
+    }
+}

@@ -1,3 +1,5 @@
+// DirtSpot.cs
+
 using UnityEngine;
 
 public class DirtSpot : MonoBehaviour
@@ -16,7 +18,7 @@ public class DirtSpot : MonoBehaviour
         if (dirtAmount <= 0f)
         {
             Debug.Log($"{name} limpio!");
-            Destroy(gameObject);
+            Destroy(gameObject); // O desactivar el MeshRenderer para que parezca limpio
         }
     }
 }
