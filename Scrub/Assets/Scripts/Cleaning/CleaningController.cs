@@ -1,6 +1,10 @@
+// CleaningController.cs
+
 using UnityEngine;
+using System.Collections.Generic;
+using System.Linq;
 #if ENABLE_INPUT_SYSTEM
-using UnityEngine.InputSystem; // soporte opcional para el nuevo Input System
+using UnityEngine.InputSystem;
 #endif
 
 [RequireComponent(typeof(Animator))]
@@ -8,44 +12,34 @@ public class CleaningController : MonoBehaviour
 {
     // ---------------- Refs ----------------
     [Header("Refs")]
-    [SerializeField] private Camera rayCamera;     // Main Camera
-    [SerializeField] private Transform holdPoint;  // mano del player (origen visual)
-    [SerializeField] private Animator anim;        // Animator del Player
+    [SerializeField] private Transform holdPoint;  // Dónde va la herramienta (mano)
+    [SerializeField] private Animator anim;
 
     // ---------------- Capas y rangos ----------------
     [Header("Layers & Ranges")]
-    [SerializeField] private LayerMask toolsLayer; // capa de herramientas (Tools)
-    [SerializeField] private LayerMask dirtLayer;  // capa de suciedad (Interactable/Dirt)
-    [SerializeField] private float pickupRange = 3.5f;
-    [SerializeField] private float cleanRange = 2.5f;
+    [SerializeField] private LayerMask toolsLayer;
+    [SerializeField] private float pickupRange = 3.5f; // Usado para el Raycast de recogida
+    [SerializeField] private float dropForce = 1.5f;
 
     // ---------------- Input ----------------
     [Header("Input (teclas simples)")]
-    [SerializeField] private KeyCode pickupKey = KeyCode.E;
-    [SerializeField] private KeyCode cleanKey = KeyCode.R;
+    [SerializeField] private KeyCode pickupKey = KeyCode.E; // Recoger/Soltar
+    [SerializeField] private KeyCode cleanKey = KeyCode.R;  // Limpiar
 
     // ---------------- Limpieza ----------------
     [Header("Cleaning")]
-    [SerializeField] private float baseCleanRate = 1f;     // trabajo/seg
-    [SerializeField] private bool requireCorrectTool = false; // valida DirtSpot.requiredToolId
-    [SerializeField] private string[] validToolIds;        // opcional: restringir herramientas válidas
-
-    // ---------------- Aim Assist para superficies bajas ----------------
-    [Header("Aim assist (low surfaces)")]
-    [SerializeField] private bool aimFromHand = true;       // origen desde la mano (si hay)
-    [SerializeField, Range(0f, 0.75f)]
-    private float downBias = 0.35f;                          // inclinación hacia abajo (0 = recto)
-    [SerializeField] private float handForwardOffset = 0.12f;// empuja el origen hacia adelante
-    [SerializeField] private float sphereRadius = 0.22f;     // grosor del ray al limpiar
-    [SerializeField] private float overlapRadius = 0.28f;    // radio de búsqueda cercana
+    [SerializeField] private float baseCleanRate = 1f;
+    [SerializeField] private bool requireCorrectTool = true;
+    [SerializeField] private string[] validToolIds = { "Mop", "Sponge", "Vacuum" };
+    [SerializeField] private string dirtTag = "Dirt"; // Tag para la detección de suciedad
 
     // ---------------- Animación (capa "Clean") ----------------
     [Header("Animation Layer")]
-    [SerializeField] private string cleaningLayerName = "Clean"; // nombre EXACTO de la capa
-    [SerializeField] private float layerBlendSpeed = 12f;        // suavizado del peso
-    [SerializeField] private bool useCrossFade = false;         // si NO tenés transiciones en la capa
-    [SerializeField] private string cleaningStateName = "Clean_Loop";      // estado de limpiar en capa Clean
-    [SerializeField] private string upperIdleStateName = "UpperBody_Idle"; // estado idle en capa Clean
+    [SerializeField] private string cleaningLayerName = "Clean";
+    [SerializeField] private float layerBlendSpeed = 12f;
+    [SerializeField] private bool useCrossFade = false;
+    [SerializeField] private string cleaningStateName = "Clean_Loop";
+    [SerializeField] private string upperIdleStateName = "UpperBody_Idle";
 
     // ---------------- Debug ----------------
     [Header("Debug")]
@@ -53,6 +47,10 @@ public class CleaningController : MonoBehaviour
 
     // ---------------- Estado ----------------
     public ToolDescriptor CurrentTool { get; private set; }
+
+    // LISTA DE OBJETOS DE SUCIEDAD DENTRO DEL TRIGGER DEL JUGADOR
+    private List<DirtSpot> nearbyDirt = new List<DirtSpot>();
+
     private int cleaningLayerIndex = -1;
     private bool prevCleaning = false;
     private int cleanHash = 0, idleHash = 0;
@@ -62,15 +60,10 @@ public class CleaningController : MonoBehaviour
     private void Awake()
     {
         if (!anim) anim = GetComponent<Animator>();
-        if (!rayCamera && Camera.main) rayCamera = Camera.main;
-
         if (anim)
         {
             cleaningLayerIndex = anim.GetLayerIndex(cleaningLayerName);
-            if (cleaningLayerIndex < 0)
-                DLogWarn($"[Anim] No encontré la capa '{cleaningLayerName}'. Verificá el nombre en el Animator.");
-            else
-                DLog($"[Anim] Capa '{cleaningLayerName}' index={cleaningLayerIndex}");
+            if (cleaningLayerIndex < 0) DLogWarn($"[Anim] No encontré la capa '{cleaningLayerName}'.");
         }
     }
 
@@ -86,55 +79,110 @@ public class CleaningController : MonoBehaviour
         // ---- LIMPIEZA + ANIM ----
         bool holding = CurrentTool != null;
         bool cleaningInput = CleanHeld();
-        bool shouldUseCleaning = holding && cleaningInput;
+        // Solo limpiamos si tenemos herramienta, input presionado Y suciedad cerca
+        bool shouldUseCleaning = holding && cleaningInput && nearbyDirt.Count > 0;
 
         UpdateCleaningLayer(shouldUseCleaning);
 
         if (shouldUseCleaning)
-            TryCleanTick();
+            ApplyCleanToNearbyDirt();
     }
 
-    // ================== PICKUP ==================
-    private void TryPickupTool()
+    // ================== DETECCIÓN POR TRIGGER ==================
+
+    private void OnTriggerEnter(Collider other)
     {
-        if (!rayCamera) { DLogErr("[Pickup] No hay Camera."); return; }
-
-        Vector3 origin = rayCamera.transform.position + rayCamera.transform.forward * 0.15f; // evita auto-hit
-        Vector3 dir = rayCamera.transform.forward;
-        Debug.DrawRay(origin, dir * pickupRange, Color.red);
-
-        // 1) RaycastAll (ordenado) respetando obstáculos
-        var hits = Physics.RaycastAll(origin, dir, pickupRange, ~0, QueryTriggerInteraction.Collide);
-        System.Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));
-
-        bool blocked = false;
-        foreach (var h in hits)
+        // 🛑 CRÍTICO: Chequeo de Tag para ser eficiente y enfocarnos en la suciedad
+        if (other.CompareTag(dirtTag))
         {
-            if (h.collider.transform.IsChildOf(transform)) continue; // salto al Player
+            DirtSpot dirt = other.GetComponent<DirtSpot>() ?? other.GetComponentInParent<DirtSpot>();
 
-            var td = h.collider.GetComponentInParent<ToolDescriptor>();
-            if (td != null)
+            if (dirt != null && !nearbyDirt.Contains(dirt))
             {
-                if (!blocked)
-                {
-                    DLog($"[Pickup] EQUIP (ray): {td.name}");
-                    Equip(td);
-                    return;
-                }
-                else
-                {
-                    DLog("[Pickup] Hay un obstáculo delante de la herramienta, no equipo.");
-                    break;
-                }
+                nearbyDirt.Add(dirt);
+                Debug.Log($"[Clean Trigger] 🟢 Detectado DirtTag en: {dirt.name}. Suciedad cerca ({nearbyDirt.Count} spots).");
+            }
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag(dirtTag))
+        {
+            DirtSpot dirt = other.GetComponent<DirtSpot>() ?? other.GetComponentInParent<DirtSpot>();
+
+            if (dirt != null && nearbyDirt.Contains(dirt))
+            {
+                nearbyDirt.Remove(dirt);
+                Debug.Log($"[Clean Trigger] 🔴 Dejado DirtTag en: {dirt.name}. Quedan ({nearbyDirt.Count} spots).");
+            }
+        }
+    }
+
+
+    // ================== CLEAN LOGIC ==================
+
+    private void ApplyCleanToNearbyDirt()
+    {
+        if (CurrentTool == null) return;
+
+        // Limpiamos la lista de objetos nulos (suciedad que fue destruida previamente)
+        // Iteramos al revés para eliminar sin problemas
+        for (int i = nearbyDirt.Count - 1; i >= 0; i--)
+        {
+            DirtSpot dirt = nearbyDirt[i];
+
+            if (dirt == null)
+            {
+                nearbyDirt.RemoveAt(i);
+                continue;
             }
 
-            // marcar oclusión si es sólido y no está en Tools
-            if (!h.collider.isTrigger && !InMask(h.collider.gameObject.layer, toolsLayer))
-                blocked = true;
+            // 1. Validación de herramienta
+            if (requireCorrectTool && !dirt.CanBeCleanedBy(CurrentTool.toolId))
+            {
+                continue; // Saltar a la siguiente suciedad
+            }
+
+            // 2. Validación de ID de herramienta
+            if (!ToolAllowed(CurrentTool.toolId))
+            {
+                DLog($"[Clean] '{CurrentTool.toolId}' no permitida por la configuración.");
+                continue;
+            }
+
+            // 3. Aplicar limpieza
+            float work = baseCleanRate * CurrentTool.toolPower * Time.deltaTime;
+            dirt.CleanTick(work);
+
+            // Si CleanTick destruye el objeto, el 'if (dirt == null)' al inicio del bucle lo limpiará
+        }
+    }
+
+    // ================== PICKUP / DROP LOGIC (Mantiene Raycast/Overlap para recoger) ==================
+
+    private void TryPickupTool()
+    {
+        Camera rayCamera = Camera.main;
+        if (!rayCamera) { DLogErr("[Pickup] No hay Camera.main en escena."); return; }
+
+        Vector3 origin = rayCamera.transform.position + rayCamera.transform.forward * 0.15f;
+        Vector3 dir = rayCamera.transform.forward;
+
+        // 1. Raycast para una detección precisa (usando la capa Tools)
+        if (Physics.Raycast(origin, dir, out RaycastHit rayHit, pickupRange, toolsLayer, QueryTriggerInteraction.Ignore))
+        {
+            var td = rayHit.collider.GetComponentInParent<ToolDescriptor>();
+            if (td != null && !rayHit.collider.transform.IsChildOf(transform))
+            {
+                DLog($"[Pickup] EQUIP (raycast): {td.name}");
+                Equip(td);
+                return;
+            }
         }
 
-        // 2) Fallback: Overlap (solo Tools), por si estás MUY cerca
-        Vector3 probe = origin + dir * 1.0f;
+        // 2. Fallback: Overlap (por si estás MUY cerca)
+        Vector3 probe = transform.position + transform.forward * 1.0f;
         var around = Physics.OverlapSphere(probe, 0.85f, toolsLayer, QueryTriggerInteraction.Collide);
         foreach (var c in around)
         {
@@ -147,8 +195,6 @@ public class CleaningController : MonoBehaviour
                 return;
             }
         }
-
-        DLog("[Pickup] No encontré herramientas.");
     }
 
     private void Equip(ToolDescriptor tool)
@@ -157,18 +203,19 @@ public class CleaningController : MonoBehaviour
 
         if (tool.TryGetComponent<Rigidbody>(out var rb))
         {
-            // primero detengo, luego seteo kinematic (evita warnings)
             rb.linearVelocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
             rb.isKinematic = true;
         }
-        SetAllCollidersTrigger(tool.gameObject, true);
+        SetAllCollidersTrigger(tool.gameObject, true); // Haz la herramienta Trigger
 
         var t = tool.transform;
-        t.SetParent(holdPoint, true);     // mantiene escala mundial
-        t.localPosition = Vector3.zero;
-        t.localRotation = Quaternion.identity;
-
+        if (holdPoint != null)
+        {
+            t.SetParent(holdPoint, true);
+            t.localPosition = Vector3.zero;
+            t.localRotation = Quaternion.identity;
+        }
         DLog($"[Pickup] EQUIP: {tool.name} (ID {tool.toolId})");
     }
 
@@ -179,97 +226,27 @@ public class CleaningController : MonoBehaviour
         var tool = CurrentTool;
         CurrentTool = null;
 
-        SetAllCollidersTrigger(tool.gameObject, false);
+        SetAllCollidersTrigger(tool.gameObject, false); // Vuelve la herramienta a sólido
 
         if (tool.TryGetComponent<Rigidbody>(out var rb))
         {
             rb.isKinematic = false;
-            rb.AddForce(transform.forward * 1.5f, ForceMode.VelocityChange);
+            rb.AddForce(transform.forward * dropForce, ForceMode.VelocityChange);
         }
 
         tool.transform.SetParent(null, true);
         DLog("[Pickup] DROP");
     }
 
-    // ================== CLEAN ==================
-    private void TryCleanTick()
-    {
-        if (!rayCamera) return;
-        if (!CurrentTool) return;
+    // ================== ANIM & INPUT helpers ==================
 
-        Transform o = (aimFromHand && holdPoint != null) ? holdPoint : rayCamera.transform;
-        Vector3 origin = o.position + rayCamera.transform.forward * handForwardOffset;
-        Vector3 dir = (rayCamera.transform.forward + Vector3.down * downBias).normalized;
-
-        Debug.DrawRay(origin, dir * cleanRange, Color.cyan);
-
-        // 1) SphereCast (gordo)
-        if (Physics.SphereCast(origin, sphereRadius, dir, out var sphHit, cleanRange, dirtLayer, QueryTriggerInteraction.Collide))
-        {
-            if (TryApplyClean(sphHit.collider)) return;
-        }
-
-        // 2) Raycast fino
-        if (Physics.Raycast(origin, dir, out var hit, cleanRange, dirtLayer, QueryTriggerInteraction.Collide))
-        {
-            if (TryApplyClean(hit.collider)) return;
-        }
-
-        // 3) RaycastAll con oclusión
-        var all = Physics.RaycastAll(origin, dir, cleanRange, ~0, QueryTriggerInteraction.Collide);
-        System.Array.Sort(all, (a, b) => a.distance.CompareTo(b.distance));
-        foreach (var h in all)
-        {
-            if (h.collider.transform.IsChildOf(transform)) continue;
-
-            bool isTools = InMask(h.collider.gameObject.layer, toolsLayer);
-            bool isDirt = InMask(h.collider.gameObject.layer, dirtLayer);
-            var dirt = h.collider.GetComponentInParent<DirtSpot>();
-
-            if (isDirt && dirt != null) { ApplyClean(dirt); return; }
-            if (dirt != null && !isDirt) { ApplyClean(dirt); return; } // collider hijo en otra capa
-
-            if (!isTools && !h.collider.isTrigger) break; // obstáculo sólido
-        }
-
-        // 4) Overlap cercano
-        Vector3 probe = origin + dir * Mathf.Min(1.0f, cleanRange * 0.5f);
-        var around = Physics.OverlapSphere(probe, overlapRadius, dirtLayer, QueryTriggerInteraction.Collide);
-        foreach (var c in around)
-        {
-            var dirt = c.GetComponentInParent<DirtSpot>();
-            if (dirt != null) { ApplyClean(dirt); return; }
-        }
-    }
-
-
-    private bool TryApplyClean(Collider col)
-    {
-        if (col.TryGetComponent(out DirtSpot d)) { ApplyClean(d); return true; }
-        var parent = col.GetComponentInParent<DirtSpot>();
-        if (parent != null) { ApplyClean(parent); return true; }
-
-        DLog($"[Clean] Impacté '{col.name}' pero no tiene DirtSpot.");
-        return false;
-    }
-
-    private void ApplyClean(DirtSpot dirt)
-    {
-        if (requireCorrectTool && !dirt.CanBeCleanedBy(CurrentTool.toolId)) { DLog("[Clean] Herramienta incorrecta."); return; }
-        if (!ToolAllowed(CurrentTool.toolId)) { DLog($"[Clean] '{CurrentTool.toolId}' no permitida."); return; }
-
-        float work = baseCleanRate * CurrentTool.toolPower * Time.deltaTime;
-        dirt.CleanTick(work);
-    }
-
-    // ================== ANIM ==================
     private void UpdateCleaningLayer(bool shouldUseCleaning)
     {
-        // booleans por si tu Animator los usa
+        if (anim == null) return;
+
         anim.SetBool("IsHolding", CurrentTool != null);
         anim.SetBool("IsCleaning", shouldUseCleaning);
 
-        // peso de la capa
         if (cleaningLayerIndex >= 0 && cleaningLayerIndex < anim.layerCount)
         {
             float cur = anim.GetLayerWeight(cleaningLayerIndex);
@@ -277,7 +254,6 @@ public class CleaningController : MonoBehaviour
             anim.SetLayerWeight(cleaningLayerIndex, Mathf.MoveTowards(cur, tgt, Time.deltaTime * layerBlendSpeed));
         }
 
-        // (Opcional) Forzar estado con CrossFade para evitar depender de transiciones
         if (!useCrossFade || cleaningLayerIndex < 0) { prevCleaning = shouldUseCleaning; return; }
 
         if (cleanHash == 0 && !string.IsNullOrEmpty(cleaningStateName)) cleanHash = Animator.StringToHash(cleaningStateName);
@@ -299,7 +275,6 @@ public class CleaningController : MonoBehaviour
         prevCleaning = shouldUseCleaning;
     }
 
-    // ================== INPUT helpers ==================
     private bool PickupPressedThisFrame()
     {
 #if ENABLE_INPUT_SYSTEM
@@ -322,31 +297,20 @@ public class CleaningController : MonoBehaviour
         return Input.GetKey(cleanKey);
     }
 
-    // ================== Utils ==================
+    // ================== UTILS ==================
     private static void SetAllCollidersTrigger(GameObject go, bool isTrigger)
     {
         var cols = go.GetComponentsInChildren<Collider>(true);
         foreach (var c in cols) c.isTrigger = isTrigger;
     }
-    private static bool InMask(int layer, LayerMask mask) => (mask.value & (1 << layer)) != 0;
 
     private bool ToolAllowed(string id)
     {
         if (validToolIds == null || validToolIds.Length == 0) return true;
-        for (int i = 0; i < validToolIds.Length; i++) if (validToolIds[i] == id) return true;
-        return false;
+        return validToolIds.Contains(id);
     }
 
     private void DLog(string m) { if (debugLogs) Debug.Log(m); }
     private void DLogWarn(string m) { if (debugLogs) Debug.LogWarning(m); }
     private void DLogErr(string m) { if (debugLogs) Debug.LogError(m); }
-
-#if UNITY_EDITOR
-    private void OnValidate()
-    {
-        if (!anim) anim = GetComponent<Animator>();
-        if (!rayCamera && Camera.main) rayCamera = Camera.main;
-        if (anim) cleaningLayerIndex = anim.GetLayerIndex(cleaningLayerName);
-    }
-#endif
 }

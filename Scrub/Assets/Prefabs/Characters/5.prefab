@@ -884,9 +884,6 @@ PrefabInstance:
       addedObject: {fileID: -5079641649731435487}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 46c5ec54e9c218c4abd9fbeb01ef1d1b, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 214062044239465495}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 46c5ec54e9c218c4abd9fbeb01ef1d1b, type: 3}
-      insertIndex: -1
       addedObject: {fileID: -3819276514375917784}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 46c5ec54e9c218c4abd9fbeb01ef1d1b, type: 3}
       insertIndex: -1
@@ -1017,25 +1014,6 @@ MonoBehaviour:
   layerBlendSpeed: 10
   validToolIds:
   - Sponge
---- !u!114 &214062044239465495
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1316996708007013917}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ef789d42160c4964280fa337ffd80fc8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  range: 2.5
-  cleanRate: 1
-  dirtLayer:
-    serializedVersion: 2
-    m_Bits: 8
-  rayOrigin: {fileID: 0}
-  animCtrl: {fileID: 0}
 --- !u!54 &-3819276514375917784
 Rigidbody:
   m_ObjectHideFlags: 0

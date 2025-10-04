@@ -1756,7 +1756,6 @@ GameObject:
   - component: {fileID: 5642898953305675846}
   - component: {fileID: 8091099361065009647}
   - component: {fileID: -5381067369654786056}
-  - component: {fileID: -8162904912955710839}
   - component: {fileID: 1241232167244424662}
   - component: {fileID: 3653506518042589047}
   - component: {fileID: 8164719371308343493}
@@ -1899,25 +1898,6 @@ MonoBehaviour:
   layerBlendSpeed: 10
   validToolIds:
   - Sponge
---- !u!114 &-8162904912955710839
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1532228888865751196}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ef789d42160c4964280fa337ffd80fc8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  range: 2.5
-  cleanRate: 1
-  dirtLayer:
-    serializedVersion: 2
-    m_Bits: 8
-  rayOrigin: {fileID: 0}
-  animCtrl: {fileID: 0}
 --- !u!54 &1241232167244424662
 Rigidbody:
   m_ObjectHideFlags: 0
