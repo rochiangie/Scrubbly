@@ -231,6 +231,10 @@ PrefabInstance:
       propertyPath: m_StaticEditorFlags
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1356503752764592277, guid: d62efa6573b1d1d4389faff49807cb3b, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1398482015392958342, guid: d62efa6573b1d1d4389faff49807cb3b, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 0
@@ -958,6 +962,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -5652703773920093883, guid: eed46729d2edb90448f72a6f8cbd5d57, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 23389897982880329, guid: eed46729d2edb90448f72a6f8cbd5d57, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 0
@@ -1781,81 +1789,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5932463756027049807, guid: eed46729d2edb90448f72a6f8cbd5d57, type: 3}
   m_PrefabInstance: {fileID: 104419972}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &218265766
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 218265768}
-  - component: {fileID: 218265767}
-  m_Layer: 0
-  m_Name: CinemachineCamera
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &218265767
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 218265766}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f9dfa5b682dcd46bda6128250e975f58, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Priority:
-    Enabled: 0
-    m_Value: 0
-  OutputChannel: 1
-  StandbyUpdate: 2
-  m_StreamingVersion: 20241001
-  m_LegacyPriority: 0
-  Target:
-    TrackingTarget: {fileID: 0}
-    LookAtTarget: {fileID: 0}
-    CustomLookAtTarget: 0
-  Lens:
-    FieldOfView: 21.1
-    OrthographicSize: 5
-    NearClipPlane: 1.91
-    FarClipPlane: 988.8
-    Dutch: 0
-    ModeOverride: 0
-    PhysicalProperties:
-      GateFit: 2
-      SensorSize: {x: 21.946, y: 16.002}
-      LensShift: {x: 0, y: 0}
-      FocusDistance: 10
-      Iso: 200
-      ShutterSpeed: 0.005
-      Aperture: 16
-      BladeCount: 5
-      Curvature: {x: 2, y: 11}
-      BarrelClipping: 0.25
-      Anamorphism: 0
-  BlendHint: 0
---- !u!4 &218265768
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 218265766}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0.0030122958, y: 0.99459344, z: -0.1036455, w: 0.005695919}
-  m_LocalPosition: {x: -13.18, y: 0.65, z: 13.31}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 11.896, y: 179.3, z: -0.42}
 --- !u!1001 &243899266
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2604,6 +2537,10 @@ PrefabInstance:
       propertyPath: m_StaticEditorFlags
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8347753574101158495, guid: 55a7a65203397ac4f8c63fa56c8dbecd, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8392959509356854705, guid: 55a7a65203397ac4f8c63fa56c8dbecd, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 0
@@ -2743,6 +2680,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -6686338990695337148, guid: 14398d2d9683cdc41b672635e201fac0, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 136976279370578323, guid: 14398d2d9683cdc41b672635e201fac0, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 0
@@ -3627,7 +3568,7 @@ Camera:
     height: 1
   near clip plane: 1.91
   far clip plane: 988.8
-  field of view: 21.1
+  field of view: 60.000004
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -3653,8 +3594,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.0030122958, y: 0.99459344, z: -0.1036455, w: 0.005695919}
-  m_LocalPosition: {x: -13.18, y: 0.65, z: 13.31}
+  m_LocalRotation: {x: -0.0014935881, y: -0.9932191, z: 0.11554116, w: -0.0128052775}
+  m_LocalPosition: {x: 2.8578322, y: 2.2326658, z: 2.8638544}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3727,7 +3668,7 @@ MonoBehaviour:
     Enabled: 0
     DefaultMode: 2
   DefaultBlend:
-    Style: 1
+    Style: 0
     Time: 2
     CustomCurve:
       serializedVersion: 2
@@ -3974,6 +3915,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -2414082941149900548, guid: 4b714ebab645ff146958795b1d039263, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 236794979739545704, guid: 4b714ebab645ff146958795b1d039263, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 0
@@ -5262,6 +5207,10 @@ PrefabInstance:
       propertyPath: m_StaticEditorFlags
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3653506518042589047, guid: af3476e1237e18c4b98f1de98714adf3, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3656583506863413466, guid: af3476e1237e18c4b98f1de98714adf3, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 0
@@ -6034,6 +5983,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -5838729563869284659, guid: 9ed5b504eb520c4439c30b9e59d319f1, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 13932451227597615, guid: 9ed5b504eb520c4439c30b9e59d319f1, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 0
@@ -7802,6 +7755,10 @@ PrefabInstance:
       propertyPath: m_StaticEditorFlags
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6977721697171589656, guid: ceefa8b3ffff2264bbbe4cb7e7533410, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6988372732001494066, guid: ceefa8b3ffff2264bbbe4cb7e7533410, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 0
@@ -8101,6 +8058,81 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8796175943201088575, guid: ceefa8b3ffff2264bbbe4cb7e7533410, type: 3}
   m_PrefabInstance: {fileID: 1930566066}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &2014787205
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2014787207}
+  - component: {fileID: 2014787206}
+  m_Layer: 0
+  m_Name: CinemachineCamera (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2014787206
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2014787205}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9dfa5b682dcd46bda6128250e975f58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Priority:
+    Enabled: 0
+    m_Value: 0
+  OutputChannel: 1
+  StandbyUpdate: 2
+  m_StreamingVersion: 20241001
+  m_LegacyPriority: 0
+  Target:
+    TrackingTarget: {fileID: 0}
+    LookAtTarget: {fileID: 0}
+    CustomLookAtTarget: 0
+  Lens:
+    FieldOfView: 60.000004
+    OrthographicSize: 5
+    NearClipPlane: 1.91
+    FarClipPlane: 988.8
+    Dutch: 0
+    ModeOverride: 0
+    PhysicalProperties:
+      GateFit: 2
+      SensorSize: {x: 21.946, y: 16.002}
+      LensShift: {x: 0, y: 0}
+      FocusDistance: 10
+      Iso: 200
+      ShutterSpeed: 0.005
+      Aperture: 16
+      BladeCount: 5
+      Curvature: {x: 2, y: 11}
+      BarrelClipping: 0.25
+      Anamorphism: 0
+  BlendHint: 0
+--- !u!4 &2014787207
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2014787205}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.0014935881, y: -0.9932191, z: 0.11554116, w: -0.0128052775}
+  m_LocalPosition: {x: 2.8578322, y: 2.2326658, z: 2.8638544}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2046273835
 GameObject:
   m_ObjectHideFlags: 0
@@ -8272,18 +8304,15 @@ MonoBehaviour:
   lightOffset: {x: 0, y: 3.5, z: 0}
   lightMoveLerp: 10
   lightLookLerp: 15
-  vcam: {fileID: 218265767}
+  vcam: {fileID: 2014787206}
   fallbackCamera: {fileID: 330585545}
-  useTargetForward: 1
-  camDistance: 3.5
-  camHeight: 1.7
-  camSide: 0
   camMoveLerp: 6
   camLookLerp: 10
   cameraAnchorNames:
   - CameraAnchor
   - Head
   - mixamorig:Head
+  - npc_hmn_01m_head2_lod0
   prev1: 276
   prev2: 97
   next1: 275
@@ -8301,6 +8330,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -3267789878314547521, guid: 976281ff04ff6ea4d941f57950adc597, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 104819917215526898, guid: 976281ff04ff6ea4d941f57950adc597, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 0
@@ -9141,5 +9174,5 @@ SceneRoots:
   - {fileID: 1930566066}
   - {fileID: 104419972}
   - {fileID: 253652675}
-  - {fileID: 218265768}
+  - {fileID: 2014787207}
   - {fileID: 2046273838}

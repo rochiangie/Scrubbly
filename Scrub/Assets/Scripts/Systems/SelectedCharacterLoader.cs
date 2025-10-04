@@ -8,7 +8,8 @@ public class SelectedCharacterLoader : MonoBehaviour
     [SerializeField] string playerTag = "Player";
     [SerializeField] CinemachineCamera vcam; // asigná tu vcam (CM3)
 
-    [SerializeField] string[] anchorNames = { "CameraAnchor", "Head", "mixamorig:Head" };
+    // Ajusta si es necesario, pero "head" debería funcionar con la búsqueda por patrón
+    [SerializeField] string[] anchorNames = { "CameraAnchor", "head", "mixamorig:Head" };
 
     void Awake() { if (!vcam) vcam = FindObjectOfType<CinemachineCamera>(); }
 
@@ -43,7 +44,8 @@ public class SelectedCharacterLoader : MonoBehaviour
             if (tpf)
             {
                 tpf.Damping = new Vector3(0.2f, 0.5f, 0.3f);
-                tpf.VerticalArmLength = 2.0f;
+                // CORRECCIÓN CLAVE: Esto asegura que la cámara NO esté muy alta.
+                tpf.VerticalArmLength = 0f;
                 tpf.CameraDistance = 3.5f;
             }
         }
@@ -51,7 +53,7 @@ public class SelectedCharacterLoader : MonoBehaviour
 
     void SnapToGround(Transform t, float skin = 0.02f)
     {
-        // bounds combinados
+        // (Lógica de SnapToGround sin cambios)
         Bounds b = default; bool has = false;
         foreach (var c in t.GetComponentsInChildren<Collider>())
         {
@@ -86,9 +88,11 @@ public class SelectedCharacterLoader : MonoBehaviour
         }
         return null;
     }
+
+    // FUNCIÓN EDITADA: Busca por patrón (Contains) en lugar de coincidencia exacta (==)
     Transform FindDeep(Transform r, string name)
     {
-        if (r.name == name) return r;
+        if (r.name.Contains(name)) return r;
         for (int i = 0; i < r.childCount; i++)
         {
             var f = FindDeep(r.GetChild(i), name);

@@ -18,8 +18,8 @@ public class CharacterSelection : MonoBehaviour
     public void SetSelected(int index, GameObject prefab)
     {
         if (PersistedInstance) { Destroy(PersistedInstance); PersistedInstance = null; }
-        SelectedIndex = index;
         SelectedPrefab = prefab;
+        SelectedIndex = index;
     }
 
     public void SetSelectedFromExisting(int index, GameObject existing)
