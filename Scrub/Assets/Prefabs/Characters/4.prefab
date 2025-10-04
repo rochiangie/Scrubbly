@@ -3858,9 +3858,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac1196cd0caca74449de82ab88f615ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rb: {fileID: 0}
-  playerBody: {fileID: 0}
-  heldItemSlot: {fileID: 0}
+  rb: {fileID: 7276465289840044989}
+  playerBody: {fileID: 1709754810301967866}
+  heldItemSlot: {fileID: -1310710929017546439}
   speedSmooth: 8
   cleaningLayerIndex: 1
   cleanKey: 114
@@ -9381,7 +9381,7 @@ Transform:
   m_GameObject: {fileID: 9102100509095487501}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.0025476217, y: 2.002, z: 0.05605316}
+  m_LocalPosition: {x: -0.0025476217, y: 2.002, z: 0.869}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

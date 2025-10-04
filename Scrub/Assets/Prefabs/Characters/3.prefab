@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 6275230774529217792}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.0032692552, y: 1.998, z: 0.04502678}
+  m_LocalPosition: {x: -0.0032692552, y: 1.998, z: 0.914}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1310,7 +1310,7 @@ PrefabInstance:
     m_RemovedGameObjects: []
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: f14962bf8c2a50544b362f1694bf4149, type: 3}
-      insertIndex: -1
+      insertIndex: 0
       addedObject: {fileID: 5838950608366082394}
     - targetCorrespondingSourceObject: {fileID: 1134662855679897990, guid: f14962bf8c2a50544b362f1694bf4149, type: 3}
       insertIndex: -1
@@ -1447,6 +1447,11 @@ SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: 3228463002199489099, guid: f14962bf8c2a50544b362f1694bf4149, type: 3}
   m_PrefabInstance: {fileID: 9050249635874669524}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &5994543441117554411 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -5861409178561632961, guid: f14962bf8c2a50544b362f1694bf4149, type: 3}
+  m_PrefabInstance: {fileID: 9050249635874669524}
+  m_PrefabAsset: {fileID: 0}
 --- !u!137 &6041665211703451280 stripped
 SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: 3332870879276195140, guid: f14962bf8c2a50544b362f1694bf4149, type: 3}
@@ -1562,8 +1567,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rb: {fileID: 0}
-  playerBody: {fileID: 0}
-  heldItemSlot: {fileID: 0}
+  playerBody: {fileID: 5994543441117554411}
+  heldItemSlot: {fileID: 7135754452494040797}
   speedSmooth: 8
   cleaningLayerIndex: 1
   cleanKey: 114
@@ -1675,7 +1680,7 @@ CapsuleCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.61
   m_Height: 2.19

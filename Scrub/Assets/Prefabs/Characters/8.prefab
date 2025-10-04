@@ -93,7 +93,7 @@ Transform:
   m_GameObject: {fileID: 98649695788542978}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.002547741, y: 2.054, z: 0.046809196}
+  m_LocalPosition: {x: -0.002547741, y: 2.054, z: 0.991}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1983,7 +1983,7 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
+  m_Radius: 0.22
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
@@ -2004,12 +2004,12 @@ CapsuleCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5
-  m_Height: 1
+  m_Height: 1.96
   m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 0.96, z: 0}
 --- !u!114 &-590188935820477901
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2022,10 +2022,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae08a95f77bab664091e43ee9bac22dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  interactRange: 5
-  rayOrigin: {fileID: 0}
-  holdPoint: {fileID: 0}
-  verticalRayOffset: -0.25
+  holdPoint: {fileID: 5511372941240343761}
   animCtrl: {fileID: 0}
 --- !u!114 &-6020347032376281702
 MonoBehaviour:
@@ -2039,7 +2036,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3334fb2a4773d2a4c9d26f0344bc3799, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  holdPoint: {fileID: 2865918169590095573}
+  holdPoint: {fileID: 5511372941240343761}
 --- !u!1 &1535028625442358750
 GameObject:
   m_ObjectHideFlags: 0
