@@ -348,6 +348,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawnPoint: {fileID: 298415734}
+  playerTag: Player
+  vcam: {fileID: 1565165547}
+  anchorNames:
+  - CameraAnchor
+  - Head
+  - mixamorig:Head
 --- !u!4 &298415734
 Transform:
   m_ObjectHideFlags: 0
@@ -3757,6 +3763,10 @@ PrefabInstance:
     - target: {fileID: 4323772801485002626, guid: 4b714ebab645ff146958795b1d039263, type: 3}
       propertyPath: m_Layer
       value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 4323772801485002626, guid: 4b714ebab645ff146958795b1d039263, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4323772801485002626, guid: 4b714ebab645ff146958795b1d039263, type: 3}
       propertyPath: m_TagString

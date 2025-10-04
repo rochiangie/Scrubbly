@@ -17,36 +17,29 @@ public class CharacterSelection : MonoBehaviour
 
     public void SetSelected(int index, GameObject prefab)
     {
+        if (PersistedInstance) { Destroy(PersistedInstance); PersistedInstance = null; }
         SelectedIndex = index;
         SelectedPrefab = prefab;
-        PersistedInstance = null;
     }
 
     public void SetSelectedFromExisting(int index, GameObject existing)
     {
-        SelectedIndex = index;
         SelectedPrefab = null;
+        SelectedIndex = index;
         PersistedInstance = existing;
         DontDestroyOnLoad(existing);
     }
 
-    /// <summary>
-    /// Devuelve una instancia lista en la escena actual (instancia prefab o reubica la persistida).
-    /// </summary>
-    public GameObject GetOrSpawn(Vector3 position, Quaternion rotation)
+    public void DestroyPersistedIfAny()
     {
-        if (SelectedPrefab != null)
-        {
-            return Instantiate(SelectedPrefab, position, rotation);
-        }
+        if (PersistedInstance) { Destroy(PersistedInstance); PersistedInstance = null; }
+    }
 
-        if (PersistedInstance != null)
-        {
-            PersistedInstance.transform.SetPositionAndRotation(position, rotation);
-            return PersistedInstance;
-        }
-
-        Debug.LogWarning("[CharacterSelection] No hay Prefab ni instancia persistida.");
+    public GameObject GetOrSpawn(Vector3 pos, Quaternion rot)
+    {
+        if (SelectedPrefab) return Object.Instantiate(SelectedPrefab, pos, rot);
+        if (PersistedInstance) { PersistedInstance.transform.SetPositionAndRotation(pos, rot); return PersistedInstance; }
+        Debug.LogWarning("[CharacterSelection] No hay personaje seleccionado.");
         return null;
     }
 }
