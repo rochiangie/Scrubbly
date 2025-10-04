@@ -1,47 +1,49 @@
-using UnityEngine;
+Ôªøusing UnityEngine;
 
 public class InteractionTrigger : MonoBehaviour
 {
     private IInteractable interactableObject;
 
-    void Start()
+    void Awake()
     {
-        // Obtiene el script que implementa la funciÛn Interact() (ej: Door.cs)
+        // Obtiene el script de la puerta (ej: DoorInteraction) que implementa IInteractable
         interactableObject = GetComponent<IInteractable>();
 
         if (interactableObject == null)
         {
-            Debug.LogError("El GameObject " + gameObject.name + " tiene un InteractionTrigger, pero no implementa IInteractable (falta el script de Puerta, BotÛn, etc.).", this);
+            Debug.LogError($"¬°ERROR! '{gameObject.name}' tiene un InteractionTrigger, pero NO implementa IInteractable.");
         }
-
-        // °Importante! Aseg˙rate de que este GameObject tiene un Collider marcado como Is Trigger.
     }
 
-    void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
-        // Verificamos si el objeto que entrÛ en el Trigger es el Player
+        // CR√çTICO: El Player debe tener el Tag "Player" en su GameObject ra√≠z.
         if (other.CompareTag("Player"))
         {
-            PlayerInteraction playerInteraction = other.GetComponent<PlayerInteraction>();
+            // Busca PlayerInteraction en el objeto ra√≠z del Player (donde est√° el Tag).
+            // Si el collider est√° en un hijo, GetComponentInParent sube para encontrarlo.
+            PlayerInteraction playerInteraction = other.GetComponentInParent<PlayerInteraction>();
 
             if (playerInteraction != null && interactableObject != null)
             {
-                // Le decimos al Player que la interacciÛn con este objeto ahora es posible.
+                // Informa al PlayerInteraction que la puerta est√° activa.
                 playerInteraction.SetCurrentInteractable(interactableObject);
+                Debug.Log("Trigger: Jugador entr√≥ al √°rea de la puerta.");
             }
         }
     }
 
-    void OnTriggerExit(Collider other)
+    private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            PlayerInteraction playerInteraction = other.GetComponent<PlayerInteraction>();
+            PlayerInteraction playerInteraction = other.GetComponentInParent<PlayerInteraction>();
 
             if (playerInteraction != null)
             {
-                // Le decimos al Player que la interacciÛn con este objeto ya no es posible.
+                // Informa al PlayerInteraction que la puerta ya no est√° activa.
                 playerInteraction.ClearCurrentInteractable();
+                Debug.Log("Trigger: Interacci√≥n de puerta finalizada.");
             }
         }
     }

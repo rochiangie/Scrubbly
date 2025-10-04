@@ -955,6 +955,11 @@ SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: -3529131898868030469, guid: f14962bf8c2a50544b362f1694bf4149, type: 3}
   m_PrefabInstance: {fileID: 6187630498800619684}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &2258357962537865974 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -3852356975776185774, guid: f14962bf8c2a50544b362f1694bf4149, type: 3}
+  m_PrefabInstance: {fileID: 6187630498800619684}
+  m_PrefabAsset: {fileID: 0}
 --- !u!137 &2309305011675345221 stripped
 SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: -733332972625567263, guid: f14962bf8c2a50544b362f1694bf4149, type: 3}
@@ -1104,9 +1109,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac1196cd0caca74449de82ab88f615ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rb: {fileID: 0}
-  playerBody: {fileID: 0}
-  heldItemSlot: {fileID: 0}
+  rb: {fileID: 5590355112871320847}
+  playerBody: {fileID: 8896568935344567707}
+  heldItemSlot: {fileID: 8307391258836582406}
   speedSmooth: 8
   cleaningLayerIndex: 1
   cleanKey: 114
@@ -1197,7 +1202,7 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
+  m_Radius: 0.3
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
@@ -1220,10 +1225,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 1
+  m_Radius: 0.72
+  m_Height: 2.3
   m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 1.02, z: 0}
 --- !u!114 &-3951364314082775715
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1236,12 +1241,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae08a95f77bab664091e43ee9bac22dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  interactRange: 2.5
-  toolsLayer:
-    serializedVersion: 2
-    m_Bits: 128
-  rayOrigin: {fileID: 0}
-  holdPoint: {fileID: 0}
+  holdPoint: {fileID: 2258357962537865974}
   animCtrl: {fileID: 0}
 --- !u!114 &8307391258836582406
 MonoBehaviour:
@@ -1255,7 +1255,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3334fb2a4773d2a4c9d26f0344bc3799, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  holdPoint: {fileID: 0}
+  holdPoint: {fileID: 2258357962537865974}
 --- !u!4 &6512698727919198498 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1134662855679897990, guid: f14962bf8c2a50544b362f1694bf4149, type: 3}
@@ -1294,6 +1294,11 @@ SkinnedMeshRenderer:
 --- !u!137 &8744283438776625602 stripped
 SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: -6014823027986990746, guid: f14962bf8c2a50544b362f1694bf4149, type: 3}
+  m_PrefabInstance: {fileID: 6187630498800619684}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &8896568935344567707 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -5861409178561632961, guid: f14962bf8c2a50544b362f1694bf4149, type: 3}
   m_PrefabInstance: {fileID: 6187630498800619684}
   m_PrefabAsset: {fileID: 0}
 --- !u!137 &8907659709887155680 stripped

@@ -1008,8 +1008,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac1196cd0caca74449de82ab88f615ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rb: {fileID: 0}
-  playerBody: {fileID: 0}
+  rb: {fileID: -3819276514375917784}
+  playerBody: {fileID: 3472160134288799347}
   heldItemSlot: {fileID: 0}
   speedSmooth: 8
   cleaningLayerIndex: 1
@@ -1122,7 +1122,7 @@ CapsuleCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Radius: 0.5
   m_Height: 1
@@ -1140,11 +1140,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae08a95f77bab664091e43ee9bac22dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  interactRange: 2.5
-  toolsLayer:
-    serializedVersion: 2
-    m_Bits: 128
-  rayOrigin: {fileID: 0}
   holdPoint: {fileID: 0}
   animCtrl: {fileID: 0}
 --- !u!114 &-3005511174071510890
@@ -1203,6 +1198,11 @@ SkinnedMeshRenderer:
 --- !u!137 &3339493666185937366 stripped
 SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: 3521748513069126298, guid: 46c5ec54e9c218c4abd9fbeb01ef1d1b, type: 3}
+  m_PrefabInstance: {fileID: 2199868053390414668}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &3472160134288799347 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -5861409178561632961, guid: 46c5ec54e9c218c4abd9fbeb01ef1d1b, type: 3}
   m_PrefabInstance: {fileID: 2199868053390414668}
   m_PrefabAsset: {fileID: 0}
 --- !u!137 &3623794234182052103 stripped

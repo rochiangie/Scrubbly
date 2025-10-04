@@ -1222,6 +1222,11 @@ SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: -733332972625567263, guid: f14962bf8c2a50544b362f1694bf4149, type: 3}
   m_PrefabInstance: {fileID: 7593736884950580922}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &2588429364943027432 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -3852356975776185774, guid: f14962bf8c2a50544b362f1694bf4149, type: 3}
+  m_PrefabInstance: {fileID: 7593736884950580922}
+  m_PrefabAsset: {fileID: 0}
 --- !u!137 &2632136651987149994 stripped
 SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: 5613003700658788880, guid: f14962bf8c2a50544b362f1694bf4149, type: 3}
@@ -1280,6 +1285,11 @@ SkinnedMeshRenderer:
 --- !u!137 &5125909046586696702 stripped
 SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: 3332870879276195140, guid: f14962bf8c2a50544b362f1694bf4149, type: 3}
+  m_PrefabInstance: {fileID: 7593736884950580922}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &5173026418188884869 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -5861409178561632961, guid: f14962bf8c2a50544b362f1694bf4149, type: 3}
   m_PrefabInstance: {fileID: 7593736884950580922}
   m_PrefabAsset: {fileID: 0}
 --- !u!137 &5225419713589771157 stripped
@@ -1401,9 +1411,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac1196cd0caca74449de82ab88f615ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rb: {fileID: 0}
-  playerBody: {fileID: 0}
-  heldItemSlot: {fileID: 0}
+  rb: {fileID: -3085999724516933025}
+  playerBody: {fileID: 5173026418188884869}
+  heldItemSlot: {fileID: -1730181286663167620}
   speedSmooth: 8
   cleaningLayerIndex: 1
   cleanKey: 114
@@ -1494,7 +1504,7 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
+  m_Radius: 0.26
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
@@ -1515,12 +1525,12 @@ CapsuleCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 1
+  m_Radius: 0.71
+  m_Height: 2.14
   m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 0.97, z: -0}
 --- !u!114 &5865463591256134175
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1533,12 +1543,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae08a95f77bab664091e43ee9bac22dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  interactRange: 2.5
-  toolsLayer:
-    serializedVersion: 2
-    m_Bits: 128
-  rayOrigin: {fileID: 0}
-  holdPoint: {fileID: 0}
+  holdPoint: {fileID: 2588429364943027432}
   animCtrl: {fileID: 0}
 --- !u!114 &-1730181286663167620
 MonoBehaviour:
@@ -1552,7 +1557,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3334fb2a4773d2a4c9d26f0344bc3799, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  holdPoint: {fileID: 0}
+  holdPoint: {fileID: 2588429364943027432}
 --- !u!4 &7412219846133534524 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1134662855679897990, guid: f14962bf8c2a50544b362f1694bf4149, type: 3}
