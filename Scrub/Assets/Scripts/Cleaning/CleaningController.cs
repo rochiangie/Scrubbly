@@ -62,7 +62,7 @@ public class CleaningController : MonoBehaviour
         if (cleanPressed)
         {
             string toolID = holding && CurrentTool != null ? CurrentTool.toolId : "NONE";
-            Debug.Log($"[INPUT TEST] Tecla 'R' PRESIONADA. Holding={holding}, Tool={toolID}, DirtNearby={dirtNearby}");
+            //Debug.Log($"[INPUT TEST] Tecla 'R' PRESIONADA. Holding={holding}, Tool={toolID}, DirtNearby={dirtNearby}");
         }
 
         UpdateCleaningLayer(holding && dirtNearby);
@@ -87,7 +87,7 @@ public class CleaningController : MonoBehaviour
             {
                 nearbyDirt.Add(dirt);
                 // Log de detección verde
-                Debug.Log($"[Clean Trigger] 🟢 Detectado: {dirt.name}. Ahora hay {nearbyDirt.Count} spots cerca.");
+                //Debug.Log($"[Clean Trigger] 🟢 Detectado: {dirt.name}. Ahora hay {nearbyDirt.Count} spots cerca.");
             }
         }
     }
@@ -117,7 +117,7 @@ public class CleaningController : MonoBehaviour
             return;
         }
         Equip(tool);
-        Debug.Log($"[EXTERNAL REGISTER] Herramienta '{tool.name}' registrada correctamente.");
+        //Debug.Log($"[EXTERNAL REGISTER] Herramienta '{tool.name}' registrada correctamente.");
     }
 
     public void DropCurrentTool()
@@ -166,7 +166,7 @@ public class CleaningController : MonoBehaviour
         if (CurrentTool == null) return;
 
         // --- LOG DE DIAGNÓSTICO CRÍTICO PARA EL BUG DE LIMPIEZA ---
-        Debug.Log($"[CLEAN HIT] Intentando golpear. ToolID: {CurrentTool.toolId}. DirtCount: {nearbyDirt.Count}");
+        //Debug.Log($"[CLEAN HIT] Intentando golpear. ToolID: {CurrentTool.toolId}. DirtCount: {nearbyDirt.Count}");
         // --------------------------------------------------------
 
         for (int i = nearbyDirt.Count - 1; i >= 0; i--)
@@ -182,7 +182,7 @@ public class CleaningController : MonoBehaviour
             if (requireCorrectTool && !dirt.CanBeCleanedBy(CurrentTool.toolId))
             {
                 // Este log te dirá si el problema es que la herramienta no coincide con la suciedad
-                Debug.LogWarning($"[Clean FAIL 1: Tool Mismatch] Herramienta '{CurrentTool.toolId}' no limpia {dirt.name}.");
+                //Debug.LogWarning($"[Clean FAIL 1: Tool Mismatch] Herramienta '{CurrentTool.toolId}' no limpia {dirt.name}.");
                 continue;
             }
 
@@ -190,7 +190,7 @@ public class CleaningController : MonoBehaviour
             float damage = damagePerHit * CurrentTool.toolPower;
             dirt.CleanHit(damage);
 
-            Debug.Log($"[Clean HIT OK] Aplicando {damage:F2} de daño a {dirt.name}.");
+            //Debug.Log($"[Clean HIT OK] Aplicando {damage:F2} de daño a {dirt.name}.");
         }
     }
 

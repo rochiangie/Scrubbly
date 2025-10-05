@@ -16,11 +16,11 @@ public class DirtSpot : MonoBehaviour
     {
         dirtHealth -= damage;
         // Log de estado de vida dentro de la suciedad
-        Debug.Log($"[DIRT STATUS] {name} recibió {damage:F2} de daño. Vida restante: {dirtHealth:F2}");
+        //Debug.Log($"[DIRT STATUS] {name} recibió {damage:F2} de daño. Vida restante: {dirtHealth:F2}");
 
         if (dirtHealth <= 0f)
         {
-            Debug.Log($"[DIRT] {name} limpio! Destruyendo objeto.");
+            //Debug.Log($"[DIRT] {name} limpio! Destruyendo objeto.");
             Destroy(gameObject);
         }
     }
