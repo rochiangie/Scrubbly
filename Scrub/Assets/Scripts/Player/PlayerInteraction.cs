@@ -1,9 +1,8 @@
-﻿// PlayerInteraction.cs
+﻿// PlayerInteraction.cs - FINAL
 
 using UnityEngine;
 using System;
 
-// Interfaz para la puerta. Puedes dejarla aquí o en su propio archivo IInteractable.cs.
 public interface IInteractable { void Interact(); }
 
 public class PlayerInteraction : MonoBehaviour
@@ -12,25 +11,24 @@ public class PlayerInteraction : MonoBehaviour
     public Transform holdPoint;
     public PlayerAnimationController animCtrl;
 
+    private CleaningController cleaningController;
+
     private Carryable carried;
     private IInteractable currentDoorInteractable = null;
     private Carryable nearbyCarryable = null;
 
     private Rigidbody playerRigidbody;
-    private Collider[] playerColliders; // Array de Colliders del Player para Ignorar Colisión
+    private Collider[] playerColliders; // Necesario para el Carryable.PickUp
 
     void Awake()
     {
+        cleaningController = GetComponent<CleaningController>();
+        if (cleaningController == null)
+            Debug.LogError("PlayerInteraction: No se encontró el CleaningController.");
+
         if (!animCtrl) animCtrl = GetComponentInChildren<PlayerAnimationController>() ?? GetComponent<PlayerAnimationController>();
         playerRigidbody = GetComponent<Rigidbody>();
-
-        // Obtener TODOS los colliders del Player, incluyendo hijos.
         playerColliders = GetComponentsInChildren<Collider>();
-
-        if (playerColliders.Length == 0)
-        {
-            Debug.LogError("PlayerInteraction: No se encontraron Colliders del Player. La prevención de empuje fallará.");
-        }
     }
 
     void Update()
@@ -44,15 +42,36 @@ public class PlayerInteraction : MonoBehaviour
         // Lógica 1: Soltar objeto
         if (carried)
         {
-            carried.Drop();
-            carried = null;
-            animCtrl?.SetHolding(false);
+            bool isToolInHand = false;
+
+            if (cleaningController != null && cleaningController.CurrentTool != null)
+            {
+                // Es una Tool que está asignada en el CleaningController
+                ToolDescriptor toolInHand = carried.GetComponent<ToolDescriptor>() ?? carried.GetComponentInParent<ToolDescriptor>();
+
+                if (toolInHand != null && toolInHand == cleaningController.CurrentTool)
+                {
+                    // **DELEGAR SOLTAR**
+                    cleaningController.DropCurrentTool();
+                    isToolInHand = true;
+                    Debug.Log("Herramienta de limpieza soltada por CleaningController.");
+                }
+            }
+
+            if (!isToolInHand)
+            {
+                // Es un Carryable normal.
+                carried.Drop(); // Llama al Carryable.Drop() para restaurar físicas y colisiones
+                animCtrl?.SetHolding(false);
+                Debug.Log("Objeto normal soltado.");
+            }
+
+            carried = null; // Reseteamos la referencia local
             animCtrl?.TriggerInteract();
-            Debug.Log("Objeto soltado.");
             return;
         }
 
-        // Lógica 2: Recoger Cubo (si está cerca)
+        // Lógica 2: Recoger Carryable o Tool
         if (nearbyCarryable != null)
         {
             if (!holdPoint)
@@ -63,8 +82,17 @@ public class PlayerInteraction : MonoBehaviour
                 holdPoint = hp;
             }
 
-            // CRÍTICO: Recoger y pasar el ARRAY de Colliders del Player.
+            // Mover el objeto a la mano (esto es manejado por Carryable.cs)
             nearbyCarryable.PickUp(holdPoint, playerColliders);
+
+            // Verificamos si es una herramienta de limpieza
+            ToolDescriptor td = nearbyCarryable.GetComponent<ToolDescriptor>() ?? nearbyCarryable.GetComponentInParent<ToolDescriptor>();
+
+            if (td != null && cleaningController != null)
+            {
+                // **DELEGAR ASIGNACIÓN**
+                cleaningController.RegisterTool(td);
+            }
 
             carried = nearbyCarryable;
             nearbyCarryable = null;
@@ -90,30 +118,26 @@ public class PlayerInteraction : MonoBehaviour
     {
         Carryable c = other.GetComponent<Carryable>();
         if (c == null) c = other.GetComponentInParent<Carryable>();
-
         if (c != null && carried == null)
         {
             nearbyCarryable = c;
         }
     }
-
+    // Detección de proximidad del cubo
     private void OnTriggerExit(Collider other)
     {
         Carryable c = other.GetComponent<Carryable>();
         if (c == null) c = other.GetComponentInParent<Carryable>();
-
         if (c != null && c == nearbyCarryable)
         {
             nearbyCarryable = null;
         }
     }
-
     // Funciones de la puerta
     public void SetCurrentInteractable(IInteractable interactable)
     {
         currentDoorInteractable = interactable;
     }
-
     public void ClearCurrentInteractable()
     {
         currentDoorInteractable = null;

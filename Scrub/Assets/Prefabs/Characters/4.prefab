@@ -3735,6 +3735,7 @@ GameObject:
   - component: {fileID: -5795742521053295895}
   - component: {fileID: 7237331737973791602}
   - component: {fileID: -1310710929017546439}
+  - component: {fileID: 7261247539198215325}
   m_Layer: 8
   m_Name: 4
   m_TagString: Player
@@ -3985,6 +3986,40 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   holdPoint: {fileID: 5278061391884730175}
+--- !u!114 &7261247539198215325
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3599570790234534221}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d9dddb7ed790ef4aa3a14e7edb5420a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  holdPoint: {fileID: 0}
+  anim: {fileID: 0}
+  toolsLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  pickupRange: 3.5
+  dropForce: 1.5
+  pickupKey: 101
+  cleanKey: 114
+  damagePerHit: 1
+  requireCorrectTool: 1
+  validToolIds:
+  - Sponge
+  - Mop
+  - Vacuum
+  dirtTag: Dirt
+  cleaningLayerName: Clean
+  layerBlendSpeed: 12
+  useCrossFade: 0
+  cleaningStateName: Clean_Loop
+  upperIdleStateName: UpperBody_Idle
+  debugLogs: 0
 --- !u!1 &3601537494100441701
 GameObject:
   m_ObjectHideFlags: 0

@@ -4867,6 +4867,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -7444284558942354931, guid: af3476e1237e18c4b98f1de98714adf3, type: 3}
+      propertyPath: damagePerHit
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 3758778392881943, guid: af3476e1237e18c4b98f1de98714adf3, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 0

@@ -242,7 +242,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   requiredToolId: Sponge
-  dirtAmount: 3
+  dirtHealth: 3
 --- !u!1 &164706692
 GameObject:
   m_ObjectHideFlags: 0
@@ -466,7 +466,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   requiredToolId: Sponge
-  dirtAmount: 3
+  dirtHealth: 3
 --- !u!1001 &330370048
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1260,7 +1260,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   requiredToolId: Sponge
-  dirtAmount: 3
+  dirtHealth: 3
 --- !u!1 &626990327 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 896414966643569542, guid: 427fa345a14882d4eb769692e5e7128c, type: 3}
@@ -1393,7 +1393,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   requiredToolId: Sponge
-  dirtAmount: 3
+  dirtHealth: 3
 --- !u!1 &758089276
 GameObject:
   m_ObjectHideFlags: 0
@@ -1494,7 +1494,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   requiredToolId: Sponge
-  dirtAmount: 3
+  dirtHealth: 3
 --- !u!1 &765541271
 GameObject:
   m_ObjectHideFlags: 0
@@ -1618,7 +1618,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   requiredToolId: Sponge
-  dirtAmount: 3
+  dirtHealth: 3
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -1791,7 +1791,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   requiredToolId: Sponge
-  dirtAmount: 3
+  dirtHealth: 3
 --- !u!1 &872245060
 GameObject:
   m_ObjectHideFlags: 0
@@ -1915,7 +1915,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   requiredToolId: Sponge
-  dirtAmount: 3
+  dirtHealth: 3
 --- !u!1 &888805762
 GameObject:
   m_ObjectHideFlags: 0
@@ -2211,7 +2211,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   requiredToolId: Sponge
-  dirtAmount: 3
+  dirtHealth: 3
 --- !u!1 &1089988867
 GameObject:
   m_ObjectHideFlags: 0
@@ -2339,7 +2339,7 @@ CapsuleCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 2
   m_Radius: 3
   m_Height: 2
@@ -2362,7 +2362,7 @@ CapsuleCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5
   m_Height: 2
@@ -2449,7 +2449,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   toolId: Sponge
-  toolPower: 1
+  toolPower: 2
 --- !u!114 &1234530406
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2631,7 +2631,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   requiredToolId: Sponge
-  dirtAmount: 3
+  dirtHealth: 3
 --- !u!1 &1377930371
 GameObject:
   m_ObjectHideFlags: 0
@@ -2755,7 +2755,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   requiredToolId: Sponge
-  dirtAmount: 3
+  dirtHealth: 3
 --- !u!1 &1429174785
 GameObject:
   m_ObjectHideFlags: 0
@@ -2879,7 +2879,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   requiredToolId: Sponge
-  dirtAmount: 3
+  dirtHealth: 3
 --- !u!1 &1450817752
 GameObject:
   m_ObjectHideFlags: 0
@@ -3003,7 +3003,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   requiredToolId: Sponge
-  dirtAmount: 3
+  dirtHealth: 3
 --- !u!1 &1505257527
 GameObject:
   m_ObjectHideFlags: 0
@@ -3264,7 +3264,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   requiredToolId: Sponge
-  dirtAmount: 3
+  dirtHealth: 3
 --- !u!1 &1565165545
 GameObject:
   m_ObjectHideFlags: 0
@@ -3606,7 +3606,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   requiredToolId: Sponge
-  dirtAmount: 3
+  dirtHealth: 3
 --- !u!1 &1923107843
 GameObject:
   m_ObjectHideFlags: 0
@@ -3730,7 +3730,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   requiredToolId: Sponge
-  dirtAmount: 3
+  dirtHealth: 3
 --- !u!1 &1982831694
 GameObject:
   m_ObjectHideFlags: 0
@@ -3854,7 +3854,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   requiredToolId: Sponge
-  dirtAmount: 3
+  dirtHealth: 3
 --- !u!1 &2013169009
 GameObject:
   m_ObjectHideFlags: 0
@@ -3978,7 +3978,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   requiredToolId: Sponge
-  dirtAmount: 3
+  dirtHealth: 3
 --- !u!1 &2039417559
 GameObject:
   m_ObjectHideFlags: 0
@@ -4102,7 +4102,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   requiredToolId: Sponge
-  dirtAmount: 3
+  dirtHealth: 3
 --- !u!1001 &867853466994502803
 PrefabInstance:
   m_ObjectHideFlags: 0

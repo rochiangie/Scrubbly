@@ -1,80 +1,82 @@
-﻿// Carryable.cs
+﻿// Carryable.cs - FINAL
 
 using UnityEngine;
-using System.Collections.Generic; // << ESTO ES CRÍTICO
 
 public class Carryable : MonoBehaviour
 {
     private Rigidbody rb;
-    private Collider[] carryableColliders;
-    // Guardamos las referencias de los colliders del jugador para Drop.
-    private List<Collider> storedPlayerColliders = new List<Collider>();
+    private Collider carryableCollider;
+    private CollisionDetectionMode originalMode;
+    // Guardaremos los colliders del jugador para deshacer la ignorancia
+    private Collider[] playerCollidersReference;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
-        carryableColliders = GetComponents<Collider>();
+        carryableCollider = GetComponent<Collider>();
+        if (rb != null)
+        {
+            originalMode = rb.collisionDetectionMode;
+        }
+        else
+        {
+            Debug.LogError($"Carryable en {gameObject.name} requiere un Rigidbody.");
+        }
     }
 
-    // 🛑 MÉTODO PickUp: Acepta un array de Colliders del jugador.
     public void PickUp(Transform parent, Collider[] playerColliders)
     {
-        if (rb == null || carryableColliders.Length == 0 || playerColliders.Length == 0)
-        {
-            Debug.LogError("Carryable: Faltan componentes o el PlayerCollider es nulo.");
-            return;
-        }
+        playerCollidersReference = playerColliders; // Guardamos la referencia para el Drop
 
-        // 1. Guardar el array de Colliders del Player
-        storedPlayerColliders.Clear();
-        storedPlayerColliders.AddRange(playerColliders);
-
-        // 2. IGNORAR CADA COLLIDER DEL CUBO CON CADA COLLIDER DEL PLAYER
-        foreach (Collider cubeCol in carryableColliders)
-        {
-            foreach (Collider playerCol in playerColliders)
-            {
-                // Ignorar la colisión
-                Physics.IgnoreCollision(cubeCol, playerCol, true);
-            }
-        }
-
-        // 3. Desactivar la física y la gravedad (se mueve con el jugador)
+        // 1. Configuración de físicas
         rb.useGravity = false;
+        rb.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
         rb.isKinematic = true;
 
-        // 4. Establecer la posición de agarre.
-        transform.SetParent(parent);
+        // 2. Jerarquía
+        transform.SetParent(parent, true);
         transform.localPosition = Vector3.zero;
         transform.localRotation = Quaternion.identity;
+
+        // 3. Ignorar Colisiones entre Player y Carryable
+        if (carryableCollider != null && playerCollidersReference != null)
+        {
+            foreach (var playerCol in playerCollidersReference)
+            {
+                Physics.IgnoreCollision(carryableCollider, playerCol, true);
+            }
+        }
     }
 
-    public void Drop()
+    // Método de Drop con parámetros (usado internamente o por otros sistemas)
+    public void Drop(Vector3 direction, float force)
     {
-        if (rb == null || carryableColliders.Length == 0) return;
-
-        // 1. REACTIVAR TODAS LAS COLISIONES IGNORADAS
-        if (storedPlayerColliders.Count > 0)
+        // 1. Deshacer Ignorar Colisiones
+        if (carryableCollider != null && playerCollidersReference != null)
         {
-            foreach (Collider cubeCol in carryableColliders)
+            foreach (var playerCol in playerCollidersReference)
             {
-                foreach (Collider playerCol in storedPlayerColliders)
-                {
-                    Physics.IgnoreCollision(cubeCol, playerCol, false);
-                }
+                Physics.IgnoreCollision(carryableCollider, playerCol, false);
             }
-            storedPlayerColliders.Clear();
+            playerCollidersReference = null;
         }
 
-        // 2. Devolver el parent al mundo
+        // 2. Restaurar físicas
+        rb.useGravity = true;
+        rb.isKinematic = false;
+        rb.collisionDetectionMode = originalMode;
+
+        // 3. Quitar jerarquía
         transform.SetParent(null);
 
-        // 3. Reactivar la física
-        rb.isKinematic = false;
-        rb.useGravity = true;
+        // 4. Aplicar fuerza
+        rb.AddForce(direction * force, ForceMode.VelocityChange);
+    }
 
-        // 4. Limpiamos la velocidad
-        rb.linearVelocity = Vector3.zero;
-        rb.angularVelocity = Vector3.zero;
+    // MÉTODO DROP ESTÁNDAR (Lo que PlayerInteraction llama cuando suelta un objeto normal)
+    public void Drop()
+    {
+        // Llama a la versión completa con fuerza cero.
+        Drop(Vector3.zero, 0f);
     }
 }
