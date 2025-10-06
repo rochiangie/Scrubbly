@@ -31,6 +31,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 5932463756027049807}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &3389087521069976763
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 451970743407948051}
+  m_Layer: 0
+  m_Name: 'GroundCheck '
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &451970743407948051
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3389087521069976763}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5338089325772055970}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &6187630498800619684
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -885,6 +916,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: f14962bf8c2a50544b362f1694bf4149, type: 3}
       insertIndex: 0
       addedObject: {fileID: 5634907409343433915}
+    - targetCorrespondingSourceObject: {fileID: -6932637613890145018, guid: f14962bf8c2a50544b362f1694bf4149, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 451970743407948051}
     - targetCorrespondingSourceObject: {fileID: 1134662855679897990, guid: f14962bf8c2a50544b362f1694bf4149, type: 3}
       insertIndex: -1
       addedObject: {fileID: 7313536415171813337}
@@ -993,6 +1027,11 @@ SkinnedMeshRenderer:
 --- !u!137 &4608602987826139354 stripped
 SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: 7650469146903969918, guid: f14962bf8c2a50544b362f1694bf4149, type: 3}
+  m_PrefabInstance: {fileID: 6187630498800619684}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &5338089325772055970 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -6932637613890145018, guid: f14962bf8c2a50544b362f1694bf4149, type: 3}
   m_PrefabInstance: {fileID: 6187630498800619684}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &5932463756027049807 stripped
@@ -1159,6 +1198,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 5
   rotationSpeed: 180
+  jumpForce: 6
+  jumpKey: 32
   groundCheck: {fileID: 0}
   groundRadius: 0.25
   groundMask:
@@ -1249,7 +1290,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d9dddb7ed790ef4aa3a14e7edb5420a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  holdPoint: {fileID: 0}
+  holdPoint: {fileID: 451970743407948051}
   anim: {fileID: 0}
   toolsLayer:
     serializedVersion: 2

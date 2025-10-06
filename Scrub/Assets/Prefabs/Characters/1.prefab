@@ -31,6 +31,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 7991890477311842641}
   m_LocalEulerAnglesHint: {x: 19.573, y: 0, z: 0}
+--- !u!1 &7664161638827670015
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2276317163299529594}
+  m_Layer: 0
+  m_Name: 'GroundCheck '
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2276317163299529594
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7664161638827670015}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4182059331188218137}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1647025093929313802
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1152,6 +1183,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: f14962bf8c2a50544b362f1694bf4149, type: 3}
       insertIndex: 0
       addedObject: {fileID: 4320441557021382352}
+    - targetCorrespondingSourceObject: {fileID: -3212201525454149725, guid: f14962bf8c2a50544b362f1694bf4149, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2276317163299529594}
     - targetCorrespondingSourceObject: {fileID: 1134662855679897990, guid: f14962bf8c2a50544b362f1694bf4149, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1248009356548686305}
@@ -1255,6 +1289,11 @@ SkinnedMeshRenderer:
 --- !u!137 &4142829742683185068 stripped
 SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: 5772513858296963350, guid: f14962bf8c2a50544b362f1694bf4149, type: 3}
+  m_PrefabInstance: {fileID: 7593736884950580922}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &4182059331188218137 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -3212201525454149725, guid: f14962bf8c2a50544b362f1694bf4149, type: 3}
   m_PrefabInstance: {fileID: 7593736884950580922}
   m_PrefabAsset: {fileID: 0}
 --- !u!137 &4421342778365943162 stripped
@@ -1461,7 +1500,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 5
   rotationSpeed: 180
-  groundCheck: {fileID: 0}
+  jumpForce: 6
+  jumpKey: 32
+  groundCheck: {fileID: 2276317163299529594}
   groundRadius: 0.25
   groundMask:
     serializedVersion: 2
@@ -1551,7 +1592,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d9dddb7ed790ef4aa3a14e7edb5420a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  holdPoint: {fileID: 0}
+  holdPoint: {fileID: 2588429364943027432}
   anim: {fileID: 0}
   toolsLayer:
     serializedVersion: 2

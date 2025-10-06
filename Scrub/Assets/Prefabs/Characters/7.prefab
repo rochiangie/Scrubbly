@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &106269999162740206
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5385341099894671279}
+  m_Layer: 0
+  m_Name: 'GroundCheck '
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5385341099894671279
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 106269999162740206}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5680518567027853372}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &701576373338411092
 GameObject:
   m_ObjectHideFlags: 0
@@ -1355,6 +1386,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 7f394e12257befb43992c3be83001db7, type: 3}
       insertIndex: 0
       addedObject: {fileID: 671478118290865661}
+    - targetCorrespondingSourceObject: {fileID: -6932637613890145018, guid: 7f394e12257befb43992c3be83001db7, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5385341099894671279}
     - targetCorrespondingSourceObject: {fileID: 1134662855679897990, guid: 7f394e12257befb43992c3be83001db7, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4934985921935975366}
@@ -1491,6 +1525,11 @@ SkinnedMeshRenderer:
 --- !u!137 &5676135310510814299 stripped
 SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: -6928016556963640991, guid: 7f394e12257befb43992c3be83001db7, type: 3}
+  m_PrefabInstance: {fileID: 5845412110500379962}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &5680518567027853372 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -6932637613890145018, guid: 7f394e12257befb43992c3be83001db7, type: 3}
   m_PrefabInstance: {fileID: 5845412110500379962}
   m_PrefabAsset: {fileID: 0}
 --- !u!137 &5818205651937720553 stripped
@@ -1665,7 +1704,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 5
   rotationSpeed: 180
-  groundCheck: {fileID: 0}
+  jumpForce: 6
+  jumpKey: 32
+  groundCheck: {fileID: 5385341099894671279}
   groundRadius: 0.25
   groundMask:
     serializedVersion: 2
