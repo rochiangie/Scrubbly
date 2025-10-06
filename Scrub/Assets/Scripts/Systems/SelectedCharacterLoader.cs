@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
-//using Cinemachine; // Importación necesaria para CinemachineVirtualCamera
-using System.Linq; // Necesario para la función .FirstOrDefault()
+using System.Linq;
 
 public class SelectedCharacterLoader : MonoBehaviour
 {
@@ -20,21 +19,14 @@ public class SelectedCharacterLoader : MonoBehaviour
     // ===============================================
 
     [Header("Simulación / Fallback")]
-    [Tooltip("ID a usar si GameDataController no se encuentra (ej: al iniciar en esta escena directamente).")]
     public string FallbackCharacterID = "1";
 
     [Header("Available Characters")]
-    [Tooltip("Lista de todos los prefabs de personaje con sus IDs.")]
     public CharacterPrefabData[] AvailableCharacters;
 
     [Header("Referencias de Escena")]
-    [Tooltip("El Transform donde aparecerá el personaje.")]
     public Transform SpawnPoint;
-    public string PlayerTag = "Player";
-
-    //[Header("Referencias de Cámara")]
-    [Tooltip("La cámara virtual de Cinemachine que debe seguir al nuevo personaje.")]
-    //public CinemachineVirtualCamera Vcam;
+    public string PlayerTag = "Player"; // ¡CRÍTICO! La cámara usará esta etiqueta.
 
     // ===============================================
     // LÓGICA DE CARGA
@@ -42,7 +34,7 @@ public class SelectedCharacterLoader : MonoBehaviour
 
     void Awake()
     {
-        // 1. Obtener el ID del personaje persistente o el Fallback
+        // 1. Obtener el ID del personaje persistente
         string characterId = GetCharacterID();
 
         // 2. Buscar el Prefab
@@ -59,16 +51,15 @@ public class SelectedCharacterLoader : MonoBehaviour
             }
         }
 
-        // 3. Instanciar y configurar
+        // 3. Instanciar y asignar Tag (sin tocar la cámara)
         InstantiateCharacter(characterPrefab);
     }
 
-    /// <summary>
-    /// Obtiene el ID del personaje, usando GameDataController (persistente) si existe.
-    /// </summary>
+    // ... (GetCharacterID y GetPrefabByID - Se mantienen igual) ...
+
     string GetCharacterID()
     {
-        // Usa la función pública del Singleton
+        // Usa la función pública del Singleton GameDataController
         if (GameDataController.Instance != null)
         {
             string persistedID = GameDataController.Instance.GetCharacterID();
@@ -76,7 +67,6 @@ public class SelectedCharacterLoader : MonoBehaviour
             return persistedID;
         }
 
-        // Si el Singleton no se ha cargado (ej: iniciando en esta escena), usa el ID de simulación
         Debug.LogWarning($"[LOADER] GameDataController no encontrado. Usando ID de Fallback: {FallbackCharacterID}");
         return FallbackCharacterID;
     }
@@ -90,17 +80,11 @@ public class SelectedCharacterLoader : MonoBehaviour
 
     private void InstantiateCharacter(GameObject prefab)
     {
-        // Instancia el personaje en la posición del SpawnPoint
         GameObject player = Instantiate(prefab, SpawnPoint.position, SpawnPoint.rotation);
 
-        // Asignar el Tag (si es necesario)
+        // ¡CRÍTICO! El script de cámara buscará esta etiqueta.
         player.tag = PlayerTag;
 
-        // Configurar la cámara para que siga al nuevo personaje
-        /*if (Vcam != null)
-        {
-            Vcam.Follow = player.transform;
-            Vcam.LookAt = player.transform;
-        }*/
+        Debug.Log("[LOADER] Personaje instanciado con Tag: " + PlayerTag);
     }
 }

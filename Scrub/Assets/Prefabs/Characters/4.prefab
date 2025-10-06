@@ -3941,6 +3941,7 @@ MonoBehaviour:
   rotationSpeed: 180
   jumpForce: 6
   jumpKey: 32
+  animator: {fileID: 0}
   groundCheck: {fileID: 5399005412898466751}
   groundRadius: 0.25
   groundMask:
@@ -9427,7 +9428,7 @@ Transform:
   m_GameObject: {fileID: 9102100509095487501}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.003269, y: 1.606, z: 0.96}
+  m_LocalPosition: {x: 0, y: 1, z: -1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
