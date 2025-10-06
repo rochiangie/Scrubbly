@@ -1,13 +1,14 @@
 using UnityEngine;
-using UnityEngine.SceneManagement; // Necesario si usas SceneManager en el futuro
+using UnityEngine.SceneManagement;
 
 public class GameDataController : MonoBehaviour
 {
-    // Hacemos que sea un Singleton estático
+    // Singleton para acceso global
     public static GameDataController Instance;
 
-    // Esta variable guarda el ID del personaje seleccionado entre escenas
-    public string SelectedCharacterID = "Default_Character";
+    // Esta variable guarda el ID del personaje seleccionado. 
+    // Debe coincidir con un ID en SelectedCharacterLoader.AvailableCharacters
+    public string SelectedCharacterID = "1"; // Valor por defecto
 
     private void Awake()
     {
@@ -23,7 +24,6 @@ public class GameDataController : MonoBehaviour
             // Si ya existe otra instancia, nos destruimos
             Destroy(gameObject);
         }
-        // ====================================
     }
 
     /// <summary>
