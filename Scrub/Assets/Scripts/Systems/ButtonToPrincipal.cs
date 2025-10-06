@@ -1,18 +1,37 @@
-using UnityEngine;
+锘縰sing UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class ButtonToPrincipal : MonoBehaviour
 {
-    // Nombre de la escena de selecci髇 de personajes
-    private const string SELECTION_SCENE_NAME = "Principal";
+    // Nombre de la escena de selecci贸n de personajes (es una constante codificada)
+    private const string SELECTION_SCENE_NAME = "SeleccionPersonaje";
 
-    // Esta funci髇 se debe asignar al evento OnClick() del bot髇
+    // 馃洃 CAMBIO: Nombre codificado de la escena de juego o "Principal"
+    private const string PRINCIPAL_SCENE_NAME = "Principal";
+
+    // Hemos eliminado la variable p煤blica TargetPrincipalSceneName
+
+    /// <summary>
+    /// Funci贸n para iniciar el juego: Carga la escena 'Principal'.
+    /// Esta funci贸n se debe asignar al evento OnClick() del bot贸n para INICIAR el juego.
+    /// </summary>
+    public void GoToPrincipalScene()
+    {
+        // Carga la escena principal del juego usando la constante.
+        SceneManager.LoadScene(PRINCIPAL_SCENE_NAME);
+
+        Debug.Log($"[NAVIGATOR] Iniciando el juego en la escena: {PRINCIPAL_SCENE_NAME}");
+    }
+
+    /// <summary>
+    /// Funci贸n para volver: Carga la escena de selecci贸n de personajes.
+    /// Esta funci贸n se debe asignar al evento OnClick() del bot贸n para REGRESAR.
+    /// </summary>
     public void GoToSelectionScene()
     {
-        // Carga la escena principal donde se selecciona el personaje.
-        // El GameDataController (que contiene el ID persistente) no se destruye.
+        // Carga la escena donde se selecciona el personaje.
         SceneManager.LoadScene(SELECTION_SCENE_NAME);
 
-        Debug.Log("[NAVIGATOR] Regresando a la escena principal.");
+        Debug.Log("[NAVIGATOR] Regresando a la escena de selecci贸n.");
     }
 }

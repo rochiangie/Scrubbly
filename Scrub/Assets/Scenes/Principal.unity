@@ -748,13 +748,8 @@ MonoBehaviour:
     Prefab: {fileID: 1532228888865751196, guid: af3476e1237e18c4b98f1de98714adf3, type: 3}
   - ID: 9
     Prefab: {fileID: 6521118409924740657, guid: 55a7a65203397ac4f8c63fa56c8dbecd, type: 3}
-  spawnPoint: {fileID: 298415734}
-  playerTag: Player
-  vcam: {fileID: 1565165547}
-  anchorNames:
-  - CameraAnchor
-  - Head
-  - mixamorig:Head
+  SpawnPoint: {fileID: 298415734}
+  PlayerTag: Player
 --- !u!4 &298415734
 Transform:
   m_ObjectHideFlags: 0
@@ -3541,7 +3536,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Juego de limpieza en Construcci\xF3n"
+  m_text: Holiiiiiii
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

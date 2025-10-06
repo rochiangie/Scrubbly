@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class GameDataController : MonoBehaviour
@@ -6,20 +6,20 @@ public class GameDataController : MonoBehaviour
     // Singleton para acceso global
     public static GameDataController Instance;
 
-    // Esta variable guarda el ID del personaje seleccionado. 
-    // Debe coincidir con un ID en SelectedCharacterLoader.AvailableCharacters
-    public string SelectedCharacterID = "1"; // Valor por defecto
+    // Esta variable guarda el ID del personaje seleccionado.
+    private string selectedCharacterID = "1"; // Valor por defecto
 
+    // Referencia al panel de notificaciÃ³n (debe asignarse en el Inspector)
     public TimedUIPanel notificationPanel;
 
 
     private void Awake()
     {
-        // === Implementación del Singleton Persistente ===
+        // === ImplementaciÃ³n del Singleton Persistente ===
         if (Instance == null)
         {
             Instance = this;
-            // ¡CRÍTICO! Mantiene el GameObject vivo al cambiar de escena.
+            // Mantiene el GameObject vivo al cambiar de escena.
             DontDestroyOnLoad(gameObject);
         }
         else
@@ -28,17 +28,30 @@ public class GameDataController : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
     void Start()
     {
-        // Llama a la función del panel después de un pequeño retraso si es necesario
-        notificationPanel.ShowAndHide();
+        // Llama a la funciÃ³n del panel despuÃ©s de un pequeÃ±o retraso si es necesario
+        if (notificationPanel != null)
+        {
+            notificationPanel.ShowAndHide();
+        }
     }
+
     /// <summary>
-    /// Llamado desde la escena de selección para guardar el personaje elegido.
+    /// ðŸ›‘ FUNCIÃ“N RESTAURADA: Llamado desde SpotlightSelector.cs para guardar el personaje elegido.
     /// </summary>
     public void SetSelectedCharacter(string characterID)
     {
-        SelectedCharacterID = characterID;
-        Debug.Log($"[PERSISTENCE] Personaje seleccionado y guardado: {characterID}");
+        selectedCharacterID = characterID;
+        Debug.Log($"[PERSISTENCE] Personaje seleccionado y guardado: {selectedCharacterID}");
+    }
+
+    /// <summary>
+    /// Llamado desde scripts como LoreDisplay y SelectedCharacterLoader para recuperar el ID guardado.
+    /// </summary>
+    public string GetCharacterID()
+    {
+        return selectedCharacterID;
     }
 }
