@@ -3705,7 +3705,7 @@ AudioListener:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
-  m_Enabled: 1
+  m_Enabled: 0
 --- !u!20 &330585545
 Camera:
   m_ObjectHideFlags: 0
@@ -4225,7 +4225,8 @@ Transform:
   m_LocalPosition: {x: -1.6217952, y: 0.31534815, z: 4.389248}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 555213801}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &555213799
@@ -4260,7 +4261,7 @@ AudioSource:
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -4350,12 +4351,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 555213799}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.6217952, y: 0.31534815, z: 4.389248}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 427379397}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &799117009
 GameObject:
@@ -8949,6 +8950,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2014787207}
   - component: {fileID: 2014787206}
+  - component: {fileID: 2014787208}
   m_Layer: 0
   m_Name: CinemachineCamera (1)
   m_TagString: Untagged
@@ -9015,6 +9017,14 @@ Transform:
   - {fileID: 350649927}
   m_Father: {fileID: 2046273838}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!81 &2014787208
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2014787205}
+  m_Enabled: 1
 --- !u!1 &2046273835
 GameObject:
   m_ObjectHideFlags: 0
@@ -9224,7 +9234,7 @@ MonoBehaviour:
   next2: 100
   confirmKey: 271
   confirmAlt: 32
-  nextSceneName: Principal
+  nextSceneName: Lore
   wrapAround: 1
   usePrefabs: 1
 --- !u!1001 &2103982467
@@ -10087,4 +10097,3 @@ SceneRoots:
   - {fileID: 97655496}
   - {fileID: 1280520679}
   - {fileID: 427379397}
-  - {fileID: 555213801}
