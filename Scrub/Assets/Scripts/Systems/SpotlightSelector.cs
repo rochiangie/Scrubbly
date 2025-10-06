@@ -10,7 +10,7 @@ public class SpotlightSelector : MonoBehaviour
 
     [Header("Etiqueta para la búsqueda automática")]
     [Tooltip("Etiqueta que tienen TODOS los personajes seleccionables en la escena.")]
-    public string CandidateTag = "Player"; // Usamos la etiqueta "Player" según tu confirmación
+    public string CandidateTag = "Player";
 
     [Header("Prefabs jugables (mismo orden que 'candidates')")]
     [SerializeField] GameObject[] playerPrefabs;
@@ -49,18 +49,17 @@ public class SpotlightSelector : MonoBehaviour
 
     int index = 0;
     bool isTransitioning = false;
-
-    // 🛑 NUEVA VARIABLE: Bloquea el input por un frame al cargar la escena.
+    // CRÍTICO: Bloquea el input por un frame al cargar la escena.
     bool isInputBlocked = true;
 
 
     void Awake()
     {
-        // Se deja vacío o con lógica mínima. SnapTo se llama ahora en OnEnable.
+        // Dejamos Awake vacío, la inicialización ocurre en OnEnable.
     }
 
     // ===============================================
-    // LÓGICA DE INICIALIZACIÓN
+    // LÓGICA DE INICIALIZACIÓN Y LIMPIEZA
     // ===============================================
 
     /// <summary>
@@ -68,13 +67,13 @@ public class SpotlightSelector : MonoBehaviour
     /// </summary>
     private void OnEnable()
     {
-        // 1. CARGA DINÁMICA DE CANDIDATOS
+        // 1. CARGA DINÁMICA DE CANDIDATOS (¡Crucial al volver a la escena!)
         LoadCandidatesFromScene();
 
         // 2. Reiniciar estado y bloquear input
         isTransitioning = false;
         index = 0;
-        isInputBlocked = true; // El input se desbloquea en el primer Update
+        isInputBlocked = true; // El input se bloquea inmediatamente al cargarse la escena
 
         // 3. Colocación inicial
         if (candidates != null && candidates.Length > 0)
@@ -87,9 +86,6 @@ public class SpotlightSelector : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Busca todos los objetos con la etiqueta CandidateTag y llena el array candidates.
-    /// </summary>
     void LoadCandidatesFromScene()
     {
         GameObject[] candidateObjects = GameObject.FindGameObjectsWithTag(CandidateTag);
@@ -111,8 +107,11 @@ public class SpotlightSelector : MonoBehaviour
     /// </summary>
     private void OnDisable()
     {
+        // 1. Detener todas las corrutinas activas.
         StopAllCoroutines();
-        candidates = null; // Limpia la referencia rota
+
+        // 2. Limpiar la referencia (CLAVE para evitar MissingReferenceException).
+        candidates = null;
     }
 
     // ===============================================
@@ -121,7 +120,7 @@ public class SpotlightSelector : MonoBehaviour
 
     void Update()
     {
-        // 🛑 CORRECCIÓN FINAL: Bloquea el input en el primer frame.
+        // CRÍTICO: Bloquea el input en el primer frame.
         if (isInputBlocked)
         {
             isInputBlocked = false; // Desbloquea para el siguiente frame
@@ -185,10 +184,10 @@ public class SpotlightSelector : MonoBehaviour
         }
 
         Transform selectedCandidate = candidates[index];
+        // CRÍTICO: Comprueba si la referencia está rota.
         if (selectedCandidate == null)
         {
-            // Si llega aquí, significa que el objeto fue destruido mientras el script intentaba usarlo.
-            Debug.LogError("[SELECTION] El Transform del candidato seleccionado ya fue destruido (NULL Reference). La escena no está cargando los objetos Player correctamente.");
+            Debug.LogError("[SELECTION] El Transform del candidato seleccionado ya fue destruido (NULL Reference).");
             return;
         }
 
