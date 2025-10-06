@@ -4211,8 +4211,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   musicSource: {fileID: 555213800}
-  selectionMusic: {fileID: 0}
-  gameplayMusic: {fileID: 0}
+  selectionMusic: {fileID: 8300000, guid: e31fffe7246ac494ba0dcb19019c9c84, type: 3}
+  gameplayMusic: {fileID: 8300000, guid: e31fffe7246ac494ba0dcb19019c9c84, type: 3}
 --- !u!4 &427379397
 Transform:
   m_ObjectHideFlags: 0
@@ -4256,8 +4256,8 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_Resource: {fileID: 8300000, guid: e31fffe7246ac494ba0dcb19019c9c84, type: 3}
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0

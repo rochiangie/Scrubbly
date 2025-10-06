@@ -12,25 +12,18 @@ public class AudioManager : MonoBehaviour
 
     private void Awake()
     {
-        // 1. Singleton: Si ya existe una instancia, nos destruimos.
+        // 1. Si NO existe una instancia, ESTA es la instancia principal.
         if (Instance == null)
         {
             Instance = this;
-            // 2. Persistencia: Marca este objeto para que NO se destruya al cargar una nueva escena.
-            DontDestroyOnLoad(gameObject);
+            // 2. Le decimos a Unity que no lo destruya al cargar la próxima escena.
+            DontDestroyOnLoad(gameObject); // << ESTA LÍNEA DEBE EJECUTARSE
         }
         else
         {
+            // 3. Si YA existe una instancia, destruimos la nueva (la de esta escena).
             Destroy(gameObject);
-            return;
-        }
-
-        // 3. Inicializar y empezar con la música de selección
-        if (musicSource != null && selectionMusic != null)
-        {
-            musicSource.clip = selectionMusic;
-            musicSource.loop = true; // Queremos que se repita la música
-            musicSource.Play();
+            return; // Salimos de Awake para que no siga ejecutando más código.
         }
     }
 
