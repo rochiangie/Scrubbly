@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5838950608366082394}
+  - component: {fileID: 5538254605641417584}
   m_Layer: 8
   m_Name: Head
   m_TagString: Untagged
@@ -31,6 +32,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 8796175943201088575}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5538254605641417584
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6275230774529217792}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 907800a4812a4ce4fa1bd6a7e4c3383e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6509800193402989830
 GameObject:
   m_ObjectHideFlags: 0
@@ -1380,6 +1393,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: f14962bf8c2a50544b362f1694bf4149, type: 3}
       insertIndex: -1
       addedObject: {fileID: -5171899905214396506}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: f14962bf8c2a50544b362f1694bf4149, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7634364315366710626}
   m_SourcePrefab: {fileID: 100100000, guid: f14962bf8c2a50544b362f1694bf4149, type: 3}
 --- !u!137 &597395024375276085 stripped
 SkinnedMeshRenderer:
@@ -1723,6 +1739,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   holdPoint: {fileID: 3968057931717919110}
   animCtrl: {fileID: 0}
+  generalInteractKey: 101
+  pickupKey: 116
 --- !u!114 &7135754452494040797
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1755,9 +1773,9 @@ MonoBehaviour:
     m_Bits: 128
   pickupRange: 3.5
   dropForce: 1.5
-  pickupKey: 101
+  generalInteractKey: 101
   cleanKey: 114
-  damagePerHit: 1
+  damageMultiplier: 1
   requireCorrectTool: 1
   validToolIds:
   - Sponge
@@ -1767,6 +1785,22 @@ MonoBehaviour:
   cleaningLayerName: Clean
   layerBlendSpeed: 12
   debugLogs: 0
+--- !u!114 &7634364315366710626
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8167730674303123077}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de73acfa817aa2448ad7fc3beee6b35c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mouseSensitivity: 200
+  upLimit: 85
+  downLimit: -85
+  headLookTarget: {fileID: 5838950608366082394}
 --- !u!4 &8225776121674363474 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1134662855679897990, guid: f14962bf8c2a50544b362f1694bf4149, type: 3}
