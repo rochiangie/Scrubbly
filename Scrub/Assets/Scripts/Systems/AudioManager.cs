@@ -1,57 +1,61 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class AudioManager : MonoBehaviour
 {
+    // Singleton para acceso global
     public static AudioManager Instance;
 
-    [Header("Configuraci�n de M�sica")]
+    [Header("Configuración de Música")]
+    [Tooltip("El AudioSource que reproducirá la música. Debe estar en este GameObject.")]
     public AudioSource musicSource;
-    public AudioClip selectionMusic; // M�sica para la escena de selecci�n/lore
-    public AudioClip gameplayMusic;  // M�sica para la escena de limpieza
+
+    public AudioClip selectionMusic; // Música para la escena de selección/lore
+    public AudioClip gameplayMusic;  // Música para la escena de limpieza
 
     private void Awake()
     {
-        // 1. Singleton: Si ya existe una instancia, nos destruimos.
+        // === 1. Implementación del Singleton Persistente ===
         if (Instance == null)
         {
             Instance = this;
-            // 2. Persistencia: Marca este objeto para que NO se destruya al cargar una nueva escena.
             DontDestroyOnLoad(gameObject);
+            Debug.Log("[AUDIO MANAGER] Persistencia establecida. Este Manager NO se destruirá.");
         }
         else
         {
+            // Si ya existe otra instancia, nos destruimos y salimos.
             Destroy(gameObject);
             return;
         }
 
-        // 3. Inicializar y empezar con la m�sica de selecci�n
-        if (musicSource != null && selectionMusic != null)
+        // === 2. Inicialización del AudioSource (Si es nulo) ===
+        if (musicSource == null)
         {
-            musicSource.clip = selectionMusic;
-            musicSource.loop = true; // Queremos que se repita la m�sica
-            musicSource.Play();
+            // Intentamos obtener el AudioSource automáticamente del mismo objeto.
+            musicSource = GetComponent<AudioSource>();
         }
-    }
 
-    /// <summary>
-    /// Cambia a una pista de m�sica y comienza a reproducirla.
-    /// </summary>
-    /// <param name="newClip">El nuevo clip de audio.</param>
-    public void PlayMusic(AudioClip newClip)
-    {
-        if (musicSource.clip == newClip)
+        if (musicSource == null)
         {
-            // Ya estamos reproduciendo esta m�sica, no hacemos nada.
+            Debug.LogError("[AUDIO MANAGER] NO se encontró el componente AudioSource en este GameObject. ¡El audio fallará!");
             return;
         }
 
-        musicSource.Stop();
-        musicSource.clip = newClip;
-        musicSource.Play();
+        // 3. Empezar con la música de selección al inicio
+        if (selectionMusic != null)
+        {
+            PlayMusic(selectionMusic);
+            Debug.Log("[AUDIO MANAGER] Música de selección iniciada.");
+        }
+        else
+        {
+            Debug.LogWarning("[AUDIO MANAGER] El AudioClip 'Selection Music' está vacío. No se puede iniciar la música.");
+        }
     }
 
-    // Opcional: Para cambiar m�sica autom�ticamente cuando una escena se carga
+    // El Audio Manager debe suscribirse al evento de carga de escena para cambiar la música.
     private void OnEnable()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
@@ -62,16 +66,44 @@ public class AudioManager : MonoBehaviour
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
+    /// <summary>
+    /// Cambia a una pista de música y comienza a reproducirla.
+    /// </summary>
+    public void PlayMusic(AudioClip newClip)
+    {
+        if (musicSource == null)
+        {
+            Debug.LogError("[AUDIO MANAGER] musicSource es nulo. No se puede reproducir la música.");
+            return;
+        }
+
+        // Evitar reiniciar la misma pista.
+        if (musicSource.clip == newClip && musicSource.isPlaying)
+        {
+            return;
+        }
+
+        musicSource.Stop();
+        musicSource.clip = newClip;
+        musicSource.loop = true; // Aseguramos que repita
+        musicSource.Play();
+        Debug.Log($"[AUDIO MANAGER] Reproduciendo música: {newClip.name}");
+    }
+
+    /// <summary>
+    /// Llamado automáticamente cuando se carga una nueva escena.
+    /// </summary>
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        if (scene.name == "NombreDeTuEscenaDeLimpieza") // Reemplaza con el nombre de tu 3ra escena
+        // 🛑 Importante: Reemplaza estos nombres con los nombres EXACTOS de tus escenas.
+        if (scene.name == "NombreDeTuEscenaDeLimpieza")
         {
             PlayMusic(gameplayMusic);
         }
-        else if (scene.name == "NombreDeTuEscenaDeSeleccion") // Reemplaza con el nombre de tu 1ra escena
+        else if (scene.name == "NombreDeTuEscenaDeLore") // Si creas la escena de Lore
         {
+            // La música de selección/lore es la misma por defecto.
             PlayMusic(selectionMusic);
         }
-        // Nota: La m�sica de selecci�n seguir� sonando en la nueva escena de Lore.
     }
 }

@@ -25,11 +25,42 @@ Transform:
   m_GameObject: {fileID: 7619649677746568785}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.003269, y: 1.606, z: 0.96}
+  m_LocalPosition: {x: 0, y: 1, z: -1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1805161885405656231}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &8315668341392613009
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2574594583171846576}
+  m_Layer: 0
+  m_Name: 'GroundCheck '
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2574594583171846576
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8315668341392613009}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5614994697820222703}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2199868053390414668
 PrefabInstance:
@@ -869,6 +900,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 46c5ec54e9c218c4abd9fbeb01ef1d1b, type: 3}
       insertIndex: 0
       addedObject: {fileID: 5249473733915914670}
+    - targetCorrespondingSourceObject: {fileID: -3212201525454149725, guid: 46c5ec54e9c218c4abd9fbeb01ef1d1b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2574594583171846576}
     - targetCorrespondingSourceObject: {fileID: 1134662855679897990, guid: 46c5ec54e9c218c4abd9fbeb01ef1d1b, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6544255643044165059}
@@ -1058,7 +1092,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 5
   rotationSpeed: 180
-  groundCheck: {fileID: 0}
+  jumpForce: 6
+  jumpKey: 32
+  animator: {fileID: 0}
+  groundCheck: {fileID: 2574594583171846576}
   groundRadius: 0.25
   groundMask:
     serializedVersion: 2
@@ -1260,6 +1297,11 @@ SkinnedMeshRenderer:
 --- !u!137 &5385774041312260236 stripped
 SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: 6069054193799209920, guid: 46c5ec54e9c218c4abd9fbeb01ef1d1b, type: 3}
+  m_PrefabInstance: {fileID: 2199868053390414668}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &5614994697820222703 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -3212201525454149725, guid: 46c5ec54e9c218c4abd9fbeb01ef1d1b, type: 3}
   m_PrefabInstance: {fileID: 2199868053390414668}
   m_PrefabAsset: {fileID: 0}
 --- !u!137 &5664286518544413274 stripped

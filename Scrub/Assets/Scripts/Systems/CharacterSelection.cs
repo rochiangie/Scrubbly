@@ -1,45 +1,47 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class CharacterSelection : MonoBehaviour
 {
+    // Hacemos que la instancia sea privada para seguir el patrón Singleton
     public static CharacterSelection Instance { get; private set; }
 
-    public int SelectedIndex { get; private set; } = -1;
-    public GameObject SelectedPrefab { get; private set; }
-    public GameObject PersistedInstance { get; private set; }
+    // El ID (Nombre) del personaje seleccionado
+    public string SelectedCharacterID { get; private set; } = string.Empty;
+
+    // Eliminamos SelectedIndex, SelectedPrefab y PersistedInstance
 
     void Awake()
     {
-        if (Instance != null && Instance != this) { Destroy(gameObject); return; }
+        // Implementación estándar del Singleton
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
         Instance = this;
+
+        // 🛑 CRÍTICO: Mantenemos la persistencia del controlador, NO del personaje.
         DontDestroyOnLoad(gameObject);
     }
 
-    public void SetSelected(int index, GameObject prefab)
+    // Eliminamos SetSelected(), SetSelectedFromExisting(), DestroyPersistedIfAny()
+    // y GetOrSpawn() ya que esa lógica ahora debe estar en el SelectedCharacterLoader.
+
+    /// <summary>
+    /// Guarda el ID (nombre) del personaje seleccionado.
+    /// Esta es la función que debe llamar SpotlightSelector.
+    /// </summary>
+    public void SetSelectedID(string characterID)
     {
-        if (PersistedInstance) { Destroy(PersistedInstance); PersistedInstance = null; }
-        SelectedPrefab = prefab;
-        SelectedIndex = index;
+        SelectedCharacterID = characterID;
+        Debug.Log($"[SelectionController] ID Guardado: {characterID}");
     }
 
-    public void SetSelectedFromExisting(int index, GameObject existing)
+    /// <summary>
+    /// Devuelve el ID guardado. Usado por SelectedCharacterLoader.
+    /// </summary>
+    public string GetSelectedID()
     {
-        SelectedPrefab = null;
-        SelectedIndex = index;
-        PersistedInstance = existing;
-        DontDestroyOnLoad(existing);
-    }
-
-    public void DestroyPersistedIfAny()
-    {
-        if (PersistedInstance) { Destroy(PersistedInstance); PersistedInstance = null; }
-    }
-
-    public GameObject GetOrSpawn(Vector3 pos, Quaternion rot)
-    {
-        if (SelectedPrefab) return Object.Instantiate(SelectedPrefab, pos, rot);
-        if (PersistedInstance) { PersistedInstance.transform.SetPositionAndRotation(pos, rot); return PersistedInstance; }
-        Debug.LogWarning("[CharacterSelection] No hay personaje seleccionado.");
-        return null;
+        return SelectedCharacterID;
     }
 }
