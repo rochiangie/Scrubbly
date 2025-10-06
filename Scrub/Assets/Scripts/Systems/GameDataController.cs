@@ -10,6 +10,9 @@ public class GameDataController : MonoBehaviour
     // Debe coincidir con un ID en SelectedCharacterLoader.AvailableCharacters
     public string SelectedCharacterID = "1"; // Valor por defecto
 
+    public TimedUIPanel notificationPanel;
+
+
     private void Awake()
     {
         // === Implementación del Singleton Persistente ===
@@ -25,7 +28,11 @@ public class GameDataController : MonoBehaviour
             Destroy(gameObject);
         }
     }
-
+    void Start()
+    {
+        // Llama a la función del panel después de un pequeño retraso si es necesario
+        notificationPanel.ShowAndHide();
+    }
     /// <summary>
     /// Llamado desde la escena de selección para guardar el personaje elegido.
     /// </summary>
