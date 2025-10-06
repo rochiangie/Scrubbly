@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections;
+using System.Linq;
 
 public class SpotlightSelector : MonoBehaviour
 {
@@ -10,10 +12,8 @@ public class SpotlightSelector : MonoBehaviour
     [SerializeField] GameObject[] playerPrefabs;
 
     [Header("Spot (la cámara es HIJA de este)")]
-    // lightOffset es RELATIVO al personaje:
-    // x = lateral (derecha +), y = altura, z = distancia
     [SerializeField] Vector3 lightOffset = new Vector3(0f, 2.5f, 3.0f);
-    [SerializeField] bool viewFromFront = true; // true = mirar la cara; false = detrás (over-the-shoulder)
+    [SerializeField] bool viewFromFront = true;
 
     [Header("Transición (sólo al cambiar)")]
     [SerializeField] float moveDuration = 0.35f;
@@ -48,15 +48,36 @@ public class SpotlightSelector : MonoBehaviour
 
     void Awake()
     {
-        SnapTo(index); // coloca en el primero, sin animar
+        SnapTo(index);
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(prev1) || Input.GetKeyDown(prev2)) Focus(-1);
-        if (Input.GetKeyDown(next1) || Input.GetKeyDown(next2)) Focus(+1);
-        if (Input.GetKeyDown(confirmKey) || Input.GetKeyDown(confirmAlt)) Confirm();
-        // No movemos nada aquí: sólo en el cambio.
+        // 1. Si estamos en transición de Spotlight, ignoramos todo el input para evitar bugs.
+        if (isTransitioning)
+        {
+            return;
+        }
+
+        // 2. Lógica de FOCO (mover)
+        // El 'Focus' actualiza el 'index' y comienza la corrutina AnimateTo, lo que establece isTransitioning = true.
+        if (Input.GetKeyDown(prev1) || Input.GetKeyDown(prev2))
+        {
+            Focus(-1);
+        }
+        else if (Input.GetKeyDown(next1) || Input.GetKeyDown(next2))
+        {
+            Focus(+1);
+        }
+
+        // 3. Lógica de CONFIRMAR
+        // Esto solo se ejecuta si NO estamos ya en transición (ver el 'return' de arriba).
+        else if (Input.GetKeyDown(confirmKey) ||
+                 Input.GetKeyDown(confirmAlt) ||
+                 Input.GetKeyDown(KeyCode.KeypadEnter)) // Añadimos el Enter numérico
+        {
+            Confirm();
+        }
     }
 
     // -------- navegación --------
@@ -73,16 +94,37 @@ public class SpotlightSelector : MonoBehaviour
         StartCoroutine(AnimateTo(index));
     }
 
-    // -------- confirmar --------
+    // -------- confirmar (Lógica de guardado) --------
     void Confirm()
     {
         if (candidates == null || candidates.Length == 0) return;
+        if (GameDataController.Instance == null)
+        {
+            Debug.LogError("[SELECTION] GameDataController NO encontrado. Cargando escena...");
+            SceneManager.LoadScene(nextSceneName);
+            return;
+        }
 
+        // 🛑 CAMBIO CLAVE: Usamos el nombre del Transform del candidato actual (ej: "1", "9", "Male")
+        string characterID = candidates[index].name;
+
+        // Puedes usar el nombre del Prefab en su lugar si lo prefieres, pero el nombre del Transform es más directo
+        /*
         if (usePrefabs && playerPrefabs != null && index < playerPrefabs.Length && playerPrefabs[index] != null)
-            CharacterSelection.Instance.SetSelected(index, playerPrefabs[index]);
+        {
+            characterID = playerPrefabs[index].name;
+        }
         else
-            CharacterSelection.Instance.SetSelectedFromExisting(index, candidates[index].gameObject);
+        {
+            characterID = candidates[index].name;
+        }
+        */
 
+        // 1. Guardar el ID (el nombre) en el controlador persistente
+        Debug.Log($"[SELECTION] Guardando ID Final (Nombre): {characterID}");
+        GameDataController.Instance.SetSelectedCharacter(characterID);
+
+        // 2. Cargar la siguiente escena
         SceneManager.LoadScene(nextSceneName);
     }
 
@@ -120,7 +162,7 @@ public class SpotlightSelector : MonoBehaviour
         transform.position = endPos;
         transform.rotation = endRot;
 
-        ApplyCameraLocalPose(); // por si querés fijar la pose local de la cámara hija
+        ApplyCameraLocalPose();
         isTransitioning = false;
     }
 
@@ -144,12 +186,10 @@ public class SpotlightSelector : MonoBehaviour
     // -------- cálculo del POS del Spot relativo al personaje --------
     Vector3 ComputeSpotPosition(Transform target)
     {
-        // interpretamos lightOffset como offsets relativos al personaje
-        float side = lightOffset.x;  // derecha +
-        float height = lightOffset.y;  // arriba +
-        float dist = lightOffset.z;  // distancia
+        float side = lightOffset.x;
+        float height = lightOffset.y;
+        float dist = lightOffset.z;
 
-        // frente = +forward si quiero ver la cara; si no, -forward (detrás)
         Vector3 frontDir = viewFromFront ? target.forward : -target.forward;
 
         return target.position

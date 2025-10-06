@@ -1,39 +1,64 @@
 ﻿using UnityEngine;
 using Unity.Cinemachine;
 using System.Collections;
+using System.Linq; // Necesario para .FirstOrDefault()
+
+[System.Serializable]
+public class CharacterPrefabData
+{
+    public string ID;               // Ej: "Player_Female"
+    public GameObject Prefab;
+}
 
 public class SelectedCharacterLoader : MonoBehaviour
 {
+    [Header("Simulación / Fallback")]
+    [Tooltip("ID a usar si se inicia la escena principal directamente.")]
+    public string FallbackCharacterID = "Player_Female";
+    [Tooltip("Lista de prefabs disponibles para spawnear.")]
+    public CharacterPrefabData[] AvailableCharacters; // ¡Asigna tus prefabs aquí!
+
+    [Header("Referencias de Escena")]
     [SerializeField] Transform spawnPoint;
     [SerializeField] string playerTag = "Player";
-    [SerializeField] CinemachineCamera vcam; // asigná tu vcam (CM3)
+    [SerializeField] CinemachineCamera vcam;
 
-    // Ajusta si es necesario, pero "head" debería funcionar con la búsqueda por patrón
+    [Header("Configuración de Cámara")]
     [SerializeField] string[] anchorNames = { "CameraAnchor", "head", "mixamorig:Head" };
 
-    void Awake() { if (!vcam) vcam = FindObjectOfType<CinemachineCamera>(); }
+    void Awake()
+    {
+        if (!vcam) vcam = FindObjectOfType<CinemachineCamera>();
+        if (!spawnPoint) spawnPoint = transform; // Usa este objeto si no hay punto de spawn
+    }
 
     IEnumerator Start()
     {
-        // 1. LIMPIEZA INICIAL: Destruir el Player anterior y el Spot Light de la escena de selección
+        // 1. LIMPIEZA INICIAL: Destruir el Player anterior (si existe) y Focos
         foreach (var go in GameObject.FindGameObjectsWithTag(playerTag)) Destroy(go);
 
-        // 🛑 NUEVO: DESTRUIR FOCOS DE LA ESCENA ANTERIOR
-        // Esto previene interferencias. Busca cualquier luz tipo Spot y la destruye.
+        // DESTRUIR FOCOS DE LA ESCENA ANTERIOR
         foreach (var light in FindObjectsOfType<Light>())
         {
             if (light.type == LightType.Spot) Destroy(light.gameObject);
         }
 
-        if (CharacterSelection.Instance == null) yield break;
-        if (CharacterSelection.Instance.SelectedPrefab) CharacterSelection.Instance.DestroyPersistedIfAny();
+        // 🛑 Lógica eliminada: if (CharacterSelection.Instance == null) yield break;
+        // 🛑 Lógica eliminada: if (CharacterSelection.Instance.SelectedPrefab) CharacterSelection.Instance.DestroyPersistedIfAny();
 
-        // 2. SPAWNEAR PLAYER
-        Vector3 pos = spawnPoint ? spawnPoint.position : Vector3.zero;
-        Quaternion rot = spawnPoint ? spawnPoint.rotation : Quaternion.identity;
+        // 2. SPAWNEAR PLAYER (Usando la lógica de simulación)
 
-        var player = CharacterSelection.Instance.GetOrSpawn(pos, rot);
-        if (!player) yield break;
+        // Determinar qué ID cargar (simulado o persistente)
+        string charID = GetCharacterID();
+
+        // Spawnea y obtiene el GameObject
+        var player = SpawnCharacter(charID);
+
+        if (!player)
+        {
+            Debug.LogError($"[LOADER] No se pudo spawnear el personaje con ID: {charID}. Verifica la lista 'Available Characters'.");
+            yield break;
+        }
 
         player.tag = playerTag;
 
@@ -51,8 +76,7 @@ public class SelectedCharacterLoader : MonoBehaviour
             var tpf = vcam.GetComponent<CinemachineThirdPersonFollow>();
             if (tpf)
             {
-                // 🛑 CAMBIO CRÍTICO: DAMPING A CERO
-                // Esto elimina el efecto de "flote" o "balanceo" al hacer que el seguimiento sea instantáneo (rígido).
+                // CRÍTICO: Damping a cero para el anclaje inicial
                 tpf.Damping = Vector3.zero;
 
                 tpf.VerticalArmLength = 0f;
@@ -60,6 +84,47 @@ public class SelectedCharacterLoader : MonoBehaviour
             }
         }
     }
+
+    // ================== LÓGICA DE SELECCIÓN/SPAWN ==================
+
+    /// <summary>
+    /// Obtiene el ID del personaje, usando GameDataController (persistente) si existe, o el Fallback (simulación) si no.
+    /// </summary>
+    string GetCharacterID()
+    {
+        // Si tienes un GameDataController persistente, úsalo. (Se asume que GameDataController es el nuevo Singleton)
+        if (GameDataController.Instance != null)
+        {
+            string persistedID = GameDataController.Instance.SelectedCharacterID;
+            Debug.Log($"[LOADER] Usando ID persistente: {persistedID}");
+            return persistedID;
+        }
+
+        // Si no, usar el ID de simulación
+        Debug.LogWarning($"[LOADER] GameDataController no encontrado. Usando ID de Fallback: {FallbackCharacterID}");
+        return FallbackCharacterID;
+    }
+
+    /// <summary>
+    /// Spawnea el prefab en la posición definida.
+    /// </summary>
+    GameObject SpawnCharacter(string charID)
+    {
+        // Usamos LINQ para buscar el prefab por ID
+        var charData = AvailableCharacters.FirstOrDefault(c => c.ID == charID);
+
+        if (charData != null && charData.Prefab != null)
+        {
+            Vector3 pos = spawnPoint.position;
+            Quaternion rot = spawnPoint.rotation;
+
+            return Instantiate(charData.Prefab, pos, rot);
+        }
+
+        return null;
+    }
+
+    // ================== UTILITIES (Lógica de anclaje y Snap) ==================
 
     void SnapToGround(Transform t, float skin = 0.02f)
     {
@@ -99,7 +164,6 @@ public class SelectedCharacterLoader : MonoBehaviour
         return null;
     }
 
-    // FUNCIÓN EDITADA: Busca por patrón (Contains) en lugar de coincidencia exacta (==)
     Transform FindDeep(Transform r, string name)
     {
         if (r.name.Contains(name)) return r;

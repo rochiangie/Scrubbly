@@ -93,7 +93,7 @@ Transform:
   m_GameObject: {fileID: 98649695788542978}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.002547741, y: 2.054, z: 0.991}
+  m_LocalPosition: {x: -0.003269, y: 1.606, z: 0.96}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1762,6 +1762,7 @@ GameObject:
   - component: {fileID: -1530187310997896335}
   - component: {fileID: -590188935820477901}
   - component: {fileID: -6020347032376281702}
+  - component: {fileID: -7444284558942354931}
   m_Layer: 8
   m_Name: 8
   m_TagString: Player
@@ -2017,6 +2018,37 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   holdPoint: {fileID: 5511372941240343761}
+--- !u!114 &-7444284558942354931
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1532228888865751196}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d9dddb7ed790ef4aa3a14e7edb5420a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  holdPoint: {fileID: 0}
+  anim: {fileID: 0}
+  toolsLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  pickupRange: 3.5
+  dropForce: 1.5
+  pickupKey: 101
+  cleanKey: 114
+  damagePerHit: 1
+  requireCorrectTool: 1
+  validToolIds:
+  - Sponge
+  - Mop
+  - Vacuum
+  dirtTag: Dirt
+  cleaningLayerName: Clean
+  layerBlendSpeed: 12
+  debugLogs: 0
 --- !u!1 &1535028625442358750
 GameObject:
   m_ObjectHideFlags: 0

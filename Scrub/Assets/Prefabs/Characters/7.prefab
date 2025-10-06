@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 701576373338411092}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.0025476217, y: 2.061, z: 0.61}
+  m_LocalPosition: {x: -0.003269, y: 1.606, z: 0.96}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1389,6 +1389,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 7f394e12257befb43992c3be83001db7, type: 3}
       insertIndex: -1
       addedObject: {fileID: -1637847807608862972}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 7f394e12257befb43992c3be83001db7, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2345121207172374331}
   m_SourcePrefab: {fileID: 100100000, guid: 7f394e12257befb43992c3be83001db7, type: 3}
 --- !u!137 &29823792102925756 stripped
 SkinnedMeshRenderer:
@@ -1740,6 +1743,37 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   holdPoint: {fileID: 1987986179021668200}
+--- !u!114 &2345121207172374331
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6763978423349608555}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d9dddb7ed790ef4aa3a14e7edb5420a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  holdPoint: {fileID: 0}
+  anim: {fileID: 0}
+  toolsLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  pickupRange: 3.5
+  dropForce: 1.5
+  pickupKey: 101
+  cleanKey: 114
+  damagePerHit: 1
+  requireCorrectTool: 1
+  validToolIds:
+  - Sponge
+  - Mop
+  - Vacuum
+  dirtTag: Dirt
+  cleaningLayerName: Clean
+  layerBlendSpeed: 12
+  debugLogs: 0
 --- !u!4 &6818505374472424636 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1134662855679897990, guid: 7f394e12257befb43992c3be83001db7, type: 3}
