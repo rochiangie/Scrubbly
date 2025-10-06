@@ -1,5 +1,5 @@
-using UnityEngine;
-using UnityEngine.Events; // Para los eventos de notificación
+ï»¿using UnityEngine;
+using UnityEngine.Events; // Para los eventos de notificaciÃ³n
 
 public class DirtManager : MonoBehaviour
 {
@@ -7,13 +7,13 @@ public class DirtManager : MonoBehaviour
 
     // Conteo total de suciedad
     private int totalDirtCount = 0;
-    // Suciedad que aún queda por limpiar
+    // Suciedad que aÃºn queda por limpiar
     private int remainingDirtCount = 0;
 
     // Eventos que notifican a la UI cuando el conteo cambia
     // El float es el valor de progreso (0.0 a 1.0)
     public UnityEvent<float> OnProgressUpdated = new UnityEvent<float>();
-    // Evento que se dispara cuando todo está limpio
+    // Evento que se dispara cuando todo estÃ¡ limpio
     public UnityEvent OnAllCleaned = new UnityEvent();
 
 
@@ -22,7 +22,7 @@ public class DirtManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            // No usamos DontDestroyOnLoad porque este manager es local a la escena de la cabaña.
+            // No usamos DontDestroyOnLoad porque este manager es local a la escena de la cabaÃ±a.
         }
         else
         {
@@ -42,8 +42,10 @@ public class DirtManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Se llama desde CleanableObject.cs cuando se interactúa con el objeto.
+    /// Se llama desde CleanableObject.cs cuando se interactÃºa con el objeto.
     /// </summary>
+    // Dentro de DirtManager.cs
+
     public void CleanDirtItem()
     {
         remainingDirtCount = Mathf.Max(0, remainingDirtCount - 1);
@@ -51,7 +53,11 @@ public class DirtManager : MonoBehaviour
 
         if (remainingDirtCount <= 0)
         {
-            Debug.Log("[CLEANING] ¡Cabaña completamente limpia!");
+            Debug.Log("[CLEANING] Â¡CabaÃ±a completamente limpia!");
+
+            // ðŸ›‘ NUEVA LÃNEA CRÃTICA: Detener el juego
+            Time.timeScale = 0f;
+
             OnAllCleaned.Invoke();
         }
     }
