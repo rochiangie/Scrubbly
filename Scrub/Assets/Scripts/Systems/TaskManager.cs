@@ -5,12 +5,15 @@ public class TaskManager : MonoBehaviour
     int totalDirt;
     int cleaned;
 
+    public TimedUIPanel notificationPanel;
     void Start()
     {
         totalDirt = FindObjectsOfType<DirtSpot>(true).Length;
         cleaned = 0;
         GameEvents.Progress(cleaned, totalDirt);
         GameEvents.OnAnyDirtCleaned += HandleCleaned;
+        notificationPanel.ShowAndHide();
+
     }
 
     void OnDestroy()
