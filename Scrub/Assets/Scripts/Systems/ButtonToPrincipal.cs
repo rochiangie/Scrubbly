@@ -6,17 +6,18 @@ public class ButtonToPrincipal : MonoBehaviour
     // Nombre de la escena de selección de personajes (es una constante codificada)
     private const string SELECTION_SCENE_NAME = "SeleccionPersonaje";
 
-    // 🛑 CAMBIO: Nombre codificado de la escena de juego o "Principal"
+    // Nombre codificado de la escena de juego o "Principal"
     private const string PRINCIPAL_SCENE_NAME = "Principal";
-
-    // Hemos eliminado la variable pública TargetPrincipalSceneName
 
     /// <summary>
     /// Función para iniciar el juego: Carga la escena 'Principal'.
-    /// Esta función se debe asignar al evento OnClick() del botón para INICIAR el juego.
     /// </summary>
     public void GoToPrincipalScene()
     {
+        // Puedes añadir StopAllCoroutines() aquí también si GoToPrincipalScene
+        // se llama desde un objeto que tiene SpotlightSelector.
+        // StopAllCoroutines(); 
+
         // Carga la escena principal del juego usando la constante.
         SceneManager.LoadScene(PRINCIPAL_SCENE_NAME);
 
@@ -29,6 +30,10 @@ public class ButtonToPrincipal : MonoBehaviour
     /// </summary>
     public void GoToSelectionScene()
     {
+        // 🛑 CORRECCIÓN CLAVE: Detener todas las corrutinas en el objeto que presiona el botón.
+        // Esto evita que las animaciones de SpotlightSelector persistan al cambiar de escena.
+        StopAllCoroutines();
+
         // Carga la escena donde se selecciona el personaje.
         SceneManager.LoadScene(SELECTION_SCENE_NAME);
 

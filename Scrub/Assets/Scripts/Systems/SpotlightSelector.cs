@@ -5,8 +5,12 @@ using System.Linq;
 
 public class SpotlightSelector : MonoBehaviour
 {
-    [Header("Candidatos en escena (root de cada personaje)")]
-    [SerializeField] Transform[] candidates;
+    // Hacemos que la lista de candidatos se maneje internamente (sin Inspector)
+    private Transform[] candidates;
+
+    [Header("Etiqueta para la búsqueda automática")]
+    [Tooltip("Etiqueta que tienen TODOS los personajes seleccionables en la escena.")]
+    public string CandidateTag = "Player"; // Usamos la etiqueta "Player" según tu confirmación
 
     [Header("Prefabs jugables (mismo orden que 'candidates')")]
     [SerializeField] GameObject[] playerPrefabs;
@@ -46,21 +50,96 @@ public class SpotlightSelector : MonoBehaviour
     int index = 0;
     bool isTransitioning = false;
 
+    // 🛑 NUEVA VARIABLE: Bloquea el input por un frame al cargar la escena.
+    bool isInputBlocked = true;
+
+
     void Awake()
     {
-        SnapTo(index);
+        // Se deja vacío o con lógica mínima. SnapTo se llama ahora en OnEnable.
     }
+
+    // ===============================================
+    // LÓGICA DE INICIALIZACIÓN
+    // ===============================================
+
+    /// <summary>
+    /// Se llama cada vez que el objeto se activa (incluyendo la recarga de escena).
+    /// </summary>
+    private void OnEnable()
+    {
+        // 1. CARGA DINÁMICA DE CANDIDATOS
+        LoadCandidatesFromScene();
+
+        // 2. Reiniciar estado y bloquear input
+        isTransitioning = false;
+        index = 0;
+        isInputBlocked = true; // El input se desbloquea en el primer Update
+
+        // 3. Colocación inicial
+        if (candidates != null && candidates.Length > 0)
+        {
+            SnapTo(index);
+        }
+        else
+        {
+            Debug.LogError("[SPOTLIGHT] No se encontró ningún personaje con la etiqueta: " + CandidateTag + ". Verifica que los personajes estén en la escena.");
+        }
+    }
+
+    /// <summary>
+    /// Busca todos los objetos con la etiqueta CandidateTag y llena el array candidates.
+    /// </summary>
+    void LoadCandidatesFromScene()
+    {
+        GameObject[] candidateObjects = GameObject.FindGameObjectsWithTag(CandidateTag);
+
+        if (candidateObjects.Length > 0)
+        {
+            // Ordenamos por nombre para asegurar un orden consistente
+            candidates = candidateObjects.OrderBy(go => go.name).Select(go => go.transform).ToArray();
+            Debug.Log($"[SPOTLIGHT] Candidatos encontrados y cargados: {candidates.Length}");
+        }
+        else
+        {
+            candidates = null;
+        }
+    }
+
+    /// <summary>
+    /// Se llama justo antes de que el objeto sea desactivado o destruido.
+    /// </summary>
+    private void OnDisable()
+    {
+        StopAllCoroutines();
+        candidates = null; // Limpia la referencia rota
+    }
+
+    // ===============================================
+    // LÓGICA DE INPUT Y TRANSICIÓN
+    // ===============================================
 
     void Update()
     {
-        // 1. Si estamos en transición de Spotlight, ignoramos todo el input para evitar bugs.
+        // 🛑 CORRECCIÓN FINAL: Bloquea el input en el primer frame.
+        if (isInputBlocked)
+        {
+            isInputBlocked = false; // Desbloquea para el siguiente frame
+            return;
+        }
+
+        // Comprobación de seguridad
+        if (candidates == null || candidates.Length == 0)
+        {
+            return;
+        }
+
         if (isTransitioning)
         {
             return;
         }
 
-        // 2. Lógica de FOCO (mover)
-        // El 'Focus' actualiza el 'index' y comienza la corrutina AnimateTo, lo que establece isTransitioning = true.
+        // Lógica de FOCO (mover)
         if (Input.GetKeyDown(prev1) || Input.GetKeyDown(prev2))
         {
             Focus(-1);
@@ -70,11 +149,10 @@ public class SpotlightSelector : MonoBehaviour
             Focus(+1);
         }
 
-        // 3. Lógica de CONFIRMAR
-        // Esto solo se ejecuta si NO estamos ya en transición (ver el 'return' de arriba).
+        // Lógica de CONFIRMAR
         else if (Input.GetKeyDown(confirmKey) ||
                  Input.GetKeyDown(confirmAlt) ||
-                 Input.GetKeyDown(KeyCode.KeypadEnter)) // Añadimos el Enter numérico
+                 Input.GetKeyDown(KeyCode.KeypadEnter))
         {
             Confirm();
         }
@@ -98,6 +176,23 @@ public class SpotlightSelector : MonoBehaviour
     void Confirm()
     {
         if (candidates == null || candidates.Length == 0) return;
+
+        // 1. Comprobación estricta del candidato
+        if (index < 0 || index >= candidates.Length)
+        {
+            Debug.LogError("[SELECTION] Índice de candidato fuera de rango: " + index);
+            return;
+        }
+
+        Transform selectedCandidate = candidates[index];
+        if (selectedCandidate == null)
+        {
+            // Si llega aquí, significa que el objeto fue destruido mientras el script intentaba usarlo.
+            Debug.LogError("[SELECTION] El Transform del candidato seleccionado ya fue destruido (NULL Reference). La escena no está cargando los objetos Player correctamente.");
+            return;
+        }
+
+        // 2. Comprobación del controlador
         if (GameDataController.Instance == null)
         {
             Debug.LogError("[SELECTION] GameDataController NO encontrado. Cargando escena...");
@@ -105,26 +200,11 @@ public class SpotlightSelector : MonoBehaviour
             return;
         }
 
-        // 🛑 CAMBIO CLAVE: Usamos el nombre del Transform del candidato actual (ej: "1", "9", "Male")
-        string characterID = candidates[index].name;
-
-        // Puedes usar el nombre del Prefab en su lugar si lo prefieres, pero el nombre del Transform es más directo
-        /*
-        if (usePrefabs && playerPrefabs != null && index < playerPrefabs.Length && playerPrefabs[index] != null)
-        {
-            characterID = playerPrefabs[index].name;
-        }
-        else
-        {
-            characterID = candidates[index].name;
-        }
-        */
-
-        // 1. Guardar el ID (el nombre) en el controlador persistente
+        // 3. Guardar y cargar
+        string characterID = selectedCandidate.name;
         Debug.Log($"[SELECTION] Guardando ID Final (Nombre): {characterID}");
         GameDataController.Instance.SetSelectedCharacter(characterID);
 
-        // 2. Cargar la siguiente escena
         SceneManager.LoadScene(nextSceneName);
     }
 
@@ -135,7 +215,13 @@ public class SpotlightSelector : MonoBehaviour
 
         if (candidates == null || candidates.Length == 0) { isTransitioning = false; yield break; }
 
+        if (i < 0 || i >= candidates.Length || candidates[i] == null) { isTransitioning = false; yield break; }
+
         Transform t = candidates[i];
+
+        if (t == null) { isTransitioning = false; yield break; }
+
+
         Transform anchor = GetAnchor(t);
 
         Vector3 startPos = transform.position;
@@ -172,6 +258,8 @@ public class SpotlightSelector : MonoBehaviour
         if (candidates == null || candidates.Length == 0) return;
 
         Transform t = candidates[i];
+        if (t == null) return;
+
         Transform anchor = GetAnchor(t);
 
         Vector3 p = ComputeSpotPosition(t);
@@ -222,6 +310,7 @@ public class SpotlightSelector : MonoBehaviour
 
     Transform FindDeepContains(Transform r, string part)
     {
+        if (r == null) return null;
         if (r.name.ToLower().Contains(part.ToLower())) return r;
         for (int i = 0; i < r.childCount; i++)
         {
