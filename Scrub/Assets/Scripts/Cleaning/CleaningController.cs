@@ -17,11 +17,11 @@ public class CleaningController : MonoBehaviour
     [SerializeField] private float dropForce = 1.5f;
 
     [Header("Input (teclas simples)")]
-    [SerializeField] private KeyCode pickupKey = KeyCode.E;
-    [SerializeField] private KeyCode cleanKey = KeyCode.R;
+    [SerializeField] private KeyCode generalInteractKey = KeyCode.E; // (De PlayerInteraction)
+    [SerializeField] private KeyCode cleanKey = KeyCode.R; // 🛑 Tu tecla de limpieza (por defecto R)
 
     [Header("Cleaning")]
-    // NOTA: 'damagePerHit' es ahora un multiplicador del poder de la herramienta
+    // NOTA: 'damageMultiplier' es el multiplicador del poder de la herramienta
     [SerializeField] private float damageMultiplier = 1f;
     [SerializeField] private bool requireCorrectTool = true;
     [SerializeField] private string[] validToolIds = { "Mop", "Sponge", "Vacuum" };
@@ -35,7 +35,6 @@ public class CleaningController : MonoBehaviour
     [SerializeField] private bool debugLogs = false;
 
     // ESTADO CRÍTICO
-    // NOTA: Asumimos que ToolDescriptor tiene el método 'bool TryUse()'
     public ToolDescriptor CurrentTool { get; private set; }
     private List<DirtSpot> nearbyDirt = new List<DirtSpot>();
 
@@ -55,28 +54,30 @@ public class CleaningController : MonoBehaviour
     private void Update()
     {
         bool holding = CurrentTool != null;
-        bool cleanPressed = Input.GetKeyDown(cleanKey);
         bool dirtNearby = nearbyDirt.Count > 0;
 
-        // Logging de input
-        if (cleanPressed && debugLogs)
+        // 🛑 CAMBIO CRÍTICO: Chequea la tecla (R) O el clic izquierdo (Fire1)
+        bool cleanInputPressed = Input.GetKeyDown(cleanKey) || Input.GetButtonDown("Fire1");
+
+        // Log de diagnóstico para el input
+        if (cleanInputPressed && debugLogs)
         {
             string toolID = holding ? CurrentTool.toolId : "NONE";
-            DLog($"[INPUT TEST] Tecla 'R' PRESIONADA. Holding={holding}, Tool={toolID}, DirtNearby={dirtNearby}");
+            DLog($"[INPUT TEST] Tecla/Clic PRESIONADO. Holding={holding}, Tool={toolID}, DirtNearby={dirtNearby}");
         }
 
-        UpdateCleaningLayer(holding && dirtNearby && cleanPressed); // Animación solo si hay input
+        // Animación solo si hay input
+        UpdateCleaningLayer(holding && dirtNearby && cleanInputPressed);
 
-        // Solo golpeamos si hay herramienta, se presionó el input y hay suciedad
-        if (holding && cleanPressed && dirtNearby)
+        // Solo golpeamos si hay herramienta, se presionó el input (tecla o clic) y hay suciedad
+        if (holding && cleanInputPressed && dirtNearby)
         {
             ApplyCleanHit();
         }
     }
 
     // ================== Detección por Trigger (Suciedad) ==================
-    // (Lógica de detección y remoción de nearbyDirt se mantiene igual, es correcta)
-    // ... (Métodos OnTriggerEnter y OnTriggerExit se mantienen) ...
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag(dirtTag))
@@ -107,7 +108,6 @@ public class CleaningController : MonoBehaviour
 
     // ================== Métodos Públicos de Interacción ==================
 
-    // ... (Método RegisterTool se mantiene) ...
     public void RegisterTool(ToolDescriptor tool)
     {
         if (tool == null)
@@ -119,7 +119,6 @@ public class CleaningController : MonoBehaviour
         DLog($"[EXTERNAL REGISTER] Herramienta '{tool.name}' registrada correctamente.");
     }
 
-    // ... (Método DropCurrentTool se mantiene) ...
     public void DropCurrentTool()
     {
         if (!CurrentTool) return;
@@ -139,7 +138,7 @@ public class CleaningController : MonoBehaviour
         DLog("[Pickup] DROP realizado por CleaningController.");
     }
 
-    // ================== Lógica Interna de Limpieza (EL CAMBIO CRÍTICO) ==================
+    // ================== Lógica Interna de Limpieza ==================
 
     private void Equip(ToolDescriptor tool)
     {
@@ -162,8 +161,7 @@ public class CleaningController : MonoBehaviour
     {
         if (CurrentTool == null) return;
 
-        // CRÍTICO: 1. Intentar usar la herramienta. 
-        // Si TryUse devuelve false, la herramienta se destruyó en ese llamado.
+        // 1. Intentar usar la herramienta (consumo de durabilidad)
         bool successfullyUsed = CurrentTool.TryUse();
 
         if (!successfullyUsed)
