@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
-using System.Linq;
+using System.Linq; // Necesario para usar OrderBy y FirstOrDefault
 
 [RequireComponent(typeof(Animator))]
 public class CleaningController : MonoBehaviour
@@ -77,7 +77,7 @@ public class CleaningController : MonoBehaviour
     }
 
     // ================== Detección por Trigger (Suciedad) ==================
-
+    // ... (Estas funciones se mantienen sin cambios, ya que solo manejan la lista de objetos en rango) ...
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag(dirtTag))
@@ -106,7 +106,7 @@ public class CleaningController : MonoBehaviour
         }
     }
 
-    // ================== Métodos Públicos de Interacción ==================
+    // ================== Métodos Públicos de Interacción (sin cambios) ==================
 
     public void RegisterTool(ToolDescriptor tool)
     {
@@ -161,7 +161,21 @@ public class CleaningController : MonoBehaviour
     {
         if (CurrentTool == null) return;
 
-        // 1. Intentar usar la herramienta (consumo de durabilidad)
+        // 1. Limpiamos la lista de referencias nulas y eliminadas
+        nearbyDirt.RemoveAll(dirt => dirt == null);
+
+        if (nearbyDirt.Count == 0) return;
+
+        // 2. 🛑 ENCONTRAR Y SELECCIONAR EL DIRT SPOT MÁS CERCANO 🛑
+
+        // Usamos LINQ para ordenar los DirtSpots por la distancia desde la posición de este objeto.
+        DirtSpot closestDirt = nearbyDirt
+            .OrderBy(dirt => Vector3.Distance(transform.position, dirt.transform.position))
+            .FirstOrDefault();
+
+        if (closestDirt == null) return;
+
+        // 3. Intentar usar la herramienta (consumo de durabilidad)
         bool successfullyUsed = CurrentTool.TryUse();
 
         if (!successfullyUsed)
@@ -171,34 +185,27 @@ public class CleaningController : MonoBehaviour
             return;
         }
 
-        // Si la herramienta pudo usarse, aplicamos el golpe a todos los spots cercanos
+        // Si la herramienta pudo usarse, aplicamos el golpe SOLAMENTE al spot más cercano
         float damage = damageMultiplier * CurrentTool.toolPower;
 
-        for (int i = nearbyDirt.Count - 1; i >= 0; i--)
+        // 4. Comprobación de herramienta correcta
+        if (requireCorrectTool && !closestDirt.CanBeCleanedBy(CurrentTool.toolId))
         {
-            DirtSpot dirt = nearbyDirt[i];
-
-            if (dirt == null)
-            {
-                nearbyDirt.RemoveAt(i);
-                continue;
-            }
-
-            // 2. Comprobación de herramienta correcta
-            if (requireCorrectTool && !dirt.CanBeCleanedBy(CurrentTool.toolId))
-            {
-                DLogWarning($"[Clean FAIL 1: Tool Mismatch] Herramienta '{CurrentTool.toolId}' no limpia {dirt.name}.");
-                continue;
-            }
-
-            // 3. Aplicamos el daño
-            dirt.CleanHit(damage);
-
-            DLog($"[Clean HIT OK] Aplicando {damage:F2} de daño a {dirt.name}.");
+            DLogWarning($"[Clean FAIL 1: Tool Mismatch] Herramienta '{CurrentTool.toolId}' no limpia {closestDirt.name}.");
+            return; // No aplicamos daño
         }
+
+        // 5. Aplicamos el daño
+        closestDirt.CleanHit(damage);
+
+        DLog($"[Clean HIT OK] Aplicando {damage:F2} de daño SOLAMENTE a {closestDirt.name} (el más cercano).");
+
+        // Opcional: Si el DirtSpot se destruye inmediatamente después del golpe final, 
+        // se eliminará de la lista en la siguiente actualización del TriggerExit/OnTriggerEnter, 
+        // o por la limpieza de nulos al inicio de esta función.
     }
 
-    // ================== Utilities ==================
+    // ================== Utilities (sin cambios) ==================
 
     private static void SetAllCollidersTrigger(GameObject go, bool isTrigger)
     {
