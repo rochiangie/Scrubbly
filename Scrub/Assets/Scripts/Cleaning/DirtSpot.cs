@@ -17,13 +17,14 @@ public class DirtSpot : MonoBehaviour
     [Header("Salud y Requisitos")]
     [Tooltip("La vida máxima que tiene la suciedad.")]
     [SerializeField]
-    private float maxHealth = 10f; // VALOR BAJO PARA PRUEBAS (10f)
+    private float maxHealth = 10f; // Ajusta este valor en el Inspector.
 
-    [Tooltip("El ID de la herramienta requerida para limpiar esta suciedad (ej. 'Sponge', 'Scrubber').")]
+    [Tooltip("El ID de la herramienta requerida para limpiar esta suciedad.")]
     [SerializeField]
     private string requiredToolId = "Sponge";
 
     private float currentHealth;
+    private bool isDestroyed = false; // Bandera para evitar doble conteo/notificación
 
     // ===============================================
     //               MÉTODOS DE UNITY
@@ -31,17 +32,22 @@ public class DirtSpot : MonoBehaviour
 
     void Awake()
     {
-        // Inicializa la vida del objeto
         currentHealth = maxHealth;
+    }
+
+    void Start()
+    {
+        // Al inicio, registra este objeto en el manager si existe una instancia.
+        if (DirtManager.Instance != null)
+        {
+            DirtManager.Instance.RegisterDirtItem();
+        }
     }
 
     // ===============================================
     //               LÓGICA DE LIMPIEZA
     // ===============================================
 
-    /// <summary>
-    /// Devuelve TRUE si la herramienta con el 'toolId' proporcionado puede limpiar este objeto.
-    /// </summary>
     public bool CanBeCleanedBy(string toolId)
     {
         if (string.IsNullOrEmpty(requiredToolId))
@@ -52,17 +58,12 @@ public class DirtSpot : MonoBehaviour
         return requiredToolId == toolId;
     }
 
-    /// <summary>
-    /// Aplica el daño de limpieza al objeto de suciedad.
-    /// (Llamado desde CleaningController.cs)
-    /// </summary>
     public void CleanHit(float damage)
     {
-        // 1. Aplica el daño
-        currentHealth -= damage;
-        // DLog eliminado aquí.
+        if (isDestroyed) return;
 
-        // 2. Comprueba si debe destruirse
+        currentHealth -= damage;
+
         if (currentHealth <= 0)
         {
             HandleDestruction();
@@ -70,26 +71,63 @@ public class DirtSpot : MonoBehaviour
     }
 
     // ===============================================
-    //             DESTRUCCIÓN (CON PARTÍCULAS)
+    //             DESTRUCCIÓN (FINAL Y ROBUSTA)
     // ===============================================
 
-    /// <summary>
-    /// Maneja la destrucción del objeto, incluyendo la instanciación de partículas.
-    /// </summary>
     private void HandleDestruction()
     {
-        // 1. INSTANCIAR EL EFECTO DE PARTÍCULAS
-        if (destructionEffectPrefab != null)
-        {
-            // Instancia el efecto en la posición del objeto antes de destruirlo.
-            // El Prefab de partículas debe tener Stop Action = Destroy para auto-eliminarse.
-            Instantiate(destructionEffectPrefab, transform.position, Quaternion.identity);
+        if (isDestroyed) return;
+        isDestroyed = true; // Marca como destruido
 
-            // DLog eliminado aquí.
+        // 1. NOTIFICAR AL MANAGER
+        if (DirtManager.Instance != null)
+        {
+            DirtManager.Instance.CleanDirtItem();
         }
 
-        // 2. DESTRUIR EL OBJETO ACTUAL (LA SUCIEDAD)
-        // DLog eliminado aquí.
+        // 2. INSTANCIAR Y CONFIGURAR PARTÍCULAS
+        if (destructionEffectPrefab != null)
+        {
+            GameObject effectInstance = Instantiate(destructionEffectPrefab, transform.position, Quaternion.identity);
+            ParticleSystem[] allParticleSystems = effectInstance.GetComponentsInChildren<ParticleSystem>();
+
+            // Forzar la escala del objeto instanciado a 1,1,1 para asegurar el tamaño
+            effectInstance.transform.localScale = Vector3.one;
+
+            // CALCULAR LA DURACIÓN MÁXIMA
+            float maxDuration = 0f;
+
+            foreach (ParticleSystem ps in allParticleSystems)
+            {
+                var main = ps.main;
+
+                // Desactivar loopeo
+                main.loop = false;
+
+                // Importante: No uses stopAction = Destroy aquí si usas el temporizador global.
+                // Sin embargo, si lo incluyes no causa problemas y asegura la no repetición de loop.
+                main.stopAction = ParticleSystemStopAction.Destroy;
+
+                // Controlar tamaño (al 5% para que sea pequeño)
+                main.startSizeMultiplier = 0.05f;
+
+                ps.Play();
+
+                // Encuentra la duración más larga entre todos los sistemas
+                if (ps.main.duration > maxDuration)
+                {
+                    // La duración del sistema se basa en Duration (si no loopea) o StartLifetime
+                    maxDuration = ps.main.duration;
+                }
+            }
+
+            // DESTRUIR EL OBJETO PADRE (effectInstance) CON UN RETRASO
+            // Usamos la duración más larga + un pequeño margen (ej. 0.5s)
+            float destroyDelay = maxDuration + 0.5f;
+            Destroy(effectInstance, destroyDelay);
+        }
+
+        // 3. DESTRUIR EL OBJETO ACTUAL (LA SUCIEDAD)
         Destroy(gameObject);
     }
 }
