@@ -2,65 +2,94 @@
 
 public class DirtSpot : MonoBehaviour
 {
-    // [Header("Configuración de Limpieza")] // Opcional
-    [SerializeField] private string requiredToolId = "";
-    [SerializeField] public float dirtHealth = 3.0f;
-
-    // Bandera para evitar doble conteo si se golpea varias veces después de morir
-    private bool isCleaned = false;
-
-    public string RequiredToolId => requiredToolId;
-
     // ===============================================
-    // REGISTRO EN EL MANAGER
+    //               VARIABLES PÚBLICAS
     // ===============================================
 
-    void Start()
+    [Header("Efecto de Destrucción")]
+    [Tooltip("Prefab del sistema de partículas que se instanciará al destruirse.")]
+    public GameObject destructionEffectPrefab;
+
+    // ===============================================
+    //               CONFIGURACIÓN DE SALUD Y REQUISITOS
+    // ===============================================
+
+    [Header("Salud y Requisitos")]
+    [Tooltip("La vida máxima que tiene la suciedad.")]
+    [SerializeField]
+    private float maxHealth = 10f; // VALOR BAJO PARA PRUEBAS (10f)
+
+    [Tooltip("El ID de la herramienta requerida para limpiar esta suciedad (ej. 'Sponge', 'Scrubber').")]
+    [SerializeField]
+    private string requiredToolId = "Sponge";
+
+    private float currentHealth;
+
+    // ===============================================
+    //               MÉTODOS DE UNITY
+    // ===============================================
+
+    void Awake()
     {
-        // 🛑 CRÍTICO: Registrarse en el DirtManager al inicio
-        if (DirtManager.Instance != null)
+        // Inicializa la vida del objeto
+        currentHealth = maxHealth;
+    }
+
+    // ===============================================
+    //               LÓGICA DE LIMPIEZA
+    // ===============================================
+
+    /// <summary>
+    /// Devuelve TRUE si la herramienta con el 'toolId' proporcionado puede limpiar este objeto.
+    /// </summary>
+    public bool CanBeCleanedBy(string toolId)
+    {
+        if (string.IsNullOrEmpty(requiredToolId))
         {
-            DirtManager.Instance.RegisterDirtItem();
+            return true;
         }
-        else
+
+        return requiredToolId == toolId;
+    }
+
+    /// <summary>
+    /// Aplica el daño de limpieza al objeto de suciedad.
+    /// (Llamado desde CleaningController.cs)
+    /// </summary>
+    public void CleanHit(float damage)
+    {
+        // 1. Aplica el daño
+        currentHealth -= damage;
+        // DLog eliminado aquí.
+
+        // 2. Comprueba si debe destruirse
+        if (currentHealth <= 0)
         {
-            Debug.LogError("[DIRTSPOT] DirtManager no encontrado. El conteo de progreso no funcionará para este objeto.");
+            HandleDestruction();
         }
     }
 
     // ===============================================
-    // LÓGICA DE HERRAMIENTAS
+    //             DESTRUCCIÓN (CON PARTÍCULAS)
     // ===============================================
 
-    public bool CanBeCleanedBy(string toolId)
-        => string.IsNullOrEmpty(requiredToolId) || requiredToolId == toolId;
-
-    // ===============================================
-    // LÓGICA DE DAÑO Y DESTRUCCIÓN
-    // ===============================================
-
-    public void CleanHit(float damage)
+    /// <summary>
+    /// Maneja la destrucción del objeto, incluyendo la instanciación de partículas.
+    /// </summary>
+    private void HandleDestruction()
     {
-        if (isCleaned) return; // Ya está limpio, ignorar golpes adicionales
-
-        dirtHealth -= damage;
-        // Debug.Log($"[DIRT STATUS] {name} recibió {damage:F2} de daño. Vida restante: {dirtHealth:F2}");
-
-        if (dirtHealth <= 0f)
+        // 1. INSTANCIAR EL EFECTO DE PARTÍCULAS
+        if (destructionEffectPrefab != null)
         {
-            // 1. Notificar al gestor ANTES de destruirse
-            if (DirtManager.Instance != null)
-            {
-                // 🛑 CRÍTICO: Informar al Manager que se ha limpiado un objeto
-                DirtManager.Instance.CleanDirtItem();
-            }
+            // Instancia el efecto en la posición del objeto antes de destruirlo.
+            // El Prefab de partículas debe tener Stop Action = Destroy para auto-eliminarse.
+            Instantiate(destructionEffectPrefab, transform.position, Quaternion.identity);
 
-            // 2. Marcar como limpio y evitar más notificaciones
-            isCleaned = true;
-
-            // 3. Destruir el objeto
-            // Debug.Log($"[DIRT] {name} limpio! Destruyendo objeto.");
-            Destroy(gameObject);
+            // DLog eliminado aquí.
         }
+
+        // 2. DESTRUIR EL OBJETO ACTUAL (LA SUCIEDAD)
+        // DLog eliminado aquí.
+        Destroy(gameObject);
     }
 }

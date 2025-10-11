@@ -17,11 +17,10 @@ public class CleaningController : MonoBehaviour
     [SerializeField] private float dropForce = 1.5f;
 
     [Header("Input (teclas simples)")]
-    [SerializeField] private KeyCode generalInteractKey = KeyCode.E; // (De PlayerInteraction)
+    [SerializeField] private KeyCode generalInteractKey = KeyCode.E;
     [SerializeField] private KeyCode cleanKey = KeyCode.R; // 🛑 Tu tecla de limpieza (por defecto R)
 
     [Header("Cleaning")]
-    // NOTA: 'damageMultiplier' es el multiplicador del poder de la herramienta
     [SerializeField] private float damageMultiplier = 1f;
     [SerializeField] private bool requireCorrectTool = true;
     [SerializeField] private string[] validToolIds = { "Mop", "Sponge", "Vacuum" };
@@ -37,6 +36,9 @@ public class CleaningController : MonoBehaviour
     // ESTADO CRÍTICO
     public ToolDescriptor CurrentTool { get; private set; }
     private List<DirtSpot> nearbyDirt = new List<DirtSpot>();
+
+    // NUEVA VAR: Indica si se está manteniendo el input de limpieza
+    private bool isCleaningInputHeld = false;
 
     private int cleaningLayerIndex = -1;
 
@@ -56,28 +58,35 @@ public class CleaningController : MonoBehaviour
         bool holding = CurrentTool != null;
         bool dirtNearby = nearbyDirt.Count > 0;
 
-        // 🛑 CAMBIO CRÍTICO: Chequea la tecla (R) O el clic izquierdo (Fire1)
-        bool cleanInputPressed = Input.GetKeyDown(cleanKey) || Input.GetButtonDown("Fire1");
+        // 🛑 CAMBIO CRÍTICO: MANEJO DE INPUT DE LIMPIEZA
+        // Usamos GetKey/GetButton para detectar si la tecla está MANTENIDA (animación continua)
+        isCleaningInputHeld = Input.GetKey(cleanKey) || Input.GetButton("Fire1");
 
         // Log de diagnóstico para el input
-        if (cleanInputPressed && debugLogs)
+        if (isCleaningInputHeld && debugLogs)
         {
             string toolID = holding ? CurrentTool.toolId : "NONE";
-            DLog($"[INPUT TEST] Tecla/Clic PRESIONADO. Holding={holding}, Tool={toolID}, DirtNearby={dirtNearby}");
+            DLog($"[INPUT TEST] Tecla/Clic MANTENIDO. Holding={holding}, Tool={toolID}, DirtNearby={dirtNearby}");
         }
 
-        // Animación solo si hay input
-        UpdateCleaningLayer(holding && dirtNearby && cleanInputPressed);
+        // Animación se activa si se está sosteniendo la herramienta Y se mantiene el input de limpieza
+        UpdateCleaningLayer(holding && isCleaningInputHeld);
 
-        // Solo golpeamos si hay herramienta, se presionó el input (tecla o clic) y hay suciedad
-        if (holding && cleanInputPressed && dirtNearby)
+        // Solo aplicamos el HIT una vez (GetKeyDown/GetButtonDown) para evitar daño excesivo por frame
+        // Si tu animación es un ciclo, puedes usar GetKey/GetButton y controlar el daño por tiempo (cooldown)
+        bool cleanInputDown = Input.GetKeyDown(cleanKey) || Input.GetButtonDown("Fire1");
+
+        if (holding && cleanInputDown && dirtNearby)
         {
+            // Si quieres daño constante mientras mantienes la tecla:
+            // Aplica un golpe fuerte o llama a un método de Coroutine.
+            // Aquí se usa el enfoque simple de un golpe por pulsación.
             ApplyCleanHit();
         }
     }
 
     // ================== Detección por Trigger (Suciedad) ==================
-    // ... (Estas funciones se mantienen sin cambios, ya que solo manejan la lista de objetos en rango) ...
+    // ... (Mantén OnTriggerEnter y OnTriggerExit sin cambios) ...
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag(dirtTag))
@@ -98,13 +107,19 @@ public class CleaningController : MonoBehaviour
         {
             DirtSpot dirt = other.GetComponent<DirtSpot>() ?? other.GetComponentInParent<DirtSpot>();
 
+            // **IMPORTANTE**: La suciedad DEBE estar limpia (destruida) para que este trigger se resuelva. 
+            // Si el objeto 'dirt' no es nulo, significa que sigue existiendo en el Trigger.
+
             if (dirt != null && nearbyDirt.Contains(dirt))
             {
                 nearbyDirt.Remove(dirt);
                 DLog($"[Clean Trigger] 🔴 Dejado: {dirt.name}. Quedan {nearbyDirt.Count} spots.");
             }
+            // NOTA: Si un DirtSpot se destruye, Unity automáticamente llama a OnTriggerExit. 
+            // Si el objeto ya fue destruido, 'dirt' será nulo, y la limpieza de la lista se hace en ApplyCleanHit.
         }
     }
+
 
     // ================== Métodos Públicos de Interacción (sin cambios) ==================
 
@@ -161,12 +176,12 @@ public class CleaningController : MonoBehaviour
     {
         if (CurrentTool == null) return;
 
-        // 1. Limpiamos la lista de referencias nulas y eliminadas
+        // 1. Limpiamos la lista de referencias nulas (objetos destruidos)
         nearbyDirt.RemoveAll(dirt => dirt == null);
 
         if (nearbyDirt.Count == 0) return;
 
-        // 2. 🛑 ENCONTRAR Y SELECCIONAR EL DIRT SPOT MÁS CERCANO 🛑
+        // 2. ENCONTRAR Y SELECCIONAR EL DIRT SPOT MÁS CERCANO
 
         // Usamos LINQ para ordenar los DirtSpots por la distancia desde la posición de este objeto.
         DirtSpot closestDirt = nearbyDirt
@@ -195,14 +210,10 @@ public class CleaningController : MonoBehaviour
             return; // No aplicamos daño
         }
 
-        // 5. Aplicamos el daño
+        // 5. Aplicamos el daño. Este método contiene la lógica de destrucción y partículas.
         closestDirt.CleanHit(damage);
 
         DLog($"[Clean HIT OK] Aplicando {damage:F2} de daño SOLAMENTE a {closestDirt.name} (el más cercano).");
-
-        // Opcional: Si el DirtSpot se destruye inmediatamente después del golpe final, 
-        // se eliminará de la lista en la siguiente actualización del TriggerExit/OnTriggerEnter, 
-        // o por la limpieza de nulos al inicio de esta función.
     }
 
     // ================== Utilities (sin cambios) ==================
@@ -217,7 +228,10 @@ public class CleaningController : MonoBehaviour
     {
         if (anim == null) return;
         anim.SetBool("IsHolding", CurrentTool != null);
+
+        // El booleano IsCleaning ahora se mantiene mientras el jugador mantiene la tecla/clic
         anim.SetBool("IsCleaning", shouldUseCleaning);
+
         if (cleaningLayerIndex >= 0)
         {
             float cur = anim.GetLayerWeight(cleaningLayerIndex);
