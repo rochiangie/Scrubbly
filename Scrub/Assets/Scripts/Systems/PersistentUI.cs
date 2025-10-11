@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using Cinemachine;                 // Necesario si usas CinemachineBrain
+using Cinemachine; // ¡Añadimos el 'using' que faltaba para la referencia!
 
 public class PersistentUI : MonoBehaviour
 {
@@ -10,7 +10,7 @@ public class PersistentUI : MonoBehaviour
 
     private void Awake()
     {
-        // === 1. Implementación del Singleton Persistente ===
+        // Implementación del patrón Singleton para la persistencia
         if (Instance == null)
         {
             Instance = this;
@@ -22,7 +22,6 @@ public class PersistentUI : MonoBehaviour
             return;
         }
 
-        // Obtener la referencia al componente Canvas
         canvasComponent = GetComponent<Canvas>();
         if (canvasComponent == null)
         {
@@ -30,7 +29,6 @@ public class PersistentUI : MonoBehaviour
         }
     }
 
-    // === 2. Suscripción y Desuscripción a Eventos de Escena ===
     private void OnEnable()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
@@ -41,32 +39,24 @@ public class PersistentUI : MonoBehaviour
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
-    /// <summary>
-    /// Se ejecuta cada vez que se carga una nueva escena.
-    /// </summary>
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         if (canvasComponent == null) return;
 
-        // --- Paso A: Ajuste para el modo Screen Space - Camera ---
+        // Solo reajustamos si el Canvas está configurado para renderizarse con una cámara
         if (canvasComponent.renderMode == RenderMode.ScreenSpaceCamera)
         {
-            // 1. Buscamos la cámara que está renderizando la escena.
             Camera renderingCamera = FindRenderingCamera();
 
             if (renderingCamera != null)
             {
-                // 2. Asignamos la nueva cámara al Canvas persistente.
+                // Asignamos la cámara (la MainCamera con CinemachineBrain)
                 canvasComponent.worldCamera = renderingCamera;
-
-                // Opcional pero recomendado: si usas un Canvas Scaler, asegúrate de que use el Camera Plane.
-                // canvasComponent.planeDistance = renderingCamera.nearClipPlane + 0.1f; 
-
                 Debug.Log($"[PERSISTENT UI] Canvas reajustado a la cámara: {renderingCamera.name} en escena: {scene.name}");
             }
             else
             {
-                Debug.LogWarning($"[PERSISTENT UI] ¡ADVERTENCIA! No se encontró una cámara para reajustar el Canvas en la escena: {scene.name}.");
+                Debug.LogWarning($"[PERSISTENT UI] ¡ADVERTENCIA! No se encontró la MainCamera (con Tag: MainCamera) para reajustar el Canvas en la escena: {scene.name}.");
             }
         }
     }
@@ -81,30 +71,20 @@ public class PersistentUI : MonoBehaviour
 
         if (mainCam != null)
         {
-            // 2. Si la encontramos, verificamos si tiene un Cinemachine Brain (la cámara que queremos).
+            // 2. Si tiene el Cinemachine Brain, es la cámara que queremos.
             if (mainCam.GetComponent<CinemachineBrain>() != null)
             {
                 return mainCam;
             }
-            // Si la MainCamera está activa y no tiene Brain (escena de menú, por ejemplo), la usamos.
+            // Si no tiene Brain, pero es la MainCamera (ej. Menú), la usamos.
             return mainCam;
         }
 
-        // 3. Si Camera.main falló, buscamos cualquier cámara activa con el Brain.
+        // 3. Fallback: Buscar cualquier CinemachineBrain activo.
         CinemachineBrain brain = FindObjectOfType<CinemachineBrain>();
         if (brain != null)
         {
             return brain.GetComponent<Camera>();
-        }
-
-        // 4. Último recurso: buscar todas las cámaras.
-        Camera[] allCameras = Camera.allCameras;
-        foreach (Camera cam in allCameras)
-        {
-            if (cam.enabled && cam.tag == "MainCamera")
-            {
-                return cam;
-            }
         }
 
         return null; // No se encontró una cámara válida.
