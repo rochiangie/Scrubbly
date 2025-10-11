@@ -1,12 +1,16 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using Cinemachine; // ¡Añadimos el 'using' que faltaba para la referencia!
+using Unity.Cinemachine;
 
 public class PersistentUI : MonoBehaviour
 {
     public static PersistentUI Instance;
     private Canvas canvasComponent;
+
+    // Distancia al plano de corte cercano de la cámara. 
+    // Un valor pequeño como 0.1f es seguro para que el Canvas se dibuje 'justo' delante.
+    private const float CANVAS_PLANE_OFFSET = 0.1f;
 
     private void Awake()
     {
@@ -50,9 +54,15 @@ public class PersistentUI : MonoBehaviour
 
             if (renderingCamera != null)
             {
-                // Asignamos la cámara (la MainCamera con CinemachineBrain)
+                // 1. Asignamos la nueva cámara
                 canvasComponent.worldCamera = renderingCamera;
-                Debug.Log($"[PERSISTENT UI] Canvas reajustado a la cámara: {renderingCamera.name} en escena: {scene.name}");
+
+                // 2. AJUSTE CRÍTICO: Movemos el plano de renderizado del Canvas para que esté 
+                //    justo delante del plano de corte cercano de la cámara (Near Clip Plane).
+                //    Esto asegura que se dibuje correctamente en la nueva vista.
+                canvasComponent.planeDistance = renderingCamera.nearClipPlane + CANVAS_PLANE_OFFSET;
+
+                Debug.Log($"[PERSISTENT UI] Canvas reajustado a la cámara: {renderingCamera.name} en escena: {scene.name}. Distancia del plano: {canvasComponent.planeDistance}");
             }
             else
             {
