@@ -2585,6 +2585,7 @@ GameObject:
   m_Component:
   - component: {fileID: 760063314}
   - component: {fileID: 760063315}
+  - component: {fileID: 760063316}
   m_Layer: 5
   m_Name: Slider
   m_TagString: Untagged
@@ -2665,6 +2666,18 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &760063316
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 760063313}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6cef392e4ee245459f808eced8ef53b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &765541271
 GameObject:
   m_ObjectHideFlags: 0
@@ -7465,9 +7478,9 @@ MonoBehaviour:
   OnProgressUpdated:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 760063315}
-        m_TargetAssemblyTypeName: UnityEngine.UI.Slider, UnityEngine.UI
-        m_MethodName: set_value
+      - m_Target: {fileID: 760063316}
+        m_TargetAssemblyTypeName: SliderUpdater, Assembly-CSharp
+        m_MethodName: UpdateSliderValue
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

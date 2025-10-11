@@ -914,8 +914,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Insert Lore aqui
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 6b064eb6d4f14a44e8b30e85a7cbb756, type: 2}
+  m_sharedMaterial: {fileID: 743754579194491402, guid: 6b064eb6d4f14a44e8b30e85a7cbb756, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -977,7 +977,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: -1.991765, y: -0.9955673, z: -3.9453828, w: 0.3273902}
+  m_margin: {x: -1.991765, y: -1.633398, z: -3.9453828, w: 0.3273902}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -1538,11 +1538,11 @@ MonoBehaviour:
   - characterID: 7
     loreText: "Jos\xE9 trabaja en el area de limpieza en un hotel y padece TOC. Cada
       habitaci\xF3n debe quedar perfecta, sim\xE9trica, pura.\nEn la 302 se hospeda
-      un escritor que no tira nada: papeles, borradores, tazas de caf\xE9, colillas.\nElla
+      un escritor que no tira nada: papeles, borradores, tazas de caf\xE9, colillas.\nEl
       limpia igual, pero sin tocar lo que \xE9l considera \u201Cparte de su proceso\u201D.\nCon
       el tiempo, empiezan a hablar. \xC9l le dice: \u201CTu limpieza me da claridad.\u201D\nCuando
       \xE9l se va, deja una nota: \u201CEl orden tambi\xE9n puede ser poes\xEDa.\u201D\nPor
-      primera vez, Laura deja una cama sin tensar del todo."
+      primera vez, \xE9l deja una cama sin tensar del todo."
   - characterID: 8
     loreText: "Rafael limpia las calles desde hace veinte a\xF1os. Su TOC lo hace
       pasar tres veces por el mismo tramo.\nEn un edificio frente a su ruta vive

@@ -3,7 +3,7 @@
 public class DirtSpot : MonoBehaviour
 {
     // ===============================================
-    //               VARIABLES PÚBLICAS
+    //           VARIABLES PÚBLICAS
     // ===============================================
 
     [Header("Efecto de Destrucción")]
@@ -21,7 +21,7 @@ public class DirtSpot : MonoBehaviour
     private Material dirtMaterial; // El material que vamos a modificar
 
     // ===============================================
-    //               CONFIGURACIÓN DE SALUD Y REQUISITOS
+    //          CONFIGURACIÓN DE SALUD Y REQUISITOS
     // ===============================================
 
     [Header("Salud y Requisitos")]
@@ -37,7 +37,7 @@ public class DirtSpot : MonoBehaviour
     private bool isDestroyed = false; // Bandera para evitar doble conteo/notificación
 
     // ===============================================
-    //               MÉTODOS DE UNITY
+    //          MÉTODOS DE UNITY
     // ===============================================
 
     void Awake()
@@ -52,7 +52,6 @@ public class DirtSpot : MonoBehaviour
             dirtMaterial = dirtRenderer.material;
 
             // IMPORTANTE: Configurar el material para soportar transparencia (Modo Blend)
-            // Esto asume que el material usa un shader estándar o URP/HDRP que soporta _Color o _BaseColor.
             SetMaterialToFadeMode(dirtMaterial);
 
             // Establecer la opacidad inicial (completamente visible)
@@ -62,20 +61,17 @@ public class DirtSpot : MonoBehaviour
 
     void Start()
     {
-        // Al inicio, registra este objeto en el manager si existe una instancia.
-        // REQUIERE UN SCRIPT DirtManager
-        /*
+        // 🛑 LÍNEA ACTIVADA: Al inicio, registra este objeto en el manager.
         if (DirtManager.Instance != null)
         {
             DirtManager.Instance.RegisterDirtItem();
         }
-        */
     }
 
     // ----------------------------------------------------------------------------------------------------------------------
 
     // ===============================================
-    //               LÓGICA DE LIMPIEZA
+    //          LÓGICA DE LIMPIEZA
     // ===============================================
 
     public bool CanBeCleanedBy(string toolId)
@@ -87,6 +83,9 @@ public class DirtSpot : MonoBehaviour
         return requiredToolId == toolId;
     }
 
+    /// <summary>
+    /// Se llama desde el script de interacción (PlayerController) al golpear/usar herramienta.
+    /// </summary>
     public void CleanHit(float damage)
     {
         if (isDestroyed) return;
@@ -103,6 +102,8 @@ public class DirtSpot : MonoBehaviour
         }
     }
 
+    // ... (El resto de funciones UpdateVisualAppearance y SetMaterialToFadeMode permanecen iguales) ...
+
     /// <summary>
     /// Actualiza la apariencia visual del dirt spot (transparencia).
     /// </summary>
@@ -114,8 +115,6 @@ public class DirtSpot : MonoBehaviour
         float healthRatio = currentHealth / maxHealth;
 
         // Mapear el ratio de salud a un valor de opacidad
-        // Si healthRatio es 1, la opacidad es 1. 
-        // Si healthRatio es 0, la opacidad es minOpacity.
         float currentOpacity = Mathf.Lerp(minOpacity, 1f, healthRatio);
 
         // Crear un nuevo color con la opacidad calculada
@@ -140,7 +139,7 @@ public class DirtSpot : MonoBehaviour
 
 
     // ===============================================
-    //               DESTRUCCIÓN (FINAL Y ROBUSTA)
+    //          DESTRUCCIÓN (FINAL Y ROBUSTA)
     // ===============================================
 
     private void HandleDestruction()
@@ -148,14 +147,11 @@ public class DirtSpot : MonoBehaviour
         if (isDestroyed) return;
         isDestroyed = true; // Marca como destruido
 
-        // 1. NOTIFICAR AL MANAGER
-        // REQUIERE UN SCRIPT DirtManager
-        /*
+        // 🛑 LÍNEA ACTIVADA: NOTIFICAR AL MANAGER 🛑
         if (DirtManager.Instance != null)
         {
-            DirtManager.Instance.CleanDirtItem();
+            DirtManager.Instance.CleanDirtItem(); // Llama a la función de conteo del manager
         }
-        */
 
         // 2. INSTANCIAR Y CONFIGURAR PARTÍCULAS
         if (destructionEffectPrefab != null)
