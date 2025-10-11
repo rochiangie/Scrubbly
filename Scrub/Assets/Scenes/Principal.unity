@@ -241,7 +241,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aec6920b21ed8424bba0015870b75fdc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  destructionEffectPrefab: {fileID: 100006, guid: 50f1c35dedf5eb940a3ee61713626364, type: 3}
+  destructionEffectPrefab: {fileID: 100006, guid: b26161bd088b9ef4992538643ba979ba, type: 3}
   maxHealth: 5
   requiredToolId: Sponge
 --- !u!1 &81060172
@@ -761,7 +761,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aec6920b21ed8424bba0015870b75fdc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  destructionEffectPrefab: {fileID: 100006, guid: 50f1c35dedf5eb940a3ee61713626364, type: 3}
+  destructionEffectPrefab: {fileID: 100006, guid: b26161bd088b9ef4992538643ba979ba, type: 3}
   maxHealth: 5
   requiredToolId: Sponge
 --- !u!1001 &330370048
@@ -1588,7 +1588,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aec6920b21ed8424bba0015870b75fdc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  destructionEffectPrefab: {fileID: 100006, guid: 50f1c35dedf5eb940a3ee61713626364, type: 3}
+  destructionEffectPrefab: {fileID: 100006, guid: b26161bd088b9ef4992538643ba979ba, type: 3}
   maxHealth: 5
   requiredToolId: Sponge
 --- !u!1 &465981101
@@ -1703,7 +1703,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   toolId: Sponge
   toolPower: 2
-  maxUses: 10
+  maxUses: 50
 --- !u!114 &626695008
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1989,7 +1989,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aec6920b21ed8424bba0015870b75fdc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  destructionEffectPrefab: {fileID: 100006, guid: 50f1c35dedf5eb940a3ee61713626364, type: 3}
+  destructionEffectPrefab: {fileID: 100006, guid: b26161bd088b9ef4992538643ba979ba, type: 3}
   maxHealth: 5
   requiredToolId: Sponge
 --- !u!64 &669561408
@@ -2136,7 +2136,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aec6920b21ed8424bba0015870b75fdc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  destructionEffectPrefab: {fileID: 100006, guid: 50f1c35dedf5eb940a3ee61713626364, type: 3}
+  destructionEffectPrefab: {fileID: 100006, guid: b26161bd088b9ef4992538643ba979ba, type: 3}
   maxHealth: 5
   requiredToolId: Sponge
 --- !u!1 &758089276
@@ -2239,7 +2239,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aec6920b21ed8424bba0015870b75fdc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  destructionEffectPrefab: {fileID: 100006, guid: 50f1c35dedf5eb940a3ee61713626364, type: 3}
+  destructionEffectPrefab: {fileID: 100006, guid: b26161bd088b9ef4992538643ba979ba, type: 3}
   maxHealth: 5
   requiredToolId: Sponge
 --- !u!64 &758089281
@@ -2476,7 +2476,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aec6920b21ed8424bba0015870b75fdc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  destructionEffectPrefab: {fileID: 100006, guid: 50f1c35dedf5eb940a3ee61713626364, type: 3}
+  destructionEffectPrefab: {fileID: 100006, guid: b26161bd088b9ef4992538643ba979ba, type: 3}
   maxHealth: 5
   requiredToolId: Sponge
 --- !u!1 &832575517
@@ -2650,7 +2650,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aec6920b21ed8424bba0015870b75fdc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  destructionEffectPrefab: {fileID: 100006, guid: 50f1c35dedf5eb940a3ee61713626364, type: 3}
+  destructionEffectPrefab: {fileID: 100006, guid: b26161bd088b9ef4992538643ba979ba, type: 3}
   maxHealth: 5
   requiredToolId: Sponge
 --- !u!1 &862040511
@@ -2843,7 +2843,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aec6920b21ed8424bba0015870b75fdc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  destructionEffectPrefab: {fileID: 100006, guid: 50f1c35dedf5eb940a3ee61713626364, type: 3}
+  destructionEffectPrefab: {fileID: 100006, guid: b26161bd088b9ef4992538643ba979ba, type: 3}
   maxHealth: 5
   requiredToolId: Sponge
 --- !u!1 &888805762
@@ -3032,7 +3032,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aec6920b21ed8424bba0015870b75fdc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  destructionEffectPrefab: {fileID: 100006, guid: 50f1c35dedf5eb940a3ee61713626364, type: 3}
+  destructionEffectPrefab: {fileID: 100006, guid: b26161bd088b9ef4992538643ba979ba, type: 3}
   maxHealth: 5
   requiredToolId: Sponge
 --- !u!64 &891450493
@@ -3179,7 +3179,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aec6920b21ed8424bba0015870b75fdc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  destructionEffectPrefab: {fileID: 100006, guid: 50f1c35dedf5eb940a3ee61713626364, type: 3}
+  destructionEffectPrefab: {fileID: 100006, guid: b26161bd088b9ef4992538643ba979ba, type: 3}
   maxHealth: 5
   requiredToolId: Sponge
 --- !u!1 &934055016
@@ -3440,7 +3440,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   toolId: Sponge
   toolPower: 1
-  maxUses: 10
+  maxUses: 50
 --- !u!114 &975740293
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3502,7 +3502,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aec6920b21ed8424bba0015870b75fdc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  destructionEffectPrefab: {fileID: 100006, guid: 50f1c35dedf5eb940a3ee61713626364, type: 3}
+  destructionEffectPrefab: {fileID: 100006, guid: b26161bd088b9ef4992538643ba979ba, type: 3}
   maxHealth: 5
   requiredToolId: Sponge
 --- !u!65 &1032942904
@@ -4070,7 +4070,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   toolId: Sponge
   toolPower: 2
-  maxUses: 10
+  maxUses: 50
 --- !u!114 &1234530407
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4247,7 +4247,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aec6920b21ed8424bba0015870b75fdc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  destructionEffectPrefab: {fileID: 100006, guid: 50f1c35dedf5eb940a3ee61713626364, type: 3}
+  destructionEffectPrefab: {fileID: 100006, guid: b26161bd088b9ef4992538643ba979ba, type: 3}
   maxHealth: 5
   requiredToolId: Sponge
 --- !u!1 &1377930371
@@ -4372,7 +4372,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aec6920b21ed8424bba0015870b75fdc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  destructionEffectPrefab: {fileID: 100006, guid: 50f1c35dedf5eb940a3ee61713626364, type: 3}
+  destructionEffectPrefab: {fileID: 100006, guid: b26161bd088b9ef4992538643ba979ba, type: 3}
   maxHealth: 5
   requiredToolId: Sponge
 --- !u!1 &1429174785
@@ -4497,7 +4497,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aec6920b21ed8424bba0015870b75fdc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  destructionEffectPrefab: {fileID: 100006, guid: 50f1c35dedf5eb940a3ee61713626364, type: 3}
+  destructionEffectPrefab: {fileID: 100006, guid: b26161bd088b9ef4992538643ba979ba, type: 3}
   maxHealth: 5
   requiredToolId: Sponge
 --- !u!1 &1450817752
@@ -4622,7 +4622,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aec6920b21ed8424bba0015870b75fdc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  destructionEffectPrefab: {fileID: 100006, guid: 50f1c35dedf5eb940a3ee61713626364, type: 3}
+  destructionEffectPrefab: {fileID: 100006, guid: b26161bd088b9ef4992538643ba979ba, type: 3}
   maxHealth: 5
   requiredToolId: Sponge
 --- !u!1 &1483505245 stripped
@@ -5136,7 +5136,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aec6920b21ed8424bba0015870b75fdc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  destructionEffectPrefab: {fileID: 100006, guid: 50f1c35dedf5eb940a3ee61713626364, type: 3}
+  destructionEffectPrefab: {fileID: 100006, guid: b26161bd088b9ef4992538643ba979ba, type: 3}
   maxHealth: 5
   requiredToolId: Sponge
 --- !u!1 &1565089739
@@ -5511,7 +5511,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   toolId: Sponge
   toolPower: 2
-  maxUses: 10
+  maxUses: 50
 --- !u!114 &1602997296
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6444,7 +6444,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aec6920b21ed8424bba0015870b75fdc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  destructionEffectPrefab: {fileID: 100006, guid: 50f1c35dedf5eb940a3ee61713626364, type: 3}
+  destructionEffectPrefab: {fileID: 100006, guid: b26161bd088b9ef4992538643ba979ba, type: 3}
   maxHealth: 5
   requiredToolId: Sponge
 --- !u!64 &1841165028
@@ -6786,7 +6786,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aec6920b21ed8424bba0015870b75fdc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  destructionEffectPrefab: {fileID: 100006, guid: 50f1c35dedf5eb940a3ee61713626364, type: 3}
+  destructionEffectPrefab: {fileID: 100006, guid: b26161bd088b9ef4992538643ba979ba, type: 3}
   maxHealth: 5
   requiredToolId: Sponge
 --- !u!1001 &1938903526
@@ -6876,6 +6876,10 @@ PrefabInstance:
     - target: {fileID: 6576828876552234837, guid: 0793318420fa5964c800276ebbb12ad4, type: 3}
       propertyPath: m_CollisionDetection
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8165731506202879206, guid: 0793318420fa5964c800276ebbb12ad4, type: 3}
+      propertyPath: maxUses
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 8165731506202879206, guid: 0793318420fa5964c800276ebbb12ad4, type: 3}
       propertyPath: toolPower
@@ -7074,7 +7078,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aec6920b21ed8424bba0015870b75fdc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  destructionEffectPrefab: {fileID: 100006, guid: 50f1c35dedf5eb940a3ee61713626364, type: 3}
+  destructionEffectPrefab: {fileID: 100006, guid: b26161bd088b9ef4992538643ba979ba, type: 3}
   maxHealth: 5
   requiredToolId: Sponge
 --- !u!4 &1998631103 stripped
@@ -7204,7 +7208,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aec6920b21ed8424bba0015870b75fdc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  destructionEffectPrefab: {fileID: 100006, guid: 50f1c35dedf5eb940a3ee61713626364, type: 3}
+  destructionEffectPrefab: {fileID: 100006, guid: b26161bd088b9ef4992538643ba979ba, type: 3}
   maxHealth: 5
   requiredToolId: Sponge
 --- !u!1 &2039417559
@@ -7329,7 +7333,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aec6920b21ed8424bba0015870b75fdc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  destructionEffectPrefab: {fileID: 100006, guid: 50f1c35dedf5eb940a3ee61713626364, type: 3}
+  destructionEffectPrefab: {fileID: 100006, guid: b26161bd088b9ef4992538643ba979ba, type: 3}
   maxHealth: 5
   requiredToolId: Sponge
 --- !u!1 &2082973676
@@ -7750,6 +7754,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8165731506202879206, guid: 0793318420fa5964c800276ebbb12ad4, type: 3}
+      propertyPath: maxUses
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 8165731506202879206, guid: 0793318420fa5964c800276ebbb12ad4, type: 3}
       propertyPath: toolPower
       value: 5
       objectReference: {fileID: 0}
@@ -7859,6 +7867,10 @@ PrefabInstance:
     - target: {fileID: 6576828876552234837, guid: 0793318420fa5964c800276ebbb12ad4, type: 3}
       propertyPath: m_CollisionDetection
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8165731506202879206, guid: 0793318420fa5964c800276ebbb12ad4, type: 3}
+      propertyPath: maxUses
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 8165731506202879206, guid: 0793318420fa5964c800276ebbb12ad4, type: 3}
       propertyPath: toolPower
