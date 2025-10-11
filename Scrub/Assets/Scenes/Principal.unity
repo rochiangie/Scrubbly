@@ -932,6 +932,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 2357437296053766347, guid: 427fa345a14882d4eb769692e5e7128c, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2482370321439550308, guid: 427fa345a14882d4eb769692e5e7128c, type: 3}
       propertyPath: m_Layer
       value: 6
@@ -995,6 +999,10 @@ PrefabInstance:
     - target: {fileID: 5098084984911881628, guid: 427fa345a14882d4eb769692e5e7128c, type: 3}
       propertyPath: m_Layer
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5159453585312304928, guid: 427fa345a14882d4eb769692e5e7128c, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5444215383717451020, guid: 427fa345a14882d4eb769692e5e7128c, type: 3}
       propertyPath: m_Layer
@@ -2446,8 +2454,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   destructionEffectPrefab: {fileID: 100006, guid: b26161bd088b9ef4992538643ba979ba, type: 3}
-  minOpacity: 0.1
-  maxHealth: 5
+  minOpacity: 0.35
+  maxHealth: 1
   requiredToolId: Sponge
 --- !u!1 &758089276
 GameObject:
@@ -7350,7 +7358,7 @@ GameObject:
   - component: {fileID: 1858645919}
   - component: {fileID: 1858645918}
   m_Layer: 3
-  m_Name: PFB_TVStand (1)
+  m_Name: PFB_TVStand SUCIO
   m_TagString: Dirt
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7386,10 +7394,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aec6920b21ed8424bba0015870b75fdc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  destructionEffectPrefab: {fileID: 0}
+  destructionEffectPrefab: {fileID: 100006, guid: b26161bd088b9ef4992538643ba979ba, type: 3}
   minOpacity: 0.1
-  maxHealth: 100
-  requiredToolId: 
+  maxHealth: 5
+  requiredToolId: Sponge
 --- !u!65 &1858645919
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -7478,9 +7486,9 @@ MonoBehaviour:
   OnProgressUpdated:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 760063316}
-        m_TargetAssemblyTypeName: SliderUpdater, Assembly-CSharp
-        m_MethodName: UpdateSliderValue
+      - m_Target: {fileID: 760063315}
+        m_TargetAssemblyTypeName: UnityEngine.UI.Slider, UnityEngine.UI
+        m_MethodName: set_value
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

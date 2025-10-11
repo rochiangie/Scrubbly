@@ -1792,7 +1792,7 @@ MonoBehaviour:
   holdPoint: {fileID: 1987986179021668200}
   animCtrl: {fileID: 0}
   generalInteractKey: 101
-  pickupKey: 116
+  pickupKey: 101
 --- !u!114 &-1637847807608862972
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1853,6 +1853,7 @@ MonoBehaviour:
   upLimit: 85
   downLimit: -85
   headLookTarget: {fileID: 671478118290865661}
+  controlsActive: 1
 --- !u!114 &6231827359233904594
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1869,6 +1870,7 @@ MonoBehaviour:
   upLimit: 85
   downLimit: -85
   headLookTarget: {fileID: 671478118290865661}
+  controlsActive: 1
 --- !u!4 &6818505374472424636 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1134662855679897990, guid: 7f394e12257befb43992c3be83001db7, type: 3}

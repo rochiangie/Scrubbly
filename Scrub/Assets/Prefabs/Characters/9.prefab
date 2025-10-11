@@ -7056,7 +7056,7 @@ MonoBehaviour:
   holdPoint: {fileID: 1560366960154808273}
   animCtrl: {fileID: 0}
   generalInteractKey: 101
-  pickupKey: 116
+  pickupKey: 101
 --- !u!114 &-8850741508234802183
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7117,6 +7117,7 @@ MonoBehaviour:
   upLimit: 85
   downLimit: -85
   headLookTarget: {fileID: 8024181741271369109}
+  controlsActive: 1
 --- !u!1 &6530007388250323192
 GameObject:
   m_ObjectHideFlags: 0
