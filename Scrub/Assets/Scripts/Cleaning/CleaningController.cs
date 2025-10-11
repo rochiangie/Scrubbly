@@ -1,8 +1,6 @@
-// CleaningController.cs - FINAL Y SIN CONFLICTOS (Versión Completa)
-
 using UnityEngine;
 using System.Collections.Generic;
-using System.Linq;
+using System.Linq; // Necesario para usar OrderBy y FirstOrDefault
 
 [RequireComponent(typeof(Animator))]
 public class CleaningController : MonoBehaviour
@@ -19,11 +17,11 @@ public class CleaningController : MonoBehaviour
     [SerializeField] private float dropForce = 1.5f;
 
     [Header("Input (teclas simples)")]
-    [SerializeField] private KeyCode pickupKey = KeyCode.E;
-    [SerializeField] private KeyCode cleanKey = KeyCode.R;
+    [SerializeField] private KeyCode generalInteractKey = KeyCode.E;
+    [SerializeField] private KeyCode cleanKey = KeyCode.R; // 🛑 Tu tecla de limpieza (por defecto R)
 
     [Header("Cleaning")]
-    [SerializeField] private float damagePerHit = 1f;
+    [SerializeField] private float damageMultiplier = 1f;
     [SerializeField] private bool requireCorrectTool = true;
     [SerializeField] private string[] validToolIds = { "Mop", "Sponge", "Vacuum" };
     [SerializeField] private string dirtTag = "Dirt";
@@ -33,11 +31,14 @@ public class CleaningController : MonoBehaviour
     [SerializeField] private float layerBlendSpeed = 12f;
 
     [Header("Debug")]
-    [SerializeField] private bool debugLogs = false; // Controla si DLog se imprime
+    [SerializeField] private bool debugLogs = false;
 
     // ESTADO CRÍTICO
     public ToolDescriptor CurrentTool { get; private set; }
     private List<DirtSpot> nearbyDirt = new List<DirtSpot>();
+
+    // NUEVA VAR: Indica si se está manteniendo el input de limpieza
+    private bool isCleaningInputHeld = false;
 
     private int cleaningLayerIndex = -1;
 
@@ -55,39 +56,47 @@ public class CleaningController : MonoBehaviour
     private void Update()
     {
         bool holding = CurrentTool != null;
-        bool cleanPressed = Input.GetKeyDown(cleanKey);
         bool dirtNearby = nearbyDirt.Count > 0;
 
-        // Log de diagnóstico para el input 'R'
-        if (cleanPressed)
+        // 🛑 CAMBIO CRÍTICO: MANEJO DE INPUT DE LIMPIEZA
+        // Usamos GetKey/GetButton para detectar si la tecla está MANTENIDA (animación continua)
+        isCleaningInputHeld = Input.GetKey(cleanKey) || Input.GetButton("Fire1");
+
+        // Log de diagnóstico para el input
+        if (isCleaningInputHeld && debugLogs)
         {
-            string toolID = holding && CurrentTool != null ? CurrentTool.toolId : "NONE";
-            //Debug.Log($"[INPUT TEST] Tecla 'R' PRESIONADA. Holding={holding}, Tool={toolID}, DirtNearby={dirtNearby}");
+            string toolID = holding ? CurrentTool.toolId : "NONE";
+            DLog($"[INPUT TEST] Tecla/Clic MANTENIDO. Holding={holding}, Tool={toolID}, DirtNearby={dirtNearby}");
         }
 
-        UpdateCleaningLayer(holding && dirtNearby);
+        // Animación se activa si se está sosteniendo la herramienta Y se mantiene el input de limpieza
+        UpdateCleaningLayer(holding && isCleaningInputHeld);
 
-        if (holding && cleanPressed && dirtNearby)
+        // Solo aplicamos el HIT una vez (GetKeyDown/GetButtonDown) para evitar daño excesivo por frame
+        // Si tu animación es un ciclo, puedes usar GetKey/GetButton y controlar el daño por tiempo (cooldown)
+        bool cleanInputDown = Input.GetKeyDown(cleanKey) || Input.GetButtonDown("Fire1");
+
+        if (holding && cleanInputDown && dirtNearby)
         {
+            // Si quieres daño constante mientras mantienes la tecla:
+            // Aplica un golpe fuerte o llama a un método de Coroutine.
+            // Aquí se usa el enfoque simple de un golpe por pulsación.
             ApplyCleanHit();
         }
     }
 
     // ================== Detección por Trigger (Suciedad) ==================
-
-    // NOTA: Para que esto funcione, el Player DEBE tener un Collider marcado como 'Is Trigger'.
+    // ... (Mantén OnTriggerEnter y OnTriggerExit sin cambios) ...
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag(dirtTag))
         {
             DirtSpot dirt = other.GetComponent<DirtSpot>() ?? other.GetComponentInParent<DirtSpot>();
 
-            // Asegúrate de que no es nulo y que no lo tenemos ya
             if (dirt != null && !nearbyDirt.Contains(dirt))
             {
                 nearbyDirt.Add(dirt);
-                // Log de detección verde
-                //Debug.Log($"[Clean Trigger] 🟢 Detectado: {dirt.name}. Ahora hay {nearbyDirt.Count} spots cerca.");
+                DLog($"[Clean Trigger] 🟢 Detectado: {dirt.name}. Ahora hay {nearbyDirt.Count} spots cerca.");
             }
         }
     }
@@ -98,16 +107,21 @@ public class CleaningController : MonoBehaviour
         {
             DirtSpot dirt = other.GetComponent<DirtSpot>() ?? other.GetComponentInParent<DirtSpot>();
 
+            // **IMPORTANTE**: La suciedad DEBE estar limpia (destruida) para que este trigger se resuelva. 
+            // Si el objeto 'dirt' no es nulo, significa que sigue existiendo en el Trigger.
+
             if (dirt != null && nearbyDirt.Contains(dirt))
             {
                 nearbyDirt.Remove(dirt);
-                // Log de detección rojo
-                Debug.Log($"[Clean Trigger] 🔴 Dejado: {dirt.name}. Quedan {nearbyDirt.Count} spots.");
+                DLog($"[Clean Trigger] 🔴 Dejado: {dirt.name}. Quedan {nearbyDirt.Count} spots.");
             }
+            // NOTA: Si un DirtSpot se destruye, Unity automáticamente llama a OnTriggerExit. 
+            // Si el objeto ya fue destruido, 'dirt' será nulo, y la limpieza de la lista se hace en ApplyCleanHit.
         }
     }
 
-    // ================== Métodos Públicos de Interacción (Llamados por PlayerInteraction) ==================
+
+    // ================== Métodos Públicos de Interacción (sin cambios) ==================
 
     public void RegisterTool(ToolDescriptor tool)
     {
@@ -117,7 +131,7 @@ public class CleaningController : MonoBehaviour
             return;
         }
         Equip(tool);
-        //Debug.Log($"[EXTERNAL REGISTER] Herramienta '{tool.name}' registrada correctamente.");
+        DLog($"[EXTERNAL REGISTER] Herramienta '{tool.name}' registrada correctamente.");
     }
 
     public void DropCurrentTool()
@@ -127,14 +141,11 @@ public class CleaningController : MonoBehaviour
         var tool = CurrentTool;
         CurrentTool = null;
 
-        // 1. Llama al Carryable.Drop() para que maneje físicas y colisiones.
         if (tool.TryGetComponent<Carryable>(out var carryable))
         {
-            // Usamos la versión con dirección y fuerza para darle el empujón
             carryable.Drop(transform.forward, dropForce);
         }
 
-        // 2. Quitamos el Trigger del Collider 
         SetAllCollidersTrigger(tool.gameObject, false);
 
         if (anim != null) anim.SetBool("IsHolding", false);
@@ -148,7 +159,6 @@ public class CleaningController : MonoBehaviour
     {
         CurrentTool = tool;
 
-        // Aseguramos que sea Trigger para evitar empujar
         SetAllCollidersTrigger(tool.gameObject, true);
 
         var t = tool.transform;
@@ -161,40 +171,52 @@ public class CleaningController : MonoBehaviour
         DLog($"[Pickup] EQUIP: {tool.name}. Asignación CurrentTool exitosa.");
     }
 
+
     private void ApplyCleanHit()
     {
         if (CurrentTool == null) return;
 
-        // --- LOG DE DIAGNÓSTICO CRÍTICO PARA EL BUG DE LIMPIEZA ---
-        //Debug.Log($"[CLEAN HIT] Intentando golpear. ToolID: {CurrentTool.toolId}. DirtCount: {nearbyDirt.Count}");
-        // --------------------------------------------------------
+        // 1. Limpiamos la lista de referencias nulas (objetos destruidos)
+        nearbyDirt.RemoveAll(dirt => dirt == null);
 
-        for (int i = nearbyDirt.Count - 1; i >= 0; i--)
+        if (nearbyDirt.Count == 0) return;
+
+        // 2. ENCONTRAR Y SELECCIONAR EL DIRT SPOT MÁS CERCANO
+
+        // Usamos LINQ para ordenar los DirtSpots por la distancia desde la posición de este objeto.
+        DirtSpot closestDirt = nearbyDirt
+            .OrderBy(dirt => Vector3.Distance(transform.position, dirt.transform.position))
+            .FirstOrDefault();
+
+        if (closestDirt == null) return;
+
+        // 3. Intentar usar la herramienta (consumo de durabilidad)
+        bool successfullyUsed = CurrentTool.TryUse();
+
+        if (!successfullyUsed)
         {
-            DirtSpot dirt = nearbyDirt[i];
-
-            if (dirt == null)
-            {
-                nearbyDirt.RemoveAt(i);
-                continue;
-            }
-
-            if (requireCorrectTool && !dirt.CanBeCleanedBy(CurrentTool.toolId))
-            {
-                // Este log te dirá si el problema es que la herramienta no coincide con la suciedad
-                //Debug.LogWarning($"[Clean FAIL 1: Tool Mismatch] Herramienta '{CurrentTool.toolId}' no limpia {dirt.name}.");
-                continue;
-            }
-
-            // Si llegamos aquí, la herramienta es correcta o no requerida
-            float damage = damagePerHit * CurrentTool.toolPower;
-            dirt.CleanHit(damage);
-
-            //Debug.Log($"[Clean HIT OK] Aplicando {damage:F2} de daño a {dirt.name}.");
+            DLogWarning($"[Clean HIT FAIL] Herramienta '{CurrentTool.toolId}' se gastó. Ya no está equipada.");
+            CurrentTool = null; // Limpiamos la referencia localmente.
+            return;
         }
+
+        // Si la herramienta pudo usarse, aplicamos el golpe SOLAMENTE al spot más cercano
+        float damage = damageMultiplier * CurrentTool.toolPower;
+
+        // 4. Comprobación de herramienta correcta
+        if (requireCorrectTool && !closestDirt.CanBeCleanedBy(CurrentTool.toolId))
+        {
+            DLogWarning($"[Clean FAIL 1: Tool Mismatch] Herramienta '{CurrentTool.toolId}' no limpia {closestDirt.name}.");
+            return; // No aplicamos daño
+        }
+
+        // 5. Aplicamos el daño. Este método contiene la lógica de destrucción y partículas.
+        closestDirt.CleanHit(damage);
+
+        DLog($"[Clean HIT OK] Aplicando {damage:F2} de daño SOLAMENTE a {closestDirt.name} (el más cercano).");
     }
 
-    // ================== Utilities ==================
+    // ================== Utilities (sin cambios) ==================
 
     private static void SetAllCollidersTrigger(GameObject go, bool isTrigger)
     {
@@ -206,7 +228,10 @@ public class CleaningController : MonoBehaviour
     {
         if (anim == null) return;
         anim.SetBool("IsHolding", CurrentTool != null);
+
+        // El booleano IsCleaning ahora se mantiene mientras el jugador mantiene la tecla/clic
         anim.SetBool("IsCleaning", shouldUseCleaning);
+
         if (cleaningLayerIndex >= 0)
         {
             float cur = anim.GetLayerWeight(cleaningLayerIndex);
@@ -216,5 +241,5 @@ public class CleaningController : MonoBehaviour
     }
 
     private void DLog(string m) { if (debugLogs) Debug.Log(m); }
-    private void DLogWarn(string m) { if (debugLogs) Debug.LogWarning(m); }
+    private void DLogWarning(string m) { if (debugLogs) Debug.LogWarning(m); }
 }

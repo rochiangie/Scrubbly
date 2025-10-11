@@ -1,6 +1,4 @@
-﻿// PlayerInteraction.cs - FINAL
-
-using UnityEngine;
+﻿using UnityEngine;
 using System;
 
 public interface IInteractable { void Interact(); }
@@ -18,7 +16,13 @@ public class PlayerInteraction : MonoBehaviour
     private Carryable nearbyCarryable = null;
 
     private Rigidbody playerRigidbody;
-    private Collider[] playerColliders; // Necesario para el Carryable.PickUp
+    private Collider[] playerColliders;
+
+    [Header("Input Keys")]
+    [Tooltip("Tecla para Interacción General (Puertas, Soltar Objeto)")]
+    [SerializeField] private KeyCode generalInteractKey = KeyCode.E;
+    [Tooltip("Tecla para Recoger/Agarrar (Pickup) objetos Carryable")]
+    [SerializeField] private KeyCode pickupKey = KeyCode.T; // 🛑 NUEVA TECLA PARA AGARRAR
 
     void Awake()
     {
@@ -33,35 +37,37 @@ public class PlayerInteraction : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E))
-            TryInteract();
+        // 🛑 LÓGICA DE AGARRE (TECLA T)
+        if (Input.GetKeyDown(pickupKey))
+            TryPickup();
+
+        // 🛑 LÓGICA DE INTERACCIÓN GENERAL (TECLA E)
+        if (Input.GetKeyDown(generalInteractKey))
+            TryGeneralInteract();
     }
 
-    void TryInteract()
+    // =========================================================================
+    // NUEVA FUNCIÓN: Maneja solo la lógica de AGARRAR/SOLTAR
+    // =========================================================================
+    void TryPickup()
     {
-        // Lógica 1: Soltar objeto
+        // Lógica 1: Soltar objeto (Si se presiona T y tengo algo, suelto)
         if (carried)
         {
-            bool isToolInHand = false;
+            // La lógica de soltar debe ser uniforme, ya sea Carryable o Tool
 
-            if (cleaningController != null && cleaningController.CurrentTool != null)
+            // 1. Es una herramienta de limpieza asignada al CleaningController
+            if (cleaningController != null && cleaningController.CurrentTool != null &&
+                carried.GetComponent<ToolDescriptor>() == cleaningController.CurrentTool)
             {
-                // Es una Tool que está asignada en el CleaningController
-                ToolDescriptor toolInHand = carried.GetComponent<ToolDescriptor>() ?? carried.GetComponentInParent<ToolDescriptor>();
-
-                if (toolInHand != null && toolInHand == cleaningController.CurrentTool)
-                {
-                    // **DELEGAR SOLTAR**
-                    cleaningController.DropCurrentTool();
-                    isToolInHand = true;
-                    Debug.Log("Herramienta de limpieza soltada por CleaningController.");
-                }
+                // DELEGAR SOLTAR A CLEANING CONTROLLER
+                cleaningController.DropCurrentTool();
+                Debug.Log("Herramienta de limpieza soltada por CleaningController.");
             }
-
-            if (!isToolInHand)
+            else
             {
                 // Es un Carryable normal.
-                carried.Drop(); // Llama al Carryable.Drop() para restaurar físicas y colisiones
+                carried.Drop();
                 animCtrl?.SetHolding(false);
                 Debug.Log("Objeto normal soltado.");
             }
@@ -71,9 +77,10 @@ public class PlayerInteraction : MonoBehaviour
             return;
         }
 
-        // Lógica 2: Recoger Carryable o Tool
+        // Lógica 2: Recoger Carryable o Tool (Si presiono T y hay algo cerca)
         if (nearbyCarryable != null)
         {
+            // Asegurar HoldPoint si no existe (buena práctica)
             if (!holdPoint)
             {
                 var hp = new GameObject("HoldPoint").transform;
@@ -82,15 +89,15 @@ public class PlayerInteraction : MonoBehaviour
                 holdPoint = hp;
             }
 
-            // Mover el objeto a la mano (esto es manejado por Carryable.cs)
+            // Mover el objeto a la mano (manejado por Carryable.cs)
             nearbyCarryable.PickUp(holdPoint, playerColliders);
 
-            // Verificamos si es una herramienta de limpieza
+            // Verificamos si es una herramienta de limpieza y la registramos
             ToolDescriptor td = nearbyCarryable.GetComponent<ToolDescriptor>() ?? nearbyCarryable.GetComponentInParent<ToolDescriptor>();
 
             if (td != null && cleaningController != null)
             {
-                // **DELEGAR ASIGNACIÓN**
+                // DELEGAR ASIGNACIÓN
                 cleaningController.RegisterTool(td);
             }
 
@@ -98,20 +105,31 @@ public class PlayerInteraction : MonoBehaviour
             nearbyCarryable = null;
             animCtrl?.SetHolding(true);
             animCtrl?.TriggerInteract();
-            Debug.Log("¡Objeto recogido con la tecla E!");
+            Debug.Log($"¡Objeto {carried.name} recogido con la tecla {pickupKey}!");
             return;
         }
 
-        // Lógica 3: Interacción por TRIGGER (Puerta)
+        Debug.Log("[Interacción Fallida] No hay objeto que soltar ni recoger (T).");
+    }
+
+    // =========================================================================
+    // FUNCIÓN EXISTENTE: Ahora maneja solo la INTERACCIÓN DE PUERTAS
+    // =========================================================================
+    void TryGeneralInteract()
+    {
+        // Lógica 1: Interacción por TRIGGER (Puerta)
         if (currentDoorInteractable != null)
         {
             currentDoorInteractable.Interact();
             animCtrl?.TriggerInteract();
+            Debug.Log($"Interacción General (Puerta) ejecutada con {generalInteractKey}.");
             return;
         }
 
-        Debug.Log("[Interacción Fallida] No hay objeto que soltar, recoger (E) ni Puerta activa.");
+        Debug.Log("[Interacción Fallida] No hay Interacción General (Puerta) activa.");
     }
+
+    // ... (El resto de los métodos OnTriggerEnter/Exit y Set/ClearCurrentInteractable se mantienen igual) ...
 
     // Detección de proximidad del cubo
     private void OnTriggerEnter(Collider other)

@@ -77,6 +77,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1792729349671573894}
+  - component: {fileID: 6376693653499318831}
   m_Layer: 8
   m_Name: Head
   m_TagString: Untagged
@@ -99,6 +100,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 771449230045066173}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6376693653499318831
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 98649695788542978}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 907800a4812a4ce4fa1bd6a7e4c3383e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &161951878957980982
 GameObject:
   m_ObjectHideFlags: 0
@@ -1763,6 +1776,7 @@ GameObject:
   - component: {fileID: -590188935820477901}
   - component: {fileID: -6020347032376281702}
   - component: {fileID: -7444284558942354931}
+  - component: {fileID: 6089838089333151501}
   m_Layer: 8
   m_Name: 8
   m_TagString: Player
@@ -2008,6 +2022,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   holdPoint: {fileID: 5511372941240343761}
   animCtrl: {fileID: 0}
+  generalInteractKey: 101
+  pickupKey: 116
 --- !u!114 &-6020347032376281702
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2040,9 +2056,9 @@ MonoBehaviour:
     m_Bits: 128
   pickupRange: 3.5
   dropForce: 1.5
-  pickupKey: 101
+  generalInteractKey: 101
   cleanKey: 114
-  damagePerHit: 1
+  damageMultiplier: 1
   requireCorrectTool: 1
   validToolIds:
   - Sponge
@@ -2052,6 +2068,22 @@ MonoBehaviour:
   cleaningLayerName: Clean
   layerBlendSpeed: 12
   debugLogs: 0
+--- !u!114 &6089838089333151501
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1532228888865751196}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de73acfa817aa2448ad7fc3beee6b35c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mouseSensitivity: 200
+  upLimit: 85
+  downLimit: -85
+  headLookTarget: {fileID: 1792729349671573894}
 --- !u!1 &1535028625442358750
 GameObject:
   m_ObjectHideFlags: 0

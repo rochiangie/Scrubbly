@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5249473733915914670}
+  - component: {fileID: 4012861015899391846}
   m_Layer: 8
   m_Name: Head
   m_TagString: Untagged
@@ -31,6 +32,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1805161885405656231}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4012861015899391846
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7619649677746568785}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 907800a4812a4ce4fa1bd6a7e4c3383e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8315668341392613009
 GameObject:
   m_ObjectHideFlags: 0
@@ -937,6 +950,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 46c5ec54e9c218c4abd9fbeb01ef1d1b, type: 3}
       insertIndex: -1
       addedObject: {fileID: -9136470669119248939}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 46c5ec54e9c218c4abd9fbeb01ef1d1b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8324909094074402666}
   m_SourcePrefab: {fileID: 100100000, guid: 46c5ec54e9c218c4abd9fbeb01ef1d1b, type: 3}
 --- !u!4 &1240919327921775306 stripped
 Transform:
@@ -1160,6 +1176,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   holdPoint: {fileID: 6056829038042550558}
   animCtrl: {fileID: 0}
+  generalInteractKey: 101
+  pickupKey: 116
 --- !u!114 &-3005511174071510890
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1192,9 +1210,9 @@ MonoBehaviour:
     m_Bits: 128
   pickupRange: 3.5
   dropForce: 1.5
-  pickupKey: 101
+  generalInteractKey: 101
   cleanKey: 114
-  damagePerHit: 1
+  damageMultiplier: 1
   requireCorrectTool: 1
   validToolIds:
   - Sponge
@@ -1204,6 +1222,22 @@ MonoBehaviour:
   cleaningLayerName: Clean
   layerBlendSpeed: 12
   debugLogs: 0
+--- !u!114 &8324909094074402666
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1316996708007013917}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de73acfa817aa2448ad7fc3beee6b35c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mouseSensitivity: 200
+  upLimit: 85
+  downLimit: -85
+  headLookTarget: {fileID: 5249473733915914670}
 --- !u!137 &1760922598799733436 stripped
 SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: 502025536470163952, guid: 46c5ec54e9c218c4abd9fbeb01ef1d1b, type: 3}
