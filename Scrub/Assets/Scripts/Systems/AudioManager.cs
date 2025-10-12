@@ -8,7 +8,8 @@ public class AudioManager : MonoBehaviour
     public static AudioManager Instance;
 
     [Header("Configuración de Audio")]
-    [Tooltip("El AudioSource que reproducirá la música. Debe estar en este GameObject.")]
+    [Tooltip("El AudioSource que reproducirá la música. Se asigna automáticamente si está en el mismo GameObject.")]
+    // **CORRECCIÓN: Eliminada la doble declaración.**
     public AudioSource musicSource;
 
     // Constante para la clave de PlayerPrefs
@@ -49,6 +50,7 @@ public class AudioManager : MonoBehaviour
         }
 
         // 2. Inicialización y chequeo del AudioSource
+        // Si no se asignó en el Inspector, intenta obtenerlo del mismo GameObject.
         if (musicSource == null)
         {
             musicSource = GetComponent<AudioSource>();
@@ -76,6 +78,19 @@ public class AudioManager : MonoBehaviour
         if (defaultMusic != null)
         {
             PlayMusic(defaultMusic);
+        }
+    }
+
+    // ===========================================
+    // DETECCIÓN DE ENTRADA (M)
+    // ===========================================
+    void Update()
+    {
+        // Verifica si la tecla 'M' fue presionada en este frame
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            // Llama a la función de toggle sin argumentos (para el teclado)
+            ToggleMusicMuteKeyboard();
         }
     }
 
@@ -160,12 +175,26 @@ public class AudioManager : MonoBehaviour
     }
 
     // ===========================================
-    // FUNCIONALIDAD DEL BOTÓN DE AJUSTES (SETTINGS)
+    // LÓGICA DE SILENCIADO (M/UI)
     // ===========================================
 
     /// <summary>
+    /// Alterna el estado de silenciado al presionar la tecla 'M'.
+    /// </summary>
+    public void ToggleMusicMuteKeyboard()
+    {
+        // Invierte el estado actual de mute
+        bool newState = !musicSource.mute;
+
+        // Aplica y guarda el nuevo estado
+        ApplyMuteState(newState);
+
+        Debug.Log(newState ? "Música silenciada (MUTE por tecla M)" : "Música activada (UNMUTE por tecla M)");
+    }
+
+    /// <summary>
     /// Alterna el estado de silenciado de la música y guarda la preferencia.
-    /// Esta función debe conectarse al evento On Value Changed (Boolean) del componente Toggle.
+    /// Esta función debe conectarse al evento On Value Changed (Boolean) del componente Toggle de la UI.
     /// </summary>
     /// <param name="isOn">El valor booleano pasado por el Toggle. True = Marcado/Música ON.</param>
     public void ToggleMusicMute(bool isOn)
@@ -173,16 +202,25 @@ public class AudioManager : MonoBehaviour
         // 1. Invertir la lógica: Si el Toggle está 'isOn' (marcado), la música NO debe estar mute.
         bool shouldBeMuted = !isOn;
 
+        // Aplica y guarda el nuevo estado
+        ApplyMuteState(shouldBeMuted);
+
+        Debug.Log($"[AUDIO MANAGER] Música silenciada: {shouldBeMuted}. Preferencia guardada por UI.");
+    }
+
+    /// <summary>
+    /// Aplica y guarda el estado de silenciado.
+    /// </summary>
+    private void ApplyMuteState(bool shouldBeMuted)
+    {
         musicSource.mute = shouldBeMuted;
 
-        // 2. Guardar la preferencia
+        // Guardar la preferencia
         // Guardamos el estado del silencio: 1 si está silenciado, 0 si está activo.
         int muteValue = shouldBeMuted ? 1 : 0;
         PlayerPrefs.SetInt(MUSIC_TOGGLE_KEY, muteValue);
 
         PlayerPrefs.Save();
-
-        Debug.Log($"[AUDIO MANAGER] Música silenciada: {shouldBeMuted}. Preferencia guardada.");
     }
 
     /// <summary>
