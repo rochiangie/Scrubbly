@@ -5770,7 +5770,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1565165548}
   - component: {fileID: 1565165547}
-  - component: {fileID: 1565165550}
+  - component: {fileID: 1565165555}
   - component: {fileID: 1565165553}
   - component: {fileID: 1565165552}
   - component: {fileID: 1565165554}
@@ -5840,32 +5840,6 @@ Transform:
   - {fileID: 2121048806}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1565165550
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1565165545}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 625c14eee3ad46c99df7c7c891ef668a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Damping: {x: 0, y: 0, z: 0}
-  ShoulderOffset: {x: -0.01, y: -0.12, z: 0.88}
-  VerticalArmLength: 0.4
-  CameraSide: 1
-  CameraDistance: 2
-  AvoidObstacles:
-    Enabled: 0
-    CollisionFilter:
-      serializedVersion: 2
-      m_Bits: 1
-    IgnoreTag: 
-    CameraRadius: 0.2
-    DampingIntoCollision: 0
-    DampingFromCollision: 0.5
 --- !u!114 &1565165552
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5910,6 +5884,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   victoryPanel: {fileID: 2097746690}
   progressSliderObject: {fileID: 760063313}
+--- !u!114 &1565165555
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1565165545}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36d1163fa822e8b418a0a603ec078d5c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Damping: 0
 --- !u!1 &1573701251
 GameObject:
   m_ObjectHideFlags: 0
