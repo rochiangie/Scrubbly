@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System;
+using System.Linq; // Necesario si usas lógica de ordenamiento en otros scripts.
 
 public interface IInteractable { void Interact(); }
 
@@ -19,10 +20,10 @@ public class PlayerInteraction : MonoBehaviour
     private Collider[] playerColliders;
 
     [Header("Input Keys")]
-    [Tooltip("Tecla para Interacción General (Puertas, Soltar Objeto)")]
+    [Tooltip("Tecla para Interacción General (Puertas)")]
     [SerializeField] private KeyCode generalInteractKey = KeyCode.E;
-    [Tooltip("Tecla para Recoger/Agarrar (Pickup) objetos Carryable")]
-    [SerializeField] private KeyCode pickupKey = KeyCode.T; // 🛑 NUEVA TECLA PARA AGARRAR
+    [Tooltip("Tecla para Recoger/Agarrar y Soltar objetos Carryable/Tool")]
+    [SerializeField] private KeyCode pickupKey = KeyCode.T;
 
     void Awake()
     {
@@ -37,28 +38,28 @@ public class PlayerInteraction : MonoBehaviour
 
     void Update()
     {
-        // 🛑 LÓGICA DE AGARRE (TECLA T)
+        // LÓGICA DE AGARRE (TECLA T)
         if (Input.GetKeyDown(pickupKey))
             TryPickup();
 
-        // 🛑 LÓGICA DE INTERACCIÓN GENERAL (TECLA E)
+        // LÓGICA DE INTERACCIÓN GENERAL (TECLA E)
         if (Input.GetKeyDown(generalInteractKey))
             TryGeneralInteract();
     }
 
     // =========================================================================
-    // NUEVA FUNCIÓN: Maneja solo la lógica de AGARRAR/SOLTAR
+    // FUNCIÓN PRINCIPAL: AGARRAR/SOLTAR con SFX
     // =========================================================================
     void TryPickup()
     {
         // Lógica 1: Soltar objeto (Si se presiona T y tengo algo, suelto)
         if (carried)
         {
-            // La lógica de soltar debe ser uniforme, ya sea Carryable o Tool
+            // Determinar si es una herramienta o un Carryable normal.
+            bool isTool = (cleaningController != null && cleaningController.CurrentTool != null &&
+                           carried.GetComponent<ToolDescriptor>() == cleaningController.CurrentTool);
 
-            // 1. Es una herramienta de limpieza asignada al CleaningController
-            if (cleaningController != null && cleaningController.CurrentTool != null &&
-                carried.GetComponent<ToolDescriptor>() == cleaningController.CurrentTool)
+            if (isTool)
             {
                 // DELEGAR SOLTAR A CLEANING CONTROLLER
                 cleaningController.DropCurrentTool();
@@ -72,7 +73,13 @@ public class PlayerInteraction : MonoBehaviour
                 Debug.Log("Objeto normal soltado.");
             }
 
-            carried = null; // Reseteamos la referencia local
+            // 🔥 DISPARAR SFX DE SOLTAR 🔥
+            if (AudioManager.Instance != null)
+            {
+                AudioManager.Instance.PlayDropSFX();
+            }
+
+            carried = null;
             animCtrl?.TriggerInteract();
             return;
         }
@@ -80,7 +87,7 @@ public class PlayerInteraction : MonoBehaviour
         // Lógica 2: Recoger Carryable o Tool (Si presiono T y hay algo cerca)
         if (nearbyCarryable != null)
         {
-            // Asegurar HoldPoint si no existe (buena práctica)
+            // Asegurar HoldPoint si no existe 
             if (!holdPoint)
             {
                 var hp = new GameObject("HoldPoint").transform;
@@ -105,6 +112,13 @@ public class PlayerInteraction : MonoBehaviour
             nearbyCarryable = null;
             animCtrl?.SetHolding(true);
             animCtrl?.TriggerInteract();
+
+            // 🔥 DISPARAR SFX DE RECOGER 🔥
+            if (AudioManager.Instance != null)
+            {
+                AudioManager.Instance.PlayPickupSFX();
+            }
+
             Debug.Log($"¡Objeto {carried.name} recogido con la tecla {pickupKey}!");
             return;
         }
@@ -113,7 +127,7 @@ public class PlayerInteraction : MonoBehaviour
     }
 
     // =========================================================================
-    // FUNCIÓN EXISTENTE: Ahora maneja solo la INTERACCIÓN DE PUERTAS
+    // FUNCIÓN EXISTENTE: Maneja solo la INTERACCIÓN DE PUERTAS
     // =========================================================================
     void TryGeneralInteract()
     {
@@ -129,7 +143,9 @@ public class PlayerInteraction : MonoBehaviour
         Debug.Log("[Interacción Fallida] No hay Interacción General (Puerta) activa.");
     }
 
-    // ... (El resto de los métodos OnTriggerEnter/Exit y Set/ClearCurrentInteractable se mantienen igual) ...
+    // =========================================================================
+    // TRIGGERS DE PROXIMIDAD
+    // =========================================================================
 
     // Detección de proximidad del cubo
     private void OnTriggerEnter(Collider other)

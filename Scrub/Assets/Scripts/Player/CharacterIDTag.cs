@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class CharacterIDTag : MonoBehaviour
 {
-    [Tooltip("Este ID se usa para identificar al personaje (ej: '1', 'juanita', '9')")]
-    public string characterID;
+    [Header("Identificación del Personaje")]
+    public string characterID; // ID único para música (ej: "Maid", "Butler")
+    public string displayName; // Nombre para mostrar en UI
 }

@@ -1,63 +1,49 @@
 ﻿using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class CharacterSelection : MonoBehaviour
 {
     public static CharacterSelection Instance { get; private set; }
 
-    public string SelectedCharacterID { get; private set; } = "";
-
-    [SerializeField] private string preGameplaySceneName = "NombreDeTuEscenaPreJuego";
-    private const string CHARACTER_KEY = "SelectedCharacter";
+    public string selectedCharacterID;
 
     void Awake()
     {
-        if (Instance != null && Instance != this) { Destroy(gameObject); return; }
-
-        Instance = this;
-
-        // Carga el ID guardado al despertar, si existe (para iniciar el Spotlight)
-        SelectedCharacterID = PlayerPrefs.GetString(CHARACTER_KEY, "");
+        // 🔴 SOLUCIÓN: Singleton robusto
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+            Debug.Log("[CHARACTER] Singleton creado: " + gameObject.name);
+        }
+        else if (Instance != this)
+        {
+            Debug.LogWarning("[CHARACTER] Instancia duplicada destruida: " + gameObject.name);
+            Destroy(gameObject);
+        }
     }
 
-    /// <summary>
-    /// Guarda el ID localmente, en PlayerPrefs, y notifica al AudioManager.
-    /// Esta función es llamada por SpotlightSelector.
-    /// </summary>
     public void SetSelectedID(string characterID)
     {
-        SelectedCharacterID = characterID;
-
-        // 1. Guardar la ID en el disco para la siguiente escena.
-        PlayerPrefs.SetString(CHARACTER_KEY, characterID);
-        PlayerPrefs.Save();
-
-        Debug.Log($"[SELECTION] ✅ Personaje guardado: {characterID}");
-
-        // 2. Notificar al AudioManager para un cambio de música inmediato.
-        /*if (AudioManager.Instance != null)
+        if (string.IsNullOrEmpty(characterID))
         {
-            AudioManager.Instance.PlayCharacterMusicImmediate(characterID);
-        }*/
-    }
-
-    /// <summary>
-    /// Función de transición: solo verifica y carga la siguiente escena (Confirmar).
-    /// </summary>
-    public void ConfirmAndLoadGame()
-    {
-        if (string.IsNullOrEmpty(SelectedCharacterID))
-        {
-            Debug.LogError("[SELECTION] No hay personaje seleccionado. No se puede cargar el juego.");
+            Debug.LogError("[CHARACTER] ID de personaje inválido");
             return;
         }
 
-        // La ID ya está guardada. Simplemente carga la escena.
-        SceneManager.LoadScene(preGameplaySceneName);
-    }
+        selectedCharacterID = characterID;
+        PlayerPrefs.SetString("SelectedCharacter", characterID);
+        PlayerPrefs.Save();
 
-    public string GetSelectedID()
-    {
-        return SelectedCharacterID;
+        Debug.Log($"[CHARACTER] Personaje guardado: {characterID}");
+
+        // 🔴 SOLUCIÓN: Cambiar música inmediatamente
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayCharacterMusic(characterID);
+        }
+        else
+        {
+            Debug.LogError("[CHARACTER] AudioManager no encontrado");
+        }
     }
 }
