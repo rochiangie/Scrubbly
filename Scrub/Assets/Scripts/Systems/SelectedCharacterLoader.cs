@@ -19,14 +19,20 @@ public class SelectedCharacterLoader : MonoBehaviour
     // ===============================================
 
     [Header("Simulación / Fallback")]
+    [Tooltip("El ID que se usará si no se encuentra la clave en PlayerPrefs (ej: '1').")]
     public string FallbackCharacterID = "1";
+
+    // 🔥 Clave CRÍTICA: Debe coincidir con la usada en CharacterSelection.cs
+    private const string CHARACTER_KEY = "SelectedCharacter";
 
     [Header("Available Characters")]
     public CharacterPrefabData[] AvailableCharacters;
 
     [Header("Referencias de Escena")]
+    [Tooltip("Punto donde se colocará el personaje instanciado.")]
     public Transform SpawnPoint;
-    public string PlayerTag = "Player"; // ¡CRÍTICO! La cámara usará esta etiqueta.
+    [Tooltip("Etiqueta asignada al personaje instanciado. (CRÍTICO para la cámara).")]
+    public string PlayerTag = "Player";
 
     // ===============================================
     // LÓGICA DE CARGA
@@ -34,7 +40,7 @@ public class SelectedCharacterLoader : MonoBehaviour
 
     void Awake()
     {
-        // 1. Obtener el ID del personaje persistente
+        // 1. Obtener el ID del personaje directamente de PlayerPrefs
         string characterId = GetCharacterID();
 
         // 2. Buscar el Prefab
@@ -42,8 +48,11 @@ public class SelectedCharacterLoader : MonoBehaviour
 
         if (characterPrefab == null)
         {
-            Debug.LogError($"[LOADER] No se encontró Prefab para el ID: {characterId}. Cargando Fallback.");
+            Debug.LogError($"[LOADER] No se encontró Prefab para el ID: {characterId}. Cargando Fallback ID.");
+
+            // Intentamos cargar el Fallback
             characterPrefab = GetPrefabByID(FallbackCharacterID);
+
             if (characterPrefab == null)
             {
                 Debug.LogError("[LOADER] El Prefab de Fallback tampoco se encontró. La carga falló.");
@@ -51,24 +60,20 @@ public class SelectedCharacterLoader : MonoBehaviour
             }
         }
 
-        // 3. Instanciar y asignar Tag (sin tocar la cámara)
+        // 3. Instanciar y asignar Tag
         InstantiateCharacter(characterPrefab);
     }
 
-    // ... (GetCharacterID y GetPrefabByID - Se mantienen igual) ...
-
+    /// <summary>
+    /// 🔥 FUNCIÓN CORREGIDA: Obtiene el ID directamente de PlayerPrefs.
+    /// </summary>
     string GetCharacterID()
     {
-        // Usa la función pública del Singleton GameDataController
-        if (GameDataController.Instance != null)
-        {
-            string persistedID = GameDataController.Instance.GetCharacterID();
-            Debug.Log($"[LOADER] Usando ID persistente: {persistedID}");
-            return persistedID;
-        }
+        // Lee la ID guardada por CharacterSelection, usando el Fallback si no hay nada.
+        string persistedID = PlayerPrefs.GetString(CHARACTER_KEY, FallbackCharacterID);
 
-        Debug.LogWarning($"[LOADER] GameDataController no encontrado. Usando ID de Fallback: {FallbackCharacterID}");
-        return FallbackCharacterID;
+        Debug.Log($"[LOADER] Usando ID persistente: {persistedID}");
+        return persistedID;
     }
 
     private GameObject GetPrefabByID(string id)
@@ -80,7 +85,10 @@ public class SelectedCharacterLoader : MonoBehaviour
 
     private void InstantiateCharacter(GameObject prefab)
     {
-        GameObject player = Instantiate(prefab, SpawnPoint.position, SpawnPoint.rotation);
+        // Si no se asignó un punto de Spawn, usa la posición del Loader.
+        Transform targetSpawn = SpawnPoint != null ? SpawnPoint : transform;
+
+        GameObject player = Instantiate(prefab, targetSpawn.position, targetSpawn.rotation);
 
         // ¡CRÍTICO! El script de cámara buscará esta etiqueta.
         player.tag = PlayerTag;

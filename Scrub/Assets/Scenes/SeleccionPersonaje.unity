@@ -6303,7 +6303,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b03c0b6b5befcb47a483767492ac359, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectedCharacterName: 
+  selectedCharacterName: Player
   playerSpotLight: {fileID: 2046273835}
 --- !u!4 &1198940920
 Transform:
