@@ -101,7 +101,6 @@ public class AudioManager : MonoBehaviour
 
         if (sceneName.Contains("menu") || sceneName.Contains("seleccion"))
         {
-            // Escenas de menú o selección - Siempre reproducir música de menú
             if (!isMenuMusic)
             {
                 Debug.Log("[AUDIO] 🔄 Transición a Menú.");
@@ -110,7 +109,6 @@ public class AudioManager : MonoBehaviour
         }
         else if (sceneName.Contains("lore") || sceneName.Contains("principal") || sceneName.Contains("gameplay"))
         {
-            // Escenas de Gameplay - Esperar y cargar música de personaje
             StopAllCoroutines();
             StartCoroutine(CheckForCharacterMusicDelayed());
         }
@@ -118,7 +116,6 @@ public class AudioManager : MonoBehaviour
 
     private System.Collections.IEnumerator CheckForCharacterMusicDelayed()
     {
-        // Espera mínima para permitir que scripts como CharacterSelection inicialicen sus variables
         yield return new WaitForSeconds(CHECK_CHARACTER_DELAY);
 
         string characterID = GetSelectedCharacterID();
@@ -155,7 +152,6 @@ public class AudioManager : MonoBehaviour
             sfxSource = gameObject.AddComponent<AudioSource>();
             sfxSource.loop = false;
             sfxSource.playOnAwake = false;
-            // Asegurarse de que el volumen inicial del SFX Source esté sincronizado
             sfxSource.volume = sfxVolumeGlobal;
         }
     }
@@ -185,7 +181,6 @@ public class AudioManager : MonoBehaviour
         if (CharacterSelection.Instance != null && !string.IsNullOrEmpty(CharacterSelection.Instance.selectedCharacterID))
         {
             string id = CharacterSelection.Instance.selectedCharacterID;
-            // Guardar en PlayerPrefs inmediatamente (aunque CharacterSelection debería hacerlo)
             PlayerPrefs.SetString(SELECTED_CHARACTER_KEY, id);
             PlayerPrefs.Save();
             return id;
@@ -216,18 +211,17 @@ public class AudioManager : MonoBehaviour
             return;
         }
 
-        // Si ya está sonando el clip correcto y no está muteado, no hacer nada.
         if (musicSource.clip == menuMusic && musicSource.isPlaying && !musicSource.mute)
         {
             if (musicSource.volume != menuMusicVolume) musicSource.volume = menuMusicVolume;
             return;
         }
 
-        // 🔴 CRITICAL FIX: Si está muteado, no reproducir, solo asignar clip y volumen base.
+        // Si está muteado, solo asignar clip y volumen base.
         if (musicSource.mute)
         {
             musicSource.clip = menuMusic;
-            musicSource.volume = menuMusicVolume; // Mantenemos el volumen para cuando se desmutee.
+            musicSource.volume = menuMusicVolume;
             isMenuMusic = true;
             currentCharacterID = "";
             Debug.Log("[AUDIO] 🎵 Música de menú asignada pero silenciada (Mute: True).");
@@ -259,13 +253,11 @@ public class AudioManager : MonoBehaviour
             return;
         }
 
-        // Si ya está sonando la música correcta y no está muteada, salir
         if (characterID == currentCharacterID && musicSource.isPlaying && !isMenuMusic && !musicSource.mute)
         {
             return;
         }
 
-        // Busca el clip en el diccionario
         if (!characterMusicMap.TryGetValue(characterID, out AudioClip clipToPlay) || clipToPlay == null)
         {
             Debug.LogError($"[AUDIO] ❌ No hay música asignada/encontrada para: {characterID}. Fallback a menú.");
@@ -273,7 +265,7 @@ public class AudioManager : MonoBehaviour
             return;
         }
 
-        // 🔴 CRITICAL FIX: Si está muteado, solo asignar el clip/volumen para que esté listo.
+        // Si está muteado, solo asignar el clip/volumen para que esté listo.
         if (musicSource.mute)
         {
             musicSource.clip = clipToPlay;
@@ -295,49 +287,79 @@ public class AudioManager : MonoBehaviour
     }
 
     // ===============================================
-    // SFX (Públicos)
+    // SFX (Públicos) CON DEBUG DE FALLO
     // ===============================================
 
     public void PlayCleanSFX()
     {
-        if (sfxSource != null && cleanObjectSFX != null)
+        float finalVolume = sfxVolumeGlobal * cleanSFXVolumeMultiplier;
+
+        if (sfxSource == null)
         {
-            float finalVolume = sfxVolumeGlobal * cleanSFXVolumeMultiplier;
-            sfxSource.PlayOneShot(cleanObjectSFX, finalVolume);
-            Debug.Log($"[AUDIO] SFX Limpieza (Vol: {finalVolume:F2})");
+            Debug.LogError("[AUDIO-SFX] ❌ FALLO DE SFX Limpieza: sfxSource es NULO. Asegura que AudioManager tiene el componente AudioSource.");
+            return;
         }
-        else
+        if (cleanObjectSFX == null)
         {
-            Debug.LogWarning("[AUDIO] ⚠️ No se pudo reproducir SFX de limpieza (Fuente o Clip nulo).");
+            Debug.LogError("[AUDIO-SFX] ❌ FALLO DE SFX Limpieza: cleanObjectSFX es NULO. ¡Asigna el Clip en el Inspector!");
+            return;
         }
+        if (sfxSource.volume * cleanSFXVolumeMultiplier <= 0.001f)
+        {
+            Debug.LogWarning($"[AUDIO-SFX] ⚠️ SFX Limpieza silenciado. Volumen final ({finalVolume:F2}) es casi cero. Ajusta sfxVolumeGlobal o cleanSFXVolumeMultiplier.");
+            return;
+        }
+
+        sfxSource.PlayOneShot(cleanObjectSFX, finalVolume);
+        Debug.Log($"[AUDIO-SFX] ✅ Limpieza OK (Vol: {finalVolume:F2}, Global: {sfxVolumeGlobal:F2}, Multi: {cleanSFXVolumeMultiplier:F2})");
     }
 
     public void PlayPickupSFX()
     {
-        if (sfxSource != null && pickupSFX != null)
+        float finalVolume = sfxVolumeGlobal * pickupSFXVolumeMultiplier;
+
+        if (sfxSource == null)
         {
-            float finalVolume = sfxVolumeGlobal * pickupSFXVolumeMultiplier;
-            sfxSource.PlayOneShot(pickupSFX, finalVolume);
-            Debug.Log($"[AUDIO] SFX Pickup (Vol: {finalVolume:F2})");
+            Debug.LogError("[AUDIO-SFX] ❌ FALLO DE SFX Recogida: sfxSource es NULO. Asegura que AudioManager tiene el componente AudioSource.");
+            return;
         }
-        else
+        if (pickupSFX == null)
         {
-            Debug.LogWarning("[AUDIO] ⚠️ No se pudo reproducir SFX de recogida (Fuente o Clip nulo).");
+            Debug.LogError("[AUDIO-SFX] ❌ FALLO DE SFX Recogida: pickupSFX es NULO. ¡Asigna el Clip en el Inspector!");
+            return;
         }
+        if (sfxSource.volume * pickupSFXVolumeMultiplier <= 0.001f)
+        {
+            Debug.LogWarning($"[AUDIO-SFX] ⚠️ SFX Recogida silenciado. Volumen final ({finalVolume:F2}) es casi cero.");
+            return;
+        }
+
+        sfxSource.PlayOneShot(pickupSFX, finalVolume);
+        Debug.Log($"[AUDIO-SFX] ✅ Recogida OK (Vol: {finalVolume:F2})");
     }
 
     public void PlayDropSFX()
     {
-        if (sfxSource != null && dropSFX != null)
+        float finalVolume = sfxVolumeGlobal * dropSFXVolumeMultiplier;
+
+        if (sfxSource == null)
         {
-            float finalVolume = sfxVolumeGlobal * dropSFXVolumeMultiplier;
-            sfxSource.PlayOneShot(dropSFX, finalVolume);
-            Debug.Log($"[AUDIO] SFX Drop (Vol: {finalVolume:F2})");
+            Debug.LogError("[AUDIO-SFX] ❌ FALLO DE SFX Soltar: sfxSource es NULO. Asegura que AudioManager tiene el componente AudioSource.");
+            return;
         }
-        else
+        if (dropSFX == null)
         {
-            Debug.LogWarning("[AUDIO] ⚠️ No se pudo reproducir SFX de soltar (Fuente o Clip nulo).");
+            Debug.LogError("[AUDIO-SFX] ❌ FALLO DE SFX Soltar: dropSFX es NULO. ¡Asigna el Clip en el Inspector!");
+            return;
         }
+        if (sfxSource.volume * dropSFXVolumeMultiplier <= 0.001f)
+        {
+            Debug.LogWarning($"[AUDIO-SFX] ⚠️ SFX Soltar silenciado. Volumen final ({finalVolume:F2}) es casi cero.");
+            return;
+        }
+
+        sfxSource.PlayOneShot(dropSFX, finalVolume);
+        Debug.Log($"[AUDIO-SFX] ✅ Soltar OK (Vol: {finalVolume:F2})");
     }
 
     // ===============================================
@@ -346,7 +368,6 @@ public class AudioManager : MonoBehaviour
 
     private void LoadSavedSettings()
     {
-        // 🔴 CRITICAL FIX: Se mantiene la lógica del PlayerPrefs.
         if (musicSource != null)
         {
             // El valor por defecto 0 significa ON (no muteado). 1 significa OFF (muteado).
@@ -370,14 +391,12 @@ public class AudioManager : MonoBehaviour
         if (musicOn)
         {
             // 1. Música ON (Desmutear)
-            // Restablecer el volumen antes de reproducir
             float targetVolume = isMenuMusic ? menuMusicVolume : gameplayMusicVolume;
             musicSource.volume = targetVolume;
 
-            // Si no está sonando (lo más probable es que se detuvo o fue un cambio de escena), lo iniciamos
+            // Si no está sonando, forzar el inicio
             if (!musicSource.isPlaying)
             {
-                // 🔴 FIX: Forzar el inicio de la reproducción con el clip que esté asignado
                 musicSource.Play();
             }
 
@@ -386,10 +405,7 @@ public class AudioManager : MonoBehaviour
         else // musicOn == false (Mutear/OFF)
         {
             // 2. Música OFF (Mutear)
-            // 🔴 FIX: Si muteamos, el volumen percibido es 0. 
             musicSource.volume = 0f;
-            // Aunque musicSource.mute=true ya lo silencia, esto asegura el estado visual/debug.
-
             Debug.Log($"[AUDIO] Toggle Música: OFF. Mute Status: {musicSource.mute}. Música silenciada.");
         }
     }
