@@ -1,11 +1,10 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
-using System.Linq; // Necesario para OrderBy y Select
+using System.Linq;
 
 public class SpotlightSelector : MonoBehaviour
 {
-    // Hacemos que la lista de candidatos se maneje internamente (sin Inspector)
     private Transform[] candidates;
 
     [Header("Etiqueta para la búsqueda automática")]
@@ -41,56 +40,44 @@ public class SpotlightSelector : MonoBehaviour
     [SerializeField] KeyCode next2 = KeyCode.D;
     [SerializeField] KeyCode confirmKey = KeyCode.Return;
     [SerializeField] KeyCode confirmAlt = KeyCode.Space;
-    // NUEVO: Variables para la detección del mouse
-    [SerializeField] int mouseClickButton = 0; // 0 = Botón izquierdo (click)
-    [SerializeField] LayerMask raycastLayer; // La capa donde están tus personajes
+    [SerializeField] int mouseClickButton = 0;
+    [SerializeField] LayerMask raycastLayer;
 
     [Header("Flujo")]
-    [SerializeField] string nextSceneName = "Principal";
+    [SerializeField] string nextSceneName = "Lore";
     [SerializeField] bool wrapAround = true;
     [SerializeField] bool usePrefabs = true;
 
     int index = 0;
     bool isTransitioning = false;
-    // CRÍTICO: Bloquea el input por un frame al cargar la escena.
     bool isInputBlocked = true;
-
 
     void Awake()
     {
-        // Aseguramos que la máscara de capa tenga un valor por defecto (Todo) si no se asigna.
         if (raycastLayer.value == 0)
         {
             raycastLayer = ~0;
         }
     }
 
-    // ===============================================
-    // LÓGICA DE INICIALIZACIÓN Y LIMPIEZA
-    // ===============================================
-
-    /// <summary>
-    /// Se llama cada vez que el objeto se activa (incluyendo la recarga de escena).
-    /// </summary>
     private void OnEnable()
     {
         LoadCandidatesFromScene();
 
         isTransitioning = false;
         index = 0;
-        isInputBlocked = true; // El input se bloquea inmediatamente al cargarse la escena
+        isInputBlocked = true;
 
         if (candidates != null && candidates.Length > 0)
         {
-            // Busca el índice guardado (si existe) y lo establece. Si no, usa 0.
-            // Esto es útil si se vuelve a la escena.
+            // Usar la llave correcta para PlayerPrefs, aunque la gestiona CharacterSelection
             int lastIndex = PlayerPrefs.GetInt("LastSelectedIndex", 0);
             index = Mathf.Clamp(lastIndex, 0, candidates.Length - 1);
             SnapTo(index);
         }
         else
         {
-            Debug.LogError("[SPOTLIGHT] No se encontró ningún personaje con la etiqueta: " + CandidateTag + ". Verifica que los personajes estén en la escena.");
+            Debug.LogError("[SPOTLIGHT] No se encontró ningún personaje con la etiqueta: " + CandidateTag);
         }
     }
 
@@ -100,7 +87,6 @@ public class SpotlightSelector : MonoBehaviour
 
         if (candidateObjects.Length > 0)
         {
-            // Ordenamos por nombre para asegurar un orden consistente
             candidates = candidateObjects.OrderBy(go => go.name).Select(go => go.transform).ToArray();
             Debug.Log($"[SPOTLIGHT] Candidatos encontrados y cargados: {candidates.Length}");
         }
@@ -110,18 +96,11 @@ public class SpotlightSelector : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Se llama justo antes de que el objeto sea desactivado o destruido.
-    /// </summary>
     private void OnDisable()
     {
         StopAllCoroutines();
         candidates = null;
     }
-
-    // ===============================================
-    // LÓGICA DE INPUT Y TRANSICIÓN
-    // ===============================================
 
     void Update()
     {
@@ -136,7 +115,6 @@ public class SpotlightSelector : MonoBehaviour
             return;
         }
 
-        // Lógica de FOCO (mover con flechas/WASD)
         if (Input.GetKeyDown(prev1) || Input.GetKeyDown(prev2))
         {
             Focus(-1);
@@ -145,62 +123,59 @@ public class SpotlightSelector : MonoBehaviour
         {
             Focus(+1);
         }
-
-        // Lógica de CONFIRMAR (Enter/Space)
         else if (Input.GetKeyDown(confirmKey) || Input.GetKeyDown(confirmAlt) || Input.GetKeyDown(KeyCode.KeypadEnter))
         {
             Confirm();
         }
-
-        // NUEVA LÓGICA: Selección por CLICK del Mouse
         else if (Input.GetMouseButtonDown(mouseClickButton))
         {
             HandleMouseClick();
         }
     }
 
-    // -------- Manejo del Click del Mouse --------
     void HandleMouseClick()
     {
-        // 1. Lanzar un rayo desde la posición del mouse
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
 
-        // 2. Comprobar si el rayo golpea algo en la capa de candidatos
         if (Physics.Raycast(ray, out hit, 100f, raycastLayer))
         {
-            Transform clickedCandidate = hit.transform;
-
-            // 3. Buscar el índice del candidato clickeado en la lista 'candidates'
-            int clickedIndex = -1;
-            for (int i = 0; i < candidates.Length; i++)
+            // Buscar el Transform raíz del candidato
+            Transform clickedRoot = hit.transform;
+            while (clickedRoot != null && !clickedRoot.CompareTag(CandidateTag))
             {
-                if (candidates[i] == clickedCandidate)
-                {
-                    clickedIndex = i;
-                    break;
-                }
+                clickedRoot = clickedRoot.parent;
             }
 
-            if (clickedIndex != -1)
+            if (clickedRoot != null)
             {
-                // Si el personaje clickeado es el mismo que el actual, CONFIRMAR
-                if (clickedIndex == index)
+                int clickedIndex = -1;
+                for (int i = 0; i < candidates.Length; i++)
                 {
-                    Confirm();
+                    if (candidates[i] == clickedRoot)
+                    {
+                        clickedIndex = i;
+                        break;
+                    }
                 }
-                // Si es un personaje diferente, CAMBIAR el foco
-                else
+
+                if (clickedIndex != -1)
                 {
-                    StopAllCoroutines();
-                    index = clickedIndex;
-                    StartCoroutine(AnimateTo(index));
+                    if (clickedIndex == index)
+                    {
+                        Confirm();
+                    }
+                    else
+                    {
+                        StopAllCoroutines();
+                        index = clickedIndex;
+                        StartCoroutine(AnimateTo(index));
+                    }
                 }
             }
         }
     }
 
-    // -------- navegación por teclado --------
     void Focus(int dir)
     {
         if (candidates == null || candidates.Length == 0 || isTransitioning) return;
@@ -214,49 +189,73 @@ public class SpotlightSelector : MonoBehaviour
         StartCoroutine(AnimateTo(index));
     }
 
-    // -------- confirmar (Lógica de guardado) --------
     void Confirm()
     {
         if (candidates == null || candidates.Length == 0) return;
 
         if (index < 0 || index >= candidates.Length || candidates[index] == null)
         {
-            Debug.LogError("[SELECTION] Índice de candidato fuera de rango o referencia rota: " + index);
+            Debug.LogError("[SELECTION] Índice de candidato fuera de rango: " + index);
             return;
         }
 
         Transform selectedCandidate = candidates[index];
 
-        // Guarda el índice seleccionado (para volver a esta escena)
         PlayerPrefs.SetInt("LastSelectedIndex", index);
 
-        // 2. Comprobación del controlador (GameDataController)
-        if (GameDataController.Instance == null)
+        // 🔴 VERIFICAR CharacterSelection (Debe existir previamente)
+        if (CharacterSelection.Instance == null)
         {
-            Debug.LogError("[SELECTION] GameDataController NO encontrado. Cargando escena...");
-            SceneManager.LoadScene(nextSceneName);
-            return;
+            // Intentar encontrar CharacterSelection en la escena (puede haber sido creado por otro script)
+            var cs = FindObjectOfType<CharacterSelection>();
+            if (cs == null)
+            {
+                Debug.LogError("[SELECTION] ❌ CharacterSelection NO encontrado. Cargando escena sin guardar ID.");
+                SceneManager.LoadScene(nextSceneName);
+                return;
+            }
         }
 
-        // 3. Guardar ID y cargar escena
-        string characterID = selectedCandidate.name;
-        Debug.Log($"[SELECTION] Guardando ID Final (Nombre): {characterID}");
-        GameDataController.Instance.SetSelectedCharacter(characterID);
+        // Obtener el ID del personaje
+        CharacterIDTag idTag = selectedCandidate.GetComponent<CharacterIDTag>();
+        string characterID = (idTag != null) ? idTag.characterID : selectedCandidate.name;
 
+        Debug.Log($"[SELECTION] 🔥 Confirmando personaje: {characterID}");
+
+        // 🔴 GUARDAR PERSONAJE
+        CharacterSelection.Instance.SetSelectedID(characterID);
+
+        // 🔴 VERIFICAR AudioManager ANTES de cambiar escena
+        if (AudioManager.Instance != null)
+        {
+            Debug.Log("[SELECTION] AudioManager encontrado, ejecutando debug...");
+            AudioManager.Instance.DebugAudioStatus();
+        }
+        else
+        {
+            Debug.LogError("[SELECTION] ❌ AudioManager NO encontrado");
+        }
+
+        // 🔴 DESTRUIR SpotlightSelector
+        Debug.Log("[SELECTION] 🗑️ Destruyendo SpotlightSelector...");
+        Destroy(gameObject);
+
+        // 🔴 CAMBIAR A ESCENA LORE
+        Debug.Log($"[SELECTION] 🎯 Cargando escena: {nextSceneName}");
         SceneManager.LoadScene(nextSceneName);
     }
 
-    // -------- transición (una sola vez por cambio) --------
     System.Collections.IEnumerator AnimateTo(int i)
     {
         isTransitioning = true;
 
-        if (candidates == null || candidates.Length == 0 || i < 0 || i >= candidates.Length || candidates[i] == null) { isTransitioning = false; yield break; }
+        if (candidates == null || candidates.Length == 0 || i < 0 || i >= candidates.Length || candidates[i] == null)
+        {
+            isTransitioning = false;
+            yield break;
+        }
 
         Transform t = candidates[i];
-        if (t == null) { isTransitioning = false; yield break; }
-
-
         Transform anchor = GetAnchor(t);
 
         Vector3 startPos = transform.position;
@@ -287,7 +286,6 @@ public class SpotlightSelector : MonoBehaviour
         isTransitioning = false;
     }
 
-    // -------- colocación instantánea (inicio) --------
     void SnapTo(int i)
     {
         if (candidates == null || candidates.Length == 0) return;
@@ -306,7 +304,6 @@ public class SpotlightSelector : MonoBehaviour
         ApplyCameraLocalPose();
     }
 
-    // -------- cálculo del POS del Spot relativo al personaje --------
     Vector3 ComputeSpotPosition(Transform target)
     {
         float side = lightOffset.x;
@@ -321,8 +318,6 @@ public class SpotlightSelector : MonoBehaviour
              + target.right * side;
     }
 
-
-    // -------- helpers --------
     void ApplyCameraLocalPose()
     {
         if (cameraChild)

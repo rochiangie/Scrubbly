@@ -1,47 +1,57 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using TMPro; // Asegúrate de tener esta librería para el texto
 
 public class SliderUpdater : MonoBehaviour
 {
     private Slider progressSlider;
 
-    void Start() // Cambié de Awake a Start, por si el DirtManager se inicializa después.
+    [Header("Referencias (Opcional)")]
+    [Tooltip("Componente TextMeshPro para mostrar el progreso como 'X/Y'.")]
+    public TextMeshProUGUI progressText;
+
+    void Awake()
     {
         progressSlider = GetComponent<Slider>();
 
-        // 🛑 ESTA ES LA CONEXIÓN CLAVE QUE FALTA POR CÓDIGO 🛑
-        if (DirtManager.Instance != null && progressSlider != null)
+        if (progressSlider == null)
         {
-            // Suscribe la función UpdateSliderValue al evento del DirtManager.
-            DirtManager.Instance.OnProgressUpdated.AddListener(UpdateSliderValue);
-
-            Debug.Log("[SliderUpdater] Suscrito al evento de progreso de limpieza.");
-        }
-        else
-        {
-            if (DirtManager.Instance == null) Debug.LogError("SliderUpdater no encontró el DirtManager.");
+            Debug.LogError("[SliderUpdater] Error: No se encontró el componente Slider en este GameObject.");
         }
 
-        // Inicializa el Slider (opcional, el manager lo hace, pero es buena práctica)
         progressSlider.minValue = 0f;
         progressSlider.maxValue = 1f;
+        progressSlider.value = 0f; // Inicializa en 0.
     }
 
-    // La función que recibe el valor del manager.
-    public void UpdateSliderValue(float progress)
+    void OnEnable()
     {
-        if (progressSlider != null)
-        {
-            progressSlider.value = progress;
-        }
+        // 🛑 CONEXIÓN CLAVE: Suscribirse al evento de GameEvents
+        GameEvents.OnProgressUpdate += UpdateSlider;
+        Debug.Log("[SliderUpdater] Suscrito al evento de GameEvents.OnProgressUpdate.");
     }
 
-    // Asegúrate de remover el Listener al destruir el objeto
-    private void OnDestroy()
+    void OnDisable()
     {
-        if (DirtManager.Instance != null)
+        // 🛑 DESUSCRIPCIÓN CLAVE
+        GameEvents.OnProgressUpdate -= UpdateSlider;
+    }
+
+    /// <summary>
+    /// Recibe los valores de limpieza del TaskManager a través de GameEvents.
+    /// </summary>
+    private void UpdateSlider(int cleaned, int total)
+    {
+        if (progressSlider == null || total <= 0) return;
+
+        // Calcular el progreso (0.0 a 1.0)
+        float progress = (float)cleaned / total;
+
+        progressSlider.value = progress;
+
+        if (progressText != null)
         {
-            DirtManager.Instance.OnProgressUpdated.RemoveListener(UpdateSliderValue);
+            progressText.text = $"Limpieza: {cleaned} / {total}";
         }
     }
 }

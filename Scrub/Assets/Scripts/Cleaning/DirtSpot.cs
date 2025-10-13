@@ -1,48 +1,49 @@
 ﻿using UnityEngine;
+using System.Collections; // Necesario para Coroutines
 
 public class DirtSpot : MonoBehaviour
 {
     // ===============================================
-    //           VARIABLES PÚBLICAS
+    //               VARIABLES PÚBLICAS Y PRIVADAS
     // ===============================================
+
+    // 🔴 NUEVA PROPIEDAD: Requerida por TaskManager para contar la suciedad al inicio.
+    /// <summary>Bandera para indicar si este punto de suciedad ya ha sido limpiado.</summary>
+    public bool IsCleaned { get; private set; } = false; // Empieza como sucio (false)
 
     [Header("Efecto de Destrucción")]
     [Tooltip("Prefab del sistema de partículas que se instanciará al destruirse.")]
     public GameObject destructionEffectPrefab;
 
-    // ----------------------------------------------------------------------------------------------------------------------
-
     [Header("Efecto Visual de Limpieza")]
     [Tooltip("La opacidad mínima que tendrá el material cuando la suciedad esté casi limpia.")]
     [Range(0f, 1f)]
-    public float minOpacity = 0.1f; // Para que no desaparezca completamente antes de tiempo
+    public float minOpacity = 0.1f;
 
     private Renderer dirtRenderer; // Componente Renderer para acceder al Material
     private Material dirtMaterial; // El material que vamos a modificar
 
-    // ===============================================
-    //          CONFIGURACIÓN DE SALUD Y REQUISITOS
-    // ===============================================
-
     [Header("Salud y Requisitos")]
     [Tooltip("La vida máxima que tiene la suciedad.")]
     [SerializeField]
-    private float maxHealth = 10f; // Ajusta este valor en el Inspector.
+    private float maxHealth = 10f;
 
     [Tooltip("El ID de la herramienta requerida para limpiar esta suciedad.")]
     [SerializeField]
     private string requiredToolId = "Sponge";
 
     private float currentHealth;
-    private bool isDestroyed = false; // Bandera para evitar doble conteo/notificación
+    // La bandera isDestroyed ahora se usará como sinónimo de IsCleaned
+    private bool isHandlingDestruction = false;
 
     // ===============================================
-    //          MÉTODOS DE UNITY
+    //               MÉTODOS DE UNITY
     // ===============================================
 
     void Awake()
     {
         currentHealth = maxHealth;
+        isHandlingDestruction = false; // Asegurar estado inicial
 
         // Inicialización de la transparencia
         dirtRenderer = GetComponent<Renderer>();
@@ -51,7 +52,7 @@ public class DirtSpot : MonoBehaviour
             // Crea una instancia del material para que solo este objeto se vea afectado
             dirtMaterial = dirtRenderer.material;
 
-            // IMPORTANTE: Configurar el material para soportar transparencia (Modo Blend)
+            // Configurar el material para soportar transparencia
             SetMaterialToFadeMode(dirtMaterial);
 
             // Establecer la opacidad inicial (completamente visible)
@@ -61,21 +62,20 @@ public class DirtSpot : MonoBehaviour
 
     void Start()
     {
-        // 🛑 LÍNEA ACTIVADA: Al inicio, registra este objeto en el manager.
-        if (DirtManager.Instance != null)
-        {
-            DirtManager.Instance.RegisterDirtItem();
-        }
+        // NOTA: Se eliminó la dependencia de DirtManager.Instance.RegisterDirtItem();
+        // El TaskManager ya encuentra todos los DirtSpots con FindObjectsOfType<DirtSpot>().
     }
 
-    // ----------------------------------------------------------------------------------------------------------------------
-
     // ===============================================
-    //          LÓGICA DE LIMPIEZA
+    //               LÓGICA DE LIMPIEZA
     // ===============================================
 
     public bool CanBeCleanedBy(string toolId)
     {
+        // Si ya está limpio o en proceso de destrucción, no se puede limpiar más.
+        if (IsCleaned || isHandlingDestruction) return false;
+
+        // Si no se requiere una herramienta específica, cualquier herramienta funciona.
         if (string.IsNullOrEmpty(requiredToolId))
         {
             return true;
@@ -84,11 +84,11 @@ public class DirtSpot : MonoBehaviour
     }
 
     /// <summary>
-    /// Se llama desde el script de interacción (PlayerController) al golpear/usar herramienta.
+    /// Se llama desde el script de interacción (CleaningController) al golpear.
     /// </summary>
     public void CleanHit(float damage)
     {
-        if (isDestroyed) return;
+        if (isHandlingDestruction) return;
 
         currentHealth -= damage;
         currentHealth = Mathf.Max(0f, currentHealth); // Asegurar que la salud no sea negativa
@@ -102,31 +102,107 @@ public class DirtSpot : MonoBehaviour
         }
     }
 
-    // ... (El resto de funciones UpdateVisualAppearance y SetMaterialToFadeMode permanecen iguales) ...
+    // ===============================================
+    //               DESTRUCCIÓN Y FINALIZACIÓN
+    // ===============================================
 
-    /// <summary>
-    /// Actualiza la apariencia visual del dirt spot (transparencia).
-    /// </summary>
+    private void HandleDestruction()
+    {
+        if (isHandlingDestruction) return;
+        isHandlingDestruction = true;
+        IsCleaned = true; // 🔴 MARCAR COMO LIMPIO PARA EL TaskManager
+
+        // 1. NOTIFICAR AL MANAGER DEL PROGRESO
+        // 🔴 CRITICAL FIX: Usar el evento global que escucha el TaskManager
+        //GameEvents.OnAnyDirtCleaned?.Invoke();
+        GameEvents.DirtCleaned();
+
+
+        // 2. LLAMADA CRÍTICA A SFX: Disparar el sonido de limpieza antes de destruirse
+        // (Aunque PlayCleanSFX ya se llama en CleaningController, este podría ser un sonido final de "desaparición").
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayCleanSFX();
+        }
+
+        // 3. INSTANCIAR PARTÍCULAS
+        if (destructionEffectPrefab != null)
+        {
+            StartCoroutine(DestroyWithParticles(destructionEffectPrefab));
+        }
+
+        // 4. DESACTIVAR EL RENDERER Y COLISIONADOR ANTES DE DESTRUIRSE
+        if (dirtRenderer != null) dirtRenderer.enabled = false;
+        Collider collider = GetComponent<Collider>();
+        if (collider != null) collider.enabled = false;
+
+        // 5. DESTRUIR EL OBJETO ACTUAL (LA SUCIEDAD) después de un pequeño retraso
+        Destroy(gameObject, 0.1f);
+    }
+
+    // Coroutine para gestionar la destrucción del efecto de partículas
+    private IEnumerator DestroyWithParticles(GameObject effectPrefab)
+    {
+        GameObject effectInstance = Instantiate(effectPrefab, transform.position, Quaternion.identity);
+
+        // Buscar el ParticleSystem más largo para determinar el tiempo de vida
+        float maxDuration = 0f;
+        ParticleSystem[] allParticleSystems = effectInstance.GetComponentsInChildren<ParticleSystem>(true);
+
+        if (allParticleSystems.Length == 0)
+        {
+            // Si no hay PS, simplemente destruir
+            Destroy(effectInstance, 2.0f);
+            yield break;
+        }
+
+        foreach (ParticleSystem ps in allParticleSystems)
+        {
+            var main = ps.main;
+
+            // Si el prefab tiene loop=true accidentalmente, lo corregimos
+            main.loop = false;
+
+            // Usamos StartDelay + Duration para el cálculo
+            float duration = main.startDelay.constant + main.duration;
+            if (duration > maxDuration)
+            {
+                maxDuration = duration;
+            }
+
+            ps.Play();
+        }
+
+        // Esperar la duración máxima de las partículas + un pequeño margen
+        float destroyDelay = maxDuration + 0.1f;
+        yield return new WaitForSeconds(destroyDelay);
+
+        // Asegurarse de que el objeto de partículas se destruya si aún existe
+        if (effectInstance != null)
+        {
+            Destroy(effectInstance);
+        }
+    }
+
+    // ===============================================
+    //               APARIENCIA VISUAL
+    // ===============================================
+
     private void UpdateVisualAppearance()
     {
         if (dirtMaterial == null) return;
 
-        // Calcular el porcentaje de salud restante (0 a 1)
         float healthRatio = currentHealth / maxHealth;
-
-        // Mapear el ratio de salud a un valor de opacidad
         float currentOpacity = Mathf.Lerp(minOpacity, 1f, healthRatio);
 
-        // Crear un nuevo color con la opacidad calculada
         Color color = dirtMaterial.color;
         color.a = currentOpacity;
         dirtMaterial.color = color;
     }
 
-    // Función de utilidad para configurar el material a un modo de Blend (Fade)
     private void SetMaterialToFadeMode(Material material)
     {
-        // Estos ajustes son para el Shader Standard de Unity, puede variar para URP/HDRP
+        // Esto es una configuración de shader estándar para transparencia tipo "Fade"
         material.SetOverrideTag("RenderType", "Transparent");
         material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
         material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
@@ -135,58 +211,5 @@ public class DirtSpot : MonoBehaviour
         material.EnableKeyword("_ALPHABLEND_ON");
         material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
         material.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
-    }
-
-
-    // ===============================================
-    //          DESTRUCCIÓN (FINAL Y ROBUSTA)
-    // ===============================================
-
-    private void HandleDestruction()
-    {
-        if (isDestroyed) return;
-        isDestroyed = true; // Marca como destruido
-
-        // 🛑 LÍNEA ACTIVADA: NOTIFICAR AL MANAGER 🛑
-        if (DirtManager.Instance != null)
-        {
-            DirtManager.Instance.CleanDirtItem(); // Llama a la función de conteo del manager
-        }
-
-        // 2. INSTANCIAR Y CONFIGURAR PARTÍCULAS
-        if (destructionEffectPrefab != null)
-        {
-            GameObject effectInstance = Instantiate(destructionEffectPrefab, transform.position, Quaternion.identity);
-            ParticleSystem[] allParticleSystems = effectInstance.GetComponentsInChildren<ParticleSystem>();
-
-            // Forzar la escala del objeto instanciado a 1,1,1 para asegurar el tamaño
-            effectInstance.transform.localScale = Vector3.one;
-
-            // CALCULAR LA DURACIÓN MÁXIMA
-            float maxDuration = 0f;
-
-            foreach (ParticleSystem ps in allParticleSystems)
-            {
-                var main = ps.main;
-                main.loop = false;
-                main.stopAction = ParticleSystemStopAction.Destroy;
-                main.startSizeMultiplier = 0.05f;
-
-                ps.Play();
-
-                // Encuentra la duración más larga entre todos los sistemas
-                if (ps.main.duration > maxDuration)
-                {
-                    maxDuration = ps.main.duration;
-                }
-            }
-
-            // DESTRUIR EL OBJETO PADRE (effectInstance) CON UN RETRASO
-            float destroyDelay = maxDuration + 0.5f;
-            Destroy(effectInstance, destroyDelay);
-        }
-
-        // 3. DESTRUIR EL OBJETO ACTUAL (LA SUCIEDAD)
-        Destroy(gameObject);
     }
 }

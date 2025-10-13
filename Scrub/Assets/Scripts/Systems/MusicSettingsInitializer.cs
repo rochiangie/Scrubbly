@@ -1,6 +1,5 @@
-using UnityEngine;
-using UnityEngine.UI; // Necesario para acceder al componente Toggle
-using UnityEngine.Events; // Necesario para UnityAction (para la conexión de eventos)
+ï»¿using UnityEngine;
+using UnityEngine.UI;
 
 public class MusicSettingsInitializer : MonoBehaviour
 {
@@ -8,10 +7,10 @@ public class MusicSettingsInitializer : MonoBehaviour
 
     void Start()
     {
-        // El AudioManager debe estar cargado, ya que este es un script de UI persistente.
+        // Verificar AudioManager
         if (AudioManager.Instance == null)
         {
-            Debug.LogError("El AudioManager no se ha cargado. No se puede inicializar la configuración de música.");
+            Debug.LogError("El AudioManager no se ha cargado. No se puede inicializar la configuraciÃ³n de mÃºsica.");
             return;
         }
 
@@ -22,23 +21,21 @@ public class MusicSettingsInitializer : MonoBehaviour
             return;
         }
 
-        // 1. Obtener el estado de silencio guardado.
-        bool isMutedInPrefs = AudioManager.Instance.IsMusicMuted();
+        // ðŸ”´ CORRECCIÃ“N: Usar los mÃ©todos correctos del AudioManager actualizado
+        // 1. Obtener el estado de la mÃºsica
+        bool isMusicEnabled = AudioManager.Instance.IsMusicEnabled();
 
-        // 2. Establecer el estado inicial del Toggle (Visual)
-        // La lógica del ToggleMusicMute es: TRUE = Música ON.
-        // Si la música está silenciada (isMutedInPrefs es TRUE), el Toggle debe estar DESMARCADO (FALSE).
-        musicToggle.isOn = !isMutedInPrefs;
+        // 2. Establecer el estado inicial del Toggle
+        // isMusicEnabled = true â†’ mÃºsica ACTIVADA â†’ Toggle MARCADO (true)
+        // isMusicEnabled = false â†’ mÃºsica DESACTIVADA â†’ Toggle DESMARCADO (false)
+        musicToggle.isOn = isMusicEnabled;
 
-
-        // 3. Conectar el evento del Toggle al AudioManager de forma segura.
-        // Es crucial quitar listeners anteriores antes de añadir el nuevo para evitar llamadas duplicadas.
+        // 3. Conectar el evento del Toggle
         musicToggle.onValueChanged.RemoveAllListeners();
 
-        // Añade el listener. El estado 'isOn' del Toggle se pasará automáticamente como 'bool'
-        // a la función ToggleMusicMute(bool isOn).
-        musicToggle.onValueChanged.AddListener(AudioManager.Instance.ToggleMusicMute);
+        // ðŸ”´ CORRECCIÃ“N: Usar ToggleMusic en lugar de ToggleMusicMute
+        musicToggle.onValueChanged.AddListener(AudioManager.Instance.ToggleMusic);
 
-        Debug.Log($"[UI INITIALIZER] Toggle de música inicializado. Estado: {(musicToggle.isOn ? "ON" : "OFF")}.");
+        Debug.Log($"[UI INITIALIZER] Toggle de mÃºsica inicializado. Estado: {(musicToggle.isOn ? "ON" : "OFF")}.");
     }
 }

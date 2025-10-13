@@ -6303,7 +6303,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b03c0b6b5befcb47a483767492ac359, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectedCharacterName: 
+  selectedCharacterName: Player
   playerSpotLight: {fileID: 2046273835}
 --- !u!4 &1198940920
 Transform:
@@ -8928,6 +8928,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78cbe0aa4c0aaef479a87cc6513726ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  selectedCharacterID: 
 --- !u!114 &2046273840
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9888,7 +9889,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &802240572483655132
 RectTransform:
   m_ObjectHideFlags: 0
