@@ -854,7 +854,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4702005202815635107, guid: 6cd7f2398c0d64b4a8f1a9eb48b054ad, type: 3}
       propertyPath: cleanSFXVolume
-      value: 0.278
+      value: 0.541
       objectReference: {fileID: 0}
     - target: {fileID: 4702005202815635107, guid: 6cd7f2398c0d64b4a8f1a9eb48b054ad, type: 3}
       propertyPath: menuMusicVolume
@@ -1232,7 +1232,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3410141298516935423, guid: 71f750719f4b576438d2eb186a11fddc, type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_BoolArgument
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7410037496131021377, guid: 71f750719f4b576438d2eb186a11fddc, type: 3}
       propertyPath: m_Name
