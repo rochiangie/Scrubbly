@@ -803,6 +803,38 @@ PrefabInstance:
       propertyPath: m_Name
       value: AudioManager
       objectReference: {fileID: 0}
+    - target: {fileID: 3584561356095330911, guid: 6cd7f2398c0d64b4a8f1a9eb48b054ad, type: 3}
+      propertyPath: m_Resource
+      value: 
+      objectReference: {fileID: 8300000, guid: 73876f1ffcd966c46b0ff3d3c6b6d7f4, type: 3}
+    - target: {fileID: 4702005202815635107, guid: 6cd7f2398c0d64b4a8f1a9eb48b054ad, type: 3}
+      propertyPath: cleanObjectSFX
+      value: 
+      objectReference: {fileID: 8300000, guid: 73876f1ffcd966c46b0ff3d3c6b6d7f4, type: 3}
+    - target: {fileID: 4702005202815635107, guid: 6cd7f2398c0d64b4a8f1a9eb48b054ad, type: 3}
+      propertyPath: menuMusicVolume
+      value: 0.324
+      objectReference: {fileID: 0}
+    - target: {fileID: 4702005202815635107, guid: 6cd7f2398c0d64b4a8f1a9eb48b054ad, type: 3}
+      propertyPath: sfxVolumeGlobal
+      value: 0.932
+      objectReference: {fileID: 0}
+    - target: {fileID: 4702005202815635107, guid: 6cd7f2398c0d64b4a8f1a9eb48b054ad, type: 3}
+      propertyPath: gameplayMusicVolume
+      value: 0.131
+      objectReference: {fileID: 0}
+    - target: {fileID: 4702005202815635107, guid: 6cd7f2398c0d64b4a8f1a9eb48b054ad, type: 3}
+      propertyPath: dropSFXVolumeMultiplier
+      value: 0.518
+      objectReference: {fileID: 0}
+    - target: {fileID: 4702005202815635107, guid: 6cd7f2398c0d64b4a8f1a9eb48b054ad, type: 3}
+      propertyPath: cleanSFXVolumeMultiplier
+      value: 0.833
+      objectReference: {fileID: 0}
+    - target: {fileID: 4702005202815635107, guid: 6cd7f2398c0d64b4a8f1a9eb48b054ad, type: 3}
+      propertyPath: pickupSFXVolumeMultiplier
+      value: 0.577
+      objectReference: {fileID: 0}
     - target: {fileID: 7079659604139739966, guid: 6cd7f2398c0d64b4a8f1a9eb48b054ad, type: 3}
       propertyPath: m_LocalPosition.x
       value: -1.6217952
