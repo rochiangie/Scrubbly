@@ -127,25 +127,33 @@ public class AudioManager : MonoBehaviour
     /// <summary>
     /// Función para cambiar la música. FUERZA la detención para evitar superposición.
     /// </summary>
+    // EN AudioManager.cs
+
+    /// <summary>
+    /// Función para cambiar la música. FUERZA la detención para evitar superposición.
+    /// </summary>
     public void PlayMusic(AudioClip clip)
     {
-        if (clip == null || musicSource == null) return;
+        if (clip == null || musicSource == null)
+        {
+            Debug.LogWarning("[AUDIO] Clip nulo o MusicSource no disponible.");
+            return;
+        }
 
-        // Si el clip es el mismo y ya está sonando, evitamos el Stop/Play para que sea fluido.
+        // Si el clip que se pide es el mismo que está sonando, no hacemos nada.
         if (musicSource.clip == clip && musicSource.isPlaying) return;
 
-        // 🛑 CORRECCIÓN CLÍTICA: Detener siempre lo que esté sonando para evitar superposición.
-        if (musicSource.isPlaying)
-        {
-            musicSource.Stop();
-        }
+        // 🛑 CORRECCIÓN CRÍTICA: Detener SIEMPRE lo que esté sonando.
+        // Esto mata la música anterior que se haya quedado pegada.
+        musicSource.Stop();
 
         musicSource.clip = clip;
         musicSource.loop = true;
+
+        // El volumen ya está configurado previamente.
         musicSource.Play();
         Debug.Log($"[AUDIO] 🎵 Reproduciendo: {clip.name} (volumen: {musicSource.volume})");
     }
-
     /// <summary>
     /// Función llamada desde CharacterSelection al confirmar. Fuerza el volumen bajo.
     /// </summary>
