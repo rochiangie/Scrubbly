@@ -1,34 +1,63 @@
-using UnityEngine;
+ï»¿using UnityEngine;
+using System.Linq;
+using System.Collections.Generic;
 
 public class TaskManager : MonoBehaviour
 {
-    int totalDirt;
-    int cleaned;
+    private int totalDirt = 0;
+    private int cleanedCount = 0;
 
     [Header("UI y Paneles")]
     public TimedUIPanel notificationPanel;
 
-    [Tooltip("El GameObject del panel de 'Ganaste' (donde está el script de temporizador).")]
-    // Referencia al Panel de Victoria (debe estar inactivo al inicio)
+    [Tooltip("El GameObject del panel de 'Ganaste' (debe estar inactivo al inicio).")]
     public GameObject winPanel;
+
+    private const string WIN_PANEL_ERROR = "[TASK MANAGER] El Panel de Victoria (Win Panel) no estÃ¡ asignado. La escena no continuarÃ¡.";
+
+    void Awake()
+    {
+        // Encontrar objetos activos E inactivos, por si la suciedad se desactiva/reactiva.
+        DirtSpot[] allDirtSpots = FindObjectsOfType<DirtSpot>(true);
+        totalDirt = allDirtSpots.Length;
+
+        // ðŸš¨ CORRECCIÃ“N: Contar los spots que tienen IsCleaned = true. 
+        // ESTO SÃ“LO FUNCIONA SI YA AGREGÃ“ LA PROPIEDAD 'IsCleaned' EN DirtSpot.cs.
+        // Si no estÃ¡ seguro, pÃ³ngalo a cero (cleanedCount = 0;).
+        cleanedCount = allDirtSpots.Count(d => d.IsCleaned);
+
+        Debug.Log($"[TASK MANAGER] Inicializado. Suciedad Total: {totalDirt}. Suciedad ya limpia: {cleanedCount}.");
+    }
 
     void Start()
     {
-        // Seguridad: El panel de victoria debe estar desactivado al inicio.
-        if (winPanel != null && winPanel.activeSelf)
+        // ... (El resto del cÃ³digo de Start permanece igual) ...
+        if (winPanel == null)
+        {
+            Debug.LogError(WIN_PANEL_ERROR);
+        }
+        else if (winPanel.activeSelf)
         {
             winPanel.SetActive(false);
         }
 
-        // Inicialización de la lógica
-        totalDirt = FindObjectsOfType<DirtSpot>(true).Length;
-        cleaned = 0;
-
-        GameEvents.Progress(cleaned, totalDirt);
         GameEvents.OnAnyDirtCleaned += HandleCleaned;
+        GameEvents.Progress(cleanedCount, totalDirt);
 
-        // Muestra la notificación inicial
-        notificationPanel.ShowAndHide();
+        if (notificationPanel != null)
+        {
+            notificationPanel.ShowAndHide();
+        }
+        else
+        {
+            Debug.LogWarning("[TASK MANAGER] Notification Panel es nulo, no se mostrarÃ¡ el mensaje inicial.");
+        }
+
+        if (totalDirt == 0)
+        {
+            Debug.LogWarning("[TASK MANAGER] No se encontrÃ³ suciedad en la escena. Terminando inmediatamente.");
+            HandleWinCondition();
+        }
     }
 
     void OnDestroy()
@@ -38,28 +67,30 @@ public class TaskManager : MonoBehaviour
 
     void HandleCleaned()
     {
-        cleaned++;
-        GameEvents.Progress(cleaned, totalDirt);
+        cleanedCount++;
 
-        if (cleaned >= totalDirt)
+        Debug.Log($"[TASK MANAGER] Suciedad limpiada: {cleanedCount} / {totalDirt}.");
+        GameEvents.Progress(cleanedCount, totalDirt);
+
+        if (cleanedCount >= totalDirt)
         {
-            // 1. Llama al evento de finalización
-            GameEvents.AllDone();
+            HandleWinCondition();
+        }
+    }
 
-            // 2. Activa el Panel de Victoria
-            // Esto dispara la función OnEnable() del script WinPanelController, 
-            // iniciando la Corrutina de 10 segundos para cargar la escena de Menú.
-            if (winPanel != null)
-            {
-                winPanel.SetActive(true);
-            }
-            else
-            {
-                Debug.LogError("[TASK MANAGER] El Panel de Victoria (Win Panel) no está asignado. La escena no continuará.");
-            }
+    private void HandleWinCondition()
+    {
+        GameEvents.OnAnyDirtCleaned -= HandleCleaned;
+        GameEvents.AllDone();
 
-            // 3. Desuscribirse para evitar que se ejecute de nuevo si se encontrara más suciedad (seguridad)
-            GameEvents.OnAnyDirtCleaned -= HandleCleaned;
+        if (winPanel != null)
+        {
+            Debug.Log("[TASK MANAGER] ðŸŽ‰ Â¡Todas las tareas completadas! Activando Panel de Victoria.");
+            winPanel.SetActive(true);
+        }
+        else
+        {
+            Debug.LogError(WIN_PANEL_ERROR);
         }
     }
 }
