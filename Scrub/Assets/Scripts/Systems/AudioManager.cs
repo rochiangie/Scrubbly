@@ -8,23 +8,38 @@ public class AudioManager : MonoBehaviour
     public static AudioManager Instance;
 
     [Header("Configuración de Audio")]
-    [Tooltip("El AudioSource que reproducirá la música. Se asigna automáticamente si está en el mismo GameObject.")]
-    // **CORRECCIÓN: Eliminada la doble declaración.**
+    [Tooltip("El AudioSource que reproducirá la música.")]
     public AudioSource musicSource;
+    [Tooltip("El AudioSource que reproducirá los efectos de sonido (SFX).")]
+    public AudioSource sfxSource; // Fuente dedicada a SFX cortos (para permitir el corte)
 
-    // Constante para la clave de PlayerPrefs
+    // Constantes para las claves de PlayerPrefs
     private const string MUSIC_TOGGLE_KEY = "MusicMuted";
+    private const string SFX_TOGGLE_KEY = "SfxMuted";
 
     [Header("Música del Juego")]
     [Tooltip("Música por defecto para Menús, Selección, etc.")]
     public AudioClip defaultMusic;
-
-    [Tooltip("La clave es el nombre/ID del personaje. El valor es el AudioClip de su música.")]
-    // Lista para que los pares Personaje/Música sean editables en el Inspector
     public List<CharacterMusicPair> characterMusicList = new List<CharacterMusicPair>();
     private Dictionary<string, AudioClip> characterMusicMap = new Dictionary<string, AudioClip>();
 
-    // Clase auxiliar para la visibilidad en el Inspector
+    [Header("Efectos de Sonido (SFX)")]
+    [Tooltip("SFX al limpiar un objeto.")]
+    public AudioClip cleanObjectSFX;
+    [Tooltip("SFX al recoger un objeto.")]
+    public AudioClip pickupSFX;
+    [Tooltip("SFX al soltar un objeto.")]
+    public AudioClip dropSFX;
+
+    [Range(0f, 1f)]
+    [Tooltip("Volumen específico para el SFX de limpieza.")]
+    public float cleanSFXVolume = 1.0f;
+
+    // CONTROL DE VOLUMEN POR ESCENA
+    [Range(0f, 1f)]
+    [Tooltip("Volumen deseado para la música en la escena de Gameplay (ej: 0.5 para bajar el volumen).")]
+    public float gameplayMusicVolume = 0.5f;
+
     [System.Serializable]
     public class CharacterMusicPair
     {
@@ -41,7 +56,7 @@ public class AudioManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject); // ¡Permite que persista entre escenas!
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -49,187 +64,161 @@ public class AudioManager : MonoBehaviour
             return;
         }
 
-        // 2. Inicialización y chequeo del AudioSource
-        // Si no se asignó en el Inspector, intenta obtenerlo del mismo GameObject.
-        if (musicSource == null)
+        // 2. Inicialización de AudioSources (Corregido: añade sfxSource si falta)
+        if (musicSource == null) musicSource = GetComponent<AudioSource>();
+
+        if (sfxSource == null)
         {
-            musicSource = GetComponent<AudioSource>();
+            sfxSource = gameObject.AddComponent<AudioSource>();
+            sfxSource.loop = false;
+            sfxSource.playOnAwake = false;
         }
 
-        if (musicSource == null)
+        if (musicSource == null || sfxSource == null)
         {
-            Debug.LogError("[AUDIO MANAGER] NO se encontró AudioSource. ¡El audio fallará!");
-            return;
+            Debug.LogError("[AUDIO MANAGER] Falta(n) AudioSource(s).");
         }
 
-        // 3. Rellenar el diccionario de personajes (para acceso rápido)
+        // 3. Rellenar diccionario de personajes
         foreach (var pair in characterMusicList)
         {
             if (!characterMusicMap.ContainsKey(pair.characterID))
-            {
                 characterMusicMap.Add(pair.characterID, pair.musicClip);
-            }
         }
 
-        // 4. Aplicar configuración guardada
+        // 4. Aplicar configuración guardada (Volumen inicial 1.0f)
         LoadSavedSettings();
-
-        // 5. Empezar con la música por defecto
-        if (defaultMusic != null)
-        {
-            PlayMusic(defaultMusic);
-        }
     }
 
     // ===========================================
-    // DETECCIÓN DE ENTRADA (M)
+    // CONTROL DE MÚSICA Y ESCENAS
     // ===========================================
-    void Update()
-    {
-        // Verifica si la tecla 'M' fue presionada en este frame
-        if (Input.GetKeyDown(KeyCode.M))
-        {
-            // Llama a la función de toggle sin argumentos (para el teclado)
-            ToggleMusicMuteKeyboard();
-        }
-    }
+    private void OnEnable() { SceneManager.sceneLoaded += OnSceneLoaded; }
+    private void OnDisable() { SceneManager.sceneLoaded -= OnSceneLoaded; }
 
-    private void LoadSavedSettings()
-    {
-        // Carga si la música estaba silenciada la última vez (1 = Silenciada, 0 = Activa)
-        bool isMutedFromPrefs = PlayerPrefs.GetInt(MUSIC_TOGGLE_KEY, 0) == 1;
-
-        // Aplicamos el valor guardado al AudioSource
-        musicSource.mute = isMutedFromPrefs;
-        Debug.Log($"[AUDIO MANAGER] Configuración cargada: Música Silenciada = {isMutedFromPrefs}");
-    }
-
-    // ===========================================
-    // SUSCRIPCIÓN DE ESCENAS
-    // ===========================================
-    private void OnEnable()
-    {
-        SceneManager.sceneLoaded += OnSceneLoaded;
-    }
-
-    private void OnDisable()
-    {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
-    }
-
-    /// <summary>
-    /// Llamado automáticamente cuando se carga una nueva escena.
-    /// </summary>
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        // 🛑 Reemplaza "NombreDeTuEscenaDeGameplay" con el nombre real.
+        // 🛑 Lógica de control de volumen por escena y cambio de música
         if (scene.name == "NombreDeTuEscenaDeGameplay")
         {
+            musicSource.volume = gameplayMusicVolume;
             PlayCharacterMusic();
         }
-        else // Asumimos que cualquier otra escena (Menú, Selección) usa la música por defecto
+        else
         {
+            musicSource.volume = 1.0f; // Volumen máximo para Menús/Selección
             PlayMusic(defaultMusic);
         }
     }
 
-    // ===========================================
-    // LÓGICA DE REPRODUCCIÓN
-    // ===========================================
-
-    /// <summary>
-    /// Cambia a una pista de música y comienza a reproducirla.
-    /// </summary>
     public void PlayMusic(AudioClip newClip)
     {
         if (musicSource == null || newClip == null) return;
 
-        // Evitar reiniciar la misma pista
-        if (musicSource.clip == newClip && musicSource.isPlaying) return;
+        // Corregido: Compara el volumen actual con el volumen objetivo de la escena
+        float targetVolume = SceneManager.GetActiveScene().name == "NombreDeTuEscenaDeGameplay" ? gameplayMusicVolume : 1.0f;
+        if (musicSource.clip == newClip && musicSource.isPlaying && Mathf.Approximately(musicSource.volume, targetVolume)) return;
 
         musicSource.Stop();
         musicSource.clip = newClip;
-        musicSource.loop = true; // Aseguramos que repita
+        musicSource.loop = true;
+        musicSource.volume = targetVolume; // Aplica el volumen antes de reproducir
         musicSource.Play();
         Debug.Log($"[AUDIO MANAGER] Reproduciendo música: {newClip.name}");
     }
 
-    /// <summary>
-    /// Carga la música basada en el personaje seleccionado (lee PlayerPrefs).
-    /// </summary>
     private void PlayCharacterMusic()
     {
-        // 🛑 Clave de PlayerPrefs. Debe coincidir con la que usas para guardar la selección.
+        // CLAVE: Asegura que esta ID se lea correctamente desde PlayerPrefs (Ej: "SelectedCharacter")
         string selectedCharacterID = PlayerPrefs.GetString("SelectedCharacter", "DEFAULT");
-
         AudioClip characterClip;
+
         if (characterMusicMap.TryGetValue(selectedCharacterID, out characterClip))
         {
             PlayMusic(characterClip);
         }
         else
         {
-            Debug.LogWarning($"[AUDIO MANAGER] No se encontró música para el personaje: {selectedCharacterID}. Usando música por defecto.");
+            Debug.LogWarning($"[AUDIO MANAGER] No se encontró música para el personaje: {selectedCharacterID}. Usando por defecto.");
             PlayMusic(defaultMusic);
         }
     }
 
     // ===========================================
-    // LÓGICA DE SILENCIADO (M/UI)
+    // CONTROL DE SFX (Corte de Sonido Añadido)
     // ===========================================
 
     /// <summary>
-    /// Alterna el estado de silenciado al presionar la tecla 'M'.
+    /// Detiene el sonido actual del sfxSource y reproduce uno nuevo.
     /// </summary>
+    private void StopAndPlaySFX(AudioClip clip, float volume = 1f)
+    {
+        if (sfxSource == null || clip == null) return;
+
+        // CORRECCIÓN CLAVE: Detiene el sonido anterior inmediatamente.
+        sfxSource.Stop();
+
+        sfxSource.PlayOneShot(clip, volume);
+    }
+
+    public void PlayCleanSFX()
+    {
+        StopAndPlaySFX(cleanObjectSFX, cleanSFXVolume);
+    }
+
+    public void PlayPickupSFX()
+    {
+        StopAndPlaySFX(pickupSFX);
+    }
+
+    public void PlayDropSFX()
+    {
+        StopAndPlaySFX(dropSFX);
+    }
+
+    // ===========================================
+    // LÓGICA DE SILENCIADO
+    // ===========================================
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.M)) ToggleMusicMuteKeyboard();
+    }
+
+    private void LoadSavedSettings()
+    {
+        musicSource.mute = PlayerPrefs.GetInt(MUSIC_TOGGLE_KEY, 0) == 1;
+        sfxSource.mute = PlayerPrefs.GetInt(SFX_TOGGLE_KEY, 0) == 1;
+        // Inicializa el volumen de la música en 1.0 (volumen predeterminado de menú)
+        musicSource.volume = 1.0f;
+    }
+
     public void ToggleMusicMuteKeyboard()
     {
-        // Invierte el estado actual de mute
-        bool newState = !musicSource.mute;
-
-        // Aplica y guarda el nuevo estado
-        ApplyMuteState(newState);
-
-        Debug.Log(newState ? "Música silenciada (MUTE por tecla M)" : "Música activada (UNMUTE por tecla M)");
+        ApplyMusicMuteState(!musicSource.mute);
     }
 
-    /// <summary>
-    /// Alterna el estado de silenciado de la música y guarda la preferencia.
-    /// Esta función debe conectarse al evento On Value Changed (Boolean) del componente Toggle de la UI.
-    /// </summary>
-    /// <param name="isOn">El valor booleano pasado por el Toggle. True = Marcado/Música ON.</param>
     public void ToggleMusicMute(bool isOn)
     {
-        // 1. Invertir la lógica: Si el Toggle está 'isOn' (marcado), la música NO debe estar mute.
-        bool shouldBeMuted = !isOn;
-
-        // Aplica y guarda el nuevo estado
-        ApplyMuteState(shouldBeMuted);
-
-        Debug.Log($"[AUDIO MANAGER] Música silenciada: {shouldBeMuted}. Preferencia guardada por UI.");
+        ApplyMusicMuteState(!isOn);
     }
 
-    /// <summary>
-    /// Aplica y guarda el estado de silenciado.
-    /// </summary>
-    private void ApplyMuteState(bool shouldBeMuted)
+    private void ApplyMusicMuteState(bool shouldBeMuted)
     {
         musicSource.mute = shouldBeMuted;
-
-        // Guardar la preferencia
-        // Guardamos el estado del silencio: 1 si está silenciado, 0 si está activo.
-        int muteValue = shouldBeMuted ? 1 : 0;
-        PlayerPrefs.SetInt(MUSIC_TOGGLE_KEY, muteValue);
-
+        PlayerPrefs.SetInt(MUSIC_TOGGLE_KEY, shouldBeMuted ? 1 : 0);
         PlayerPrefs.Save();
+        Debug.Log($"[AUDIO MANAGER] Música silenciada: {shouldBeMuted}.");
     }
 
-    /// <summary>
-    /// Devuelve el estado de silenciado (1 = Silenciado, 0 = Activo). 
-    /// Útil para inicializar el estado del Toggle de la UI.
-    /// </summary>
-    public bool IsMusicMuted()
+    public bool IsMusicMuted() { return PlayerPrefs.GetInt(MUSIC_TOGGLE_KEY, 0) == 1; }
+    public bool IsSfxMuted() { return PlayerPrefs.GetInt(SFX_TOGGLE_KEY, 0) == 1; }
+
+    public void ToggleSfxMute(bool isOn)
     {
-        // Devuelve TRUE si el valor guardado es 1 (Silenciado)
-        return PlayerPrefs.GetInt(MUSIC_TOGGLE_KEY, 0) == 1;
+        sfxSource.mute = !isOn;
+        PlayerPrefs.SetInt(SFX_TOGGLE_KEY, !isOn ? 1 : 0);
+        PlayerPrefs.Save();
+        Debug.Log($"[AUDIO MANAGER] SFX silenciados: {!isOn}.");
     }
 }
