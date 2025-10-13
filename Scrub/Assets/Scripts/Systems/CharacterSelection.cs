@@ -1,44 +1,49 @@
 ﻿using UnityEngine;
+using System.Linq;
 
+// 🔴 ESTA CLASE ES CRUCIAL PARA LA MÚSICA DE PERSONAJE
+// Debe ser un Singleton que persista entre la escena de Selección y la escena de Gameplay.
+// El SpotlightSelector lo usa para guardar el ID. El AudioManager lo usa para leer el ID.
 public class CharacterSelection : MonoBehaviour
 {
     public static CharacterSelection Instance { get; private set; }
 
-    public string selectedCharacterID;
+    [Header("Estado Persistente")]
+    public string selectedCharacterID = "";
+    private const string SELECTED_CHARACTER_KEY = "SelectedCharacter";
 
     void Awake()
     {
-        if (Instance == null)
+        // Implementación de Singleton estricta y persistente
+        if (Instance != null && Instance != this)
         {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-            Debug.Log("[CHARACTER] ✅ Singleton creado: " + gameObject.name);
-        }
-        else if (Instance != this)
-        {
-            Debug.Log("[CHARACTER] ❌ Destruyendo duplicado: " + gameObject.name);
             Destroy(gameObject);
-        }
-    }
-
-    public void SetSelectedID(string characterID)
-    {
-        if (string.IsNullOrEmpty(characterID))
-        {
-            Debug.LogError("[CHARACTER] ❌ ID de personaje inválido");
             return;
         }
 
-        selectedCharacterID = characterID;
-        PlayerPrefs.SetString("SelectedCharacter", characterID);
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+
+        // Cargar el ID al inicio, en caso de que volvamos a una escena de selección
+        LoadSelectedID();
+
+        Debug.Log("[SELECTION] CharacterSelection inicializado y persistente.");
+    }
+
+    public void SetSelectedID(string id)
+    {
+        selectedCharacterID = id;
+        PlayerPrefs.SetString(SELECTED_CHARACTER_KEY, id);
         PlayerPrefs.Save();
+        Debug.Log($"[SELECTION] ID de personaje guardado en Singleton/PlayerPrefs: {id}");
+    }
 
-        Debug.Log($"[CHARACTER] ✅ Personaje guardado: {characterID}");
-
-        // 🔴 OPCIONAL: Debug inmediato
-        if (AudioManager.Instance != null)
+    private void LoadSelectedID()
+    {
+        if (PlayerPrefs.HasKey(SELECTED_CHARACTER_KEY))
         {
-            AudioManager.Instance.DebugAudioStatus();
+            selectedCharacterID = PlayerPrefs.GetString(SELECTED_CHARACTER_KEY);
+            Debug.Log($"[SELECTION] ID de personaje cargado al inicio: {selectedCharacterID}");
         }
     }
 }

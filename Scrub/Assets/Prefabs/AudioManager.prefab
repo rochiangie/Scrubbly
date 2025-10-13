@@ -45,7 +45,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: 38ef414d21e5cb6408d4d0c780050eb3, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.423
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -174,7 +174,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: 38ef414d21e5cb6408d4d0c780050eb3, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.423
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -303,7 +303,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: 38ef414d21e5cb6408d4d0c780050eb3, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.423
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -437,7 +437,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2671726334555064309}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d917127946fc4214187af9efbb88d7d8, type: 3}
   m_Name: 
@@ -478,31 +478,35 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   musicSource: {fileID: 3983306668719462538}
   sfxSource: {fileID: 3584561356095330911}
-  defaultMusic: {fileID: 8300000, guid: e31fffe7246ac494ba0dcb19019c9c84, type: 3}
+  menuMusic: {fileID: 8300000, guid: 38ef414d21e5cb6408d4d0c780050eb3, type: 3}
   characterMusicList:
   - characterID: 1
-    musicClip: {fileID: 8300000, guid: 3ce13604bf24088449a3c1540e3c676a, type: 3}
-  - characterID: 2
     musicClip: {fileID: 8300000, guid: 3f92bb85bb6c2af4499cc193f53a9378, type: 3}
+  - characterID: 2
+    musicClip: {fileID: 8300000, guid: 3ce13604bf24088449a3c1540e3c676a, type: 3}
   - characterID: 3
     musicClip: {fileID: 8300000, guid: 4fc652ebfa3553245ab3442ee89f0e05, type: 3}
   - characterID: 4
-    musicClip: {fileID: 8300000, guid: cf59bc92354569343948200d407a31f0, type: 3}
-  - characterID: 5
     musicClip: {fileID: 8300000, guid: eb6f7b4e6c3f0cf4aa7fd7db5c221b56, type: 3}
-  - characterID: 6
+  - characterID: 5
     musicClip: {fileID: 8300000, guid: b733fe097e77b2e4d90c370c492a7347, type: 3}
+  - characterID: 6
+    musicClip: {fileID: 8300000, guid: 3b70c822a470b4443b6e64a8d3e5c3fe, type: 3}
   - characterID: 7
     musicClip: {fileID: 8300000, guid: 9b10d41754276df4ca2ee9b492051429, type: 3}
   - characterID: 8
     musicClip: {fileID: 8300000, guid: 33c42f14fdbff4f4181e28b1ff2f311b, type: 3}
   - characterID: 9
-    musicClip: {fileID: 8300000, guid: 3b70c822a470b4443b6e64a8d3e5c3fe, type: 3}
-  gameplayMusicVolume: 0.1
+    musicClip: {fileID: 8300000, guid: 3f92bb85bb6c2af4499cc193f53a9378, type: 3}
+  menuMusicVolume: 0.545
+  gameplayMusicVolume: 0.477
+  sfxVolumeGlobal: 0.689
   cleanObjectSFX: {fileID: 8300000, guid: adcac75087a17704ca6c0c3b15bc3aa5, type: 3}
   pickupSFX: {fileID: 8300000, guid: e11a5a019377fbd4c81caa0adcb4c236, type: 3}
   dropSFX: {fileID: 8300000, guid: e11a5a019377fbd4c81caa0adcb4c236, type: 3}
-  cleanSFXVolume: 1
+  cleanSFXVolumeMultiplier: 0.613
+  pickupSFXVolumeMultiplier: 0.7
+  dropSFXVolumeMultiplier: 0.6
 --- !u!1 &3838679054476559141
 GameObject:
   m_ObjectHideFlags: 0
@@ -548,7 +552,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: 38ef414d21e5cb6408d4d0c780050eb3, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.423
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -677,13 +681,13 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: adcac75087a17704ca6c0c3b15bc3aa5, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
-  m_Pitch: 1
+  m_Volume: 0.808
+  m_Pitch: 0.19
   Loop: 0
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
-  Priority: 128
+  Priority: 92
   DopplerLevel: 1
   MinDistance: 1
   MaxDistance: 500
@@ -806,7 +810,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: 38ef414d21e5cb6408d4d0c780050eb3, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.582
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -935,7 +939,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: 38ef414d21e5cb6408d4d0c780050eb3, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.423
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -1064,7 +1068,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: 38ef414d21e5cb6408d4d0c780050eb3, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.423
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -1193,7 +1197,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: 38ef414d21e5cb6408d4d0c780050eb3, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.423
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -1322,7 +1326,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: 38ef414d21e5cb6408d4d0c780050eb3, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.423
   m_Pitch: 1
   Loop: 1
   Mute: 0

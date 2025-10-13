@@ -39,6 +39,10 @@ public class CleaningController : MonoBehaviour
     private bool isCleaningInputHeld = false;
     private int cleaningLayerIndex = -1;
 
+    // Control de SFX para el sonido continuo de herramienta (si lo necesitas)
+    // private float lastCleanSFXTime = 0f;
+    // [SerializeField] private float cleanSFXInterval = 0.5f;
+
     // ================== Unity Lifecycle ==================
 
     private void Awake()
@@ -68,30 +72,36 @@ public class CleaningController : MonoBehaviour
         // Animación
         UpdateCleaningLayer(holding && isCleaningInputHeld);
 
-        // Aplicar limpieza cuando se presiona la tecla/clic
+        // Aplicar limpieza cuando se pulsa la tecla/clic (para el golpe de limpieza)
         bool cleanInputDown = Input.GetKeyDown(cleanKey) || Input.GetMouseButtonDown(0);
 
         if (holding && cleanInputDown && dirtNearby)
         {
+            // 🔴 Aplica el golpe de daño Y reproduce el SFX de golpe
             ApplyCleanHit();
         }
 
-        // 🔥 NUEVO: SFX de limpieza CONTINUO mientras se mantiene la tecla
-        if (holding && isCleaningInputHeld && dirtNearby)
+        /* 🔴 LÓGICA DE SFX CONTINUO (Si quieres un sonido tipo aspiradora/fregado constante)
+        if (holding && isCleaningInputHeld && dirtNearby && Time.time > lastCleanSFXTime + cleanSFXInterval)
         {
-            PlayContinuousCleaningSFX();
+             // Implementación de SFX continuo (no PlayOneShot en un loop)
+             // PlayContinuousCleaningSFX(); 
+             // lastCleanSFXTime = Time.time;
         }
+        */
     }
 
     // ================== SFX INTEGRATION ==================
 
     /// <summary>
-    /// Reproduce SFX de limpieza continua mientras se mantiene la tecla
+    /// Reproduce SFX de limpieza (uso de PlayOneShot para el golpe de limpieza).
     /// </summary>
-    private void PlayContinuousCleaningSFX()
+    private void PlayCleanSFX()
     {
         if (AudioManager.Instance != null)
         {
+            // AudioManager.Instance.PlayCleanSFX() ahora llama a PlayOneShot, 
+            // lo cual es correcto para el "golpe" o el inicio del fregado.
             AudioManager.Instance.PlayCleanSFX();
         }
     }
@@ -119,6 +129,7 @@ public class CleaningController : MonoBehaviour
     }
 
     // ================== Detección por Trigger (Suciedad) ==================
+    // ... (El código de OnTriggerEnter/Exit está bien)
 
     private void OnTriggerEnter(Collider other)
     {
@@ -159,7 +170,7 @@ public class CleaningController : MonoBehaviour
         }
         Equip(tool);
 
-        // 🔥 SFX DE RECOGER HERRAMIENTA
+        // 🔥 SFX DE RECOGER HERRAMIENTA (Llamada al SFX)
         PlayPickupSFX();
 
         DLog($"[EXTERNAL REGISTER] Herramienta '{tool.name}' registrada correctamente.");
@@ -174,6 +185,7 @@ public class CleaningController : MonoBehaviour
 
         if (tool.TryGetComponent<Carryable>(out var carryable))
         {
+            // Asumiendo que Drop necesita un vector para la fuerza
             carryable.Drop(transform.forward, dropForce);
         }
 
@@ -181,7 +193,7 @@ public class CleaningController : MonoBehaviour
 
         if (anim != null) anim.SetBool("IsHolding", false);
 
-        // 🔥 SFX DE SOLTAR HERRAMIENTA
+        // 🔥 SFX DE SOLTAR HERRAMIENTA (Llamada al SFX)
         PlayDropSFX();
 
         DLog("[Pickup] DROP realizado por CleaningController.");
@@ -193,6 +205,7 @@ public class CleaningController : MonoBehaviour
     {
         CurrentTool = tool;
 
+        // ... (resto de la lógica de equipar)
         SetAllCollidersTrigger(tool.gameObject, true);
 
         var t = tool.transform;
@@ -204,6 +217,7 @@ public class CleaningController : MonoBehaviour
         }
         DLog($"[Pickup] EQUIP: {tool.name}. Asignación CurrentTool exitosa.");
     }
+
 
     private void ApplyCleanHit()
     {
@@ -243,9 +257,8 @@ public class CleaningController : MonoBehaviour
         // Aplicar daño
         closestDirt.CleanHit(damage);
 
-        // 🔥 SFX DE IMPACTO DE LIMPIEZA (adicional al continuo)
-        // Esto da un "golpe" sonoro adicional al impacto
-        PlayContinuousCleaningSFX();
+        // 🔥 SFX DE IMPACTO DE LIMPIEZA
+        PlayCleanSFX();
 
         DLog($"[Clean HIT OK] Aplicando {damage:F2} de daño SOLAMENTE a {closestDirt.name} (el más cercano).");
     }

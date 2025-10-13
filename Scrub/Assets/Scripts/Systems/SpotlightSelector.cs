@@ -70,6 +70,7 @@ public class SpotlightSelector : MonoBehaviour
 
         if (candidates != null && candidates.Length > 0)
         {
+            // Usar la llave correcta para PlayerPrefs, aunque la gestiona CharacterSelection
             int lastIndex = PlayerPrefs.GetInt("LastSelectedIndex", 0);
             index = Mathf.Clamp(lastIndex, 0, candidates.Length - 1);
             SnapTo(index);
@@ -139,29 +140,37 @@ public class SpotlightSelector : MonoBehaviour
 
         if (Physics.Raycast(ray, out hit, 100f, raycastLayer))
         {
-            Transform clickedCandidate = hit.transform;
-
-            int clickedIndex = -1;
-            for (int i = 0; i < candidates.Length; i++)
+            // Buscar el Transform raíz del candidato
+            Transform clickedRoot = hit.transform;
+            while (clickedRoot != null && !clickedRoot.CompareTag(CandidateTag))
             {
-                if (candidates[i] == clickedCandidate)
-                {
-                    clickedIndex = i;
-                    break;
-                }
+                clickedRoot = clickedRoot.parent;
             }
 
-            if (clickedIndex != -1)
+            if (clickedRoot != null)
             {
-                if (clickedIndex == index)
+                int clickedIndex = -1;
+                for (int i = 0; i < candidates.Length; i++)
                 {
-                    Confirm();
+                    if (candidates[i] == clickedRoot)
+                    {
+                        clickedIndex = i;
+                        break;
+                    }
                 }
-                else
+
+                if (clickedIndex != -1)
                 {
-                    StopAllCoroutines();
-                    index = clickedIndex;
-                    StartCoroutine(AnimateTo(index));
+                    if (clickedIndex == index)
+                    {
+                        Confirm();
+                    }
+                    else
+                    {
+                        StopAllCoroutines();
+                        index = clickedIndex;
+                        StartCoroutine(AnimateTo(index));
+                    }
                 }
             }
         }
@@ -194,31 +203,27 @@ public class SpotlightSelector : MonoBehaviour
 
         PlayerPrefs.SetInt("LastSelectedIndex", index);
 
-        // 🔴 VERIFICAR CharacterSelection
+        // 🔴 VERIFICAR CharacterSelection (Debe existir previamente)
         if (CharacterSelection.Instance == null)
         {
-            Debug.LogError("[SELECTION] ❌ CharacterSelection NO encontrado. Cargando escena...");
-            SceneManager.LoadScene(nextSceneName);
-            return;
+            // Intentar encontrar CharacterSelection en la escena (puede haber sido creado por otro script)
+            var cs = FindObjectOfType<CharacterSelection>();
+            if (cs == null)
+            {
+                Debug.LogError("[SELECTION] ❌ CharacterSelection NO encontrado. Cargando escena sin guardar ID.");
+                SceneManager.LoadScene(nextSceneName);
+                return;
+            }
         }
 
+        // Obtener el ID del personaje
         CharacterIDTag idTag = selectedCandidate.GetComponent<CharacterIDTag>();
         string characterID = (idTag != null) ? idTag.characterID : selectedCandidate.name;
 
         Debug.Log($"[SELECTION] 🔥 Confirmando personaje: {characterID}");
 
-        // 🔴 DEBUG ANTES de guardar
-        Debug.Log($"[SELECTION] CharacterSelection.Instance: {CharacterSelection.Instance != null}");
-        if (CharacterSelection.Instance != null)
-        {
-            Debug.Log($"[SELECTION] CharacterSelection gameObject: {CharacterSelection.Instance.gameObject.name}");
-        }
-
         // 🔴 GUARDAR PERSONAJE
         CharacterSelection.Instance.SetSelectedID(characterID);
-
-        // 🔴 DEBUG DESPUÉS de guardar
-        Debug.Log($"[SELECTION] ✅ CharacterID guardado: {CharacterSelection.Instance.selectedCharacterID}");
 
         // 🔴 VERIFICAR AudioManager ANTES de cambiar escena
         if (AudioManager.Instance != null)
@@ -236,9 +241,8 @@ public class SpotlightSelector : MonoBehaviour
         Destroy(gameObject);
 
         // 🔴 CAMBIAR A ESCENA LORE
-        string sceneToLoad = "Lore";
-        Debug.Log($"[SELECTION] 🎯 Cargando escena: {sceneToLoad}");
-        SceneManager.LoadScene(sceneToLoad);
+        Debug.Log($"[SELECTION] 🎯 Cargando escena: {nextSceneName}");
+        SceneManager.LoadScene(nextSceneName);
     }
 
     System.Collections.IEnumerator AnimateTo(int i)

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System;
-using System.Linq; // Necesario si usas lógica de ordenamiento en otros scripts.
+using System.Linq;
 
 public interface IInteractable { void Interact(); }
 
@@ -61,7 +61,7 @@ public class PlayerInteraction : MonoBehaviour
 
             if (isTool)
             {
-                // DELEGAR SOLTAR A CLEANING CONTROLLER
+                // DELEGAR SOLTAR A CLEANING CONTROLLER (Este método YA dispara el SFX de soltar)
                 cleaningController.DropCurrentTool();
                 Debug.Log("Herramienta de limpieza soltada por CleaningController.");
             }
@@ -71,12 +71,12 @@ public class PlayerInteraction : MonoBehaviour
                 carried.Drop();
                 animCtrl?.SetHolding(false);
                 Debug.Log("Objeto normal soltado.");
-            }
 
-            // 🔥 DISPARAR SFX DE SOLTAR 🔥
-            if (AudioManager.Instance != null)
-            {
-                AudioManager.Instance.PlayDropSFX();
+                // 🔥 DISPARAR SFX DE SOLTAR (Solo si es un Carryable normal, si es herramienta, lo hizo CleaningController)
+                if (AudioManager.Instance != null)
+                {
+                    AudioManager.Instance.PlayDropSFX();
+                }
             }
 
             carried = null;
@@ -87,7 +87,7 @@ public class PlayerInteraction : MonoBehaviour
         // Lógica 2: Recoger Carryable o Tool (Si presiono T y hay algo cerca)
         if (nearbyCarryable != null)
         {
-            // Asegurar HoldPoint si no existe 
+            // Asegurar HoldPoint si no existe 
             if (!holdPoint)
             {
                 var hp = new GameObject("HoldPoint").transform;
@@ -104,20 +104,26 @@ public class PlayerInteraction : MonoBehaviour
 
             if (td != null && cleaningController != null)
             {
-                // DELEGAR ASIGNACIÓN
+                // DELEGAR ASIGNACIÓN a CleaningController.
+                // 🔴 IMPORTANTE: cleaningController.RegisterTool(td) ya llama a AudioManager.Instance.PlayPickupSFX();
                 cleaningController.RegisterTool(td);
+                carried = nearbyCarryable; // Asignar carried después del registro.
+            }
+            else
+            {
+                // Si no es una herramienta de limpieza
+                carried = nearbyCarryable;
+
+                // 🔥 DISPARAR SFX DE RECOGER (Solo si NO es una herramienta de limpieza, si lo es, lo hizo CleaningController)
+                if (AudioManager.Instance != null)
+                {
+                    AudioManager.Instance.PlayPickupSFX();
+                }
             }
 
-            carried = nearbyCarryable;
             nearbyCarryable = null;
             animCtrl?.SetHolding(true);
             animCtrl?.TriggerInteract();
-
-            // 🔥 DISPARAR SFX DE RECOGER 🔥
-            if (AudioManager.Instance != null)
-            {
-                AudioManager.Instance.PlayPickupSFX();
-            }
 
             Debug.Log($"¡Objeto {carried.name} recogido con la tecla {pickupKey}!");
             return;
