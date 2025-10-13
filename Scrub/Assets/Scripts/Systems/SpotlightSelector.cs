@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
-using System.Linq;
+using System.Linq; // Necesario para OrderBy y Select
 
 public class SpotlightSelector : MonoBehaviour
 {
@@ -41,6 +41,9 @@ public class SpotlightSelector : MonoBehaviour
     [SerializeField] KeyCode next2 = KeyCode.D;
     [SerializeField] KeyCode confirmKey = KeyCode.Return;
     [SerializeField] KeyCode confirmAlt = KeyCode.Space;
+    // NUEVO: Variables para la detección del mouse
+    [SerializeField] int mouseClickButton = 0; // 0 = Botón izquierdo (click)
+    [SerializeField] LayerMask raycastLayer; // La capa donde están tus personajes
 
     [Header("Flujo")]
     [SerializeField] string nextSceneName = "Principal";
@@ -55,7 +58,11 @@ public class SpotlightSelector : MonoBehaviour
 
     void Awake()
     {
-        // Dejamos Awake vacío, la inicialización ocurre en OnEnable.
+        // Aseguramos que la máscara de capa tenga un valor por defecto (Todo) si no se asigna.
+        if (raycastLayer.value == 0)
+        {
+            raycastLayer = ~0;
+        }
     }
 
     // ===============================================
@@ -67,17 +74,18 @@ public class SpotlightSelector : MonoBehaviour
     /// </summary>
     private void OnEnable()
     {
-        // 1. CARGA DINÁMICA DE CANDIDATOS (¡Crucial al volver a la escena!)
         LoadCandidatesFromScene();
 
-        // 2. Reiniciar estado y bloquear input
         isTransitioning = false;
         index = 0;
         isInputBlocked = true; // El input se bloquea inmediatamente al cargarse la escena
 
-        // 3. Colocación inicial
         if (candidates != null && candidates.Length > 0)
         {
+            // Busca el índice guardado (si existe) y lo establece. Si no, usa 0.
+            // Esto es útil si se vuelve a la escena.
+            int lastIndex = PlayerPrefs.GetInt("LastSelectedIndex", 0);
+            index = Mathf.Clamp(lastIndex, 0, candidates.Length - 1);
             SnapTo(index);
         }
         else
@@ -107,10 +115,7 @@ public class SpotlightSelector : MonoBehaviour
     /// </summary>
     private void OnDisable()
     {
-        // 1. Detener todas las corrutinas activas.
         StopAllCoroutines();
-
-        // 2. Limpiar la referencia (CLAVE para evitar MissingReferenceException).
         candidates = null;
     }
 
@@ -120,25 +125,18 @@ public class SpotlightSelector : MonoBehaviour
 
     void Update()
     {
-        // CRÍTICO: Bloquea el input en el primer frame.
         if (isInputBlocked)
         {
-            isInputBlocked = false; // Desbloquea para el siguiente frame
+            isInputBlocked = false;
             return;
         }
 
-        // Comprobación de seguridad
-        if (candidates == null || candidates.Length == 0)
+        if (candidates == null || candidates.Length == 0 || isTransitioning)
         {
             return;
         }
 
-        if (isTransitioning)
-        {
-            return;
-        }
-
-        // Lógica de FOCO (mover)
+        // Lógica de FOCO (mover con flechas/WASD)
         if (Input.GetKeyDown(prev1) || Input.GetKeyDown(prev2))
         {
             Focus(-1);
@@ -148,16 +146,61 @@ public class SpotlightSelector : MonoBehaviour
             Focus(+1);
         }
 
-        // Lógica de CONFIRMAR
-        else if (Input.GetKeyDown(confirmKey) ||
-                 Input.GetKeyDown(confirmAlt) ||
-                 Input.GetKeyDown(KeyCode.KeypadEnter))
+        // Lógica de CONFIRMAR (Enter/Space)
+        else if (Input.GetKeyDown(confirmKey) || Input.GetKeyDown(confirmAlt) || Input.GetKeyDown(KeyCode.KeypadEnter))
         {
             Confirm();
         }
+
+        // NUEVA LÓGICA: Selección por CLICK del Mouse
+        else if (Input.GetMouseButtonDown(mouseClickButton))
+        {
+            HandleMouseClick();
+        }
     }
 
-    // -------- navegación --------
+    // -------- Manejo del Click del Mouse --------
+    void HandleMouseClick()
+    {
+        // 1. Lanzar un rayo desde la posición del mouse
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+
+        // 2. Comprobar si el rayo golpea algo en la capa de candidatos
+        if (Physics.Raycast(ray, out hit, 100f, raycastLayer))
+        {
+            Transform clickedCandidate = hit.transform;
+
+            // 3. Buscar el índice del candidato clickeado en la lista 'candidates'
+            int clickedIndex = -1;
+            for (int i = 0; i < candidates.Length; i++)
+            {
+                if (candidates[i] == clickedCandidate)
+                {
+                    clickedIndex = i;
+                    break;
+                }
+            }
+
+            if (clickedIndex != -1)
+            {
+                // Si el personaje clickeado es el mismo que el actual, CONFIRMAR
+                if (clickedIndex == index)
+                {
+                    Confirm();
+                }
+                // Si es un personaje diferente, CAMBIAR el foco
+                else
+                {
+                    StopAllCoroutines();
+                    index = clickedIndex;
+                    StartCoroutine(AnimateTo(index));
+                }
+            }
+        }
+    }
+
+    // -------- navegación por teclado --------
     void Focus(int dir)
     {
         if (candidates == null || candidates.Length == 0 || isTransitioning) return;
@@ -176,22 +219,18 @@ public class SpotlightSelector : MonoBehaviour
     {
         if (candidates == null || candidates.Length == 0) return;
 
-        // 1. Comprobación estricta del candidato
-        if (index < 0 || index >= candidates.Length)
+        if (index < 0 || index >= candidates.Length || candidates[index] == null)
         {
-            Debug.LogError("[SELECTION] Índice de candidato fuera de rango: " + index);
+            Debug.LogError("[SELECTION] Índice de candidato fuera de rango o referencia rota: " + index);
             return;
         }
 
         Transform selectedCandidate = candidates[index];
-        // CRÍTICO: Comprueba si la referencia está rota.
-        if (selectedCandidate == null)
-        {
-            Debug.LogError("[SELECTION] El Transform del candidato seleccionado ya fue destruido (NULL Reference).");
-            return;
-        }
 
-        // 2. Comprobación del controlador
+        // Guarda el índice seleccionado (para volver a esta escena)
+        PlayerPrefs.SetInt("LastSelectedIndex", index);
+
+        // 2. Comprobación del controlador (GameDataController)
         if (GameDataController.Instance == null)
         {
             Debug.LogError("[SELECTION] GameDataController NO encontrado. Cargando escena...");
@@ -199,7 +238,7 @@ public class SpotlightSelector : MonoBehaviour
             return;
         }
 
-        // 3. Guardar y cargar
+        // 3. Guardar ID y cargar escena
         string characterID = selectedCandidate.name;
         Debug.Log($"[SELECTION] Guardando ID Final (Nombre): {characterID}");
         GameDataController.Instance.SetSelectedCharacter(characterID);
@@ -212,12 +251,9 @@ public class SpotlightSelector : MonoBehaviour
     {
         isTransitioning = true;
 
-        if (candidates == null || candidates.Length == 0) { isTransitioning = false; yield break; }
-
-        if (i < 0 || i >= candidates.Length || candidates[i] == null) { isTransitioning = false; yield break; }
+        if (candidates == null || candidates.Length == 0 || i < 0 || i >= candidates.Length || candidates[i] == null) { isTransitioning = false; yield break; }
 
         Transform t = candidates[i];
-
         if (t == null) { isTransitioning = false; yield break; }
 
 

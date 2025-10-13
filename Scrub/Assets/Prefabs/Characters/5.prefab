@@ -1177,7 +1177,7 @@ MonoBehaviour:
   holdPoint: {fileID: 6056829038042550558}
   animCtrl: {fileID: 0}
   generalInteractKey: 101
-  pickupKey: 116
+  pickupKey: 101
 --- !u!114 &-3005511174071510890
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1238,6 +1238,7 @@ MonoBehaviour:
   upLimit: 85
   downLimit: -85
   headLookTarget: {fileID: 5249473733915914670}
+  controlsActive: 1
 --- !u!137 &1760922598799733436 stripped
 SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: 502025536470163952, guid: 46c5ec54e9c218c4abd9fbeb01ef1d1b, type: 3}

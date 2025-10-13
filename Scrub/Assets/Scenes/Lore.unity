@@ -369,6 +369,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 3653500460054308404}
   - {fileID: 1982011785}
   - {fileID: 2147402576}
   - {fileID: 1672395997}
@@ -914,8 +915,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Insert Lore aqui
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 6b064eb6d4f14a44e8b30e85a7cbb756, type: 2}
+  m_sharedMaterial: {fileID: 743754579194491402, guid: 6b064eb6d4f14a44e8b30e85a7cbb756, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -977,7 +978,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: -1.991765, y: -0.9955673, z: -3.9453828, w: 0.3273902}
+  m_margin: {x: -1.991765, y: -1.633398, z: -3.9453828, w: 0.3273902}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -1491,7 +1492,7 @@ MonoBehaviour:
       a limpiar una habitaci\xF3n por d\xEDa, siempre preguntando antes de tirar
       algo. \xC9l le cuenta historias detr\xE1s de cada objeto. As\xED, sin notarlo,
       Luc\xEDa deja de limpiar por ansiedad y empieza a hacerlo por amor."
-  - characterID: 2
+  - characterID: 3
     loreText: "Tom\xE1s tiene TOC desde los 13. Vive con su madre, una acumuladora
       que guarda ropa, diarios y frascos desde los a\xF1os 80.\nEl contraste entre
       ambos es tan brutal que casi no se hablan.\nUna noche, un incendio comienza
@@ -1500,7 +1501,7 @@ MonoBehaviour:
       tirar algunas cosas\u2026 juntas.\u201D\nPor primera vez en a\xF1os, limpian
       lado a lado. No se curan, pero el amor encuentra su propio orden en medio del
       caos."
-  - characterID: 3
+  - characterID: 2
     loreText: "Mara trabaja como auxiliar de limpieza en un geri\xE1trico. Su TOC
       la obliga a desinfectar m\xE1s all\xE1 del turno, incluso las barandas y los
       picaportes.\nUn d\xEDa conoce a Irene, una anciana que acumula pa\xF1uelos.
@@ -1517,7 +1518,7 @@ MonoBehaviour:
       limpiando los objetos antes de que los use. Ella, a su vez, lo ense\xF1a a
       ver belleza en lo que no brilla.\nSu amor se construye entre el agua con lavandina
       y las latas oxidadas."
-  - characterID: 5
+  - characterID: 6
     loreText: "Elena no puede dormir si algo est\xE1 fuera de lugar.\nSu hermano
       Juli\xE1n, en cambio, vive rodeado de monta\xF1as de diarios, aparatos rotos
       y botellas vac\xEDas.\nCuando \xE9l enferma, ella decide quedarse en su casa
@@ -1526,7 +1527,7 @@ MonoBehaviour:
       a olvidar a su esposa fallecida, Elena cambia su mirada.\nComienzan a limpiar
       de a poco, y cada cosa que tiran la reemplazan por una foto. La casa se llena
       de memoria limpia."
-  - characterID: 6
+  - characterID: 5
     loreText: "Mateo es limpiador profesional. Su TOC lo hace eficiente, pero tambi\xE9n
       lo destruye.\nUn d\xEDa, lo contratan para limpiar el s\xF3tano de una anciana
       acumuladora: 40 a\xF1os de basura, insectos y polvo.\nEntre los escombros encuentra
@@ -1536,13 +1537,13 @@ MonoBehaviour:
       lo abraza y dice: \u201CAhora s\xED puedo descansar.\u201D\nMateo se queda
       solo, con la casa vac\xEDa y el coraz\xF3n lleno."
   - characterID: 7
-    loreText: "Laura trabaja como mucama en un hotel y padece TOC. Cada habitaci\xF3n
-      debe quedar perfecta, sim\xE9trica, pura.\nEn la 302 se hospeda un escritor
-      que no tira nada: papeles, borradores, tazas de caf\xE9, colillas.\nElla limpia
-      igual, pero sin tocar lo que \xE9l considera \u201Cparte de su proceso\u201D.\nCon
+    loreText: "Jos\xE9 trabaja en el area de limpieza en un hotel y padece TOC. Cada
+      habitaci\xF3n debe quedar perfecta, sim\xE9trica, pura.\nEn la 302 se hospeda
+      un escritor que no tira nada: papeles, borradores, tazas de caf\xE9, colillas.\nEl
+      limpia igual, pero sin tocar lo que \xE9l considera \u201Cparte de su proceso\u201D.\nCon
       el tiempo, empiezan a hablar. \xC9l le dice: \u201CTu limpieza me da claridad.\u201D\nCuando
       \xE9l se va, deja una nota: \u201CEl orden tambi\xE9n puede ser poes\xEDa.\u201D\nPor
-      primera vez, Laura deja una cama sin tensar del todo."
+      primera vez, \xE9l deja una cama sin tensar del todo."
   - characterID: 8
     loreText: "Rafael limpia las calles desde hace veinte a\xF1os. Su TOC lo hace
       pasar tres veces por el mismo tramo.\nEn un edificio frente a su ruta vive
@@ -1839,6 +1840,267 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2147402575}
   m_CullTransparentMesh: 1
+--- !u!1 &1047819057315516251
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2154683927552398422}
+  - component: {fileID: 4968251123087133548}
+  - component: {fileID: 6874599307433964247}
+  m_Layer: 5
+  m_Name: Background
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1245098660342407551
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3653500460054308404}
+  - component: {fileID: 4149954221302701976}
+  - component: {fileID: 8190050118615914651}
+  m_Layer: 5
+  m_Name: Toggle
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!222 &1485782341885787865
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7621185754283185923}
+  m_CullTransparentMesh: 1
+--- !u!114 &1516264294349898829
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7621185754283185923}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!224 &2154683927552398422
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1047819057315516251}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 5828781119501697510}
+  m_Father: {fileID: 3653500460054308404}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 10, y: -10}
+  m_SizeDelta: {x: 20, y: 20}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!224 &3653500460054308404
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1245098660342407551}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 2154683927552398422}
+  m_Father: {fileID: 989530295}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 3.39, y: -3.03}
+  m_SizeDelta: {x: 5.6114, y: 5.8409}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &4149954221302701976
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1245098660342407551}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9085046f02f69544eb97fd06b6048fe2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 2
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 21300000, guid: ad691b53ef5d58d4f951fa03b9debb2b, type: 3}
+    m_PressedSprite: {fileID: 21300000, guid: 2f15efd046302854fb63536b53755f8e, type: 3}
+    m_SelectedSprite: {fileID: 21300000, guid: 00c7f6c285f88e34bb091f54aa73cd9a, type: 3}
+    m_DisabledSprite: {fileID: 21300000, guid: ad691b53ef5d58d4f951fa03b9debb2b, type: 3}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 6874599307433964247}
+  toggleTransition: 1
+  graphic: {fileID: 1516264294349898829}
+  m_Group: {fileID: 0}
+  onValueChanged:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4702005202815635107, guid: 6cd7f2398c0d64b4a8f1a9eb48b054ad, type: 3}
+        m_TargetAssemblyTypeName: AudioManager, Assembly-CSharp
+        m_MethodName: ToggleMusicMute
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+  m_IsOn: 1
+--- !u!222 &4968251123087133548
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1047819057315516251}
+  m_CullTransparentMesh: 1
+--- !u!224 &5828781119501697510
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7621185754283185923}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2154683927552398422}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 20, y: 20}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &6874599307433964247
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1047819057315516251}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 00c7f6c285f88e34bb091f54aa73cd9a, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!1 &7621185754283185923
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5828781119501697510}
+  - component: {fileID: 1485782341885787865}
+  - component: {fileID: 1516264294349898829}
+  m_Layer: 5
+  m_Name: Checkmark
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!114 &8190050118615914651
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1245098660342407551}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82414267b2633e247b4fe70987e9ed23, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

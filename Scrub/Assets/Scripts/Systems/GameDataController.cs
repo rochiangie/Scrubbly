@@ -20,7 +20,7 @@ public class GameDataController : MonoBehaviour
         {
             Instance = this;
             // Mantiene el GameObject vivo al cambiar de escena.
-            DontDestroyOnLoad(gameObject);
+            DontDestroyOnLoad(gameObject); // ✅ CRÍTICO para persistencia
         }
         else
         {
