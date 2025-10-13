@@ -12,10 +12,11 @@ public class AudioManager : MonoBehaviour
     public AudioSource sfxSource;
 
     [Header("Música")]
-    public AudioClip menuMusic; // Música del menú inicial
+    public AudioClip menuMusic; // Música del menú
     public List<CharacterMusicPair> characterMusicList = new List<CharacterMusicPair>();
     private Dictionary<string, AudioClip> characterMusicMap = new Dictionary<string, AudioClip>();
 
+    [Header("Volúmenes")]
     [Range(0f, 1f)] public float menuMusicVolume = 0.3f;
     [Range(0f, 1f)] public float gameplayMusicVolume = 0.15f;
 
@@ -24,16 +25,15 @@ public class AudioManager : MonoBehaviour
     public AudioClip pickupSFX;
     public AudioClip dropSFX;
 
-    [Range(0f, 1f)] public float cleanSFXVolume = 0.8f;
+    [Range(0f, 1f)] public float cleanSFXVolume = 0.4f;
     [Range(0f, 1f)] public float pickupSFXVolume = 0.7f;
     [Range(0f, 1f)] public float dropSFXVolume = 0.6f;
 
-    // Control de estado
+    // Control
     private string currentCharacterID = "";
-    private bool characterMusicStarted = false;
-    private AudioClip currentMusicClip = null;
+    private bool isMenuMusic = true;
 
-    // Constantes para PlayerPrefs
+    // Constantes
     private const string MUSIC_TOGGLE_KEY = "MusicMuted";
 
     [System.Serializable]
@@ -45,7 +45,6 @@ public class AudioManager : MonoBehaviour
 
     void Awake()
     {
-        // 🔴 SOLUCIÓN: Manejar Singleton correctamente
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -56,12 +55,12 @@ public class AudioManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
 
         // Inicializar AudioSources
-        if (musicSource == null) musicSource = GetComponent<AudioSource>();
-        if (musicSource == null) musicSource = gameObject.AddComponent<AudioSource>();
-
-        // Configurar audio source
-        musicSource.loop = true;
-        musicSource.playOnAwake = false;
+        if (musicSource == null)
+        {
+            musicSource = gameObject.AddComponent<AudioSource>();
+            musicSource.loop = true;
+            musicSource.playOnAwake = false;
+        }
 
         // Mapear música de personajes
         foreach (var pair in characterMusicList)
@@ -70,94 +69,111 @@ public class AudioManager : MonoBehaviour
                 characterMusicMap.Add(pair.characterID, pair.musicClip);
         }
 
-        // Cargar configuración
         LoadSavedSettings();
 
-        Debug.Log("[AUDIO] AudioManager inicializado correctamente");
+        Debug.Log("[AUDIO] AudioManager inicializado");
     }
 
-    void OnEnable()
+    void Start()
     {
-        SceneManager.sceneLoaded += OnSceneLoaded;
-        Debug.Log("[AUDIO] Suscrito a SceneManager");
+        // Iniciar con música de menú
+        PlayMenuMusic();
     }
-    void OnDisable()
-    {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
-        Debug.Log("[AUDIO] Desuscrito de SceneManager");
-    }
+
+    void OnEnable() { SceneManager.sceneLoaded += OnSceneLoaded; }
+    void OnDisable() { SceneManager.sceneLoaded -= OnSceneLoaded; }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         string sceneName = scene.name.ToLower();
-        Debug.Log($"[AUDIO] Escena cargada: {sceneName}, characterMusicStarted: {characterMusicStarted}");
+        Debug.Log($"[AUDIO] Escena cargada: {sceneName}");
 
-        // 🔴 SOLUCIÓN: Lógica simplificada y robusta
-        if (sceneName.Contains("menu"))
+        if (sceneName.Contains("menu") || sceneName.Contains("seleccion"))
         {
-            // Reset al volver al menú
-            characterMusicStarted = false;
-            currentCharacterID = "";
-            StartMenuMusic();
-        }
-        else if (sceneName.Contains("seleccion") || sceneName.Contains("select"))
-        {
-            // Selección - continuar música menú si no hay personaje
-            if (!characterMusicStarted)
+            // Menú o selección - música de menú
+            if (!isMenuMusic)
             {
-                StartMenuMusic();
+                PlayMenuMusic();
             }
         }
-        else if (sceneName.Contains("lore") || sceneName.Contains("principal") || sceneName.Contains("gameplay"))
+        else if (sceneName.Contains("lore") || sceneName.Contains("principal"))
         {
-            // Gameplay - usar música de personaje si está seleccionado
-            if (characterMusicStarted && !string.IsNullOrEmpty(currentCharacterID))
-            {
-                // Reforzar música actual
-                musicSource.volume = gameplayMusicVolume;
-                if (!musicSource.isPlaying)
-                {
-                    PlayCharacterMusic(currentCharacterID);
-                }
-            }
+            // Gameplay - música de personaje
+            StartCoroutine(CheckForCharacterMusicDelayed());
         }
-
-        // 🔴 SOLUCIÓN: Eliminar AudioListeners duplicados
-        RemoveDuplicateAudioListeners();
     }
 
-    // 🔴 NUEVO: Eliminar AudioListeners duplicados
-    private void RemoveDuplicateAudioListeners()
+    private System.Collections.IEnumerator CheckForCharacterMusicDelayed()
     {
-        AudioListener[] listeners = FindObjectsOfType<AudioListener>();
-        if (listeners.Length > 1)
-        {
-            Debug.LogWarning($"[AUDIO] Encontrados {listeners.Length} AudioListeners, eliminando duplicados...");
+        yield return new WaitForSeconds(0.1f); // Pequeña espera
 
-            // Mantener solo el primero, eliminar los demás
-            for (int i = 1; i < listeners.Length; i++)
-            {
-                Destroy(listeners[i]);
-                Debug.Log($"[AUDIO] Eliminado AudioListener duplicado: {listeners[i].gameObject.name}");
-            }
+        string characterID = GetSelectedCharacterID();
+
+        if (!string.IsNullOrEmpty(characterID))
+        {
+            Debug.Log($"[AUDIO] 🔥 Reproduciendo música del personaje: {characterID}");
+            PlayCharacterMusic(characterID);
+        }
+        else
+        {
+            Debug.LogError("[AUDIO] ❌ No se pudo encontrar personaje seleccionado");
+            // Fallback: continuar con música de menú
+            PlayMenuMusic();
         }
     }
 
+    private string GetSelectedCharacterID()
+    {
+        // 1. Buscar en CharacterSelection
+        if (CharacterSelection.Instance != null)
+        {
+            Debug.Log($"[AUDIO] CharacterSelection encontrado: {CharacterSelection.Instance.selectedCharacterID}");
+            if (!string.IsNullOrEmpty(CharacterSelection.Instance.selectedCharacterID))
+            {
+                return CharacterSelection.Instance.selectedCharacterID;
+            }
+        }
+
+        // 2. Buscar en PlayerPrefs
+        if (PlayerPrefs.HasKey("SelectedCharacter"))
+        {
+            string characterID = PlayerPrefs.GetString("SelectedCharacter");
+            if (!string.IsNullOrEmpty(characterID))
+            {
+                Debug.Log($"[AUDIO] Personaje de PlayerPrefs: {characterID}");
+                return characterID;
+            }
+        }
+
+        Debug.LogWarning("[AUDIO] No se encontró characterID en ninguna fuente");
+        return null;
+    }
+
     // ===============================================
-    // CONTROL DE MÚSICA - SIMPLIFICADO
+    // CONTROL DE MÚSICA
     // ===============================================
 
-    public void StartMenuMusic()
+    public void PlayMenuMusic()
     {
         if (menuMusic == null)
         {
-            Debug.LogError("[AUDIO] MenuMusic no asignado en Inspector");
+            Debug.LogError("[AUDIO] MenuMusic no asignado");
             return;
         }
 
+        if (musicSource.clip == menuMusic && musicSource.isPlaying)
+        {
+            Debug.Log("[AUDIO] Música de menú ya está sonando");
+            return;
+        }
+
+        musicSource.Stop();
+        musicSource.clip = menuMusic;
         musicSource.volume = menuMusicVolume;
-        PlayMusicInternal(menuMusic);
-        characterMusicStarted = false;
+        musicSource.Play();
+        isMenuMusic = true;
+        currentCharacterID = "";
+
         Debug.Log("[AUDIO] 🎵 Música de menú iniciada");
     }
 
@@ -166,6 +182,7 @@ public class AudioManager : MonoBehaviour
         if (string.IsNullOrEmpty(characterID))
         {
             Debug.LogError("[AUDIO] characterID es nulo o vacío");
+            PlayMenuMusic(); // Fallback
             return;
         }
 
@@ -177,39 +194,31 @@ public class AudioManager : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning($"[AUDIO] No se encontró música para: {characterID}");
+            Debug.LogError($"[AUDIO] ❌ No hay música asignada para: {characterID}");
+            // Mostrar qué characterIDs están disponibles
+            Debug.Log("[AUDIO] CharacterIDs disponibles: " + string.Join(", ", characterMusicMap.Keys));
+            PlayMenuMusic(); // Fallback
             return;
         }
 
-        currentCharacterID = characterID;
-        characterMusicStarted = true;
+        if (musicSource.clip == clipToPlay && musicSource.isPlaying)
+        {
+            Debug.Log($"[AUDIO] Música de {characterID} ya está sonando");
+            return;
+        }
+
+        musicSource.Stop();
+        musicSource.clip = clipToPlay;
         musicSource.volume = gameplayMusicVolume;
+        musicSource.Play();
+        isMenuMusic = false;
+        currentCharacterID = characterID;
 
-        PlayMusicInternal(clipToPlay);
-        Debug.Log($"[AUDIO] 🎵 Música de personaje: {characterID}");
-    }
-
-    private void PlayMusicInternal(AudioClip clip)
-    {
-        if (clip == null || musicSource == null)
-        {
-            Debug.LogError("[AUDIO] Clip o MusicSource nulo");
-            return;
-        }
-
-        // Solo cambiar si es diferente
-        if (musicSource.clip != clip || !musicSource.isPlaying)
-        {
-            musicSource.Stop();
-            musicSource.clip = clip;
-            musicSource.Play();
-            currentMusicClip = clip;
-            Debug.Log($"[AUDIO] Reproduciendo: {clip.name}");
-        }
+        Debug.Log($"[AUDIO] 🎵 Música de personaje iniciada: {characterID}");
     }
 
     // ===============================================
-    // SFX FUNCTIONS
+    // SFX
     // ===============================================
 
     public void PlayCleanSFX()
@@ -217,7 +226,7 @@ public class AudioManager : MonoBehaviour
         if (sfxSource != null && cleanObjectSFX != null)
         {
             sfxSource.PlayOneShot(cleanObjectSFX, cleanSFXVolume);
-            Debug.Log("[AUDIO] SFX Limpieza reproducido");
+            Debug.Log("[AUDIO] SFX Limpieza");
         }
     }
 
@@ -226,7 +235,7 @@ public class AudioManager : MonoBehaviour
         if (sfxSource != null && pickupSFX != null)
         {
             sfxSource.PlayOneShot(pickupSFX, pickupSFXVolume);
-            Debug.Log("[AUDIO] SFX Pickup reproducido");
+            Debug.Log("[AUDIO] SFX Pickup");
         }
     }
 
@@ -235,41 +244,55 @@ public class AudioManager : MonoBehaviour
         if (sfxSource != null && dropSFX != null)
         {
             sfxSource.PlayOneShot(dropSFX, dropSFXVolume);
-            Debug.Log("[AUDIO] SFX Drop reproducido");
+            Debug.Log("[AUDIO] SFX Drop");
         }
     }
 
     // ===============================================
-    // TOGGLE/MUTE FUNCTIONS - CORREGIDO
+    // TOGGLE/MUTE
     // ===============================================
 
     private void LoadSavedSettings()
     {
         if (musicSource != null)
         {
-            // 0 = no muteado, 1 = muteado
             bool isMuted = PlayerPrefs.GetInt(MUSIC_TOGGLE_KEY, 0) == 1;
             musicSource.mute = isMuted;
-            Debug.Log($"[AUDIO] Configuración cargada: Mute = {isMuted}");
+            Debug.Log($"[AUDIO] Mute: {isMuted}");
         }
     }
 
-    // 🔴 CORRECCIÓN: Toggle funcionando correctamente
     public void ToggleMusic(bool musicOn)
     {
-        // musicOn = true → música ACTIVADA → mute = false
-        // musicOn = false → música DESACTIVADA → mute = true
         if (musicSource != null)
         {
             musicSource.mute = !musicOn;
             PlayerPrefs.SetInt(MUSIC_TOGGLE_KEY, musicSource.mute ? 1 : 0);
             PlayerPrefs.Save();
-            Debug.Log($"[AUDIO] Música: {(musicOn ? "ACTIVADA" : "DESACTIVADA")}");
+            Debug.Log($"[AUDIO] Música: {(musicOn ? "ON" : "OFF")}");
         }
     }
 
     public bool IsMusicEnabled()
     {
         return PlayerPrefs.GetInt(MUSIC_TOGGLE_KEY, 0) == 0;
+    }
+
+    // 🔴 NUEVO: Método para debug
+    public void DebugAudioStatus()
+    {
+        Debug.Log($"=== AUDIO DEBUG ===");
+        Debug.Log($"Music Source: {musicSource}");
+        Debug.Log($"Clip: {musicSource?.clip?.name}");
+        Debug.Log($"Is Playing: {musicSource?.isPlaying}");
+        Debug.Log($"Volume: {musicSource?.volume}");
+        Debug.Log($"Mute: {musicSource?.mute}");
+        Debug.Log($"Current Character ID: {currentCharacterID}");
+        Debug.Log($"Is Menu Music: {isMenuMusic}");
+        Debug.Log($"CharacterSelection Instance: {CharacterSelection.Instance != null}");
+        if (CharacterSelection.Instance != null)
+        {
+            Debug.Log($"Selected Character: {CharacterSelection.Instance.selectedCharacterID}");
+        }
     }
 }

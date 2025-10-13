@@ -44,7 +44,7 @@ public class SpotlightSelector : MonoBehaviour
     [SerializeField] LayerMask raycastLayer;
 
     [Header("Flujo")]
-    [SerializeField] string nextSceneName = "Principal";
+    [SerializeField] string nextSceneName = "Lore";
     [SerializeField] bool wrapAround = true;
     [SerializeField] bool usePrefabs = true;
 
@@ -194,10 +194,10 @@ public class SpotlightSelector : MonoBehaviour
 
         PlayerPrefs.SetInt("LastSelectedIndex", index);
 
-        // 🔥 USAR CharacterSelection.Instance en lugar de GameDataController
+        // 🔴 VERIFICAR CharacterSelection
         if (CharacterSelection.Instance == null)
         {
-            Debug.LogError("[SELECTION] CharacterSelection NO encontrado. Cargando escena...");
+            Debug.LogError("[SELECTION] ❌ CharacterSelection NO encontrado. Cargando escena...");
             SceneManager.LoadScene(nextSceneName);
             return;
         }
@@ -205,12 +205,40 @@ public class SpotlightSelector : MonoBehaviour
         CharacterIDTag idTag = selectedCandidate.GetComponent<CharacterIDTag>();
         string characterID = (idTag != null) ? idTag.characterID : selectedCandidate.name;
 
-        Debug.Log($"[SELECTION] Confirmando personaje: {characterID}");
+        Debug.Log($"[SELECTION] 🔥 Confirmando personaje: {characterID}");
 
-        // 🔥 Usar CharacterSelection para guardar y cambiar música
+        // 🔴 DEBUG ANTES de guardar
+        Debug.Log($"[SELECTION] CharacterSelection.Instance: {CharacterSelection.Instance != null}");
+        if (CharacterSelection.Instance != null)
+        {
+            Debug.Log($"[SELECTION] CharacterSelection gameObject: {CharacterSelection.Instance.gameObject.name}");
+        }
+
+        // 🔴 GUARDAR PERSONAJE
         CharacterSelection.Instance.SetSelectedID(characterID);
 
-        SceneManager.LoadScene(nextSceneName);
+        // 🔴 DEBUG DESPUÉS de guardar
+        Debug.Log($"[SELECTION] ✅ CharacterID guardado: {CharacterSelection.Instance.selectedCharacterID}");
+
+        // 🔴 VERIFICAR AudioManager ANTES de cambiar escena
+        if (AudioManager.Instance != null)
+        {
+            Debug.Log("[SELECTION] AudioManager encontrado, ejecutando debug...");
+            AudioManager.Instance.DebugAudioStatus();
+        }
+        else
+        {
+            Debug.LogError("[SELECTION] ❌ AudioManager NO encontrado");
+        }
+
+        // 🔴 DESTRUIR SpotlightSelector
+        Debug.Log("[SELECTION] 🗑️ Destruyendo SpotlightSelector...");
+        Destroy(gameObject);
+
+        // 🔴 CAMBIAR A ESCENA LORE
+        string sceneToLoad = "Lore";
+        Debug.Log($"[SELECTION] 🎯 Cargando escena: {sceneToLoad}");
+        SceneManager.LoadScene(sceneToLoad);
     }
 
     System.Collections.IEnumerator AnimateTo(int i)

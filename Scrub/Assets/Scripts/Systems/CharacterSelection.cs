@@ -8,16 +8,15 @@ public class CharacterSelection : MonoBehaviour
 
     void Awake()
     {
-        // 🔴 SOLUCIÓN: Singleton robusto
         if (Instance == null)
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
-            Debug.Log("[CHARACTER] Singleton creado: " + gameObject.name);
+            Debug.Log("[CHARACTER] ✅ Singleton creado: " + gameObject.name);
         }
         else if (Instance != this)
         {
-            Debug.LogWarning("[CHARACTER] Instancia duplicada destruida: " + gameObject.name);
+            Debug.Log("[CHARACTER] ❌ Destruyendo duplicado: " + gameObject.name);
             Destroy(gameObject);
         }
     }
@@ -26,7 +25,7 @@ public class CharacterSelection : MonoBehaviour
     {
         if (string.IsNullOrEmpty(characterID))
         {
-            Debug.LogError("[CHARACTER] ID de personaje inválido");
+            Debug.LogError("[CHARACTER] ❌ ID de personaje inválido");
             return;
         }
 
@@ -34,16 +33,12 @@ public class CharacterSelection : MonoBehaviour
         PlayerPrefs.SetString("SelectedCharacter", characterID);
         PlayerPrefs.Save();
 
-        Debug.Log($"[CHARACTER] Personaje guardado: {characterID}");
+        Debug.Log($"[CHARACTER] ✅ Personaje guardado: {characterID}");
 
-        // 🔴 SOLUCIÓN: Cambiar música inmediatamente
+        // 🔴 OPCIONAL: Debug inmediato
         if (AudioManager.Instance != null)
         {
-            AudioManager.Instance.PlayCharacterMusic(characterID);
-        }
-        else
-        {
-            Debug.LogError("[CHARACTER] AudioManager no encontrado");
+            AudioManager.Instance.DebugAudioStatus();
         }
     }
 }
