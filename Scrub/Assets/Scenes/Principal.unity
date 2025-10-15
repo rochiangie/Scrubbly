@@ -589,7 +589,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af1bf63b2c9c38a4bb34f01cfbb590a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sentimentalValue: 1
+  sentimentalValue: -5
 --- !u!114 &50751507
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2414,11 +2414,11 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 0.69, y: 0.75, z: 0.5}
   m_Center: {x: 0, y: 0.45, z: 0}
 --- !u!1001 &296960860
 PrefabInstance:
@@ -2699,7 +2699,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 78bed2d0e6852444286f196db6874ddf, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -12.279
+      value: -12.282
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 78bed2d0e6852444286f196db6874ddf, type: 3}
       propertyPath: m_LocalRotation.w
@@ -5980,7 +5980,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af1bf63b2c9c38a4bb34f01cfbb590a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sentimentalValue: -2
+  sentimentalValue: 10
 --- !u!114 &624347196
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6498,7 +6498,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 0
   serializedVersion: 3
-  m_Size: {x: 0.15, y: 0.31, z: 0.17}
+  m_Size: {x: 1.01, y: 0.31, z: 0.17}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &659445243 stripped
 GameObject:
@@ -6779,7 +6779,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af1bf63b2c9c38a4bb34f01cfbb590a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sentimentalValue: 1
+  sentimentalValue: -5
 --- !u!114 &686126293
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6814,7 +6814,7 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 0
+  m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
@@ -7132,7 +7132,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.0038624448, y: 0.0038624443, z: 0.00056528545}
+  m_Size: {x: 0.25, y: 0.0038624443, z: 0.00056528545}
   m_Center: {x: 0, y: 0, z: -0.000090061}
 --- !u!54 &719182932
 Rigidbody:
@@ -7272,7 +7272,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af1bf63b2c9c38a4bb34f01cfbb590a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sentimentalValue: 1
+  sentimentalValue: -5
 --- !u!114 &747939017
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7865,7 +7865,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.0014105395, y: 0.0016287505, z: 0.0039755334}
+  m_Size: {x: 0.03, y: 0.0016287505, z: 0.0039755334}
   m_Center: {x: -4.2730403e-13, y: -4.579827e-13, z: -0.000028675882}
 --- !u!54 &799302822
 Rigidbody:
@@ -7964,7 +7964,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.0035546266, y: 0.0027889842, z: 0.0013176819}
+  m_Size: {x: 0.33, y: 0.0027889842, z: 0.0013176819}
   m_Center: {x: -0.00029944043, y: -1.1987599e-18, z: 0.00016871041}
 --- !u!54 &819637054
 Rigidbody:
@@ -8277,7 +8277,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 0
   serializedVersion: 3
-  m_Size: {x: 0.43, y: 0.16, z: 0.38}
+  m_Size: {x: 1.01, y: 0.16, z: 0.38}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &844073758
 GameObject:
@@ -11244,7 +11244,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.0014105395, y: 0.0016287505, z: 0.0039755334}
+  m_Size: {x: 0.06, y: 0.0016287505, z: 0.0039755334}
   m_Center: {x: -4.2730403e-13, y: 0.000000014900703, z: -0.000028675882}
 --- !u!54 &1012365656
 Rigidbody:
@@ -11911,7 +11911,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 0
   serializedVersion: 3
-  m_Size: {x: 0.43, y: 0.16, z: 0.38}
+  m_Size: {x: 2.48, y: 0.16, z: 0.38}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1077441844
 GameObject:
@@ -11926,9 +11926,11 @@ GameObject:
   - component: {fileID: 1077441846}
   - component: {fileID: 1077441845}
   - component: {fileID: 1077441849}
-  m_Layer: 0
+  - component: {fileID: 1077441851}
+  - component: {fileID: 1077441850}
+  m_Layer: 3
   m_Name: Cube
-  m_TagString: Untagged
+  m_TagString: Memorie
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -12049,6 +12051,31 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &1077441850
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1077441844}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af1bf63b2c9c38a4bb34f01cfbb590a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sentimentalValue: 1
+--- !u!114 &1077441851
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1077441844}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f66cac6c0758ad94c87aa13bae39d21b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1089988867
 GameObject:
   m_ObjectHideFlags: 0
@@ -12200,7 +12227,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af1bf63b2c9c38a4bb34f01cfbb590a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sentimentalValue: 1
+  sentimentalValue: -5
 --- !u!114 &1107548365
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12884,7 +12911,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -12929,7 +12956,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af1bf63b2c9c38a4bb34f01cfbb590a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sentimentalValue: 1
+  sentimentalValue: -1
 --- !u!114 &1232237984
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12961,7 +12988,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 0
   serializedVersion: 3
-  m_Size: {x: 0, y: 5.820765e-11, z: 0.00001480707}
+  m_Size: {x: 10.07, y: 10, z: 10}
   m_Center: {x: 0, y: 5.820765e-11, z: 0.000014807066}
 --- !u!1001 &1234261188
 PrefabInstance:
@@ -13382,7 +13409,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.0033616223, y: 0.0027889844, z: 0.0011049025}
+  m_Size: {x: 0.02, y: 0.02788984, z: 0.0011049025}
   m_Center: {x: -0.00039594277, y: 0, z: 0.00006232069}
 --- !u!54 &1323841760
 Rigidbody:
@@ -13726,7 +13753,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 0
   serializedVersion: 3
-  m_Size: {x: 0.13, y: 0.08, z: 0.25}
+  m_Size: {x: 1.01, y: 0.08, z: 0.25}
   m_Center: {x: 0, y: 0.02, z: 0}
 --- !u!1001 &1345688668
 PrefabInstance:
@@ -18783,7 +18810,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af1bf63b2c9c38a4bb34f01cfbb590a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sentimentalValue: 1
+  sentimentalValue: -5
 --- !u!114 &1760543309
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20818,7 +20845,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.0014105395, y: 0.0016287505, z: 0.0039755334}
+  m_Size: {x: 0.06, y: 0.0016287505, z: 0.0039755334}
   m_Center: {x: -4.2730403e-13, y: -4.579827e-13, z: -0.000028675882}
 --- !u!54 &1941779467
 Rigidbody:
@@ -21096,7 +21123,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.0014105395, y: 0.0016287505, z: 0.0039755334}
+  m_Size: {x: 0.06, y: 0.0016287505, z: 0.0039755334}
   m_Center: {x: -4.2730403e-13, y: -4.579827e-13, z: -0.000028675882}
 --- !u!54 &1955731577
 Rigidbody:
@@ -22293,7 +22320,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af1bf63b2c9c38a4bb34f01cfbb590a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sentimentalValue: 1
+  sentimentalValue: 20
 --- !u!114 &2065005131
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22328,7 +22355,7 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 0
+  m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
@@ -22350,7 +22377,7 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 0.0027542368, y: 0.0028351315, z: 0.005209133}
   m_Center: {x: -0.0000054366633, y: -0.00067925354, z: 0.00017948789}
@@ -22373,7 +22400,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: -0.000005436663, y: -0.0006792535, z: 0.0001794879}
+  m_Size: {x: 0.004, y: 0.004, z: 0.004}
   m_Center: {x: -0.0000054366633, y: -0.00067925354, z: 0.00017948789}
 --- !u!1 &2082973676
 GameObject:
@@ -26542,7 +26569,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.22767103, y: 0.37725008, z: 0.058772158}
+  m_Size: {x: 0.86, y: 1.33, z: 0.6}
   m_Center: {x: 0.6675816, y: 0.00000005972153, z: -0.0002638923}
 --- !u!54 &8941426133351878495
 Rigidbody:
@@ -26746,7 +26773,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.227671, y: 0.37725005, z: 0.058772065}
+  m_Size: {x: 0.65, y: 0.96, z: 0.21}
   m_Center: {x: -0.3154085, y: 0, z: -0.00026397128}
 --- !u!54 &9007582893319288444
 Rigidbody:
