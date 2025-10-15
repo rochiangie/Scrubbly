@@ -1,4 +1,4 @@
-using System;
+锘縰sing System;
 using UnityEngine;
 
 public static class GameEvents
@@ -7,21 +7,22 @@ public static class GameEvents
     public static event Action OnAnyDirtCleaned;
     public static event Action<int, int> OnProgressUpdate; // Limpiado / Total Suciedad
 
-    // NUEVO: EVENTOS DE SENTIMENTALISMO (Gesti髇 de Objetos Memorie)
+    // NUEVO: EVENTOS DE SENTIMENTALISMO (Gesti贸n de Objetos Memorie)
     // Dispara al decidir GUARDAR o DESTRUIR un objeto Memorie.
-    // Par醡etros: bool isKept (true=Guardado, false=Destruido/Tirado)
+    // Par谩metros: bool isKept (true=Guardado, false=Destruido/Tirado)
     public static event Action<bool, int> OnMemorieDecided; // isKept, SentimentalValue
-    public static event Action<int, int> OnSentimentalScoreUpdate; // Score Actual, Score de Acumulaci髇
+    public static event Action<int, int> OnSentimentalScoreUpdate; // Score Actual, Score de Acumulaci贸n
 
+    public static event Action<bool> OnGameResult; // True = Gan贸, False = Perdi贸
 
-    // EVENTO DE FINALIZACI覰
+    // EVENTO DE FINALIZACI脫N
     public static event Action OnAllDone;
 
     // ===================================
-    // M蒚ODOS P贐LICOS DE INVOCACI覰
+    // M脡TODOS P脷BLICOS DE INVOCACI脫N
     // ===================================
 
-    // Limpieza (Mantiene el c骴igo original)
+    // Limpieza (Mantiene el c贸digo original)
     public static void DirtCleaned()
     {
         OnAnyDirtCleaned?.Invoke();
@@ -32,21 +33,27 @@ public static class GameEvents
         OnProgressUpdate?.Invoke(cleaned, total);
     }
 
-    // Finalizaci髇 (Mantiene el c骴igo original)
-    public static void AllDone() // IN PAR罬ETROS!
+    // Finalizaci贸n (Mantiene el c贸digo original)
+    public static void AllDone() // Sigue sin par谩metros (solo notifica el fin de la limpieza)
     {
         OnAllDone?.Invoke();
     }
 
-    // NUEVO: Invocaci髇 de Decisi髇 de Memoria
+    // NUEVO: Invocaci贸n de Decisi贸n de Memoria
     public static void MemorieDecided(bool isKept, int sentimentalValue)
     {
         OnMemorieDecided?.Invoke(isKept, sentimentalValue);
     }
 
-    // NUEVO: Invocaci髇 de Actualizaci髇 de Score
+    // NUEVO: Invocaci贸n de Actualizaci贸n de Score
     public static void SentimentalScore(int currentScore, int accumulationScore)
     {
         OnSentimentalScoreUpdate?.Invoke(currentScore, accumulationScore);
+    }
+
+    // 馃摙 NUEVO M脡TODO DE INVOCACI脫N
+    public static void GameResult(bool won)
+    {
+        OnGameResult?.Invoke(won); // Llama al nuevo evento con el resultado
     }
 }
