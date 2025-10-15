@@ -81,12 +81,14 @@ public class TaskManager : MonoBehaviour
     private void HandleWinCondition()
     {
         GameEvents.OnAnyDirtCleaned -= HandleCleaned;
+
+        // CORRECCIÓN: Llamar a AllDone sin argumentos, según GameEvents.cs
         GameEvents.AllDone();
 
         if (winPanel != null)
         {
-            Debug.Log("[TASK MANAGER] 🎉 ¡Todas las tareas completadas! Activando Panel de Victoria.");
-            winPanel.SetActive(true);
+            Debug.Log("[TASK MANAGER] 🎉 ¡Todas las tareas de limpieza completadas! Esperando veredicto sentimental...");
+            // winPanel.SetActive(true); // Opcional: Desactivar esto. Dejar que SentimentalScoreManager muestre el panel de V/D.
         }
         else
         {

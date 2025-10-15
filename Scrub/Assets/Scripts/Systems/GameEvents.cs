@@ -1,26 +1,29 @@
 using System;
 using UnityEngine;
 
-// Clase estática para gestionar eventos globales del juego.
 public static class GameEvents
 {
-    // 1. EVENTO DE LIMPIEZA (El que TaskManager y DirtSpot usan)
-    // Se dispara cuando CUALQUIER DirtSpot es limpiado/destruido.
+    // EVENTOS DE LIMPIEZA (Se mantienen)
     public static event Action OnAnyDirtCleaned;
+    public static event Action<int, int> OnProgressUpdate; // Limpiado / Total Suciedad
 
-    // 2. EVENTO DE PROGRESO (Necesita dos parámetros: Limpiado actual y Total)
-    public static event Action<int, int> OnProgressUpdate;
+    // NUEVO: EVENTOS DE SENTIMENTALISMO (Gestión de Objetos Memorie)
+    // Dispara al decidir GUARDAR o DESTRUIR un objeto Memorie.
+    // Parámetros: bool isKept (true=Guardado, false=Destruido/Tirado)
+    public static event Action<bool, int> OnMemorieDecided; // isKept, SentimentalValue
+    public static event Action<int, int> OnSentimentalScoreUpdate; // Score Actual, Score de Acumulación
 
-    // 3. EVENTO DE FINALIZACIÓN (Disparado cuando totalDirt == cleaned)
+
+    // EVENTO DE FINALIZACIÓN
     public static event Action OnAllDone;
 
     // ===================================
-    // MÉTODOS PÚBLICOS DE INVOCACIÓN (Llamar a estos métodos dispara los eventos)
+    // MÉTODOS PÚBLICOS DE INVOCACIÓN
     // ===================================
 
+    // Limpieza (Mantiene el código original)
     public static void DirtCleaned()
     {
-        // El signo de interrogación '?' previene errores si no hay suscriptores.
         OnAnyDirtCleaned?.Invoke();
     }
 
@@ -29,8 +32,21 @@ public static class GameEvents
         OnProgressUpdate?.Invoke(cleaned, total);
     }
 
-    public static void AllDone()
+    // Finalización (Mantiene el código original)
+    public static void AllDone() // ¡SIN PARÁMETROS!
     {
         OnAllDone?.Invoke();
+    }
+
+    // NUEVO: Invocación de Decisión de Memoria
+    public static void MemorieDecided(bool isKept, int sentimentalValue)
+    {
+        OnMemorieDecided?.Invoke(isKept, sentimentalValue);
+    }
+
+    // NUEVO: Invocación de Actualización de Score
+    public static void SentimentalScore(int currentScore, int accumulationScore)
+    {
+        OnSentimentalScoreUpdate?.Invoke(currentScore, accumulationScore);
     }
 }

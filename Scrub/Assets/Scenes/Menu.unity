@@ -1109,6 +1109,10 @@ PrefabInstance:
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_BoolArgument
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4369316475369108643, guid: 71f750719f4b576438d2eb186a11fddc, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 3d426991361ce4540bc920afcd62ecb8, type: 3}
     - target: {fileID: 7410037496131021377, guid: 71f750719f4b576438d2eb186a11fddc, type: 3}
       propertyPath: m_Name
       value: CanvasManuPpal
