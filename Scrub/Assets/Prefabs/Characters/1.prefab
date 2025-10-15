@@ -1609,6 +1609,12 @@ MonoBehaviour:
   animCtrl: {fileID: 0}
   generalInteractKey: 101
   pickupKey: 101
+  attackKey: 102
+  attackRange: 2.5
+  attackableLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  memorieTag: Memorie
 --- !u!114 &-1730181286663167620
 MonoBehaviour:
   m_ObjectHideFlags: 0
