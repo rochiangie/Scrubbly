@@ -104,6 +104,6 @@ public class SentimentalScoreManager : MonoBehaviour
         }
 
         // Llamar al evento final para que la UI final se muestre
-        GameEvents.AllDone(won);
+        GameEvents.GameResult(won);
     }
 }

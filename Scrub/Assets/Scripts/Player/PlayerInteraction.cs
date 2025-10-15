@@ -39,7 +39,8 @@ public class PlayerInteraction : MonoBehaviour
     [Header("Tags de Objetos")]
     [Tooltip("Tag para objetos que inician el proceso de decisión sentimental.")]
     [SerializeField] private string memorieTag = "Memorie"; // El Tag de los objetos de memoria
-
+    [Tooltip("Tecla para mostrar/ocultar el panel de puntuación sentimental.")]
+    [SerializeField] private KeyCode scorePanelToggleKey = KeyCode.Tab;
     void Awake()
     {
         cleaningController = GetComponent<CleaningController>();
@@ -64,6 +65,10 @@ public class PlayerInteraction : MonoBehaviour
         // LÓGICA DE INTERACCIÓN GENERAL (TECLA E)
         if (Input.GetKeyDown(generalInteractKey))
             TryGeneralInteract();
+        if (Input.GetKeyDown(scorePanelToggleKey))
+        {
+            GameEvents.ToggleScorePanel(); // Llamar a un nuevo evento
+        }
     }
 
     // =========================================================================

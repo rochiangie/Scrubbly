@@ -15,8 +15,10 @@ public static class GameEvents
 
     public static event Action<bool> OnGameResult; // True = Ganó, False = Perdió
 
-    // EVENTO DE FINALIZACIÓN
     public static event Action OnAllDone;
+
+    public static event Action OnToggleScorePanel;
+
 
     // ===================================
     // MÉTODOS PÚBLICOS DE INVOCACIÓN
@@ -55,5 +57,9 @@ public static class GameEvents
     public static void GameResult(bool won)
     {
         OnGameResult?.Invoke(won); // Llama al nuevo evento con el resultado
+    }
+    public static void ToggleScorePanel()
+    {
+        OnToggleScorePanel?.Invoke();
     }
 }
