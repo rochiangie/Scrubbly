@@ -55,8 +55,8 @@ public class PlayerInteraction : MonoBehaviour
     void Update()
     {
         // LÓGICA DE ATAQUE/DESTRUCCIÓN (TECLA F) <--- ¡NUEVO!
-        if (Input.GetKeyDown(attackKey))
-            TryAttack();
+        /*if (Input.GetKeyDown(attackKey))
+            TryAttack();*/
 
         // LÓGICA DE AGARRE/DECISIÓN (TECLA T)
         if (Input.GetKeyDown(pickupKey))
@@ -74,7 +74,7 @@ public class PlayerInteraction : MonoBehaviour
     // =========================================================================
     // NUEVA FUNCIÓN: ATAQUE DIRECTO (Tecla F) - Para limpieza/destrucción inmediata
     // =========================================================================
-    void TryAttack()
+    /*void TryAttack()
     {
         // Dispara la animación de ataque (Asume que tienes un Trigger "Attack" en tu Animator)
         animCtrl?.TriggerInteract();
@@ -102,7 +102,7 @@ public class PlayerInteraction : MonoBehaviour
         }
 
         Debug.Log("[Ataque Fallido (F)] No se detectó IAttackable en el rango.");
-    }
+    }*/
 
     // =========================================================================
     // FUNCIÓN PRINCIPAL: AGARRAR/SOLTAR/DECIDIR (Tecla T)
