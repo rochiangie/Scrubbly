@@ -26,14 +26,18 @@ public class SentimentalScoreManager : MonoBehaviour
 
     void Awake()
     {
-        if (Instance != null && Instance != this)
+        // Optimizamos la sintaxis del Singleton.
+        if (Instance == null)
         {
-            Destroy(gameObject);
-            return;
+            Instance = this;
+            // No destruimos, simplemente aseguramos que el estado inicie limpio.
+            IsDecisionActive = false;
         }
-        Instance = this;
-        // Reiniciamos el estado por si acaso (útil al cargar escenas)
-        IsDecisionActive = false;
+        else
+        {
+            // Si ya existe una instancia, destruye esta para mantener el Singleton.
+            Destroy(gameObject);
+        }
     }
 
     void OnEnable()
@@ -47,11 +51,13 @@ public class SentimentalScoreManager : MonoBehaviour
 
     void OnDisable()
     {
+        // Asegúrate de desuscribir los eventos
         GameEvents.OnMemorieDecided -= HandleMemorieDecision;
         GameEvents.OnAllDone -= CheckFinalScore;
     }
 
     // Método estático para que la UI de decisión pueda activar/desactivar el estado
+    // Esto debería ser llamado por MemorieDecisionUI.cs al mostrar/ocultar el panel.
     public static void SetDecisionActive(bool isActive)
     {
         IsDecisionActive = isActive;
@@ -65,15 +71,21 @@ public class SentimentalScoreManager : MonoBehaviour
         if (isKept)
         {
             // Decisión: GUARDAR (Acumulación/Nostalgia)
+            // Se usa Abs() porque acumular es bueno/malo, pero siempre es un valor positivo de acumulación.
             accumulationScore += Mathf.Abs(sentimentalValue);
+            Debug.Log($"[SCORE] GUARDADO. Acumulación: +{Mathf.Abs(sentimentalValue)}");
         }
         else // isTossed (Tirar/Destruir)
         {
             // Decisión: DESTRUIR/TIRAR (Balance Emocional)
+            // La decisión de tirar un objeto impacta negativamente el balance emocional,
+            // ya que son "recuerdos" que deben ser balanceados.
             emotionalBalanceScore -= sentimentalValue;
+            Debug.Log($"[SCORE] TIRADO. Balance Emocional: -{sentimentalValue}");
         }
 
         // Notificar a la UI (si existe) los nuevos puntajes
+        // Asumiendo que GameEvents.SentimentalScore toma los dos puntajes.
         GameEvents.SentimentalScore(emotionalBalanceScore, accumulationScore);
 
         Debug.Log($"[SCORE] Balance Emocional: {emotionalBalanceScore} | Acumulación: {accumulationScore}");
@@ -83,25 +95,28 @@ public class SentimentalScoreManager : MonoBehaviour
     public void CheckFinalScore()
     {
         bool won = false;
+        string finalMessage = "";
 
         // 1. Condición de Pérdida: ACUMULADOR (Demasiada nostalgia)
         if (accumulationScore > maxAccumulationForGoodEnding)
         {
-            Debug.Log($"📦 ¡FIN! PERDISTE. Demasiada acumulación ({accumulationScore} puntos).");
+            finalMessage = $"📦 ¡FIN! PERDISTE: Acumulador. Demasiada acumulación ({accumulationScore} puntos).";
             won = false;
         }
         // 2. Condición de Victoria: BALANCE ÓPTIMO
         else if (emotionalBalanceScore >= minBalanceForGoodEnding)
         {
-            Debug.Log($"🎉 ¡FIN! GANASTE. Balance emocional óptimo ({emotionalBalanceScore}).");
+            finalMessage = $"🎉 ¡FIN! GANASTE: Balance Óptimo. Balance emocional de {emotionalBalanceScore}.";
             won = true;
         }
         // 3. Condición de Pérdida: DESEQUILIBRIO (Destrucción de cosas importantes)
         else
         {
-            Debug.Log($"😢 ¡FIN! PERDISTE. Desequilibrio emocional por malas decisiones ({emotionalBalanceScore}).");
+            finalMessage = $"😢 ¡FIN! PERDISTE: Desequilibrio. Balance emocional bajo ({emotionalBalanceScore}).";
             won = false;
         }
+
+        Debug.Log(finalMessage);
 
         // Llamar al evento final para que la UI final se muestre
         GameEvents.GameResult(won);

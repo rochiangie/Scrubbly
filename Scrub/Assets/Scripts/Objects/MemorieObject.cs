@@ -1,48 +1,61 @@
-using UnityEngine;
+Ôªøusing UnityEngine;
 
-// Aseg˙rate de que este script estÈ en objetos con el Tag "Memorie"
+// Asumo que tienes un script est√°tico llamado GameEvents
+// que contiene el evento OnMemorieDecided.
+// Si no lo tienes, el siguiente paso ser√° crearlo.
+// Esto asume que el objeto tiene el Tag "Memorie"
 public class MemorieObject : MonoBehaviour
 {
     [Header("Valor Sentimental")]
     public int sentimentalValue = 20;
 
-    // MÈtodo llamado por PlayerInteraction cuando se recoge con 'E' (o tu tecla de PickUp)
+    // M√©todo llamado por PlayerInteraction cuando se recoge con 'E' (o tu tecla de PickUp)
     public void StartDecisionProcess()
     {
         // 1. Delegar la interfaz al Manager de UI
         if (MemorieDecisionUI.Instance != null)
         {
-            // Pasamos la informaciÛn del objeto y un mÈtodo de vuelta (callback)
+            // Oculta el objeto temporalmente mientras se toma la decisi√≥n
+            gameObject.SetActive(false);
+
+            // Pasamos la informaci√≥n del objeto y un m√©todo de vuelta (callback)
             MemorieDecisionUI.Instance.ShowDecisionPanel(
                 gameObject.name,
                 sentimentalValue,
-                DecideAndNotify // Este es el mÈtodo que se llamar· al pulsar el botÛn
+                DecideAndNotify // Este es el m√©todo que se llamar√° al pulsar el bot√≥n
             );
+
+            // üõë Importante: Indicamos al sistema que la UI de decisi√≥n est√° activa.
+            SentimentalScoreManager.SetDecisionActive(true);
         }
         else
         {
-            Debug.LogError("°MemorieDecisionUI no encontrado! No se puede iniciar la decisiÛn.");
-            // Si no se encuentra, destruimos el objeto para evitar que el juego se rompa.
-            Destroy(gameObject);
+            // NO DESTRUIR AQU√ç. Solo loguear el error y dejar que el objeto se quede.
+            Debug.LogError("¬°MemorieDecisionUI no encontrado! No se puede iniciar la decisi√≥n. " +
+                           "Verifica que el script est√© en la escena y configurado como Singleton.");
         }
     }
 
-    // Este mÈtodo es el CALLBACK, llamado por MemorieDecisionUI.cs cuando se pulsa un botÛn
+    // Este m√©todo es el CALLBACK, llamado por MemorieDecisionUI.cs cuando se pulsa un bot√≥n
     private void DecideAndNotify(bool isKept)
     {
-        // 1. Notificar al SentimentalScoreManager
+        // 1. Notificar al sistema de Puntuaci√≥n (SentimentalScoreManager) a trav√©s de eventos
+        // üí° ESTE EVENTO REEMPLAZA LA LLAMADA A SentimentalScoreManager.Instance.UpdateScore()
         GameEvents.MemorieDecided(isKept, sentimentalValue);
 
         if (isKept)
         {
-            Debug.Log($"[DECISI”N] °Guardaste {gameObject.name}! Suma a la acumulaciÛn.");
+            Debug.Log($"[DECISI√ìN] ¬°Guardaste {gameObject.name}! Suma a la acumulaci√≥n.");
         }
         else // Tirar/Destruir
         {
-            Debug.Log($"[DECISI”N] Tiraste {gameObject.name}. Afecta el balance emocional.");
+            Debug.Log($"[DECISI√ìN] Tiraste {gameObject.name}. Afecta el balance emocional.");
         }
 
         // 2. Eliminar el objeto del juego
         Destroy(gameObject);
+
+        // 3. Importante: Indicamos que la UI de decisi√≥n se ha cerrado.
+        SentimentalScoreManager.SetDecisionActive(false);
     }
 }

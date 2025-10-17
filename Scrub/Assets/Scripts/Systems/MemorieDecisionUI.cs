@@ -1,109 +1,125 @@
 ﻿using UnityEngine;
-using TMPro; // Necesario para TextMeshPro
+using UnityEngine.UI;
+using TMPro;
 using System;
-using System.Collections; // Necesario para las corrutinas
 
 public class MemorieDecisionUI : MonoBehaviour
 {
-    // Singleton para que MemorieObject pueda acceder a él fácilmente.
+    // ====================================================================
+    // 1. SINGLETON PATTERN
+    // ====================================================================
     public static MemorieDecisionUI Instance { get; private set; }
 
-    [Header("Referencias de la UI")]
-    public GameObject decisionPanel; // El objeto Panel principal a activar/desactivar
+    [Header("Referencias de UI")]
+    public GameObject decisionPanel; // Asigna el GameObject del panel completo
+    public TMP_Text itemNameText;
+    public TMP_Text sentimentalValueText;
 
-    [Tooltip("El componente TextMeshProUGUI que muestra la información del objeto.")]
-    public TMP_Text infoText;       // Muestra el valor y la instrucción.
+    // Opcional: Deshabilita estos botones en el Inspector o elimínalos si solo usas S/N
+    // public Button keepButton;        
+    // public Button discardButton;     
 
-    private Action<bool> onDecisionTaken; // Callback para notificar al MemorieObject la decisión tomada
-    private Coroutine inputCoroutine;     // Referencia para gestionar la escucha de teclado
+    // Almacena el método que se ejecutará una vez que el jugador tome una decisión.
+    private Action<bool> onDecisionMade;
 
-    void Awake()
+    private void Awake()
     {
-        if (Instance != null && Instance != this)
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
         {
             Destroy(gameObject);
             return;
         }
-        Instance = this;
 
-        // Asegurar que el panel esté inicialmente oculto.
-        if (decisionPanel != null)
-        {
-            decisionPanel.SetActive(false);
-        }
-    }
-
-    /// <summary>
-    /// Muestra el panel, bloquea la interacción del jugador y comienza a escuchar las teclas 'Y' o 'N'.
-    /// </summary>
-    /// <param name="objectName">Nombre del objeto levantado.</param>
-    /// <param name="sentimentalValue">Valor sentimental del objeto.</param>
-    /// <param name="callback">El método DecideAndNotify del MemorieObject que se llamará al tomar la decisión.</param>
-    public void ShowDecisionPanel(string objectName, int sentimentalValue, Action<bool> callback)
-    {
-        onDecisionTaken = callback;
-
-        // 1. Mostrar texto informativo e instrucción de teclado
-        infoText.text = $"Objeto: <color=#FFD700>{objectName}</color>\n" +
-                        $"Valor Sentimental: {sentimentalValue}\n\n" +
-                        "¿Deseas guardarlo o tirarlo?\n" +
-                        "<color=green>[Y]</color> para GUARDAR (Acumular) | " +
-                        "<color=red>[N]</color> para DESTRUIR (Desprenderse)";
-
-        // 2. Mostrar el panel
-        decisionPanel.SetActive(true);
-
-        // 3. 🟢 ACTIVAR el estado de Decisión Global (Bloquea el movimiento/ataque)
-        // Usamos el Manager para bloquear el juego sin Time.timeScale.
-        if (SentimentalScoreManager.Instance != null)
-        {
-            SentimentalScoreManager.SetDecisionActive(true);
-        }
-
-        // 4. Comenzar a escuchar la entrada del teclado
-        inputCoroutine = StartCoroutine(WaitForDecisionInput());
-    }
-
-    private IEnumerator WaitForDecisionInput()
-    {
-        // Continuar el ciclo de la corrutina mientras el panel esté visible
-        while (decisionPanel.activeSelf)
-        {
-            if (Input.GetKeyDown(KeyCode.Y)) // Guardar (Acumular Nostalgia)
-            {
-                TakeDecision(true);
-                yield break; // Salir de la corrutina
-            }
-            else if (Input.GetKeyDown(KeyCode.N)) // Destruir/Tirar (Desprendimiento)
-            {
-                TakeDecision(false);
-                yield break; // Salir de la corrutina
-            }
-            yield return null; // Esperar al siguiente frame
-        }
-    }
-
-    // Método llamado al tomar la decisión (por el teclado)
-    private void TakeDecision(bool isKept)
-    {
-        // 1. Detener la escucha del teclado
-        if (inputCoroutine != null)
-        {
-            StopCoroutine(inputCoroutine);
-        }
-
-        // 2. Ocultar el panel
+        // El panel debe empezar oculto.
         decisionPanel.SetActive(false);
 
-        // 3. 🔴 DESACTIVAR el estado de Decisión Global (Reanuda el movimiento/ataque)
-        if (SentimentalScoreManager.Instance != null)
+        // IMPORTANTE: Si mantienes los objetos Button en la escena, 
+        // ¡asegúrate de que NO tengan listeners conectados para evitar duplicados!
+    }
+
+    // ====================================================================
+    // 2. ESCUCHA DE TECLADO (S/N)
+    // ====================================================================
+    private void Update()
+    {
+        // Solo verificamos la entrada si el panel está visible.
+        if (decisionPanel.activeSelf)
         {
-            SentimentalScoreManager.SetDecisionActive(false);
+            // Tecla 'S' (Sí / Keep)
+            if (Input.GetKeyDown(KeyCode.S))
+            {
+                OnDecisionInput(true);
+            }
+
+            // Tecla 'N' (No / Discard)
+            else if (Input.GetKeyDown(KeyCode.N))
+            {
+                OnDecisionInput(false);
+            }
+        }
+    }
+
+    // ====================================================================
+    // 3. FUNCIÓN DE INICIO
+    // ====================================================================
+
+    /// <summary>
+    /// Muestra el panel de decisión y configura el callback.
+    /// </summary>
+    /// <param name="itemName">El nombre del objeto con el que se está interactuando.</param>
+    /// <param name="value">El valor sentimental del objeto.</param>
+    /// <param name="callback">El método a ejecutar cuando se toma la decisión (DecideAndNotify).</param>
+    public void ShowDecisionPanel(string itemName, int value, Action<bool> callback)
+    {
+        onDecisionMade = callback;
+
+        itemNameText.text = $"Objeto: {itemName}";
+        sentimentalValueText.text = $"Valor Sentimental: {value} (SÍ para GUARDAR / NO para TIRAR)";
+
+        // Mostrar el panel, pausar, y notificar al manager del estado
+        decisionPanel.SetActive(true);
+        SentimentalScoreManager.SetDecisionActive(true);
+        Time.timeScale = 0f; // Pausa el juego
+
+        // 🛑 Importante: Mantenemos el cursor bloqueado y oculto.
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+
+        // NOTA: Aquí también debes deshabilitar el script de PlayerLook/Movimiento si no lo haces con Time.timeScale.
+    }
+
+    // ====================================================================
+    // 4. FUNCIÓN DE DECISIÓN: Llamada por la entrada de teclado.
+    // ====================================================================
+
+    /// <summary>
+    /// Se llama cuando el jugador presiona 'S' o 'N'.
+    /// </summary>
+    /// <param name="isKept">True si se guarda (S), False si se tira/descarta (N).</param>
+    private void OnDecisionInput(bool isKept)
+    {
+        // Ejecutar el callback (DecideAndNotify en MemorieObject.cs)
+        if (onDecisionMade != null)
+        {
+            onDecisionMade.Invoke(isKept);
         }
 
-        // 4. Ejecutar la acción de vuelta en el MemorieObject
-        onDecisionTaken?.Invoke(isKept);
+        // Ocultar la UI y reanudar el juego
+        decisionPanel.SetActive(false);
+        SentimentalScoreManager.SetDecisionActive(false);
+        Time.timeScale = 1f; // Reanuda el juego
 
-        onDecisionTaken = null; // Limpiar el callback
+        // Bloquear el cursor de nuevo (si la cámara no se movió, esto es redundante, pero seguro)
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+
+        // NOTA: Aquí también debes habilitar el script de PlayerLook/Movimiento.
+
+        // Limpiar el callback 
+        onDecisionMade = null;
     }
 }
