@@ -458,7 +458,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: f811d04ba7bea9840bd789e2041c84e0, type: 3}
       propertyPath: m_Name
-      value: planter_pot_clay_4k (3)
+      value: Maceta4
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: f811d04ba7bea9840bd789e2041c84e0, type: 3}
       propertyPath: m_Layer
@@ -658,7 +658,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: e7c9626fe50f8f943b08f47e8fbdffc2, type: 3}
       propertyPath: m_Name
-      value: folding_wooden_stool_4k
+      value: Banqueta
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: e7c9626fe50f8f943b08f47e8fbdffc2, type: 3}
       propertyPath: m_Layer
@@ -1066,7 +1066,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: bf30024ce8d251d40941085e44298d88, type: 3}
       propertyPath: m_Name
-      value: brass_candleholders_4k (1)
+      value: Candelabro2
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: bf30024ce8d251d40941085e44298d88, type: 3}
       propertyPath: m_Layer
@@ -1219,7 +1219,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af1bf63b2c9c38a4bb34f01cfbb590a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sentimentalValue: 20
+  sentimentalValue: -1
 --- !u!1 &71240210
 GameObject:
   m_ObjectHideFlags: 0
@@ -1962,7 +1962,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: bf30024ce8d251d40941085e44298d88, type: 3}
       propertyPath: m_Name
-      value: brass_candleholders_4k
+      value: Candelabro
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: bf30024ce8d251d40941085e44298d88, type: 3}
       propertyPath: m_Layer
@@ -2262,7 +2262,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 139090, guid: bfe9900043c59b04ab9e2d58f97d900a, type: 3}
       propertyPath: m_Name
-      value: WheelChair
+      value: SillaDeRuedas
       objectReference: {fileID: 0}
     - target: {fileID: 139090, guid: bfe9900043c59b04ab9e2d58f97d900a, type: 3}
       propertyPath: m_Layer
@@ -2977,7 +2977,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 22fb715b13926714d9269de822cc3026, type: 3}
       propertyPath: m_Name
-      value: WoodenTable_03_4k (1)
+      value: "Armario peque\xF1o"
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 22fb715b13926714d9269de822cc3026, type: 3}
       propertyPath: m_Layer
@@ -3193,7 +3193,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: c0148e9c123304848bd106b690b22ec4, type: 3}
       propertyPath: m_Name
-      value: Television_01_4k
+      value: Tv1
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: c0148e9c123304848bd106b690b22ec4, type: 3}
       propertyPath: m_Layer
@@ -3506,7 +3506,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 78bed2d0e6852444286f196db6874ddf, type: 3}
       propertyPath: m_Name
-      value: CheeseBox_01_4k (4)
+      value: Caja5
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 78bed2d0e6852444286f196db6874ddf, type: 3}
       propertyPath: m_Layer
@@ -4599,7 +4599,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 289878fe69fcd7c4cbd8f6e920af8049, type: 3}
       propertyPath: m_Name
-      value: lion_head_4k
+      value: Leon
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 289878fe69fcd7c4cbd8f6e920af8049, type: 3}
       propertyPath: m_Layer
@@ -4649,7 +4649,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af1bf63b2c9c38a4bb34f01cfbb590a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sentimentalValue: -1
+  sentimentalValue: 1
 --- !u!114 &347611346
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5607,7 +5607,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: f811d04ba7bea9840bd789e2041c84e0, type: 3}
       propertyPath: m_Name
-      value: planter_pot_clay_4k
+      value: Maceta1
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: f811d04ba7bea9840bd789e2041c84e0, type: 3}
       propertyPath: m_Layer
@@ -5909,7 +5909,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: c0148e9c123304848bd106b690b22ec4, type: 3}
       propertyPath: m_Name
-      value: Television_01_4k (3)
+      value: TV4
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: c0148e9c123304848bd106b690b22ec4, type: 3}
       propertyPath: m_Layer
@@ -6155,7 +6155,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 46a2a27bcd19b0c4e866b4d83e3a5c8d, type: 3}
       propertyPath: m_Name
-      value: wooden_stool_01_4k (1)
+      value: Banquito
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 46a2a27bcd19b0c4e866b4d83e3a5c8d, type: 3}
       propertyPath: m_Layer
@@ -6304,7 +6304,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af1bf63b2c9c38a4bb34f01cfbb590a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sentimentalValue: 20
+  sentimentalValue: 1
 --- !u!1 &553203981 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7644855479038527004, guid: b5c12635e1e51bd44823dc3c6fd9eba4, type: 3}
@@ -6417,7 +6417,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 22fb715b13926714d9269de822cc3026, type: 3}
       propertyPath: m_Name
-      value: WoodenTable_03_4k
+      value: Caja
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 22fb715b13926714d9269de822cc3026, type: 3}
       propertyPath: m_Layer
@@ -7199,7 +7199,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: c0148e9c123304848bd106b690b22ec4, type: 3}
       propertyPath: m_Name
-      value: Television_01_4k (2)
+      value: TV3
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: c0148e9c123304848bd106b690b22ec4, type: 3}
       propertyPath: m_Layer
@@ -7249,7 +7249,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af1bf63b2c9c38a4bb34f01cfbb590a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sentimentalValue: -1
+  sentimentalValue: 2
 --- !u!114 &624347196
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7654,7 +7654,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 78bed2d0e6852444286f196db6874ddf, type: 3}
       propertyPath: m_Name
-      value: CheeseBox_01_4k
+      value: Caja
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 78bed2d0e6852444286f196db6874ddf, type: 3}
       propertyPath: m_Layer
@@ -8023,7 +8023,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 100000, guid: 72b369626c991784a901d44918508a5e, type: 3}
       propertyPath: m_Name
-      value: fi_vil_container_crate_small_empty03
+      value: CCaja
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: 72b369626c991784a901d44918508a5e, type: 3}
       propertyPath: m_Layer
@@ -8113,7 +8113,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af1bf63b2c9c38a4bb34f01cfbb590a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sentimentalValue: -5
+  sentimentalValue: -4
 --- !u!114 &686126293
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9100,7 +9100,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 100000, guid: f78191dbce572154697845711316ab6f, type: 3}
       propertyPath: m_Name
-      value: fi_vil_forge_crate_small
+      value: caja4
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: f78191dbce572154697845711316ab6f, type: 3}
       propertyPath: m_Layer
@@ -9829,7 +9829,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 78bed2d0e6852444286f196db6874ddf, type: 3}
       propertyPath: m_Name
-      value: CheeseBox_01_4k (2)
+      value: Caja3
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 78bed2d0e6852444286f196db6874ddf, type: 3}
       propertyPath: m_Layer
@@ -10835,7 +10835,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: ac5dc1869e885c745b58c113ab9359ff, type: 3}
       propertyPath: m_Name
-      value: industrial_wall_sconce_4k (2)
+      value: Lampara3
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: ac5dc1869e885c745b58c113ab9359ff, type: 3}
       propertyPath: m_Layer
@@ -12018,7 +12018,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 4f8b192b8df73ac419c91696a83513e6, type: 3}
       propertyPath: m_Name
-      value: painted_wooden_nightstand_4k
+      value: Mesita
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 4f8b192b8df73ac419c91696a83513e6, type: 3}
       propertyPath: m_Layer
@@ -12068,7 +12068,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af1bf63b2c9c38a4bb34f01cfbb590a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sentimentalValue: -1
+  sentimentalValue: 1
 --- !u!114 &938155055
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12359,7 +12359,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 100000, guid: 72b369626c991784a901d44918508a5e, type: 3}
       propertyPath: m_Name
-      value: fi_vil_container_crate_small_empty03 (1)
+      value: caja3
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: 72b369626c991784a901d44918508a5e, type: 3}
       propertyPath: m_Layer
@@ -12727,7 +12727,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 6055d1c203640d048b39c134b353eea1, type: 3}
       propertyPath: m_Name
-      value: chess_set_4k
+      value: Ajedrez
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 6055d1c203640d048b39c134b353eea1, type: 3}
       propertyPath: m_Layer
@@ -12913,7 +12913,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af1bf63b2c9c38a4bb34f01cfbb590a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sentimentalValue: -1
+  sentimentalValue: 3
 --- !u!114 &972501481
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13979,7 +13979,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 78bed2d0e6852444286f196db6874ddf, type: 3}
       propertyPath: m_Name
-      value: CheeseBox_01_4k (3)
+      value: Caja4
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 78bed2d0e6852444286f196db6874ddf, type: 3}
       propertyPath: m_Layer
@@ -16584,7 +16584,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 78bed2d0e6852444286f196db6874ddf, type: 3}
       propertyPath: m_Name
-      value: CheeseBox_01_4k (1)
+      value: Caja2
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 78bed2d0e6852444286f196db6874ddf, type: 3}
       propertyPath: m_Layer
@@ -16848,7 +16848,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: c0148e9c123304848bd106b690b22ec4, type: 3}
       propertyPath: m_Name
-      value: Television_01_4k (1)
+      value: Tv2
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: c0148e9c123304848bd106b690b22ec4, type: 3}
       propertyPath: m_Layer
@@ -17735,7 +17735,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 46a2a27bcd19b0c4e866b4d83e3a5c8d, type: 3}
       propertyPath: m_Name
-      value: wooden_stool_01_4k
+      value: Banqueta
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 46a2a27bcd19b0c4e866b4d83e3a5c8d, type: 3}
       propertyPath: m_Layer
@@ -17785,7 +17785,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af1bf63b2c9c38a4bb34f01cfbb590a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sentimentalValue: -1
+  sentimentalValue: 1
 --- !u!114 &1431607273
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18259,7 +18259,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: f811d04ba7bea9840bd789e2041c84e0, type: 3}
       propertyPath: m_Name
-      value: planter_pot_clay_4k (2)
+      value: Maceta3
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: f811d04ba7bea9840bd789e2041c84e0, type: 3}
       propertyPath: m_Layer
@@ -19412,7 +19412,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: ac5dc1869e885c745b58c113ab9359ff, type: 3}
       propertyPath: m_Name
-      value: industrial_wall_sconce_4k (1)
+      value: Lampara2
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: ac5dc1869e885c745b58c113ab9359ff, type: 3}
       propertyPath: m_Layer
@@ -19718,7 +19718,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de73acfa817aa2448ad7fc3beee6b35c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mouseSensitivity: 200
+  mouseSensitivity: 500
   upLimit: 85
   downLimit: -85
   headLookTarget: {fileID: 0}
@@ -20217,7 +20217,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: ac5dc1869e885c745b58c113ab9359ff, type: 3}
       propertyPath: m_Name
-      value: industrial_wall_sconce_4k
+      value: Lampara
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: ac5dc1869e885c745b58c113ab9359ff, type: 3}
       propertyPath: m_Layer
@@ -20836,7 +20836,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: c0a634df197861849842f9ad7a14c9ec, type: 3}
       propertyPath: m_Name
-      value: Iphone seceond version finished
+      value: Iphone
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: c0a634df197861849842f9ad7a14c9ec, type: 3}
       propertyPath: m_Layer
@@ -20990,7 +20990,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af1bf63b2c9c38a4bb34f01cfbb590a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sentimentalValue: -1
+  sentimentalValue: 15
 --- !u!114 &1606235253
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22224,7 +22224,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 100000, guid: cffd77da92125de43beff28f0051721e, type: 3}
       propertyPath: m_Name
-      value: fi_vil_container_crate_big_empty02
+      value: caja2
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: cffd77da92125de43beff28f0051721e, type: 3}
       propertyPath: m_Layer
@@ -22842,7 +22842,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 177b2002803d95c47bce93d05345d431, type: 3}
       propertyPath: m_Name
-      value: painted_wooden_cabinet_4k
+      value: Modular
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 177b2002803d95c47bce93d05345d431, type: 3}
       propertyPath: m_Layer
@@ -23065,7 +23065,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 5a924d9ada0c4584e9ce5d0f162fc5de, type: 3}
       propertyPath: m_Name
-      value: wooden_bookshelf_worn_4k
+      value: Libreria
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 5a924d9ada0c4584e9ce5d0f162fc5de, type: 3}
       propertyPath: m_Layer
@@ -23115,7 +23115,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af1bf63b2c9c38a4bb34f01cfbb590a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sentimentalValue: -1
+  sentimentalValue: -2
 --- !u!114 &1830929132
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24160,7 +24160,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 2da1cd71f6bd088429eb736825ded384, type: 3}
       propertyPath: m_Name
-      value: Shelf_01_4k
+      value: Estanteria
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 2da1cd71f6bd088429eb736825ded384, type: 3}
       propertyPath: m_Layer
@@ -24906,7 +24906,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: f811d04ba7bea9840bd789e2041c84e0, type: 3}
       propertyPath: m_Name
-      value: planter_pot_clay_4k (1)
+      value: Maceta2
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: f811d04ba7bea9840bd789e2041c84e0, type: 3}
       propertyPath: m_Layer
@@ -27067,7 +27067,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 100000, guid: 0ccc65feebde1d04e921f8c1bc592e5b, type: 3}
       propertyPath: m_Name
-      value: fi_vil_container_barrel_big_empty
+      value: Barril
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: 0ccc65feebde1d04e921f8c1bc592e5b, type: 3}
       propertyPath: m_Layer
@@ -27504,7 +27504,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 100000, guid: 990dfdc0273fc324daa3afc755f28fa1, type: 3}
       propertyPath: m_Name
-      value: fi_vil_container_bag01_01
+      value: Bolsa
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: 990dfdc0273fc324daa3afc755f28fa1, type: 3}
       propertyPath: m_Layer
@@ -28853,7 +28853,7 @@ GameObject:
   - component: {fileID: 5733618162176240981}
   - component: {fileID: 5733618162176240983}
   m_Layer: 3
-  m_Name: 376d151e-9114-4766-9eba-be3099a3da20
+  m_Name: cuaderno14
   m_TagString: Memorie
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -28877,7 +28877,7 @@ GameObject:
   - component: {fileID: 5733618163442438991}
   - component: {fileID: 5733618163442438993}
   m_Layer: 3
-  m_Name: 376d151e-9114-4766-9eba-be3099a3da20
+  m_Name: cuaderno9
   m_TagString: Memorie
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -29561,7 +29561,7 @@ GameObject:
   - component: {fileID: 9007582893319288446}
   - component: {fileID: 9007582893319288448}
   m_Layer: 3
-  m_Name: 41ac7acc-dc7f-487a-ac1f-4f5fdba0496e
+  m_Name: cuaderno8
   m_TagString: Memorie
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -29585,7 +29585,7 @@ GameObject:
   - component: {fileID: 9007582892203083876}
   - component: {fileID: 9007582892203083878}
   m_Layer: 3
-  m_Name: 41ac7acc-dc7f-487a-ac1f-4f5fdba0496e
+  m_Name: cuaderno13
   m_TagString: Memorie
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -29658,7 +29658,7 @@ GameObject:
   - component: {fileID: 3593268102256023625}
   - component: {fileID: 3593268102256023627}
   m_Layer: 3
-  m_Name: obj-relebook-ggach156060-001
+  m_Name: cuaderno5
   m_TagString: Memorie
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -29770,7 +29770,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af1bf63b2c9c38a4bb34f01cfbb590a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sentimentalValue: 20
+  sentimentalValue: 0
 --- !u!33 &3614069056891344742
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -30182,7 +30182,7 @@ GameObject:
   - component: {fileID: 6520676729730401877}
   - component: {fileID: 6520676729730401879}
   m_Layer: 3
-  m_Name: 73450632-4e07-44dc-95ff-01f3e6463e92
+  m_Name: cuaderno3
   m_TagString: Memorie
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -30618,7 +30618,7 @@ GameObject:
   - component: {fileID: 6838324102942681683}
   - component: {fileID: 6838324102942681685}
   m_Layer: 3
-  m_Name: de947d6a-dc87-434e-9d4d-4b49541af475
+  m_Name: cuaderno4
   m_TagString: Memorie
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -30640,7 +30640,7 @@ GameObject:
   - component: {fileID: 6253070734278259340}
   - component: {fileID: 6253070734278259342}
   m_Layer: 3
-  m_Name: obj-relebook-ggach156060-006
+  m_Name: cuaderno6
   m_TagString: Memorie
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -30888,7 +30888,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af1bf63b2c9c38a4bb34f01cfbb590a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sentimentalValue: 20
+  sentimentalValue: 0
 --- !u!4 &5733618163442438987
 Transform:
   m_ObjectHideFlags: 0
@@ -31010,7 +31010,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af1bf63b2c9c38a4bb34f01cfbb590a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sentimentalValue: 20
+  sentimentalValue: 0
 --- !u!1 &5896276174831449428
 GameObject:
   m_ObjectHideFlags: 0
@@ -31067,7 +31067,7 @@ GameObject:
   - component: {fileID: 8941426132287074635}
   - component: {fileID: 8941426132287074637}
   m_Layer: 3
-  m_Name: 33ef0e16-64a6-4bc8-a2b1-9009a7e5dae0
+  m_Name: cuaderno12
   m_TagString: Memorie
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -31091,7 +31091,7 @@ GameObject:
   - component: {fileID: 8941426133351878497}
   - component: {fileID: 8941426133351878499}
   m_Layer: 3
-  m_Name: 33ef0e16-64a6-4bc8-a2b1-9009a7e5dae0
+  m_Name: cuaderno7
   m_TagString: Memorie
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -31330,7 +31330,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af1bf63b2c9c38a4bb34f01cfbb590a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sentimentalValue: 20
+  sentimentalValue: 0
 --- !u!1 &6332678949721839135
 GameObject:
   m_ObjectHideFlags: 0
@@ -31563,7 +31563,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af1bf63b2c9c38a4bb34f01cfbb590a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sentimentalValue: 20
+  sentimentalValue: 0
 --- !u!1001 &6546210853606162629
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -31698,7 +31698,7 @@ GameObject:
   - component: {fileID: 8822683279909784879}
   - component: {fileID: 8822683279909784881}
   m_Layer: 3
-  m_Name: 28896da0-185a-4de7-96ae-8119dd6e4853
+  m_Name: cuaderno15
   m_TagString: Memorie
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -31722,7 +31722,7 @@ GameObject:
   - component: {fileID: 8822683278810411829}
   - component: {fileID: 8822683278810411831}
   m_Layer: 3
-  m_Name: 28896da0-185a-4de7-96ae-8119dd6e4853
+  m_Name: cuaderno10
   m_TagString: Memorie
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -31875,7 +31875,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af1bf63b2c9c38a4bb34f01cfbb590a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sentimentalValue: 20
+  sentimentalValue: 0
 --- !u!224 &7007015771451804045
 RectTransform:
   m_ObjectHideFlags: 0
@@ -32032,7 +32032,7 @@ GameObject:
   - component: {fileID: 8561357408109530354}
   - component: {fileID: 8561357408109530356}
   m_Layer: 3
-  m_Name: f7874275-a905-4f81-a79c-814889a661d5
+  m_Name: cuaderno16
   m_TagString: Memorie
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -32056,7 +32056,7 @@ GameObject:
   - component: {fileID: 8561357407514522360}
   - component: {fileID: 8561357407514522362}
   m_Layer: 3
-  m_Name: f7874275-a905-4f81-a79c-814889a661d5
+  m_Name: cuaderno11
   m_TagString: Memorie
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -32254,8 +32254,8 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5896276174831449428}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -295}
-  m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
+  m_LocalPosition: {x: 0, y: 0, z: -309.5}
+  m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5226484677464553555}
@@ -32272,7 +32272,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -691.4, y: 112.4}
+  m_AnchoredPosition: {x: -691.9, y: 112.4}
   m_SizeDelta: {x: -1465.808, y: -1992.446}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &8373376895840760483
@@ -32448,7 +32448,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af1bf63b2c9c38a4bb34f01cfbb590a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sentimentalValue: 20
+  sentimentalValue: 0
 --- !u!4 &8561357408109530350
 Transform:
   m_ObjectHideFlags: 0
@@ -32570,7 +32570,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af1bf63b2c9c38a4bb34f01cfbb590a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sentimentalValue: 20
+  sentimentalValue: 0
 --- !u!1 &8591298449044592702
 GameObject:
   m_ObjectHideFlags: 0
@@ -32831,7 +32831,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af1bf63b2c9c38a4bb34f01cfbb590a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sentimentalValue: 20
+  sentimentalValue: 0
 --- !u!33 &8822683279909784875
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -32946,7 +32946,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af1bf63b2c9c38a4bb34f01cfbb590a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sentimentalValue: 20
+  sentimentalValue: 0
 --- !u!1 &8865115048303693685
 GameObject:
   m_ObjectHideFlags: 0
@@ -32983,7 +32983,7 @@ GameObject:
   - component: {fileID: 8877222177428457402}
   - component: {fileID: 8877222177428457404}
   m_Layer: 3
-  m_Name: 37e6367a-29ee-4296-a1c1-ef51864d4bdd
+  m_Name: cuaderno2
   m_TagString: Memorie
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -33095,7 +33095,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af1bf63b2c9c38a4bb34f01cfbb590a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sentimentalValue: 20
+  sentimentalValue: 0
 --- !u!4 &8941426132287074631
 Transform:
   m_ObjectHideFlags: 0
@@ -33217,7 +33217,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af1bf63b2c9c38a4bb34f01cfbb590a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sentimentalValue: 20
+  sentimentalValue: 0
 --- !u!4 &8941426133351878493
 Transform:
   m_ObjectHideFlags: 0
@@ -33339,7 +33339,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af1bf63b2c9c38a4bb34f01cfbb590a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sentimentalValue: 20
+  sentimentalValue: 0
 --- !u!222 &8963074845940024313
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -33470,7 +33470,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af1bf63b2c9c38a4bb34f01cfbb590a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sentimentalValue: 20
+  sentimentalValue: 0
 --- !u!33 &9007582893319288442
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -33585,7 +33585,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af1bf63b2c9c38a4bb34f01cfbb590a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sentimentalValue: 20
+  sentimentalValue: 0
 --- !u!1 &9024765330142838163
 GameObject:
   m_ObjectHideFlags: 0
@@ -33621,7 +33621,7 @@ GameObject:
   - component: {fileID: 9053472433117394614}
   - component: {fileID: 9053472433117394616}
   m_Layer: 3
-  m_Name: 10cf4775-edaa-4077-9d86-6eb7606fb2c6
+  m_Name: cuaderno
   m_TagString: Memorie
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -33733,7 +33733,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af1bf63b2c9c38a4bb34f01cfbb590a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sentimentalValue: 20
+  sentimentalValue: 0
 --- !u!224 &9126815952466718021
 RectTransform:
   m_ObjectHideFlags: 0
