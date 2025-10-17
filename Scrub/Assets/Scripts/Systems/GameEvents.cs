@@ -1,22 +1,36 @@
 ﻿using System;
 using UnityEngine;
 
+// Clase estática que actúa como un bus de eventos global para desacoplar sistemas.
 public static class GameEvents
 {
-    // EVENTOS DE LIMPIEZA (Se mantienen)
+    // ===================================
+    // 1. EVENTOS DE LIMPIEZA
+    // ===================================
+
+    // Disparado cada vez que un DirtSpot es limpiado.
     public static event Action OnAnyDirtCleaned;
-    public static event Action<int, int> OnProgressUpdate; // Limpiado / Total Suciedad
 
-    // NUEVO: EVENTOS DE SENTIMENTALISMO (Gestión de Objetos Memorie)
-    // Dispara al decidir GUARDAR o DESTRUIR un objeto Memorie.
-    // Parámetros: bool isKept (true=Guardado, false=Destruido/Tirado)
-    public static event Action<bool, int> OnMemorieDecided; // isKept, SentimentalValue
-    public static event Action<int, int> OnSentimentalScoreUpdate; // Score Actual, Score de Acumulación
+    // Disparado al actualizar el progreso de limpieza general (Limpiado / Total).
+    public static event Action<int, int> OnProgressUpdate;
 
-    public static event Action<bool> OnGameResult; // True = Ganó, False = Perdió
+    // ===================================
+    // 2. EVENTOS DE SENTIMENTALISMO Y UI
+    // ===================================
 
+    // Disparado por MemorieObject al decidir GUARDAR (S) o DESTRUIR (N).
+    public static event Action<bool, int> OnMemorieDecided; // (isKept, SentimentalValue)
+
+    // Disparado por SentimentalScoreManager al cambiar los puntajes. Escuchado por UIPauseController.
+    public static event Action<int, int> OnSentimentalScoreUpdate; // (BalanceScore, AccumulationScore)
+
+    // Disparado por el SentimentalScoreManager al final del juego.
+    public static event Action<bool> OnGameResult; // (True = Ganó, False = Perdió)
+
+    // Disparado para notificar el fin de la limpieza general (usado por SentimentalScoreManager).
     public static event Action OnAllDone;
 
+    // Disparado para alternar la visibilidad de algún panel de score.
     public static event Action OnToggleScorePanel;
 
 
@@ -24,40 +38,43 @@ public static class GameEvents
     // MÉTODOS PÚBLICOS DE INVOCACIÓN
     // ===================================
 
-    // Limpieza (Mantiene el código original)
+    // Invocado por el CleaningTool o DirtSpot.
     public static void DirtCleaned()
     {
         OnAnyDirtCleaned?.Invoke();
     }
 
+    // Invocado por el TaskManager/CleaningController.
     public static void Progress(int cleaned, int total)
     {
         OnProgressUpdate?.Invoke(cleaned, total);
     }
 
-    // Finalización (Mantiene el código original)
-    public static void AllDone() // Sigue sin parámetros (solo notifica el fin de la limpieza)
+    // Invocado por el TaskManager.
+    public static void AllDone()
     {
         OnAllDone?.Invoke();
     }
 
-    // NUEVO: Invocación de Decisión de Memoria
+    // Invocado por el MemorieObject (Callback del panel S/N).
     public static void MemorieDecided(bool isKept, int sentimentalValue)
     {
         OnMemorieDecided?.Invoke(isKept, sentimentalValue);
     }
 
-    // NUEVO: Invocación de Actualización de Score
-    public static void SentimentalScore(int currentScore, int accumulationScore)
+    // Invocado por el SentimentalScoreManager.
+    public static void SentimentalScore(int currentBalance, int accumulationScore)
     {
-        OnSentimentalScoreUpdate?.Invoke(currentScore, accumulationScore);
+        OnSentimentalScoreUpdate?.Invoke(currentBalance, accumulationScore);
     }
 
-    // 📢 NUEVO MÉTODO DE INVOCACIÓN
+    // Invocado por el SentimentalScoreManager (al final del juego).
     public static void GameResult(bool won)
     {
-        OnGameResult?.Invoke(won); // Llama al nuevo evento con el resultado
+        OnGameResult?.Invoke(won);
     }
+
+    // Invocado por el jugador/botón para mostrar/ocultar el panel.
     public static void ToggleScorePanel()
     {
         OnToggleScorePanel?.Invoke();
