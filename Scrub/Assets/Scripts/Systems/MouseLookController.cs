@@ -11,16 +11,20 @@ public class MouseLookController : MonoBehaviour
     public float downLimit = -85f;
 
     [Header("Referencias")]
-    [Tooltip("El objeto que recibirá la rotación vertical (Asignado por HeadLookRegistrar).")]
+    [Tooltip("El objeto que recibirá la rotación vertical (Generalmente la cámara).")]
     public Transform headLookTarget;
 
     [Header("Control de Estado")]
-    [Tooltip("Si es False, el mouse es liberado para interactuar con la UI.")]
-    [SerializeField] private bool controlsActive = true;
+    [Tooltip("La variable privada que almacena si los controles están activos.")]
+    [SerializeField] private bool _controlsActive = true;
 
-    // 📢 NUEVA VARIABLE: Tecla para alternar el control
-    [Tooltip("Tecla para activar/desactivar el control del mouse (ej: Menú de Pausa).")]
-    public KeyCode toggleControlKey = KeyCode.Escape;
+    // 📢 PROPIEDAD PÚBLICA: Permite que PlayerMovement y otros scripts lean el estado sin errores.
+    public bool ControlsActive
+    {
+        get { return _controlsActive; }
+    }
+
+    // Quitamos la variable 'toggleControlKey' para evitar conflictos con PauseManager.
 
     // === Variables privadas ===
     private float rotationX = 0f;
@@ -30,24 +34,19 @@ public class MouseLookController : MonoBehaviour
 
     void Start()
     {
-        // El control inicial es determinado por 'controlsActive'
-        SetControlsActive(controlsActive);
+        // El control inicial es determinado por '_controlsActive'
+        SetControlsActive(_controlsActive);
     }
 
     void Update()
     {
-        // 📢 NUEVA LÓGICA: DETECCIÓN DE TECLA ESCAPE (o la tecla asignada)
-        if (Input.GetKeyDown(toggleControlKey))
-        {
-            // Alterna el estado de control (de activo a inactivo, o viceversa)
-            SetControlsActive(!controlsActive);
-        }
+        // 🛑 Lógica de Escape ELIMINADA: PauseManager se encarga de llamar a SetControlsActive.
 
-        // 🛑 CRÍTICO: Salir si el control está inactivo (menú)
-        // Ya no necesitamos revisar Time.timeScale aquí, pues SetControlsActive maneja el flujo.
-        if (!controlsActive) return;
+        // CRÍTICO: Salir si el control está inactivo (menú)
+        // Esto bloquea la rotación de la cámara cuando el menú de pausa está activo.
+        if (!_controlsActive) return;
 
-        // 1. Asignación Dinámica (Intenta la búsqueda solo si el SetHeadTarget falló)
+        // 1. Asignación Dinámica
         if (headLookTarget == null)
         {
             TryAssignHeadTarget();
@@ -55,14 +54,11 @@ public class MouseLookController : MonoBehaviour
         }
 
         // 2. Cálculo del Input y Rotación
-        // Usamos Time.deltaTime para hacer la sensibilidad independiente del framerate
         float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
         float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
 
-
         // ROTACIÓN HORIZONTAL (Lados): Aplicada al Cuerpo (este transform)
         transform.Rotate(Vector3.up * mouseX);
-
 
         // ROTACIÓN VERTICAL (Arriba/Abajo): Aplicada a la Cabeza
         rotationX -= mouseY;
@@ -74,30 +70,12 @@ public class MouseLookController : MonoBehaviour
     // ================== Funciones de Comunicación y Control ==================
 
     /// <summary>
-    /// Función llamada por HeadLookRegistrar.cs para asignar la referencia de la cabeza.
-    /// </summary>
-    public void SetHeadTarget(Transform head)
-    {
-        if (head != null && headLookTarget == null)
-        {
-            headLookTarget = head;
-            Debug.Log($"[MouseLook] ¡ASIGNACIÓN ÉXITO! Head Target asignado por SetHeadTarget a: {head.name}");
-
-            // Inicialización de la rotación vertical
-            rotationX = headLookTarget.localEulerAngles.x;
-            if (rotationX > 180f) rotationX -= 360f;
-
-            hasLoggedError = false;
-        }
-    }
-
-    /// <summary>
     /// Activa o desactiva el control de cámara/cabeza del jugador y ajusta el cursor.
-    /// Al llamar a esta función, la tecla ESC automáticamente libera o bloquea el mouse.
+    /// Este método es llamado por el UIPauseController.
     /// </summary>
     public void SetControlsActive(bool active)
     {
-        controlsActive = active;
+        _controlsActive = active; // ⬅️ Actualiza la variable interna
 
         if (active)
         {
@@ -113,27 +91,37 @@ public class MouseLookController : MonoBehaviour
         else
         {
             // MODO PAUSA/MENÚ: Desactivar el control y liberar el cursor
+            // 📢 Esto permite el clickeo en la UI
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
-
-            // Opcional: Aquí puedes disparar un evento si necesitas mostrar un menú de pausa.
-            // GameEvents.ShowPauseMenu(); 
         }
+    }
 
-        // El script de movimiento (PlayerMovement.cs) y otros deben revisar la variable 'controlsActive'
-        // o usar un sistema de estados global si también quieres pausar el movimiento.
+    /// <summary>
+    /// Función llamada por HeadLookRegistrar.cs para asignar la referencia de la cabeza.
+    /// </summary>
+    public void SetHeadTarget(Transform head)
+    {
+        if (head != null && headLookTarget == null)
+        {
+            headLookTarget = head;
+            Debug.Log($"[MouseLook] ¡ASIGNACIÓN ÉXITO! Head Target asignado por SetHeadTarget a: {head.name}");
+
+            rotationX = headLookTarget.localEulerAngles.x;
+            if (rotationX > 180f) rotationX -= 360f;
+
+            hasLoggedError = false;
+        }
     }
 
     // ================== Fallback de Asignación ==================
 
     private const string HeadObjectName = "Head";
 
-    // Función auxiliar de búsqueda como respaldo si SetHeadTarget falla
     private void TryAssignHeadTarget()
     {
         if (headLookTarget != null) return;
 
-        // Búsqueda simple por nombre de hijo
         Transform foundHead = transform.Find(HeadObjectName);
 
         if (foundHead != null)
@@ -142,7 +130,6 @@ public class MouseLookController : MonoBehaviour
             return;
         }
 
-        // Solo logeamos el error si no se ha logeado antes
         if (headLookTarget == null && hasLoggedError == false)
         {
             Debug.LogError($"[MouseLook] ¡Advertencia! No se encontró el objeto llamado '{HeadObjectName}'. Verifique que el HeadLookRegistrar está adjunto a la cabeza.");

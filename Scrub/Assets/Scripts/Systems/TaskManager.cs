@@ -5,8 +5,8 @@ using System.Collections.Generic;
 
 public class TaskManager : MonoBehaviour
 {
-    private int totalDirt = 0;
-    private int cleanedCount = 0;
+    public int totalDirt = 0;
+    public int cleanedCount = 0;
 
     [Header("UI y Paneles")]
     public TimedUIPanel notificationPanel;
