@@ -2877,7 +2877,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3006424547328665478, guid: 2c3b7cb9660f44c438470cecbd8a6c4d, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -7.4727407
+      value: -6.887
       objectReference: {fileID: 0}
     - target: {fileID: 3006424547328665478, guid: 2c3b7cb9660f44c438470cecbd8a6c4d, type: 3}
       propertyPath: m_LocalPosition.y
@@ -2885,7 +2885,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3006424547328665478, guid: 2c3b7cb9660f44c438470cecbd8a6c4d, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 4.3331
+      value: 3.941
       objectReference: {fileID: 0}
     - target: {fileID: 3006424547328665478, guid: 2c3b7cb9660f44c438470cecbd8a6c4d, type: 3}
       propertyPath: m_LocalRotation.w
@@ -9002,13 +9002,7 @@ PrefabInstance:
       addedObject: {fileID: 686126292}
     - targetCorrespondingSourceObject: {fileID: 100000, guid: 72b369626c991784a901d44918508a5e, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 686126294}
-    - targetCorrespondingSourceObject: {fileID: 100000, guid: 72b369626c991784a901d44918508a5e, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 686126299}
-    - targetCorrespondingSourceObject: {fileID: 100000, guid: 72b369626c991784a901d44918508a5e, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 686126298}
     - targetCorrespondingSourceObject: {fileID: 100000, guid: 72b369626c991784a901d44918508a5e, type: 3}
       insertIndex: -1
       addedObject: {fileID: 686126303}
@@ -9043,54 +9037,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f66cac6c0758ad94c87aa13bae39d21b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!54 &686126294
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 686126291}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 1
---- !u!65 &686126298
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 686126291}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 0
-  serializedVersion: 3
-  m_Size: {x: -0.1433987, y: 0.25, z: 0.07561871}
-  m_Center: {x: -0.14339873, y: 0.25, z: 0.075618714}
 --- !u!65 &686126299
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -15721,7 +15667,6 @@ GameObject:
   - component: {fileID: 1077441847}
   - component: {fileID: 1077441846}
   - component: {fileID: 1077441845}
-  - component: {fileID: 1077441849}
   - component: {fileID: 1077441851}
   - component: {fileID: 1077441850}
   m_Layer: 3
@@ -15820,33 +15765,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!54 &1077441849
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1077441844}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!114 &1077441850
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22263,7 +22181,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 0.001, y: 0.001, z: 0.001}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &1590432311
 PrefabInstance:
@@ -29000,7 +28918,7 @@ GameObject:
   - component: {fileID: 2042780890}
   m_Layer: 3
   m_Name: door01 SUCIO
-  m_TagString: Basura
+  m_TagString: Dirt
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
