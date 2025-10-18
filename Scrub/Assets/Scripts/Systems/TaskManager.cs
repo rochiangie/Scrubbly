@@ -34,6 +34,10 @@ public class TaskManager : MonoBehaviour
     public float balanceThresholdPercentage = 0.8f;
     public float accumulationThresholdPercentage = 0.5f;
 
+    [Header("5. Control de Mensajes de Estado")] // [NUEVO]
+    [Tooltip("Intervalo para revisar las condiciones de los mensajes (en segundos).")]
+    public float statusCheckInterval = 5f;
+    private float nextStatusCheckTime = 0f;
     public int minBalanceForGoodEnding { get; private set; }
     public int maxAccumulationForGoodEnding { get; private set; }
 
@@ -83,6 +87,11 @@ public class TaskManager : MonoBehaviour
         {
             Debug.Log("DEBUG: Forzando el puntaje ideal de victoria.");
             ForceSetIdealScore();
+        }
+        if (Time.time >= nextStatusCheckTime)
+        {
+            CheckAndDisplayStatus();
+            nextStatusCheckTime = Time.time + statusCheckInterval;
         }
     }
 
@@ -274,7 +283,38 @@ public class TaskManager : MonoBehaviour
         // Disparar el evento final.
         GameEvents.GameResult(won);
     }
+    private void CheckAndDisplayStatus()
+    {
+        // Si el gestor de UI no existe, salimos
+        if (StatusMessageDisplay.Instance == null) return;
 
+        // Si el juego ya terminó (limpieza completa y fase de decisión activa), no mostramos mensajes de estado.
+        if (cleanedCount >= totalDirt && !IsDecisionActive) return;
+
+        // --- Condición 1: Falta de Limpieza (Tareas no completadas) ---
+        // Usamos el 50% de progreso como umbral para recordar.
+        if (cleanedCount < totalDirt * 0.5f)
+        {
+            StatusMessageDisplay.Instance.ShowMessage("Aún quedan muchas manchas por limpiar. ¡Concentra tus energías en recoger todo!");
+            return;
+        }
+
+        // --- Condición 2: Exceso de Acumulación (Te estás pasando del límite) ---
+        // Advertencia cuando la Acumulación supera el 70% del límite total.
+        if (accumulationScore > maxAccumulationForGoodEnding * 0.7f)
+        {
+            StatusMessageDisplay.Instance.ShowMessage("¡El monto de acumulación es muy alto! Necesitas deshacerte de algunas memorias antes de que sea tarde.");
+            return;
+        }
+
+        // --- Condición 3: Falta de Descarte (La limpieza está casi hecha, pero el score es malo) ---
+        // Se activa cuando la limpieza está casi hecha (ej: 80% completada) PERO el Balance es bajo.
+        if (cleanedCount >= totalDirt * 0.8f && emotionalBalanceScore < minBalanceForGoodEnding * 0.8f)
+        {
+            StatusMessageDisplay.Instance.ShowMessage("¡El desequilibrio emocional es evidente! Asegúrate de soltar las cosas negativas y conservar las positivas.");
+            return;
+        }
+    }
     public static void SetDecisionActive(bool isActive)
     {
         IsDecisionActive = isActive;
