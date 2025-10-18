@@ -107,20 +107,28 @@ public class PlayerInteraction : MonoBehaviour
     // =========================================================================
     // FUNCIÓN PRINCIPAL: AGARRAR/SOLTAR/DECIDIR (Tecla T)
     // =========================================================================
+    /// <summary>
+    /// Intenta soltar el objeto sostenido o recoger un objeto cercano.
+    /// (Asume que es llamado por la tecla de interacción, ej: 'T')
+    /// </summary>
     void TryPickup()
     {
-        // Lógica 1: Soltar objeto (Si se presiona T y tengo algo, suelto)
+        // Lógica 1: Soltar objeto (Si tengo algo, suelto)
         if (carried)
         {
-            bool isTool = (cleaningController != null && cleaningController.CurrentTool != null &&
-                            carried.GetComponent<ToolDescriptor>() == cleaningController.CurrentTool);
+            // Determinar si el objeto que llevo es la herramienta que está registrada en el CleaningController
+            bool isTool = (cleaningController != null &&
+                           cleaningController.CurrentTool != null &&
+                           carried.GetComponent<ToolDescriptor>() == cleaningController.CurrentTool);
 
             if (isTool)
             {
+                // Si es la herramienta, usamos el método controlado para soltarla
                 cleaningController.DropCurrentTool();
             }
             else
             {
+                // Si es un objeto genérico (no ToolDescriptor), usamos el método Drop de Carryable
                 carried.Drop();
                 animCtrl?.SetHolding(false);
 
@@ -131,7 +139,7 @@ public class PlayerInteraction : MonoBehaviour
                 }
             }
 
-            carried = null;
+            carried = null; // Borrar la referencia de lo que llevo
             animCtrl?.TriggerInteract();
             Debug.Log("Objeto soltado (T).");
             return;
@@ -141,7 +149,7 @@ public class PlayerInteraction : MonoBehaviour
         if (nearbyCarryable != null)
         {
             // ----------------------------------------------------
-            // NUEVO: DECISIÓN DE MEMORIA
+            // DECISIÓN DE MEMORIA (MemorieObject)
             // ----------------------------------------------------
             if (nearbyCarryable.CompareTag(memorieTag))
             {
@@ -163,7 +171,7 @@ public class PlayerInteraction : MonoBehaviour
             // LÓGICA NORMAL DE RECOGER HERRAMIENTA O CARRYABLE (Si no es Memorie)
             // ----------------------------------------------------
 
-            // Asegurar HoldPoint si no existe 
+            // 1. Asegurar HoldPoint si no existe
             if (!holdPoint)
             {
                 var hp = new GameObject("HoldPoint").transform;
@@ -172,18 +180,21 @@ public class PlayerInteraction : MonoBehaviour
                 holdPoint = hp;
             }
 
-            // Mover el objeto a la mano (manejado por Carryable.cs)
+            // 2. Mover el objeto a la mano (manejado por Carryable.cs)
             nearbyCarryable.PickUp(holdPoint, playerColliders);
 
+            // 3. Buscar si es una Herramienta (ToolDescriptor)
             ToolDescriptor td = nearbyCarryable.GetComponent<ToolDescriptor>() ?? nearbyCarryable.GetComponentInParent<ToolDescriptor>();
 
             if (td != null && cleaningController != null)
             {
+                // Es una herramienta: registrarla en el controlador de limpieza
                 cleaningController.RegisterTool(td);
                 carried = nearbyCarryable;
             }
             else
             {
+                // Es un objeto Carryable genérico
                 carried = nearbyCarryable;
                 if (AudioManager.Instance != null)
                 {
@@ -191,7 +202,7 @@ public class PlayerInteraction : MonoBehaviour
                 }
             }
 
-            nearbyCarryable = null;
+            nearbyCarryable = null; // Borrar la referencia de lo que detectamos
             animCtrl?.SetHolding(true);
             animCtrl?.TriggerInteract();
 

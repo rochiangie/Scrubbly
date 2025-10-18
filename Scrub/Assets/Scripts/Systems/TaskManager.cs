@@ -9,19 +9,21 @@ public class TaskManager : MonoBehaviour
     public static TaskManager Instance { get; private set; }
     public static bool IsDecisionActive { get; private set; } = false;
 
-    // === 1. PROGRESO DE LIMPIEZA ===
-    [Header("1. Progreso de Limpieza")]
-    public int cleanedCount = 0;
-    public int totalDirt = 0;
+    // === 1. PROGRESO DE LIMPIEZA DUAL ===
+    [Header("1. Progreso de Limpieza Dual")]
+    public int totalDirtSpots = 0;
+    public int cleanedDirtSpots = 0;
+    public int totalTrashItems = 0;
+    public int cleanedTrashItems = 0;
 
-    // === 2. GESTIÓN DE HERRAMIENTAS Y LIMPIEZA ===
-    [Header("2. Gestión de Herramientas y Daño")]
-    public ToolDescriptor CurrentTool { get; private set; }
-    [SerializeField] private float damageMultiplier = 1f;
-    [SerializeField] private bool requireCorrectTool = true;
-    public List<DirtSpot> nearbyDirt { get; private set; } = new List<DirtSpot>();
+    // === 2. CONTROL DE TIEMPO ===
+    [Header("2. Control de Tiempo")]
+    [Tooltip("Duración máxima del nivel en segundos.")]
+    public float maxLevelTime = 300f; // 5 minutos por defecto
+    public float currentTime;
+    public bool timeIsUp = false;
 
-    // === 3. PUNTUACIÓN SENTIMENTAL ===
+    // === 3. GESTIÓN DE PUNTUACIÓN Y UMBRALES ===
     [Header("3. Puntuación Sentimental")]
     public int emotionalBalanceScore = 0;
     public int accumulationScore = 0;
@@ -30,18 +32,24 @@ public class TaskManager : MonoBehaviour
     public int totalPositiveMemoriesValue = 0;
     public int totalNegativeMemoriesValue = 0;
 
-    [Header("4. Configuración de Umbrales (Ganar/Perder)")]
+    [Header("4. Configuración de Umbrales")]
     public float balanceThresholdPercentage = 0.8f;
     public float accumulationThresholdPercentage = 0.5f;
 
-    [Header("5. Control de Mensajes de Estado")] // [NUEVO]
-    [Tooltip("Intervalo para revisar las condiciones de los mensajes (en segundos).")]
-    public float statusCheckInterval = 5f;
-    private float nextStatusCheckTime = 0f;
     public int minBalanceForGoodEnding { get; private set; }
     public int maxAccumulationForGoodEnding { get; private set; }
-
     private int totalSentimentalValue = 0;
+
+    // === 5. GESTIÓN DE HERRAMIENTAS Y ZONAS (Para ApplyCleanHit) ===
+    [Header("5. Gestión de Herramientas")]
+    public ToolDescriptor CurrentTool { get; private set; }
+    public float damageMultiplier = 1f;
+    public bool requireCorrectTool = true;
+    public List<DirtSpot> nearbyDirt { get; private set; } = new List<DirtSpot>();
+
+    // =========================================================================
+    // AWAKE, START & UPDATE
+    // =========================================================================
 
     void Awake()
     {
@@ -65,16 +73,33 @@ public class TaskManager : MonoBehaviour
     void Start()
     {
         InitializeSentimentalAnalysis();
+        currentTime = maxLevelTime;
     }
 
     void OnDestroy()
     {
         GameEvents.OnMemorieDecided -= HandleMemorieDecision;
         GameEvents.OnAllDone -= CheckFinalScore;
+        Time.timeScale = 1f;
     }
 
     void Update()
     {
+        // === LÓGICA DE TIEMPO ===
+        if (!timeIsUp && currentTime > 0)
+        {
+            currentTime -= Time.deltaTime;
+
+            if (currentTime <= 0)
+            {
+                currentTime = 0;
+                timeIsUp = true;
+                GameEvents.GameResult(false);
+                Debug.Log("¡TIEMPO AGOTADO! Derrota instantánea.");
+                return;
+            }
+        }
+
         // 🛑 SHORTCUT 1: Completar Tareas de Limpieza (Tecla L)
         if (Input.GetKeyDown(KeyCode.L))
         {
@@ -88,43 +113,103 @@ public class TaskManager : MonoBehaviour
             Debug.Log("DEBUG: Forzando el puntaje ideal de victoria.");
             ForceSetIdealScore();
         }
-        if (Time.time >= nextStatusCheckTime)
+    }
+
+    // =========================================================================
+    // LÓGICA DE NOTIFICACIÓN DE LIMPIEZA DUAL
+    // =========================================================================
+
+    /// <summary> Se llama desde TrashObject.cs </summary>
+    public void NotifyTrashCleaned()
+    {
+        cleanedTrashItems++;
+        CheckCompletion();
+    }
+
+    /// <summary> Se llama desde DirtSpot.cs </summary>
+    public void NotifySpotCleaned()
+    {
+        cleanedDirtSpots++;
+        CheckCompletion();
+    }
+
+    private void CheckCompletion()
+    {
+        int total = totalDirtSpots + totalTrashItems;
+        int cleaned = cleanedDirtSpots + cleanedTrashItems;
+
+        GameEvents.Progress(cleaned, total);
+
+        if (cleaned >= total && total > 0)
         {
-            CheckAndDisplayStatus();
-            nextStatusCheckTime = Time.time + statusCheckInterval;
+            GameEvents.AllDone();
         }
+    }
+
+    // =========================================================================
+    // LÓGICA DE INICIALIZACIÓN
+    // =========================================================================
+
+    private void InitializeCleaningAnalysis()
+    {
+        // Contar ambos tipos de objetos para los totales
+        totalDirtSpots = FindObjectsOfType<DirtSpot>().Length;
+        totalTrashItems = FindObjectsOfType<TrashObject>().Length;
+
+        cleanedDirtSpots = 0;
+        cleanedTrashItems = 0;
+
+        GameEvents.Progress(0, totalDirtSpots + totalTrashItems);
+    }
+
+    private void InitializeSentimentalAnalysis()
+    {
+        // Asumiendo que existe MemorieObject.cs y sentimentalValue
+        MemorieObject[] memories = FindObjectsOfType<MemorieObject>();
+        totalSentimentalValue = 0;
+        totalPositiveMemoriesValue = 0;
+        totalNegativeMemoriesValue = 0;
+
+        foreach (var memory in memories)
+        {
+            // Asumiendo que 'sentimentalValue' es público o property en MemorieObject
+            // (Esta es la variable que tu MemorieObject debe exponer)
+            // NOTA: Es común tener que usar una propiedad de solo lectura aquí si 'sentimentalValue' es privado.
+            int value = memory.sentimentalValue;
+            totalSentimentalValue += Mathf.Abs(value);
+
+            if (value >= 0) totalPositiveMemoriesValue += value;
+            else totalNegativeMemoriesValue += Mathf.Abs(value);
+        }
+
+        // Cálculo de umbrales
+        minBalanceForGoodEnding = Mathf.CeilToInt(totalPositiveMemoriesValue * balanceThresholdPercentage);
+        maxAccumulationForGoodEnding = Mathf.FloorToInt(totalSentimentalValue * accumulationThresholdPercentage);
+
+        GameEvents.SentimentalScore(emotionalBalanceScore, accumulationScore);
     }
 
     // =========================================================================
     // LÓGICA DE DEBUG (SHORTCUTS)
     // =========================================================================
 
-    /// <summary>
-    /// Forzar la finalización de todas las tareas de limpieza.
-    /// </summary>
-    // TaskManager.cs (Fragmento de la función ForceCompleteCleaningTasks)
-
     private void ForceCompleteCleaningTasks()
     {
-        // 1. Poner score ideal
         ForceSetIdealScore();
 
-        // 2. Completar conteo de limpieza
-        cleanedCount = totalDirt;
-        GameEvents.Progress(cleanedCount, totalDirt);
+        cleanedDirtSpots = totalDirtSpots;
+        cleanedTrashItems = totalTrashItems;
 
-        if (totalDirt > 0)
+        int total = totalDirtSpots + totalTrashItems;
+        GameEvents.Progress(total, total);
+
+        if (total > 0)
         {
-            // 🛑 ESTO PREVIENE EL DOBLE DISPARO
-            // Llama al chequeo final DE FORMA DIRECTA, sin usar GameEvents.AllDone()
             Debug.Log("DEBUG: Forzando FINAL DEL JUEGO DIRECTO para evitar doble disparo de evento.");
             CheckFinalScore();
         }
     }
 
-    /// <summary>
-    /// Forzar un Emotional Balance alto y una Accumulation baja.
-    /// </summary>
     private void ForceSetIdealScore()
     {
         if (minBalanceForGoodEnding == 0 || maxAccumulationForGoodEnding == 0)
@@ -137,118 +222,62 @@ public class TaskManager : MonoBehaviour
             }
         }
 
-        // El balance debe ser cómodamente mayor que el mínimo
         emotionalBalanceScore = minBalanceForGoodEnding + 50;
-
-        // La acumulación debe ser muy baja (ej. 10)
         accumulationScore = 10;
 
-        // Notificar a la UI
         GameEvents.SentimentalScore(emotionalBalanceScore, accumulationScore);
 
         Debug.Log($"DEBUG: Puntuación fijada a VICTORY: Balance={emotionalBalanceScore} (Mín: {minBalanceForGoodEnding}) | Acumulación={accumulationScore} (Lím: {maxAccumulationForGoodEnding})");
     }
 
     // =========================================================================
-    // LÓGICA DE INICIALIZACIÓN
+    // 📢 LÓGICA DE LIMPIEZA Y DAÑO A DIRTSPOTS
     // =========================================================================
 
-    private void InitializeCleaningAnalysis()
-    {
-        totalDirt = FindObjectsOfType<DirtSpot>().Length;
-        cleanedCount = 0;
-        GameEvents.Progress(cleanedCount, totalDirt);
-    }
-
-    private void InitializeSentimentalAnalysis()
-    {
-        MemorieObject[] memories = FindObjectsOfType<MemorieObject>();
-        totalSentimentalValue = 0;
-        totalPositiveMemoriesValue = 0;
-        totalNegativeMemoriesValue = 0;
-
-        foreach (var memory in memories)
-        {
-            int value = memory.sentimentalValue;
-            totalSentimentalValue += Mathf.Abs(value);
-
-            if (value >= 0) totalPositiveMemoriesValue += value;
-            else totalNegativeMemoriesValue += Mathf.Abs(value);
-        }
-
-        minBalanceForGoodEnding = Mathf.CeilToInt(totalPositiveMemoriesValue * balanceThresholdPercentage);
-        maxAccumulationForGoodEnding = Mathf.FloorToInt(totalSentimentalValue * accumulationThresholdPercentage);
-
-        GameEvents.SentimentalScore(emotionalBalanceScore, accumulationScore);
-    }
-
-    // =========================================================================
-    // LÓGICA DE JUEGO
-    // =========================================================================
-
-    public void RegisterTool(ToolDescriptor tool) { CurrentTool = tool; }
-    public void DropTool(ToolDescriptor tool, Vector3 dropDirection, float dropForce)
-    {
-        if (tool == null) return;
-        Carryable carryable = tool.GetComponent<Carryable>();
-        if (carryable != null) { carryable.Drop(); }
-        CurrentTool = null;
-    }
-
+    /// <summary>
+    /// Aplica daño a la suciedad más cercana. Llamado desde CleaningController.cs.
+    /// </summary>
     public void ApplyCleanHit(Vector3 playerPosition)
     {
         if (CurrentTool == null) return;
+
+        // Limpiar referencias nulas (objetos ya destruidos)
         nearbyDirt.RemoveAll(dirt => dirt == null);
         if (nearbyDirt.Count == 0) return;
 
+        // Encontrar el DirtSpot más cercano
         DirtSpot closestDirt = nearbyDirt
             .OrderBy(dirt => Vector3.Distance(playerPosition, dirt.transform.position))
             .FirstOrDefault();
 
         if (closestDirt == null) return;
 
+        // 1. Consumir durabilidad de la herramienta
         bool successfullyUsed = CurrentTool.TryUse();
-        if (!successfullyUsed) { CurrentTool = null; return; }
+        if (!successfullyUsed)
+        {
+            // Si la herramienta se rompe, el CleaningController debe borrar la referencia.
+            return;
+        }
 
-        float damage = damageMultiplier * CurrentTool.toolPower;
+        float damage = damageMultiplier * CurrentTool.ToolPower;
 
-        if (requireCorrectTool && !closestDirt.CanBeCleanedBy(CurrentTool.toolId)) { return; }
+        // 2. Comprobar si la herramienta es correcta (si se requiere)
+        if (requireCorrectTool && !closestDirt.CanBeCleanedBy(CurrentTool.ToolId))
+        {
+            Debug.LogWarning($"[Clean Hit] Herramienta incorrecta para {closestDirt.name}.");
+            return;
+        }
 
+        // 3. Aplicar el daño
         closestDirt.CleanHit(damage);
     }
 
-    public void NotifyDirtCleaned()
-    {
-        cleanedCount++;
-        GameEvents.Progress(cleanedCount, totalDirt);
-
-        if (cleanedCount >= totalDirt && totalDirt > 0)
-        {
-            GameEvents.AllDone();
-        }
-    }
-
-    private void HandleMemorieDecision(bool isKept, int sentimentalValue)
-    {
-        int absoluteValue = Mathf.Abs(sentimentalValue);
-
-        if (isKept)
-        {
-            accumulationScore += absoluteValue;
-            if (sentimentalValue < 0) emotionalBalanceScore -= absoluteValue;
-        }
-        else
-        {
-            if (sentimentalValue > 0) emotionalBalanceScore -= sentimentalValue;
-            else emotionalBalanceScore += absoluteValue;
-        }
-
-        GameEvents.SentimentalScore(emotionalBalanceScore, accumulationScore);
-    }
-
     // =========================================================================
-    // LÓGICA DE FINAL DEL JUEGO
+    // OTROS MÉTODOS DE JUEGO (Necesarios para la compilación completa)
     // =========================================================================
+
+    public void RegisterTool(ToolDescriptor tool) { CurrentTool = tool; }
 
     public void CheckFinalScore()
     {
@@ -257,7 +286,7 @@ public class TaskManager : MonoBehaviour
 
         if (minBalanceForGoodEnding == 0 && maxAccumulationForGoodEnding == 0)
         {
-            finalMessage = "Error: Umbrales no inicializados. La lógica del TaskManager falló al configurar los límites.";
+            finalMessage = "Error: Umbrales no inicializados.";
             Debug.LogError(finalMessage);
             return;
         }
@@ -280,41 +309,27 @@ public class TaskManager : MonoBehaviour
 
         Debug.Log(finalMessage);
 
-        // Disparar el evento final.
         GameEvents.GameResult(won);
     }
-    private void CheckAndDisplayStatus()
+
+    private void HandleMemorieDecision(bool isKept, int sentimentalValue)
     {
-        // Si el gestor de UI no existe, salimos
-        if (StatusMessageDisplay.Instance == null) return;
+        int absoluteValue = Mathf.Abs(sentimentalValue);
 
-        // Si el juego ya terminó (limpieza completa y fase de decisión activa), no mostramos mensajes de estado.
-        if (cleanedCount >= totalDirt && !IsDecisionActive) return;
-
-        // --- Condición 1: Falta de Limpieza (Tareas no completadas) ---
-        // Usamos el 50% de progreso como umbral para recordar.
-        if (cleanedCount < totalDirt * 0.5f)
+        if (isKept)
         {
-            StatusMessageDisplay.Instance.ShowMessage("Aún quedan muchas manchas por limpiar. ¡Concentra tus energías en recoger todo!");
-            return;
+            accumulationScore += absoluteValue;
+            if (sentimentalValue < 0) emotionalBalanceScore -= absoluteValue;
+        }
+        else
+        {
+            if (sentimentalValue > 0) emotionalBalanceScore -= sentimentalValue;
+            else emotionalBalanceScore += absoluteValue;
         }
 
-        // --- Condición 2: Exceso de Acumulación (Te estás pasando del límite) ---
-        // Advertencia cuando la Acumulación supera el 70% del límite total.
-        if (accumulationScore > maxAccumulationForGoodEnding * 0.7f)
-        {
-            StatusMessageDisplay.Instance.ShowMessage("¡El monto de acumulación es muy alto! Necesitas deshacerte de algunas memorias antes de que sea tarde.");
-            return;
-        }
-
-        // --- Condición 3: Falta de Descarte (La limpieza está casi hecha, pero el score es malo) ---
-        // Se activa cuando la limpieza está casi hecha (ej: 80% completada) PERO el Balance es bajo.
-        if (cleanedCount >= totalDirt * 0.8f && emotionalBalanceScore < minBalanceForGoodEnding * 0.8f)
-        {
-            StatusMessageDisplay.Instance.ShowMessage("¡El desequilibrio emocional es evidente! Asegúrate de soltar las cosas negativas y conservar las positivas.");
-            return;
-        }
+        GameEvents.SentimentalScore(emotionalBalanceScore, accumulationScore);
     }
+
     public static void SetDecisionActive(bool isActive)
     {
         IsDecisionActive = isActive;

@@ -4,6 +4,14 @@ using UnityEngine;
 
 public class Carryable : MonoBehaviour
 {
+    // 📢 NUEVO: Propiedad para rastrear el estado de transporte.
+    // Esto resuelve el error 'IsCarried' en el CleaningController y PlayerInteraction.
+    public bool IsCarried { get; set; } = false;
+
+    [Header("Configuración de Drop")]
+    [Tooltip("Fuerza por defecto aplicada al soltar si no se especifica.")]
+    public float defaultDropForce = 3f;
+
     private Rigidbody rb;
     private Collider carryableCollider;
     private CollisionDetectionMode originalMode;
@@ -24,12 +32,16 @@ public class Carryable : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Recoge el objeto, lo adjunta al padre y configura las físicas.
+    /// </summary>
     public void PickUp(Transform parent, Collider[] playerColliders)
     {
         playerCollidersReference = playerColliders; // Guardamos la referencia para el Drop
 
         // 1. Configuración de físicas
         rb.useGravity = false;
+        // La detección continua es mejor para objetos kinemáticos que se mueven rápido
         rb.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
         rb.isKinematic = true;
 
@@ -43,12 +55,21 @@ public class Carryable : MonoBehaviour
         {
             foreach (var playerCol in playerCollidersReference)
             {
+                // Ignorar colisiones para que el objeto no "empuje" al jugador
                 Physics.IgnoreCollision(carryableCollider, playerCol, true);
             }
         }
+
+        // 4. Actualizar estado
+        IsCarried = true;
     }
 
-    // Método de Drop con parámetros (usado internamente o por otros sistemas)
+    /// <summary>
+    /// Suelta el objeto, restaura físicas y aplica una fuerza.
+    /// Es llamado por CleaningController (para soltar herramientas) o PlayerInteraction.
+    /// </summary>
+    /// <param name="direction">Dirección de la fuerza aplicada.</param>
+    /// <param name="force">Magnitud de la fuerza (usualmente dropForce de CleaningController).</param>
     public void Drop(Vector3 direction, float force)
     {
         // 1. Deshacer Ignorar Colisiones
@@ -70,13 +91,20 @@ public class Carryable : MonoBehaviour
         transform.SetParent(null);
 
         // 4. Aplicar fuerza
+        // Usamos ForceMode.VelocityChange para un impulso instantáneo y controlado.
         rb.AddForce(direction * force, ForceMode.VelocityChange);
+
+        // 5. Actualizar estado
+        IsCarried = false;
     }
 
-    // MÉTODO DROP ESTÁNDAR (Lo que PlayerInteraction llama cuando suelta un objeto normal)
+    /// <summary>
+    /// Método DROP ESTÁNDAR (Usado cuando el objeto se suelta sin una dirección/fuerza específica).
+    /// </summary>
     public void Drop()
     {
-        // Llama a la versión completa con fuerza cero.
+        // 📢 MEJORA: Llama a la versión con parámetros, usando la fuerza por defecto y la dirección "hacia adelante" (simplemente Vector3.forward si se necesita, o cero si no se quiere fuerza).
+        // Nota: Si este método es llamado por un objeto sin una dirección clara (como una memoria), es mejor usar fuerza cero.
         Drop(Vector3.zero, 0f);
     }
 }

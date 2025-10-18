@@ -3,8 +3,9 @@
 public class ToolDescriptor : MonoBehaviour
 {
     [Header("Identificación y Potencia")]
-    [SerializeField] public string toolId = "Sponge";  // ej: "Sponge", "Mop", "Spray"
-    [SerializeField] public float toolPower = 1f;     // multiplicador del daño (damageMultiplier)
+    // 📢 Valor por defecto ajustado para coincidir con tu sistema
+    [SerializeField] public string toolId = "Escoba";
+    [SerializeField] public float toolPower = 1f;       // multiplicador del daño (damageMultiplier)
 
     [Header("Durabilidad")]
     [Tooltip("Cantidad de veces que se puede usar antes de destruirse")]
@@ -25,13 +26,13 @@ public class ToolDescriptor : MonoBehaviour
 
     /// <summary>
     /// Intenta usar la herramienta una vez. Consume un uso y destruye el objeto si llega a cero.
+    /// Es llamado por CleaningController para verificar durabilidad.
     /// </summary>
     /// <returns>True si la herramienta se usó exitosamente y sigue activa. False si se gastó o ya estaba gastada.</returns>
     public bool TryUse()
     {
         if (remainingUses <= 0)
         {
-            // Ya está gastada, ignorar
             return false;
         }
 

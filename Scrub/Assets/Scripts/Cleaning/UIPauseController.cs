@@ -35,21 +35,27 @@ public class UIPauseController : MonoBehaviour
 
     void Awake()
     {
-        // 🛑 SOLO BUSCA TASK MANAGER. ELIMINAMOS TODAS LAS OTRAS BÚSQUEDAS.
-        DontDestroyOnLoad(gameObject);
+        // El DontDestroyOnLoad(gameObject) debe ir en Start o en un script externo si este es un Singleton. 
+        // Si este script es solo para la UI de una escena, es mejor quitarlo. Lo dejo comentado.
+        // DontDestroyOnLoad(gameObject);
 
         mouseLook = FindObjectOfType<MouseLookController>();
-        // Intentamos obtener la instancia Singleton, pero debe estar inicializada antes.
-        taskManager = TaskManager.Instance;
 
-        if (mouseLook == null) Debug.LogError("UIPauseController: MouseLookController no encontrado.");
-        if (taskManager == null) Debug.LogError("UIPauseController: TaskManager.Instance es null. ¡Verifica el Orden de Ejecución!");
-
+        // La instancia se busca en Awake, pero la asignamos en Start para asegurar que TaskManager exista.
 
         if (pauseMenuPanel != null)
         {
             pauseMenuPanel.SetActive(false);
         }
+    }
+
+    void Start()
+    {
+        // Intentamos obtener la instancia Singleton, pero debe estar inicializada antes.
+        taskManager = TaskManager.Instance;
+
+        if (mouseLook == null) Debug.LogError("UIPauseController: MouseLookController no encontrado.");
+        if (taskManager == null) Debug.LogError("UIPauseController: TaskManager.Instance es null. ¡Verifica el Orden de Ejecución!");
     }
 
     void OnEnable()
@@ -66,7 +72,8 @@ public class UIPauseController : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Return) && TaskManager.IsDecisionActive == false)
+        // 🛑 Corregido el GetKeyDown para usar la tecla ESCAPE (más común para pausa) o RETURN si lo prefieres
+        if (Input.GetKeyDown(KeyCode.Escape) && !TaskManager.IsDecisionActive)
         {
             TogglePause();
         }
@@ -86,7 +93,6 @@ public class UIPauseController : MonoBehaviour
         {
             if (pauseMenuPanel != null)
             {
-                // 🛑 Llamada a la función corregida.
                 UpdateStatsDisplay();
                 pauseMenuPanel.SetActive(true);
             }
@@ -117,7 +123,6 @@ public class UIPauseController : MonoBehaviour
     /// </summary>
     private void UpdateStatsDisplay()
     {
-        // 🛑 ELIMINAMOS LA LÍNEA DE ERROR Y SIMPLIFICAMOS LA VERIFICACIÓN.
         if (taskManager == null)
         {
             taskManager = TaskManager.Instance;
@@ -128,8 +133,11 @@ public class UIPauseController : MonoBehaviour
             }
         }
 
-        // 1. STATS DE LIMPIEZA: Leemos directamente los contadores del TaskManager
-        UpdateCleaningUI(taskManager.cleanedCount, taskManager.totalDirt);
+        // 1. STATS DE LIMPIEZA: Sumamos los contadores duales del TaskManager
+        int total = taskManager.totalDirtSpots + taskManager.totalTrashItems;
+        int cleaned = taskManager.cleanedDirtSpots + taskManager.cleanedTrashItems;
+
+        UpdateCleaningUI(cleaned, total);
 
         // 2. STATS DE BALANCE EMOCIONAL Y ACUMULACIÓN: TaskManager tiene los scores
         UpdateSentimentalUI(taskManager.emotionalBalanceScore, taskManager.accumulationScore);
@@ -144,12 +152,11 @@ public class UIPauseController : MonoBehaviour
     /// </summary>
     private void UpdateCleaningUI(int cleaned, int total)
     {
-        // 🛑 Lógica para arreglar el slider de 0 a 1.
         if (total > 0)
         {
             if (cleaningProgressSlider != null)
             {
-                // 🛑 CLAVE: El max value debe ser el total de suciedad.
+                // CLAVE: El max value debe ser el total combinado.
                 cleaningProgressSlider.maxValue = total;
                 cleaningProgressSlider.value = cleaned;
             }
@@ -159,11 +166,11 @@ public class UIPauseController : MonoBehaviour
                 cleaningProgressText.text = $"Limpieza: {cleaned} / {total}";
             }
         }
-        else // Si totalDirt es 0 (no hay suciedad), mostramos 0/0.
+        else
         {
             if (cleaningProgressSlider != null)
             {
-                cleaningProgressSlider.maxValue = 1; // Para que no divida por cero
+                cleaningProgressSlider.maxValue = 1;
                 cleaningProgressSlider.value = 0;
             }
             if (cleaningProgressText != null)
@@ -182,6 +189,7 @@ public class UIPauseController : MonoBehaviour
 
         // Balance Emocional
         int minBalance = taskManager.minBalanceForGoodEnding;
+        // El máximo del slider es 2x el mínimo de victoria, para visualizar la zona segura
         emotionalBalanceSlider.maxValue = minBalance > 0 ? minBalance * 2 : 100;
         emotionalBalanceSlider.value = currentBalance;
         emotionalBalanceText.text = $"Balance Emocional: {currentBalance} / {minBalance} (Mínimo)";
@@ -207,8 +215,8 @@ public class UIPauseController : MonoBehaviour
 
         if (isAccumulation)
         {
-            // Lógica de Acumulación: Cuanto más cerca del límite (goodThreshold), peor.
-            if (currentValue > goodThreshold)
+            // Lógica de Acumulación: Cuanto más cerca del límite, peor.
+            if (currentValue >= goodThreshold)
             {
                 fillImage.color = critical; // ROJO: ¡Límite excedido o alcanzado!
             }
@@ -223,11 +231,10 @@ public class UIPauseController : MonoBehaviour
         }
         else // Balance Emocional
         {
-            // Lógica de Balance: Cuanto más cerca del mínimo (goodThreshold), mejor.
-            // badThreshold generalmente es 50% del mínimo (ej. 0.5f * minBalance)
+            // Lógica de Balance: Cuanto más cerca del mínimo, mejor.
             if (currentValue >= goodThreshold)
             {
-                fillImage.color = good; // VERDE: Se alcanzó o superó el mínimo para el buen final.
+                fillImage.color = good; // VERDE: Se alcanzó o superó el mínimo.
             }
             else if (currentValue > badThreshold)
             {
@@ -235,7 +242,7 @@ public class UIPauseController : MonoBehaviour
             }
             else
             {
-                fillImage.color = critical; // ROJO: En zona crítica (por debajo del 50% del mínimo).
+                fillImage.color = critical; // ROJO: En zona crítica.
             }
         }
     }
