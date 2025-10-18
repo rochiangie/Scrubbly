@@ -93,18 +93,22 @@ public class TaskManager : MonoBehaviour
     /// <summary>
     /// Forzar la finalización de todas las tareas de limpieza.
     /// </summary>
+    // TaskManager.cs (Fragmento de la función ForceCompleteCleaningTasks)
+
     private void ForceCompleteCleaningTasks()
     {
-        // 1. Poner score ideal (Se ejecuta primero para tener valores correctos en el chequeo final)
+        // 1. Poner score ideal
         ForceSetIdealScore();
 
         // 2. Completar conteo de limpieza
-        cleanedCount = totalDirt; // Igualar el contador al total
+        cleanedCount = totalDirt;
         GameEvents.Progress(cleanedCount, totalDirt);
 
         if (totalDirt > 0)
         {
-            // 3. Disparar el evento que inicia el chequeo final de score
+            // 🛑 ESTO PREVIENE EL DOBLE DISPARO
+            // Llama al chequeo final DE FORMA DIRECTA, sin usar GameEvents.AllDone()
+            Debug.Log("DEBUG: Forzando FINAL DEL JUEGO DIRECTO para evitar doble disparo de evento.");
             CheckFinalScore();
         }
     }
