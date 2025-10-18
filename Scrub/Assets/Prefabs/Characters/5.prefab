@@ -1278,7 +1278,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbf140a9c3f331e46b845dfc3075db5e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  interactionDistance: 3
+  detectionRadius: 2.5
 --- !u!137 &1760922598799733436 stripped
 SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: 502025536470163952, guid: 46c5ec54e9c218c4abd9fbeb01ef1d1b, type: 3}

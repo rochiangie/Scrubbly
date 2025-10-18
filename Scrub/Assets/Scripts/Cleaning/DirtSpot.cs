@@ -112,10 +112,11 @@ public class DirtSpot : MonoBehaviour
         isHandlingDestruction = true;
         IsCleaned = true; // 🔴 MARCAR COMO LIMPIO PARA EL TaskManager
 
-        // 1. NOTIFICAR AL MANAGER DEL PROGRESO
-        // 🔴 CRITICAL FIX: Usar el evento global que escucha el TaskManager
-        //GameEvents.OnAnyDirtCleaned?.Invoke();
-        GameEvents.DirtCleaned();
+        // 🛑 1. NOTIFICAR AL TASKMANAGER (¡LA BARRA SE MUEVE AQUÍ!)
+        if (TaskManager.Instance != null)
+        {
+            TaskManager.Instance.NotifyDirtCleaned();
+        }
 
 
         // 2. LLAMADA CRÍTICA A SFX: Disparar el sonido de limpieza antes de destruirse

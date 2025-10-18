@@ -1,19 +1,17 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System;
 
 public class UIPauseController : MonoBehaviour
 {
     // === 1. ESTADO Y CONTROL DE PAUSA ===
     [Header("1. Control de Pausa")]
-    [Tooltip("El GameObject del panel de menú que se activará/desactivará.")]
     public GameObject pauseMenuPanel;
 
     // Dependencias
     private MouseLookController mouseLook;
     private TaskManager taskManager;
-    private SentimentalScoreManager scoreManager;
-    private CleaningController cleaningController; // <-- NECESARIO PARA OBTENER LOS CONTEOS
 
     private bool isPaused = false;
 
@@ -26,12 +24,10 @@ public class UIPauseController : MonoBehaviour
     [Header("3. Referencias de Puntuación Sentimental")]
     public Slider emotionalBalanceSlider;
     public TMP_Text emotionalBalanceText;
-    [Tooltip("Asigna aquí la IMAGEN de Relleno (Fill Area) del Slider de Balance.")]
     public Image emotionalBalanceFillImage;
 
     public Slider accumulationSlider;
     public TMP_Text accumulationText;
-    [Tooltip("Asigna aquí la IMAGEN de Relleno (Fill Area) del Slider de Acumulación.")]
     public Image accumulationFillImage;
 
 
@@ -39,20 +35,16 @@ public class UIPauseController : MonoBehaviour
 
     void Awake()
     {
+        // 🛑 SOLO BUSCA TASK MANAGER. ELIMINAMOS TODAS LAS OTRAS BÚSQUEDAS.
         DontDestroyOnLoad(gameObject);
 
-        // 🛑 Búsqueda de sistemas críticos (usando FindObjectOfType y Singleton).
         mouseLook = FindObjectOfType<MouseLookController>();
-        taskManager = FindObjectOfType<TaskManager>();
-        // Buscamos el CleaningController que tiene los datos cleanedCount/totalDirt
-        cleaningController = FindObjectOfType<CleaningController>();
-        scoreManager = SentimentalScoreManager.Instance; // Singleton
+        // Intentamos obtener la instancia Singleton, pero debe estar inicializada antes.
+        taskManager = TaskManager.Instance;
 
-        // Verificación de referencias (útil para la depuración)
         if (mouseLook == null) Debug.LogError("UIPauseController: MouseLookController no encontrado.");
-        if (taskManager == null) Debug.LogError("UIPauseController: TaskManager no encontrado.");
-        if (cleaningController == null) Debug.LogError("UIPauseController: CleaningController no encontrado. **¡Este es el script que tiene los conteos!**");
-        if (scoreManager == null) Debug.LogError("UIPauseController: SentimentalScoreManager.Instance es null.");
+        if (taskManager == null) Debug.LogError("UIPauseController: TaskManager.Instance es null. ¡Verifica el Orden de Ejecución!");
+
 
         if (pauseMenuPanel != null)
         {
@@ -74,8 +66,7 @@ public class UIPauseController : MonoBehaviour
 
     void Update()
     {
-        // Abre/Cierra con ENTER, y solo si no estamos en medio de una decisión S/N.
-        if (Input.GetKeyDown(KeyCode.Return) && !SentimentalScoreManager.IsDecisionActive)
+        if (Input.GetKeyDown(KeyCode.Return) && TaskManager.IsDecisionActive == false)
         {
             TogglePause();
         }
@@ -87,7 +78,7 @@ public class UIPauseController : MonoBehaviour
 
     public void TogglePause()
     {
-        if (SentimentalScoreManager.IsDecisionActive) return;
+        if (TaskManager.IsDecisionActive) return;
 
         isPaused = !isPaused;
 
@@ -95,7 +86,7 @@ public class UIPauseController : MonoBehaviour
         {
             if (pauseMenuPanel != null)
             {
-                // **CLAVE:** Actualiza los valores antes de mostrar el menú
+                // 🛑 Llamada a la función corregida.
                 UpdateStatsDisplay();
                 pauseMenuPanel.SetActive(true);
             }
@@ -104,6 +95,7 @@ public class UIPauseController : MonoBehaviour
             {
                 mouseLook.SetControlsActive(false);
             }
+            Time.timeScale = 0f;
         }
         else
         {
@@ -116,40 +108,48 @@ public class UIPauseController : MonoBehaviour
             {
                 mouseLook.SetControlsActive(true);
             }
+            Time.timeScale = 1f;
         }
     }
 
-    // Método que actualiza TODOS los stats cuando se pausa el juego
+    /// <summary>
+    /// Método que actualiza TODOS los stats cuando se pausa el juego.
+    /// </summary>
     private void UpdateStatsDisplay()
     {
-        // **🛑 LA LÍNEA DE ERROR HA SIDO ELIMINADA Y CORREGIDA AQUÍ.**
-        if (scoreManager == null || cleaningController == null)
+        // 🛑 ELIMINAMOS LA LÍNEA DE ERROR Y SIMPLIFICAMOS LA VERIFICACIÓN.
+        if (taskManager == null)
         {
-            // Intentamos buscar de nuevo por si se cargaron tarde
-            if (scoreManager == null) scoreManager = SentimentalScoreManager.Instance;
-            if (cleaningController == null) cleaningController = FindObjectOfType<CleaningController>();
-
-            if (scoreManager == null || cleaningController == null)
+            taskManager = TaskManager.Instance;
+            if (taskManager == null)
             {
-                Debug.LogError("No se pueden actualizar las estadísticas: Falta el ScoreManager o CleaningController en la escena.");
+                Debug.LogError("No se pueden actualizar las estadísticas: TaskManager no disponible.");
                 return;
             }
         }
 
-        // 🛑 1. STATS DE LIMPIEZA: Leemos las variables directamente del CleaningController
-        UpdateCleaningUI(cleaningController.cleanedCount, cleaningController.totalDirt);
+        // 1. STATS DE LIMPIEZA: Leemos directamente los contadores del TaskManager
+        UpdateCleaningUI(taskManager.cleanedCount, taskManager.totalDirt);
 
-        // 2. STATS DE BALANCE EMOCIONAL Y ACUMULACIÓN
-        UpdateSentimentalUI(scoreManager.emotionalBalanceScore, scoreManager.accumulationScore);
+        // 2. STATS DE BALANCE EMOCIONAL Y ACUMULACIÓN: TaskManager tiene los scores
+        UpdateSentimentalUI(taskManager.emotionalBalanceScore, taskManager.accumulationScore);
     }
 
-    // Método llamado por GameEvents.OnProgressUpdate (cuando se limpia algo)
+    // =========================================================================
+    // LÓGICA DE ACTUALIZACIÓN DE UI (CONEXIÓN DEL SLIDER)
+    // =========================================================================
+
+    /// <summary>
+    /// Actualiza el slider de Limpieza (se llama desde GameEvents.Progress).
+    /// </summary>
     private void UpdateCleaningUI(int cleaned, int total)
     {
+        // 🛑 Lógica para arreglar el slider de 0 a 1.
         if (total > 0)
         {
             if (cleaningProgressSlider != null)
             {
+                // 🛑 CLAVE: El max value debe ser el total de suciedad.
                 cleaningProgressSlider.maxValue = total;
                 cleaningProgressSlider.value = cleaned;
             }
@@ -159,55 +159,44 @@ public class UIPauseController : MonoBehaviour
                 cleaningProgressText.text = $"Limpieza: {cleaned} / {total}";
             }
         }
-        else // total == 0 o no inicializado
+        else // Si totalDirt es 0 (no hay suciedad), mostramos 0/0.
         {
             if (cleaningProgressSlider != null)
             {
-                cleaningProgressSlider.maxValue = 1;
+                cleaningProgressSlider.maxValue = 1; // Para que no divida por cero
                 cleaningProgressSlider.value = 0;
             }
             if (cleaningProgressText != null)
             {
-                cleaningProgressText.text = "Limpieza: 0% / --";
+                cleaningProgressText.text = "Limpieza: 0 / 0";
             }
         }
     }
 
-    // Método llamado por GameEvents.OnSentimentalScoreUpdate (cuando cambia el score)
+    /// <summary>
+    /// Actualiza el slider de Score (se llama desde GameEvents.OnSentimentalScoreUpdate).
+    /// </summary>
     private void UpdateSentimentalUI(int currentBalance, int currentAccumulation)
     {
-        if (scoreManager == null) return;
+        if (taskManager == null) return;
 
         // Balance Emocional
-        int minBalance = scoreManager.minBalanceForGoodEnding;
-        emotionalBalanceSlider.maxValue = minBalance * 2;
+        int minBalance = taskManager.minBalanceForGoodEnding;
+        emotionalBalanceSlider.maxValue = minBalance > 0 ? minBalance * 2 : 100;
         emotionalBalanceSlider.value = currentBalance;
         emotionalBalanceText.text = $"Balance Emocional: {currentBalance} / {minBalance} (Mínimo)";
 
-        UpdateSliderColor(
-            emotionalBalanceFillImage,
-            currentBalance,
-            minBalance,
-            minBalance * 0.5f,
-            false
-        );
+        UpdateSliderColor(emotionalBalanceFillImage, currentBalance, minBalance, minBalance * 0.5f, false);
 
         // Acumulación
-        int maxAccumulation = scoreManager.maxAccumulationForGoodEnding;
-        accumulationSlider.maxValue = maxAccumulation;
+        int maxAccumulation = taskManager.maxAccumulationForGoodEnding;
+        accumulationSlider.maxValue = maxAccumulation > 0 ? maxAccumulation : 100;
         accumulationSlider.value = currentAccumulation;
         accumulationText.text = $"Acumulación: {currentAccumulation} / {maxAccumulation} (Límite)";
 
-        UpdateSliderColor(
-            accumulationFillImage,
-            currentAccumulation,
-            maxAccumulation,
-            0,
-            true
-        );
+        UpdateSliderColor(accumulationFillImage, currentAccumulation, maxAccumulation, 0, true);
     }
 
-    // Función para el control de color (para retroalimentación visual)
     private void UpdateSliderColor(Image fillImage, float currentValue, float goodThreshold, float badThreshold, bool isAccumulation)
     {
         if (fillImage == null) return;
@@ -218,32 +207,35 @@ public class UIPauseController : MonoBehaviour
 
         if (isAccumulation)
         {
+            // Lógica de Acumulación: Cuanto más cerca del límite (goodThreshold), peor.
             if (currentValue > goodThreshold)
             {
-                fillImage.color = critical;
+                fillImage.color = critical; // ROJO: ¡Límite excedido o alcanzado!
             }
             else if (currentValue > goodThreshold * 0.7f)
             {
-                fillImage.color = warning;
+                fillImage.color = warning; // AMARILLO: Cerca del 70% del límite.
             }
             else
             {
-                fillImage.color = good;
+                fillImage.color = good; // VERDE: Nivel seguro.
             }
         }
         else // Balance Emocional
         {
+            // Lógica de Balance: Cuanto más cerca del mínimo (goodThreshold), mejor.
+            // badThreshold generalmente es 50% del mínimo (ej. 0.5f * minBalance)
             if (currentValue >= goodThreshold)
             {
-                fillImage.color = good;
+                fillImage.color = good; // VERDE: Se alcanzó o superó el mínimo para el buen final.
             }
             else if (currentValue > badThreshold)
             {
-                fillImage.color = warning;
+                fillImage.color = warning; // AMARILLO: Por encima de la zona crítica, pero bajo el mínimo.
             }
             else
             {
-                fillImage.color = critical;
+                fillImage.color = critical; // ROJO: En zona crítica (por debajo del 50% del mínimo).
             }
         }
     }

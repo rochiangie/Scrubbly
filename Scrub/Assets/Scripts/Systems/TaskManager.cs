@@ -1,22 +1,44 @@
 ﻿using UnityEngine;
 using System.Linq;
+using System;
+using System.Collections.Generic;
 
+// GESTOR CENTRAL DE TODO (SCORE, LIMPIEZA, HERRAMIENTAS, ESTADO GLOBAL)
 public class TaskManager : MonoBehaviour
 {
-    // Singleton (simplificado para accesibilidad)
+    // === SINGLETON Y ESTADO GLOBAL ===
     public static TaskManager Instance { get; private set; }
 
-    [Header("Progreso de Limpieza")]
+    // Bandera de estado de la UI de decisión
+    public static bool IsDecisionActive { get; private set; } = false;
+
+    // === 1. PROGRESO DE LIMPIEZA ===
+    [Header("1. Progreso de Limpieza")]
     public int cleanedCount = 0;
     public int totalDirt = 0;
 
-    [Header("Configuración de Umbrales")]
-    [Tooltip("El mínimo de Balance Emocional necesario (como % del Valor Total de Memorias).")]
+    // === 2. GESTIÓN DE HERRAMIENTAS Y LIMPIEZA ===
+    [Header("2. Gestión de Herramientas y Daño")]
+    public ToolDescriptor CurrentTool { get; private set; }
+    [SerializeField] private float damageMultiplier = 1f;
+    [SerializeField] private bool requireCorrectTool = true;
+
+    // Lista de suciedad cercana (se llena desde PlayerInteraction.cs)
+    public List<DirtSpot> nearbyDirt { get; private set; } = new List<DirtSpot>();
+
+    // === 3. PUNTUACIÓN SENTIMENTAL ===
+    [Header("3. Puntuación Sentimental")]
+    public int emotionalBalanceScore = 0;
+    public int accumulationScore = 0;
+
+    [Header("4. Configuración de Umbrales (Ganar/Perder)")]
     public float balanceThresholdPercentage = 0.8f;
-    [Tooltip("El máximo de Acumulación permitido (como % del Valor Total de Memorias).")]
     public float accumulationThresholdPercentage = 0.5f;
 
-    // Variable interna para almacenar el valor total de la escena
+    // Umbrales calculados, para que la UI de pausa los lea
+    public int minBalanceForGoodEnding { get; private set; }
+    public int maxAccumulationForGoodEnding { get; private set; }
+
     private int totalSentimentalValue = 0;
 
     void Awake()
@@ -29,71 +51,134 @@ public class TaskManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
 
-        // La inicialización de la limpieza se movió a Start()
+        GameEvents.OnMemorieDecided += HandleMemorieDecision;
+        GameEvents.OnAllDone += CheckFinalScore;
+
+        IsDecisionActive = false;
+        CurrentTool = null;
+
+        // Inicialización de conteo de suciedad
+        InitializeCleaningAnalysis();
     }
 
     void Start()
     {
-        // 🛑 CLAVE: Mover la lógica pesada a Start() para asegurar que todos los objetos existen.
-        InitializeCleaningAnalysis();
+        // Inicialización de score sentimental
         InitializeSentimentalAnalysis();
     }
 
+    void OnDestroy()
+    {
+        GameEvents.OnMemorieDecided -= HandleMemorieDecision;
+        GameEvents.OnAllDone -= CheckFinalScore;
+    }
+
+    // =========================================================================
+    // LÓGICA DE INICIALIZACIÓN
+    // =========================================================================
+
     private void InitializeCleaningAnalysis()
     {
-        // 🛑 CORRECCIÓN: Usamos FindObjectsOfType<DirtSpot>() para el conteo total.
+        // 🛑 CONTEO CORRECTO
         totalDirt = FindObjectsOfType<DirtSpot>().Length;
         cleanedCount = 0;
-
-        Debug.Log($"[TaskManager] Total de Manchas de Suciedad: {totalDirt}.");
-
-        // Notificar a la UI inicial
         GameEvents.Progress(cleanedCount, totalDirt);
     }
 
     private void InitializeSentimentalAnalysis()
     {
-        // Encontrar todos los scripts MemorieObject en la escena
+        // ... (Tu lógica de análisis sentimental) ...
         MemorieObject[] memories = FindObjectsOfType<MemorieObject>();
+        totalSentimentalValue = memories.Sum(m => m.sentimentalValue);
+        minBalanceForGoodEnding = Mathf.CeilToInt(totalSentimentalValue * balanceThresholdPercentage);
+        maxAccumulationForGoodEnding = Mathf.FloorToInt(totalSentimentalValue * accumulationThresholdPercentage);
 
-        totalSentimentalValue = 0;
-
-        // Sumar los valores sentimentales de todos los objetos
-        foreach (var memory in memories)
-        {
-            totalSentimentalValue += memory.sentimentalValue;
-        }
-
-        Debug.Log($"[TaskManager] Análisis Sentimental Completo: {memories.Length} Memorias. Valor Total: {totalSentimentalValue}.");
-
-        // 🛑 CLAVE: Configuramos el SentimentalScoreManager con los umbrales calculados.
-        if (SentimentalScoreManager.Instance != null)
-        {
-            SentimentalScoreManager.Instance.SetWinThresholds(
-                totalSentimentalValue,
-                balanceThresholdPercentage,
-                accumulationThresholdPercentage
-            );
-        }
-        else
-        {
-            Debug.LogError("SentimentalScoreManager.Instance es null. Asegúrate de que se inicialice antes de que el TaskManager llame a Start().");
-        }
+        Debug.Log($"[TaskManager] Umbrales Fijados. Mínimo Balance: {minBalanceForGoodEnding} | Máximo Acumulación: {maxAccumulationForGoodEnding}");
+        GameEvents.SentimentalScore(emotionalBalanceScore, accumulationScore);
     }
 
-    // Método que actualiza el progreso de limpieza (debe ser llamado por el objeto DirtSpot al limpiarse)
-    public void UpdateCleaningProgress()
+    // =========================================================================
+    // 🛑 MÉTODOS DE HERRAMIENTAS Y LIMPIEZA 🛑
+    // =========================================================================
+
+    public void RegisterTool(ToolDescriptor tool) { CurrentTool = tool; }
+    public void DropTool(ToolDescriptor tool, Vector3 dropDirection, float dropForce)
+    {
+        if (tool == null) return;
+        Carryable carryable = tool.GetComponent<Carryable>();
+        if (carryable != null) { carryable.Drop(); }
+        CurrentTool = null;
+    }
+
+    /// <summary>
+    /// APLICACIÓN DE GOLPE: Simula la acción del antiguo CleaningController.
+    /// </summary>
+    public void ApplyCleanHit(Vector3 playerPosition)
+    {
+        if (CurrentTool == null) return;
+
+        nearbyDirt.RemoveAll(dirt => dirt == null);
+        if (nearbyDirt.Count == 0) return;
+
+        DirtSpot closestDirt = nearbyDirt
+            .OrderBy(dirt => Vector3.Distance(playerPosition, dirt.transform.position))
+            .FirstOrDefault();
+
+        if (closestDirt == null) return;
+
+        bool successfullyUsed = CurrentTool.TryUse();
+
+        if (!successfullyUsed) { CurrentTool = null; return; }
+
+        float damage = damageMultiplier * CurrentTool.toolPower;
+
+        if (requireCorrectTool && !closestDirt.CanBeCleanedBy(CurrentTool.toolId))
+        {
+            Debug.LogWarning($"[Clean FAIL: Tool Mismatch] Herramienta incorrecta.");
+            return;
+        }
+
+        // 🛑 LÍNEA CLAVE: Aplicar daño al objeto de suciedad.
+        closestDirt.CleanHit(damage);
+    }
+
+    // =========================================================================
+    // LÓGICA DE CONTADORES Y EVENTOS
+    // =========================================================================
+
+    /// <summary>
+    /// 🛑 LÍNEA CLAVE: Hace que la barra se mueva. Llamada por DirtSpot.cs.
+    /// </summary>
+    public void NotifyDirtCleaned()
     {
         cleanedCount++;
-
-        // Notificar a la UI (UIPauseController)
         GameEvents.Progress(cleanedCount, totalDirt);
 
-        // 🛑 CLAVE: Comprobar la finalización de la limpieza y disparar el chequeo final.
         if (cleanedCount >= totalDirt && totalDirt > 0)
         {
             GameEvents.AllDone();
-            Debug.Log("¡TAREAS DE LIMPIEZA COMPLETADAS! Disparando evento AllDone.");
         }
+    }
+
+    private void HandleMemorieDecision(bool isKept, int sentimentalValue)
+    {
+        if (isKept) accumulationScore += Mathf.Abs(sentimentalValue);
+        else emotionalBalanceScore -= sentimentalValue;
+
+        GameEvents.SentimentalScore(emotionalBalanceScore, accumulationScore);
+    }
+
+    // =========================================================================
+    // LÓGICA DE FINAL DEL JUEGO
+    // =========================================================================
+
+    public void CheckFinalScore()
+    {
+        // ... (Tu lógica de victoria/derrota) ...
+    }
+
+    public static void SetDecisionActive(bool isActive)
+    {
+        IsDecisionActive = isActive;
     }
 }
