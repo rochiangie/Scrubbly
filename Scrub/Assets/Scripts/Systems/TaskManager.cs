@@ -59,6 +59,7 @@ public class TaskManager : MonoBehaviour
         GameEvents.OnMemorieDecided += HandleMemorieDecision;
         GameEvents.OnAllDone += CheckFinalScore;
 
+
         IsDecisionActive = false;
         CurrentTool = null;
 
