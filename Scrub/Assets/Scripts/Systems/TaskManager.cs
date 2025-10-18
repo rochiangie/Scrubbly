@@ -1,137 +1,99 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 using System.Linq;
-using System.Collections.Generic;
 
 public class TaskManager : MonoBehaviour
 {
-    public int totalDirt = 0;
+    // Singleton (simplificado para accesibilidad)
+    public static TaskManager Instance { get; private set; }
+
+    [Header("Progreso de Limpieza")]
     public int cleanedCount = 0;
+    public int totalDirt = 0;
 
-    [Header("UI y Paneles")]
-    public TimedUIPanel notificationPanel;
+    [Header("Configuración de Umbrales")]
+    [Tooltip("El mínimo de Balance Emocional necesario (como % del Valor Total de Memorias).")]
+    public float balanceThresholdPercentage = 0.8f;
+    [Tooltip("El máximo de Acumulación permitido (como % del Valor Total de Memorias).")]
+    public float accumulationThresholdPercentage = 0.5f;
 
-    [Tooltip("El GameObject del panel de 'Ganaste' (debe estar inactivo al inicio).")]
-    public GameObject winPanel;
-
-    [Header("UI de Progreso de Limpieza")]
-    public Slider cleaningProgressSlider;
-    public TMPro.TMP_Text progressText;
-
-    private const string WIN_PANEL_ERROR = "[TASK MANAGER] El Panel de Victoria (Win Panel) no está asignado. La escena no continuará.";
+    // Variable interna para almacenar el valor total de la escena
+    private int totalSentimentalValue = 0;
 
     void Awake()
     {
-        // 📢 CORRECCIÓN: Contar todos los GameObjects que tienen el Tag "Dirt".
-        // Esto es más robusto y cumple con tu regla de negocio (limpiar objetos con ese Tag).
-        GameObject[] allDirtObjects = GameObject.FindGameObjectsWithTag("Dirt");
-        totalDirt = allDirtObjects.Length;
-        cleanedCount = 0; // Siempre empezamos con 0 objetos limpios
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
 
-        Debug.Log($"[TASK MANAGER] Inicializado. Tareas de limpieza Total (Tag 'Dirt'): {totalDirt}. Limpiado: {cleanedCount}.");
+        // La inicialización de la limpieza se movió a Start()
     }
 
     void Start()
     {
-        if (winPanel == null)
-        {
-            Debug.LogError(WIN_PANEL_ERROR);
-        }
-        else if (winPanel.activeSelf)
-        {
-            winPanel.SetActive(false);
-        }
-
-        // Suscribirse a los eventos
-        GameEvents.OnAnyDirtCleaned += HandleCleaned;
-        GameEvents.OnProgressUpdate += UpdateCleaningUI;
-
-        // 📢 Configuración Inicial del Slider y el Texto.
-        UpdateCleaningUI(cleanedCount, totalDirt);
-        GameEvents.Progress(cleanedCount, totalDirt);
-
-        if (notificationPanel != null)
-        {
-            notificationPanel.ShowAndHide();
-        }
-
-        if (totalDirt == 0)
-        {
-            HandleWinCondition();
-        }
+        // 🛑 CLAVE: Mover la lógica pesada a Start() para asegurar que todos los objetos existen.
+        InitializeCleaningAnalysis();
+        InitializeSentimentalAnalysis();
     }
 
-    void OnDestroy()
+    private void InitializeCleaningAnalysis()
     {
-        GameEvents.OnAnyDirtCleaned -= HandleCleaned;
-        GameEvents.OnProgressUpdate -= UpdateCleaningUI;
+        // 🛑 CORRECCIÓN: Usamos FindObjectsOfType<DirtSpot>() para el conteo total.
+        totalDirt = FindObjectsOfType<DirtSpot>().Length;
+        cleanedCount = 0;
+
+        Debug.Log($"[TaskManager] Total de Manchas de Suciedad: {totalDirt}.");
+
+        // Notificar a la UI inicial
+        GameEvents.Progress(cleanedCount, totalDirt);
     }
 
-    /// <summary>
-    /// Llamado por GameEvents.OnAnyDirtCleaned cuando un objeto es destruido con 'F'.
-    /// </summary>
-    void HandleCleaned()
+    private void InitializeSentimentalAnalysis()
+    {
+        // Encontrar todos los scripts MemorieObject en la escena
+        MemorieObject[] memories = FindObjectsOfType<MemorieObject>();
+
+        totalSentimentalValue = 0;
+
+        // Sumar los valores sentimentales de todos los objetos
+        foreach (var memory in memories)
+        {
+            totalSentimentalValue += memory.sentimentalValue;
+        }
+
+        Debug.Log($"[TaskManager] Análisis Sentimental Completo: {memories.Length} Memorias. Valor Total: {totalSentimentalValue}.");
+
+        // 🛑 CLAVE: Configuramos el SentimentalScoreManager con los umbrales calculados.
+        if (SentimentalScoreManager.Instance != null)
+        {
+            SentimentalScoreManager.Instance.SetWinThresholds(
+                totalSentimentalValue,
+                balanceThresholdPercentage,
+                accumulationThresholdPercentage
+            );
+        }
+        else
+        {
+            Debug.LogError("SentimentalScoreManager.Instance es null. Asegúrate de que se inicialice antes de que el TaskManager llame a Start().");
+        }
+    }
+
+    // Método que actualiza el progreso de limpieza (debe ser llamado por el objeto DirtSpot al limpiarse)
+    public void UpdateCleaningProgress()
     {
         cleanedCount++;
 
-        Debug.Log($"[TASK MANAGER] Suciedad limpiada: {cleanedCount} / {totalDirt}.");
-
-        // 📢 Disparar el evento para que UpdateCleaningUI se ejecute.
+        // Notificar a la UI (UIPauseController)
         GameEvents.Progress(cleanedCount, totalDirt);
 
-        if (cleanedCount >= totalDirt)
+        // 🛑 CLAVE: Comprobar la finalización de la limpieza y disparar el chequeo final.
+        if (cleanedCount >= totalDirt && totalDirt > 0)
         {
-            HandleWinCondition();
-        }
-    }
-
-    /// <summary>
-    /// Método que actualiza el Slider y el texto (Se suscribe a OnProgressUpdate).
-    /// </summary>
-    private void UpdateCleaningUI(int cleaned, int total)
-    {
-        // 1. Caso: La limpieza está en curso (total > 0).
-        if (total > 0)
-        {
-            if (cleaningProgressSlider != null)
-            {
-                cleaningProgressSlider.maxValue = total;
-                cleaningProgressSlider.value = cleaned;
-            }
-
-            if (progressText != null)
-            {
-                progressText.text = $"Limpieza: {cleaned} / {total}";
-            }
-        }
-        // 2. Caso: El nivel no tiene nada que limpiar (total = 0).
-        else
-        {
-            if (cleaningProgressSlider != null)
-            {
-                cleaningProgressSlider.maxValue = 1;
-                cleaningProgressSlider.value = 1;
-            }
-            if (progressText != null)
-            {
-                progressText.text = "Limpieza: 100% (Listo)";
-            }
-        }
-    }
-
-    /// <summary>
-    /// Llamado al completar todas las tareas de limpieza.
-    /// </summary>
-    private void HandleWinCondition()
-    {
-        GameEvents.OnAnyDirtCleaned -= HandleCleaned;
-
-        // Notificar que la fase de limpieza ha terminado.
-        GameEvents.AllDone();
-
-        if (winPanel == null)
-        {
-            Debug.LogError(WIN_PANEL_ERROR);
+            GameEvents.AllDone();
+            Debug.Log("¡TAREAS DE LIMPIEZA COMPLETADAS! Disparando evento AllDone.");
         }
     }
 }

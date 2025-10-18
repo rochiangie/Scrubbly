@@ -33,15 +33,14 @@ public class CleaningController : MonoBehaviour
     [Header("Debug")]
     [SerializeField] private bool debugLogs = false;
 
-    // ESTADO CRÍTICO
+    // ESTADO CRÍTICO Y CONTEO (🛑 Añadidas para la UI)
+    public int cleanedCount { get; private set; } = 0; // Se limpia al inicio
+    public int totalDirt { get; private set; } = 0;    // Se inicializa en Start
+
     public ToolDescriptor CurrentTool { get; private set; }
     private List<DirtSpot> nearbyDirt = new List<DirtSpot>();
     private bool isCleaningInputHeld = false;
     private int cleaningLayerIndex = -1;
-
-    // Control de SFX para el sonido continuo de herramienta (si lo necesitas)
-    // private float lastCleanSFXTime = 0f;
-    // [SerializeField] private float cleanSFXInterval = 0.5f;
 
     // ================== Unity Lifecycle ==================
 
@@ -52,6 +51,20 @@ public class CleaningController : MonoBehaviour
         {
             cleaningLayerIndex = anim.GetLayerIndex(cleaningLayerName);
         }
+    }
+
+    private void Start()
+    {
+        // 🛑 CLAVE: Inicializar el conteo total de suciedad en la escena
+        // Se asume que tu suciedad usa el componente DirtSpot.cs
+        DirtSpot[] allDirt = FindObjectsOfType<DirtSpot>();
+        totalDirt = allDirt.Length;
+        cleanedCount = 0; // Aseguramos que empiece limpio
+
+        DLog($"[CLEAN INIT] Total de Suciedad en escena: {totalDirt}");
+
+        // Dispara el evento inicial de progreso para que la UI sepa el total
+        GameEvents.Progress(cleanedCount, totalDirt);
     }
 
     private void Update()
@@ -77,38 +90,20 @@ public class CleaningController : MonoBehaviour
 
         if (holding && cleanInputDown && dirtNearby)
         {
-            // 🔴 Aplica el golpe de daño Y reproduce el SFX de golpe
             ApplyCleanHit();
         }
-
-        /* 🔴 LÓGICA DE SFX CONTINUO (Si quieres un sonido tipo aspiradora/fregado constante)
-        if (holding && isCleaningInputHeld && dirtNearby && Time.time > lastCleanSFXTime + cleanSFXInterval)
-        {
-             // Implementación de SFX continuo (no PlayOneShot en un loop)
-             // PlayContinuousCleaningSFX(); 
-             // lastCleanSFXTime = Time.time;
-        }
-        */
     }
 
-    // ================== SFX INTEGRATION ==================
+    // ================== SFX Integration (Se mantiene) ==================
 
-    /// <summary>
-    /// Reproduce SFX de limpieza (uso de PlayOneShot para el golpe de limpieza).
-    /// </summary>
     private void PlayCleanSFX()
     {
         if (AudioManager.Instance != null)
         {
-            // AudioManager.Instance.PlayCleanSFX() ahora llama a PlayOneShot, 
-            // lo cual es correcto para el "golpe" o el inicio del fregado.
             AudioManager.Instance.PlayCleanSFX();
         }
     }
 
-    /// <summary>
-    /// Reproduce SFX cuando se recoge una herramienta
-    /// </summary>
     private void PlayPickupSFX()
     {
         if (AudioManager.Instance != null)
@@ -117,9 +112,6 @@ public class CleaningController : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Reproduce SFX cuando se suelta una herramienta
-    /// </summary>
     private void PlayDropSFX()
     {
         if (AudioManager.Instance != null)
@@ -128,8 +120,7 @@ public class CleaningController : MonoBehaviour
         }
     }
 
-    // ================== Detección por Trigger (Suciedad) ==================
-    // ... (El código de OnTriggerEnter/Exit está bien)
+    // ================== Detección por Trigger (Suciedad) (Se mantiene) ==================
 
     private void OnTriggerEnter(Collider other)
     {
@@ -159,7 +150,7 @@ public class CleaningController : MonoBehaviour
         }
     }
 
-    // ================== Métodos Públicos de Interacción ==================
+    // ================== Métodos Públicos de Interacción (Se mantiene) ==================
 
     public void RegisterTool(ToolDescriptor tool)
     {
@@ -170,7 +161,6 @@ public class CleaningController : MonoBehaviour
         }
         Equip(tool);
 
-        // 🔥 SFX DE RECOGER HERRAMIENTA (Llamada al SFX)
         PlayPickupSFX();
 
         DLog($"[EXTERNAL REGISTER] Herramienta '{tool.name}' registrada correctamente.");
@@ -185,7 +175,6 @@ public class CleaningController : MonoBehaviour
 
         if (tool.TryGetComponent<Carryable>(out var carryable))
         {
-            // Asumiendo que Drop necesita un vector para la fuerza
             carryable.Drop(transform.forward, dropForce);
         }
 
@@ -193,19 +182,34 @@ public class CleaningController : MonoBehaviour
 
         if (anim != null) anim.SetBool("IsHolding", false);
 
-        // 🔥 SFX DE SOLTAR HERRAMIENTA (Llamada al SFX)
         PlayDropSFX();
 
         DLog("[Pickup] DROP realizado por CleaningController.");
     }
 
-    // ================== Lógica Interna de Limpieza ==================
+    // 🛑 NUEVA FUNCIÓN: Llamada por DirtSpot.cs cuando su salud llega a 0
+    public void NotifyDirtCleaned()
+    {
+        cleanedCount++;
+        DLog($"[CLEAN COUNT] Suciedad Limpia Aumentada a: {cleanedCount}");
+
+        // 🛑 Dispara el evento de progreso para actualizar la UI del menú de pausa
+        GameEvents.Progress(cleanedCount, totalDirt);
+
+        // 🛑 Comprobar la finalización de la limpieza
+        if (cleanedCount >= totalDirt && totalDirt > 0)
+        {
+            GameEvents.AllDone();
+            DLog($"¡TAREAS COMPLETADAS! Disparando evento AllDone. ScoreManager debe iniciar chequeo.");
+        }
+    }
+
+
+    // ================== Lógica Interna de Limpieza (Se mantiene) ==================
 
     private void Equip(ToolDescriptor tool)
     {
         CurrentTool = tool;
-
-        // ... (resto de la lógica de equipar)
         SetAllCollidersTrigger(tool.gameObject, true);
 
         var t = tool.transform;
@@ -223,19 +227,16 @@ public class CleaningController : MonoBehaviour
     {
         if (CurrentTool == null) return;
 
-        // Limpiar lista de referencias nulas
         nearbyDirt.RemoveAll(dirt => dirt == null);
 
         if (nearbyDirt.Count == 0) return;
 
-        // Encontrar dirt spot más cercano
         DirtSpot closestDirt = nearbyDirt
             .OrderBy(dirt => Vector3.Distance(transform.position, dirt.transform.position))
             .FirstOrDefault();
 
         if (closestDirt == null) return;
 
-        // Intentar usar la herramienta
         bool successfullyUsed = CurrentTool.TryUse();
 
         if (!successfullyUsed)
@@ -247,7 +248,6 @@ public class CleaningController : MonoBehaviour
 
         float damage = damageMultiplier * CurrentTool.toolPower;
 
-        // Comprobación de herramienta correcta
         if (requireCorrectTool && !closestDirt.CanBeCleanedBy(CurrentTool.toolId))
         {
             DLogWarning($"[Clean FAIL 1: Tool Mismatch] Herramienta '{CurrentTool.toolId}' no limpia {closestDirt.name}.");
@@ -257,13 +257,12 @@ public class CleaningController : MonoBehaviour
         // Aplicar daño
         closestDirt.CleanHit(damage);
 
-        // 🔥 SFX DE IMPACTO DE LIMPIEZA
         PlayCleanSFX();
 
         DLog($"[Clean HIT OK] Aplicando {damage:F2} de daño SOLAMENTE a {closestDirt.name} (el más cercano).");
     }
 
-    // ================== Utilities ==================
+    // ================== Utilities (Se mantiene) ==================
 
     private static void SetAllCollidersTrigger(GameObject go, bool isTrigger)
     {
