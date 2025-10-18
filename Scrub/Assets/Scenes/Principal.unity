@@ -10905,8 +10905,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b6de284dbb2b2947a020410154ddbd4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  emotionalBalanceScore: 0
-  accumulationScore: 0
+  emotionalBalanceScore: 15
+  accumulationScore: 20
 --- !u!1001 &912226795
 PrefabInstance:
   m_ObjectHideFlags: 0

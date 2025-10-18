@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
-using UnityEngine.SceneManagement; // Necesario para cargar escenas
-using System.Collections; // Necesario para la corrutina (si se usa un temporizador)
+using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class GameUIController : MonoBehaviour
 {
@@ -13,34 +13,33 @@ public class GameUIController : MonoBehaviour
     [Tooltip("El índice de la escena del Menú Principal en Build Settings (generalmente 0).")]
     public int menuSceneIndex = 0;
 
-    // Opcional: Si quieres un temporizador en lugar de un botón:
-    // public float waitTimeBeforeMenu = 5f; 
+    [Tooltip("Tiempo de espera en segundos antes de cargar el menú principal (ej: 3.0 segundos).")]
+    public float waitTimeBeforeMenu = 3.0f;
 
     void Start()
     {
-        // Suscribirse al evento de resultado final
         GameEvents.OnGameResult += ShowFinalScreen;
 
-        // Asegurarse de que los paneles estén ocultos al inicio
         if (victoryPanel != null) victoryPanel.SetActive(false);
         if (defeatPanel != null) defeatPanel.SetActive(false);
 
-        // Asegúrate de que el tiempo esté corriendo al inicio del nivel
+        // Aseguramos que el tiempo esté corriendo al inicio
         Time.timeScale = 1f;
     }
 
     void OnDestroy()
     {
-        // Cancelar la suscripción al destruir el objeto
         GameEvents.OnGameResult -= ShowFinalScreen;
-
-        // MUY IMPORTANTE: Asegurar que el tiempo se reanude si la escena de juego se destruye
+        // Siempre reanudar el tiempo al destruir la escena
         Time.timeScale = 1f;
     }
 
+    // ===============================================
+    // FUNCIÓN PRINCIPAL DE PANTALLA FINAL
+    // ===============================================
     private void ShowFinalScreen(bool won)
     {
-        // 1. Pausar el juego (El panel se muestra y el juego se detiene)
+        // 1. Pausar el juego (Permite que el panel se vea estático)
         Time.timeScale = 0f;
 
         if (won)
@@ -60,41 +59,40 @@ public class GameUIController : MonoBehaviour
             }
         }
 
-        // Si quisieras un temporizador en lugar de un botón, descomentarías esto:
-        // StartCoroutine(WaitAndLoadMenu(waitTimeBeforeMenu));
+        // 2. Iniciar la corrutina para esperar y cargar el menú
+        StartCoroutine(WaitAndLoadMenu(waitTimeBeforeMenu));
     }
 
     // ===============================================
-    // FUNCIÓN CLAVE PARA LOS BOTONES DE LA UI
+    // CORRUTINA DE ESPERA Y CARGA
     // ===============================================
 
     /// <summary>
-    /// Reanuda el tiempo y carga la escena del Menú Principal.
-    /// Esta función debe ser llamada por un botón "Continuar" o "Menú Principal" 
-    /// en el Panel de Victoria/Derrota.
+    /// Espera un tiempo real, despausa el juego y carga la escena del menú.
     /// </summary>
-    public void LoadMainMenu()
+    private IEnumerator WaitAndLoadMenu(float waitTime)
     {
-        // 1. Reanudar el tiempo ANTES de cargar una nueva escena.
-        Time.timeScale = 1f;
+        // 1. Esperar el tiempo configurado (contando en tiempo real, ignorando Time.timeScale = 0)
+        yield return new WaitForSecondsRealtime(waitTime);
 
-        // 2. Cargar la escena del menú principal.
+        // 2. Despausar el juego
+        Time.timeScale = 1f;
+        Debug.Log("[UI] Tiempo reanudado. Cargando Menú Principal.");
+
+        // 3. Cargar la escena del menú principal.
         SceneManager.LoadScene(menuSceneIndex);
     }
 
-    /* // Ejemplo de cómo sería la función con temporizador (si no usas botón)
-    private IEnumerator WaitAndLoadMenu(float waitTime)
+    /// <summary>
+    /// Función de utilidad, aunque ahora la carga es automática.
+    /// Mantenida por si se usa en un botón 'Saltar espera'.
+    /// </summary>
+    public void LoadMainMenu()
     {
-        // Usar Time.unscaledDeltaTime para contar tiempo real mientras Time.timeScale = 0
-        float timer = 0f;
-        while (timer < waitTime)
-        {
-            timer += Time.unscaledDeltaTime;
-            yield return null;
-        }
+        // Si se llama desde un botón, detiene la corrutina y carga inmediatamente.
+        StopAllCoroutines();
 
-        // Después del tiempo de espera, reanudar y cargar el menú
-        LoadMainMenu(); 
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(menuSceneIndex);
     }
-    */
 }

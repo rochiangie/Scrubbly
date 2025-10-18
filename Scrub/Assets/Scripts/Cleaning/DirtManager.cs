@@ -56,7 +56,7 @@ public class DirtManager : MonoBehaviour
             Debug.Log("[CLEANING] ¡Cabaña completamente limpia!");
 
             // 🛑 NUEVA LÍNEA CRÍTICA: Detener el juego
-            Time.timeScale = 0f;
+            Time.timeScale = 1f;
 
             OnAllCleaned.Invoke();
         }
