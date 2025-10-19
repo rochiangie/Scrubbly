@@ -1262,6 +1262,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: f14962bf8c2a50544b362f1694bf4149, type: 3}
       insertIndex: -1
       addedObject: {fileID: -8509742679597968660}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: f14962bf8c2a50544b362f1694bf4149, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -4857622129060404472}
   m_SourcePrefab: {fileID: 100100000, guid: f14962bf8c2a50544b362f1694bf4149, type: 3}
 --- !u!137 &167823368543131158 stripped
 SkinnedMeshRenderer:
@@ -1612,12 +1615,12 @@ MonoBehaviour:
   generalInteractKey: 101
   pickupKey: 101
   attackKey: 102
+  scorePanelToggleKey: 271
   attackRange: 2.5
   attackableLayer:
     serializedVersion: 2
     m_Bits: 8
   memorieTag: Memorie
-  scorePanelToggleKey: 9
 --- !u!114 &-1730181286663167620
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1707,6 +1710,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   detectionRadius: 2.5
+--- !u!114 &-4857622129060404472
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7323757511219053547}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7db2576cb7b317d48a3b00de80635c3f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  selectionPanelUI: {fileID: 7379211190014833698, guid: 59956f75ee0baa242b6fe807956720f9, type: 3}
+  toolSlot: {fileID: 2588429364943027432}
+  slidersManager: {fileID: 0}
+  mouseLook: {fileID: 0}
 --- !u!4 &7412219846133534524 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1134662855679897990, guid: f14962bf8c2a50544b362f1694bf4149, type: 3}

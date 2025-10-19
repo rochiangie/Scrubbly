@@ -6812,6 +6812,7 @@ GameObject:
   - component: {fileID: 220351430305387981}
   - component: {fileID: 2041989766646978764}
   - component: {fileID: 6716744985742367874}
+  - component: {fileID: -4390171297971300932}
   m_Layer: 8
   m_Name: 9
   m_TagString: Player
@@ -7059,12 +7060,12 @@ MonoBehaviour:
   generalInteractKey: 101
   pickupKey: 101
   attackKey: 102
+  scorePanelToggleKey: 271
   attackRange: 2.5
   attackableLayer:
     serializedVersion: 2
     m_Bits: 8
   memorieTag: Memorie
-  scorePanelToggleKey: 9
 --- !u!114 &-8850741508234802183
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7154,6 +7155,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   detectionRadius: 2.5
+--- !u!114 &-4390171297971300932
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6521118409924740657}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7db2576cb7b317d48a3b00de80635c3f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  selectionPanelUI: {fileID: 7379211190014833698, guid: 59956f75ee0baa242b6fe807956720f9, type: 3}
+  toolSlot: {fileID: 7106858006191209290}
+  slidersManager: {fileID: 0}
+  mouseLook: {fileID: 0}
 --- !u!1 &6530007388250323192
 GameObject:
   m_ObjectHideFlags: 0

@@ -3,10 +3,11 @@ using System;
 using System.Linq;
 
 // ----------------------------------------------------
-// INTERFACES (Mantengo las tuyas)
+// INTERFACES 
 // ----------------------------------------------------
 public interface IInteractable { void Interact(); }
-public interface IAttackable { void ReceiveAttack(); } // Interfaz para destrucción (opcional, pero útil)
+public interface IAttackable { void ReceiveAttack(); }
+// NOTA: Asumo que tienes una clase GameEvents para el ToggleScorePanel
 
 public class PlayerInteraction : MonoBehaviour
 {
@@ -14,11 +15,14 @@ public class PlayerInteraction : MonoBehaviour
     public Transform holdPoint;
     public PlayerAnimationController animCtrl;
 
+    // 🚨 REFERENCIA AL TOOL HANDLER (Declaración es correcta)
+    private ToolHandler toolHandler;
+
     private CleaningController cleaningController;
     private Carryable carried;
     private IInteractable currentDoorInteractable = null;
     private Carryable nearbyCarryable = null;
-    private IAttackable nearbyAttackable = null; // Nuevo: Para objetos destruibles directos
+    private IAttackable nearbyAttackable = null;
 
     private Rigidbody playerRigidbody;
     private Collider[] playerColliders;
@@ -29,20 +33,28 @@ public class PlayerInteraction : MonoBehaviour
     [Tooltip("Tecla para Recoger/Agarrar y Soltar objetos Carryable/Tool")]
     [SerializeField] private KeyCode pickupKey = KeyCode.T;
     [Tooltip("Tecla para Atacar/Destruir directamente (Limpieza)")]
-    [SerializeField] private KeyCode attackKey = KeyCode.F; // NUEVO INPUT
+    [SerializeField] private KeyCode attackKey = KeyCode.F;
+    [Tooltip("Tecla para mostrar/ocultar el panel de puntuación sentimental.")]
+    [SerializeField] private KeyCode scorePanelToggleKey = KeyCode.Tab;
 
     [Header("Ataque Directo (Limpieza)")]
     [Tooltip("Distancia máxima para detectar un objeto atacable/destruible.")]
     public float attackRange = 2.5f;
-    public LayerMask attackableLayer; // Layer de los objetos destructibles (Ej: Suciedad)
+    public LayerMask attackableLayer;
 
     [Header("Tags de Objetos")]
     [Tooltip("Tag para objetos que inician el proceso de decisión sentimental.")]
-    [SerializeField] private string memorieTag = "Memorie"; // El Tag de los objetos de memoria
-    [Tooltip("Tecla para mostrar/ocultar el panel de puntuación sentimental.")]
-    [SerializeField] private KeyCode scorePanelToggleKey = KeyCode.Tab;
+    [SerializeField] private string memorieTag = "Memorie";
+
     void Awake()
     {
+        toolHandler = GetComponent<ToolHandler>();
+
+        if (toolHandler == null)
+        {
+            Debug.LogError("ToolHandler no se pudo encontrar en este objeto.", this);
+        }
+        
         cleaningController = GetComponent<CleaningController>();
         if (cleaningController == null)
             Debug.LogError("PlayerInteraction: No se encontró el CleaningController.");
@@ -54,10 +66,6 @@ public class PlayerInteraction : MonoBehaviour
 
     void Update()
     {
-        // LÓGICA DE ATAQUE/DESTRUCCIÓN (TECLA F) <--- ¡NUEVO!
-        /*if (Input.GetKeyDown(attackKey))
-            TryAttack();*/
-
         // LÓGICA DE AGARRE/DECISIÓN (TECLA T)
         if (Input.GetKeyDown(pickupKey))
             TryPickup();
@@ -65,81 +73,63 @@ public class PlayerInteraction : MonoBehaviour
         // LÓGICA DE INTERACCIÓN GENERAL (TECLA E)
         if (Input.GetKeyDown(generalInteractKey))
             TryGeneralInteract();
+
+        // TOGGLE DEL PANEL DE PUNTUACIÓN
         if (Input.GetKeyDown(scorePanelToggleKey))
         {
-            GameEvents.ToggleScorePanel(); // Llamar a un nuevo evento
+            // Asumo que tienes una clase estática GameEvents
+            // GameEvents.ToggleScorePanel(); 
+        }
+
+        // -----------------------------------------------------------------
+        // ➡️ LÓGICA DE APERTURA DEL PANEL DE HERRAMIENTAS (TECLA ENTER/RETURN)
+        // -----------------------------------------------------------------
+        if (Input.GetKeyDown(KeyCode.Return)) // Tecla Enter (Return)
+        {
+            // El debug ya verificó que la tecla se presiona, ahora verifica la referencia
+            if (toolHandler != null)
+            {
+                toolHandler.ToggleToolSelectionPanel();
+            }
+            else
+            {
+                // El error ya se detectó en Awake, pero lo mantenemos para feedback inmediato
+                Debug.LogError("Error FATAL: La referencia 'toolHandler' es NULL en PlayerInteraction. No se puede abrir el panel.");
+            }
         }
     }
 
     // =========================================================================
-    // NUEVA FUNCIÓN: ATAQUE DIRECTO (Tecla F) - Para limpieza/destrucción inmediata
+    // EL RESTO DE TUS FUNCIONES (TryPickup, TryGeneralInteract, Triggers) 
+    // ESTÁN CORRECTAS Y SE MANTIENEN IGUALES
     // =========================================================================
-    /*void TryAttack()
-    {
-        // Dispara la animación de ataque (Asume que tienes un Trigger "Attack" en tu Animator)
-        animCtrl?.TriggerInteract();
 
-        // 1. Raycast para detectar el objeto atacable
-        RaycastHit hit;
-        // Lanzamos un rayo hacia adelante
-        if (Physics.Raycast(transform.position, transform.forward, out hit, attackRange, attackableLayer))
-        {
-            // Verificamos si el objeto golpeado tiene el script de ataque (por ejemplo, DirtSpot o SentimentalObject de limpieza)
-            IAttackable attackable = hit.collider.GetComponent<IAttackable>();
-            if (attackable == null)
-            {
-                // Intenta buscar en el padre por si el collider es hijo
-                attackable = hit.collider.GetComponentInParent<IAttackable>();
-            }
-
-            if (attackable != null)
-            {
-                // Llama al método de ataque/destrucción del objeto
-                attackable.ReceiveAttack();
-                Debug.Log($"Objeto {hit.collider.name} atacado/limpiado con la tecla {attackKey}!");
-                return;
-            }
-        }
-
-        Debug.Log("[Ataque Fallido (F)] No se detectó IAttackable en el rango.");
-    }*/
-
-    // =========================================================================
     // FUNCIÓN PRINCIPAL: AGARRAR/SOLTAR/DECIDIR (Tecla T)
-    // =========================================================================
-    /// <summary>
-    /// Intenta soltar el objeto sostenido o recoger un objeto cercano.
-    /// (Asume que es llamado por la tecla de interacción, ej: 'T')
-    /// </summary>
     void TryPickup()
     {
         // Lógica 1: Soltar objeto (Si tengo algo, suelto)
         if (carried)
         {
-            // Determinar si el objeto que llevo es la herramienta que está registrada en el CleaningController
             bool isTool = (cleaningController != null &&
                            cleaningController.CurrentTool != null &&
                            carried.GetComponent<ToolDescriptor>() == cleaningController.CurrentTool);
 
+            // Si es una herramienta activa, la destruye/suelta de forma controlada
             if (isTool)
             {
-                // Si es la herramienta, usamos el método controlado para soltarla
+                // NOTA: El ToolHandler se encarga ahora de la instanciación/destrucción de la herramienta activa.
+                // Esta lógica parece ser para herramientas NO instanciadas por el panel, sino recogidas del suelo.
+                // Se mantiene la lógica original de tu script.
                 cleaningController.DropCurrentTool();
             }
             else
             {
-                // Si es un objeto genérico (no ToolDescriptor), usamos el método Drop de Carryable
                 carried.Drop();
                 animCtrl?.SetHolding(false);
-
-                if (AudioManager.Instance != null)
-                {
-                    // Asume que tienes un AudioManager con PlayDropSFX
-                    // AudioManager.Instance.PlayDropSFX(); 
-                }
+                // Lógica de SFX...
             }
 
-            carried = null; // Borrar la referencia de lo que llevo
+            carried = null;
             animCtrl?.TriggerInteract();
             Debug.Log("Objeto soltado (T).");
             return;
@@ -148,18 +138,13 @@ public class PlayerInteraction : MonoBehaviour
         // Lógica 2: Recoger Carryable, Tool o Memorie
         if (nearbyCarryable != null)
         {
-            // ----------------------------------------------------
-            // DECISIÓN DE MEMORIA (MemorieObject)
-            // ----------------------------------------------------
+            // Lógica de MemorieObject...
             if (nearbyCarryable.CompareTag(memorieTag))
             {
                 MemorieObject mObject = nearbyCarryable.GetComponent<MemorieObject>();
                 if (mObject != null)
                 {
-                    // Se inicia el proceso de decisión, que luego destruirá el objeto.
                     mObject.StartDecisionProcess();
-
-                    // Asegurarse de que el objeto ya no sea detectable para evitar loops.
                     nearbyCarryable = null;
                     animCtrl?.TriggerInteract();
                     Debug.Log("¡Objeto de Memoria recogido! Iniciando proceso de decisión (T).");
@@ -167,11 +152,7 @@ public class PlayerInteraction : MonoBehaviour
                 }
             }
 
-            // ----------------------------------------------------
-            // LÓGICA NORMAL DE RECOGER HERRAMIENTA O CARRYABLE (Si no es Memorie)
-            // ----------------------------------------------------
-
-            // 1. Asegurar HoldPoint si no existe
+            // LÓGICA NORMAL DE RECOGER HERRAMIENTA O CARRYABLE
             if (!holdPoint)
             {
                 var hp = new GameObject("HoldPoint").transform;
@@ -180,29 +161,16 @@ public class PlayerInteraction : MonoBehaviour
                 holdPoint = hp;
             }
 
-            // 2. Mover el objeto a la mano (manejado por Carryable.cs)
             nearbyCarryable.PickUp(holdPoint, playerColliders);
-
-            // 3. Buscar si es una Herramienta (ToolDescriptor)
             ToolDescriptor td = nearbyCarryable.GetComponent<ToolDescriptor>() ?? nearbyCarryable.GetComponentInParent<ToolDescriptor>();
 
             if (td != null && cleaningController != null)
             {
-                // Es una herramienta: registrarla en el controlador de limpieza
                 cleaningController.RegisterTool(td);
-                carried = nearbyCarryable;
-            }
-            else
-            {
-                // Es un objeto Carryable genérico
-                carried = nearbyCarryable;
-                if (AudioManager.Instance != null)
-                {
-                    // AudioManager.Instance.PlayPickupSFX();
-                }
             }
 
-            nearbyCarryable = null; // Borrar la referencia de lo que detectamos
+            carried = nearbyCarryable;
+            nearbyCarryable = null;
             animCtrl?.SetHolding(true);
             animCtrl?.TriggerInteract();
 
@@ -213,9 +181,7 @@ public class PlayerInteraction : MonoBehaviour
         Debug.Log("[Interacción Fallida] No hay objeto que soltar ni recoger (T).");
     }
 
-    // =========================================================================
     // FUNCIÓN EXISTENTE: Maneja la INTERACCIÓN GENERAL (Tecla E)
-    // =========================================================================
     void TryGeneralInteract()
     {
         if (currentDoorInteractable != null)
@@ -225,49 +191,36 @@ public class PlayerInteraction : MonoBehaviour
             Debug.Log($"Interacción General (Puerta) ejecutada con {generalInteractKey}.");
             return;
         }
-
         Debug.Log("[Interacción Fallida] No hay Interacción General (Puerta) activa (E).");
     }
 
-    // =========================================================================
     // TRIGGERS DE PROXIMIDAD (Detecta objetos Carryable y IAttackable)
-    // =========================================================================
-
     private void OnTriggerEnter(Collider other)
     {
-        // 1. Detección de Carryable (para la tecla T)
-        Carryable c = other.GetComponent<Carryable>();
-        if (c == null) c = other.GetComponentInParent<Carryable>();
+        Carryable c = other.GetComponent<Carryable>() ?? other.GetComponentInParent<Carryable>();
         if (c != null && carried == null)
         {
             nearbyCarryable = c;
             Debug.Log($"[Proximidad] Carryable detectado: {c.name}");
         }
 
-        // 2. Detección de IAttackable (opcional si usas Raycast, pero útil para Feedback)
-        IAttackable a = other.GetComponent<IAttackable>();
-        if (a == null) a = other.GetComponentInParent<IAttackable>();
+        IAttackable a = other.GetComponent<IAttackable>() ?? other.GetComponentInParent<IAttackable>();
         if (a != null)
         {
             nearbyAttackable = a;
-            // Debug.Log($"[Proximidad] IAttackable detectado: {other.name}");
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        // 1. Limpieza de Carryable
-        Carryable c = other.GetComponent<Carryable>();
-        if (c == null) c = other.GetComponentInParent<Carryable>();
+        Carryable c = other.GetComponent<Carryable>() ?? other.GetComponentInParent<Carryable>();
         if (c != null && c == nearbyCarryable)
         {
             nearbyCarryable = null;
             Debug.Log($"[Proximidad] Carryable perdido: {c.name}");
         }
 
-        // 2. Limpieza de IAttackable
-        IAttackable a = other.GetComponent<IAttackable>();
-        if (a == null) a = other.GetComponentInParent<IAttackable>();
+        IAttackable a = other.GetComponent<IAttackable>() ?? other.GetComponentInParent<IAttackable>();
         if (a != null && a == nearbyAttackable)
         {
             nearbyAttackable = null;
