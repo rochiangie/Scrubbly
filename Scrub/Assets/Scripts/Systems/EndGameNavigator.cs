@@ -1,43 +1,76 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
+using System;
 
 public class EndGameNavigator : MonoBehaviour
 {
-    // Nombre de la escena a la que quieres volver (Menú Principal)
-    [Tooltip("El nombre exacto de la escena de menú principal")]
-    public string mainMenuSceneName = "MenuPrincipal";
+    // === Asigna estos GameObjects en el Inspector ===
+    [Header("Referencias de UI Final")]
+    [Tooltip("Panel completo que se muestra al ganar.")]
+    public GameObject victoryPanel;
+    [Tooltip("Panel completo que se muestra al perder.")]
+    public GameObject defeatPanel;
+
+    [Header("Configuración de Escena")]
+    [Tooltip("Nombre de la escena a la que regresar (ej: 'MainMenu').")]
+    public string menuSceneName = "MainMenu";
+
+    void Awake()
+    {
+        // Asegurar que los paneles estén ocultos al inicio
+        if (victoryPanel != null) victoryPanel.SetActive(false);
+        if (defeatPanel != null) defeatPanel.SetActive(false);
+    }
+
+    void OnEnable()
+    {
+        // 🛑 LÍNEA CLAVE: Suscribirse al evento que dispara el TaskManager
+        GameEvents.OnGameResult += HandleGameResult;
+    }
+
+    void OnDisable()
+    {
+        GameEvents.OnGameResult -= HandleGameResult;
+    }
 
     /// <summary>
-    /// Esta función debe ser llamada por un botón en el Panel de Victoria.
+    /// Llamado por el TaskManager cuando el juego termina (limpieza completada + score chequeado).
     /// </summary>
-    public void QuitOrReturnToMenu()
+    private void HandleGameResult(bool won)
     {
-        // 🛑 PASO 1: Reanudar el tiempo ANTES de cargar la escena
-        // (CRÍTICO: Si no haces esto, la próxima escena se cargará congelada).
+        Debug.Log($"[EndGameNavigator] Resultado Final Recibido: {(won ? "VICTORIA" : "DERROTA")}. Activando panel.");
+
+        // 1. Despausar el tiempo
         Time.timeScale = 1f;
 
-        if (Application.isEditor)
+        // 2. Mostrar la UI de Resultado
+        if (won)
         {
-            // Si estás en el Editor de Unity, detenemos el modo Play (simula la salida)
-            Debug.Log("[GAME OVER] ¡Cabaña limpia! Simulación de salida / Volver al Menú.");
-            // UnityEditor.EditorApplication.isPlaying = false; // Comenta esta línea en el build final
-
-            // Opcional: Cargar la escena de menú, si existe en el Editor
-            SceneManager.LoadScene(mainMenuSceneName);
+            if (victoryPanel != null)
+            {
+                victoryPanel.SetActive(true);
+            }
         }
         else
         {
-            // 🛑 PASO 2: Si es un juego compilado, salimos o cargamos el menú
-            if (string.IsNullOrEmpty(mainMenuSceneName))
+            if (defeatPanel != null)
             {
-                // Si no se asignó un nombre de escena, cerramos la aplicación
-                Application.Quit();
-            }
-            else
-            {
-                // Cargamos la escena de menú principal
-                SceneManager.LoadScene(mainMenuSceneName);
+                defeatPanel.SetActive(true);
             }
         }
+
+        // Si usas un script para bloquear el mouse, puedes llamarlo aquí:
+        // MouseLookController.Instance?.SetControlsActive(false); 
+    }
+
+    // Método público para usar en el botón "Volver al Menú Principal"
+    public void GoToMainMenu()
+    {
+        if (string.IsNullOrEmpty(menuSceneName))
+        {
+            Debug.LogError("Nombre de escena de menú no asignado.");
+            return;
+        }
+        SceneManager.LoadScene(menuSceneName);
     }
 }

@@ -4,9 +4,9 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     // === Movimiento y Salto ===
-    [Header("Movimiento tipo tanque")]
+    [Header("Movimiento (WASD)")]
     public float moveSpeed = 5f;
-    public float rotationSpeed = 180f;
+    // 🛑 Eliminamos rotationSpeed ya que no rotaremos con A/D
 
     [Header("Salto")]
     public float jumpForce = 6f;
@@ -17,6 +17,8 @@ public class PlayerMovement : MonoBehaviour
 
     // El hash es más eficiente para Unity
     private readonly int JumpTriggerHash = Animator.StringToHash("Jump");
+    // 🛑 NUEVO: Hash para la velocidad del Animator
+    private readonly int SpeedFloatHash = Animator.StringToHash("Speed");
 
     // === Ground Check ===
     [Header("Ground Check (opcional)")]
@@ -34,13 +36,11 @@ public class PlayerMovement : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
 
-        // Inicializa el Animator si no está asignado en el Inspector
         if (animator == null)
         {
             animator = GetComponent<Animator>();
         }
 
-        // Crea el objeto GroundCheck si es nulo
         if (!groundCheck)
         {
             var gc = new GameObject("GroundCheck").transform;
@@ -52,13 +52,12 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        // 1. Detección de suelo: La condición principal para poder saltar
+        // 1. Detección de suelo
         isGrounded = Physics.CheckSphere(groundCheck.position, groundRadius, groundMask);
 
         // 2. Manejo de Input de salto
         if (isGrounded && Input.GetKeyDown(jumpKey))
         {
-            // Programamos el salto para el próximo FixedUpdate
             jumpScheduled = true;
         }
     }
@@ -68,41 +67,66 @@ public class PlayerMovement : MonoBehaviour
         // === Lógica de Salto y Animación ===
         if (jumpScheduled)
         {
-            // FÍSICAS: Anular velocidad vertical y aplicar fuerza de impulso
             rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
 
-            // ANIMACIÓN: Activa el Trigger "Jump"
             if (animator != null)
             {
                 animator.SetTrigger(JumpTriggerHash);
             }
 
-            jumpScheduled = false; // Resetear la bandera
+            jumpScheduled = false;
         }
 
-        // === Lógica de Movimiento existente ===
+        // === Lógica de Movimiento: 4 direcciones (WASD) ===
 
-        // 1) Girar en el lugar con A/D (yaw)
-        float turn = Input.GetAxisRaw("Horizontal");
-        if (Mathf.Abs(turn) > 0.001f)
+        // 🛑 1) Obtener inputs para adelante/atrás y strafe
+        float forwardInput = Input.GetAxis("Vertical");
+        float strafeInput = Input.GetAxis("Horizontal");
+
+        // 🛑 2) Calcular la dirección deseada en el espacio del mundo
+        Vector3 desiredForward = transform.forward * forwardInput;
+        Vector3 desiredStrafe = transform.right * strafeInput;
+
+        // Combinar y aplicar la velocidad máxima (normalizando si se mueve en diagonal)
+        Vector3 targetHoriz = (desiredForward + desiredStrafe).normalized * moveSpeed;
+
+        // Si no hay input, el vector deseado es cero.
+        if (Mathf.Abs(forwardInput) < 0.001f && Mathf.Abs(strafeInput) < 0.001f)
         {
-            var yaw = Quaternion.Euler(0f, turn * rotationSpeed * Time.fixedDeltaTime, 0f);
-            rb.MoveRotation(rb.rotation * yaw);
+            targetHoriz = Vector3.zero;
         }
 
-        // 2) Avanzar SOLO con W
-        bool forwardPressed = Input.GetKey(KeyCode.W);
-        Vector3 targetHoriz = forwardPressed ? transform.forward * moveSpeed : Vector3.zero;
+        // --- Lógica de Aceleración Suave (mantenida) ---
 
-        // 3) Proyección y aceleración horizontal
         Vector3 v = rb.linearVelocity;
-        Vector3 vertical = Vector3.up * v.y; // Mantiene la gravedad y la velocidad de salto
-        Vector3 currentAlongForward = transform.forward * Vector3.Dot(new Vector3(v.x, 0f, v.z), transform.forward);
+        Vector3 vertical = Vector3.up * v.y; // Mantiene la gravedad
+
+        // Usamos toda la velocidad horizontal actual para el Lerp
+        Vector3 currentHoriz = new Vector3(v.x, 0f, v.z);
 
         float accel = 20f;
-        Vector3 newHoriz = Vector3.Lerp(currentAlongForward, targetHoriz, accel * Time.fixedDeltaTime);
+        // Interpolamos la velocidad horizontal actual hacia la velocidad horizontal deseada
+        Vector3 newHoriz = Vector3.Lerp(currentHoriz, targetHoriz, accel * Time.fixedDeltaTime);
 
+        // Aplicar la nueva velocidad horizontal + la velocidad vertical
         rb.linearVelocity = newHoriz + vertical;
+
+        // 🛑 3) Actualizar Animación
+        if (animator != null)
+        {
+            // Usamos la magnitud de la velocidad horizontal para el Animator.
+            animator.SetFloat(SpeedFloatHash, newHoriz.magnitude);
+        }
+    }
+
+    // Opcional: Para depuración, dibuja el radio de detección del suelo en el editor de Unity.
+    private void OnDrawGizmosSelected()
+    {
+        if (groundCheck != null)
+        {
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawWireSphere(groundCheck.position, groundRadius);
+        }
     }
 }

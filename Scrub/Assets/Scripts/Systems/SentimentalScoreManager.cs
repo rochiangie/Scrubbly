@@ -1,111 +1,123 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System;
 
 public class SentimentalScoreManager : MonoBehaviour
 {
-    // Singleton pattern
     public static SentimentalScoreManager Instance { get; private set; }
 
-    // Indica si el panel de decisión (S/N) está activo.
     public static bool IsDecisionActive { get; private set; } = false;
 
     [Header("Puntuación Sentimental")]
     public int emotionalBalanceScore = 0;
     public int accumulationScore = 0;
 
-    [Header("Umbrales de Final")]
-    public int minBalanceForGoodEnding = 50;
-    public int maxAccumulationForGoodEnding = 150;
+    // Umbrales privados, configurados por TaskManager
+    private int minBalanceThreshold = 0;
+    private int maxAccumulationThreshold = 0;
+
+    // Propiedades públicas para que UIPauseController.cs pueda acceder a los límites
+    public int minBalanceForGoodEnding => minBalanceThreshold;
+    public int maxAccumulationForGoodEnding => maxAccumulationThreshold;
 
     void Awake()
     {
-        // 1. Singleton y Persistencia
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
             return;
         }
         Instance = this;
-        // 🛑 CLAVE: Asegura que el manager no se destruya al cargar otras escenas.
         DontDestroyOnLoad(gameObject);
 
-        // 2. 🛑 CLAVE: Movemos la suscripción de OnEnable() a Awake(). 
-        // Esto asegura que el Manager esté escuchando desde el primer frame.
+        // Suscripciones:
         GameEvents.OnMemorieDecided += HandleMemorieDecision;
         GameEvents.OnAllDone += CheckFinalScore;
 
         IsDecisionActive = false;
+
+        minBalanceThreshold = 0;
+        maxAccumulationThreshold = 0;
     }
 
-    // Ya no es necesario el OnEnable, pero lo dejamos vacío para referencia.
-    // Los eventos ya están suscritos en Awake().
-    void OnEnable() { }
-
-    // 🛑 ES CRÍTICO mantener el OnDisable para evitar errores al salir del juego.
     void OnDisable()
     {
         GameEvents.OnMemorieDecided -= HandleMemorieDecision;
         GameEvents.OnAllDone -= CheckFinalScore;
     }
 
-    // Método estático para que la UI de decisión pueda activar/desactivar el estado
+    // 🛑 NUEVO MÉTODO: Recibe los valores calculados por TaskManager
+    public void SetWinThresholds(int totalValue, float balancePct, float accumulationPct)
+    {
+        // Cálculo del Mínimo Balance requerido (ej. 80% del valor total)
+        minBalanceThreshold = Mathf.CeilToInt(totalValue * balancePct);
+
+        // Cálculo del Límite Máximo de Acumulación (ej. 50% del valor total)
+        maxAccumulationThreshold = Mathf.FloorToInt(totalValue * accumulationPct);
+
+        Debug.Log($"[ScoreManager] Umbrales Fijados. Mínimo Balance: {minBalanceThreshold} | Máximo Acumulación: {maxAccumulationThreshold}");
+
+        // Forzar actualización inicial de la UI de Score (para que muestre los límites en el menú de pausa)
+        GameEvents.SentimentalScore(emotionalBalanceScore, accumulationScore);
+    }
+
     public static void SetDecisionActive(bool isActive)
     {
         IsDecisionActive = isActive;
-        Debug.Log($"[STATE] IsDecisionActive: {IsDecisionActive}");
     }
 
-    // Maneja la actualización de puntuación basada en la decisión del jugador
     private void HandleMemorieDecision(bool isKept, int sentimentalValue)
     {
-        // Lógica de Puntuación:
         if (isKept)
         {
-            // Decisión: GUARDAR
+            // Acumulación: Suma valor (riesgo de ser acumulador)
             accumulationScore += Mathf.Abs(sentimentalValue);
-            Debug.Log($"[SCORE] GUARDADO. Acumulación: +{Mathf.Abs(sentimentalValue)}");
         }
-        else // isTossed (Tirar/Destruir)
+        else
         {
-            // Decisión: DESTRUIR/TIRAR
+            // Balance: La pérdida de valor disminuye el balance emocional (hace más difícil ganar).
             emotionalBalanceScore -= sentimentalValue;
-            Debug.Log($"[SCORE] TIRADO. Balance Emocional: -{sentimentalValue}");
         }
 
-        // Notificar a la UI (UIPauseController) a través del bus de eventos
-        // 🛑 Esta llamada es la que actualiza los Sliders.
+        // Notificar a la UI (UIPauseController)
         GameEvents.SentimentalScore(emotionalBalanceScore, accumulationScore);
-
-        Debug.Log($"[SCORE] Balance Emocional: {emotionalBalanceScore} | Acumulación: {accumulationScore}");
     }
 
-    // Método llamado por GameEvents.OnAllDone
+    // Método llamado por GameEvents.OnAllDone (disparado por TaskManager al terminar la limpieza)
     public void CheckFinalScore()
     {
+        // 🛑 CLAVE: El chequeo usa los umbrales dinámicos.
         bool won = false;
         string finalMessage = "";
 
-        // 1. Condición de Pérdida: ACUMULADOR
-        if (accumulationScore > maxAccumulationForGoodEnding)
+        if (minBalanceThreshold == 0 && maxAccumulationThreshold == 0)
         {
-            finalMessage = $"📦 ¡FIN! PERDISTE: Acumulador. Demasiada acumulación ({accumulationScore} puntos).";
+            finalMessage = "Error: Umbrales no inicializados. La lógica del TaskManager falló al configurar los límites.";
+            won = false;
+        }
+
+        // 1. Condición de Pérdida: ACUMULADOR 
+        else if (accumulationScore > maxAccumulationThreshold)
+        {
+            finalMessage = $"📦 ¡FIN! PERDISTE: Acumulador. Acumulación ({accumulationScore}) > Límite ({maxAccumulationThreshold}).";
             won = false;
         }
         // 2. Condición de Victoria: BALANCE ÓPTIMO
-        else if (emotionalBalanceScore >= minBalanceForGoodEnding)
+        else if (emotionalBalanceScore >= minBalanceThreshold)
         {
-            finalMessage = $"🎉 ¡FIN! GANASTE: Balance Óptimo. Balance emocional de {emotionalBalanceScore}.";
+            finalMessage = $"🎉 ¡FIN! GANASTE: Balance Óptimo. Balance ({emotionalBalanceScore}) >= Mínimo ({minBalanceThreshold}).";
             won = true;
         }
         // 3. Condición de Pérdida: DESEQUILIBRIO
         else
         {
-            finalMessage = $"😢 ¡FIN! PERDISTE: Desequilibrio. Balance emocional bajo ({emotionalBalanceScore}).";
+            finalMessage = $"😢 ¡FIN! PERDISTE: Desequilibrio. Balance ({emotionalBalanceScore}) < Mínimo ({minBalanceThreshold}).";
             won = false;
         }
 
         Debug.Log(finalMessage);
 
+        // Disparar el evento que mostrará el panel de victoria/derrota
         GameEvents.GameResult(won);
     }
 }

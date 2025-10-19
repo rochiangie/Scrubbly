@@ -1,18 +1,17 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System;
 
 public class UIPauseController : MonoBehaviour
 {
     // === 1. ESTADO Y CONTROL DE PAUSA ===
     [Header("1. Control de Pausa")]
-    [Tooltip("El GameObject del panel de menú que se activará/desactivará.")]
     public GameObject pauseMenuPanel;
 
     // Dependencias
     private MouseLookController mouseLook;
     private TaskManager taskManager;
-    private SentimentalScoreManager scoreManager;
 
     private bool isPaused = false;
 
@@ -25,57 +24,56 @@ public class UIPauseController : MonoBehaviour
     [Header("3. Referencias de Puntuación Sentimental")]
     public Slider emotionalBalanceSlider;
     public TMP_Text emotionalBalanceText;
-    [Tooltip("Asigna aquí la IMAGEN de Relleno (Fill Area) del Slider de Balance.")]
-    public Image emotionalBalanceFillImage; // <-- NUEVO CAMPO PARA EL COLOR
+    public Image emotionalBalanceFillImage;
 
     public Slider accumulationSlider;
     public TMP_Text accumulationText;
-    [Tooltip("Asigna aquí la IMAGEN de Relleno (Fill Area) del Slider de Acumulación.")]
-    public Image accumulationFillImage; // <-- NUEVO CAMPO PARA EL COLOR
+    public Image accumulationFillImage;
+
 
     // =========================================================================
 
     void Awake()
     {
-        // Configuración de Persistencia.
-        DontDestroyOnLoad(gameObject);
+        // El DontDestroyOnLoad(gameObject) debe ir en Start o en un script externo si este es un Singleton. 
+        // Si este script es solo para la UI de una escena, es mejor quitarlo. Lo dejo comentado.
+        // DontDestroyOnLoad(gameObject);
 
-        // Buscar los sistemas necesarios
         mouseLook = FindObjectOfType<MouseLookController>();
-        if (mouseLook == null) Debug.LogError("UIPauseController: MouseLookController no encontrado.");
 
-        taskManager = FindObjectOfType<TaskManager>();
-        if (taskManager == null) Debug.LogError("UIPauseController: TaskManager no encontrado.");
+        // La instancia se busca en Awake, pero la asignamos en Start para asegurar que TaskManager exista.
 
-        // Se asume que SentimentalScoreManager.Instance ya se inicializó
-        scoreManager = SentimentalScoreManager.Instance;
-        if (scoreManager == null) Debug.LogError("UIPauseController: SentimentalScoreManager.Instance es null. ¡Verifica el Singleton!");
-
-        // Inicializar UI.
         if (pauseMenuPanel != null)
         {
             pauseMenuPanel.SetActive(false);
         }
     }
 
+    void Start()
+    {
+        // Intentamos obtener la instancia Singleton, pero debe estar inicializada antes.
+        taskManager = TaskManager.Instance;
+
+        if (mouseLook == null) Debug.LogError("UIPauseController: MouseLookController no encontrado.");
+        if (taskManager == null) Debug.LogError("UIPauseController: TaskManager.Instance es null. ¡Verifica el Orden de Ejecución!");
+    }
+
     void OnEnable()
     {
-        // Suscripciones para actualizar la UI
         GameEvents.OnSentimentalScoreUpdate += UpdateSentimentalUI;
         GameEvents.OnProgressUpdate += UpdateCleaningUI;
     }
 
     void OnDisable()
     {
-        // Desuscripciones
         GameEvents.OnSentimentalScoreUpdate -= UpdateSentimentalUI;
         GameEvents.OnProgressUpdate -= UpdateCleaningUI;
     }
 
     void Update()
     {
-        // 📢 PAUSA CON TECLA ENTER
-        if (Input.GetKeyDown(KeyCode.Return) && !SentimentalScoreManager.IsDecisionActive)
+        // 🛑 Corregido el GetKeyDown para usar la tecla ESCAPE (más común para pausa) o RETURN si lo prefieres
+        if (Input.GetKeyDown(KeyCode.Escape) && !TaskManager.IsDecisionActive)
         {
             TogglePause();
         }
@@ -87,73 +85,126 @@ public class UIPauseController : MonoBehaviour
 
     public void TogglePause()
     {
-        if (SentimentalScoreManager.IsDecisionActive) return;
+        if (TaskManager.IsDecisionActive) return;
 
         isPaused = !isPaused;
 
         if (isPaused)
         {
-            // MODO PAUSA
             if (pauseMenuPanel != null)
             {
-                // **CLAVE:** Actualiza los valores antes de mostrar el menú
                 UpdateStatsDisplay();
                 pauseMenuPanel.SetActive(true);
             }
 
-            // ACCIÓN CLAVE: Detiene la cámara y libera el cursor.
             if (mouseLook != null)
             {
                 mouseLook.SetControlsActive(false);
             }
+            Time.timeScale = 0f;
         }
         else
         {
-            // MODO JUEGO
             if (pauseMenuPanel != null)
             {
                 pauseMenuPanel.SetActive(false);
             }
 
-            // ACCIÓN CLAVE: Restaura el control de cámara y bloquea el cursor.
             if (mouseLook != null)
             {
                 mouseLook.SetControlsActive(true);
             }
+            Time.timeScale = 1f;
         }
     }
 
-    // Método que actualiza TODOS los stats cuando se pausa el juego
+    /// <summary>
+    /// Método que actualiza TODOS los stats cuando se pausa el juego.
+    /// </summary>
     private void UpdateStatsDisplay()
     {
-        if (scoreManager == null || taskManager == null)
+        if (taskManager == null)
         {
-            // Intenta buscar la instancia si falló en Awake.
-            if (scoreManager == null) scoreManager = SentimentalScoreManager.Instance;
-            if (taskManager == null) taskManager = FindObjectOfType<TaskManager>();
-
-            if (scoreManager == null || taskManager == null) return;
+            taskManager = TaskManager.Instance;
+            if (taskManager == null)
+            {
+                Debug.LogError("No se pueden actualizar las estadísticas: TaskManager no disponible.");
+                return;
+            }
         }
 
-        // 📢 La lógica de actualización se llama aquí
-        UpdateCleaningUI(taskManager.cleanedCount, taskManager.totalDirt);
-        UpdateSentimentalUI(scoreManager.emotionalBalanceScore, scoreManager.accumulationScore);
+        // 1. STATS DE LIMPIEZA: Sumamos los contadores duales del TaskManager
+        int total = taskManager.totalDirtSpots + taskManager.totalTrashItems;
+        int cleaned = taskManager.cleanedDirtSpots + taskManager.cleanedTrashItems;
+
+        UpdateCleaningUI(cleaned, total);
+
+        // 2. STATS DE BALANCE EMOCIONAL Y ACUMULACIÓN: TaskManager tiene los scores
+        UpdateSentimentalUI(taskManager.emotionalBalanceScore, taskManager.accumulationScore);
     }
 
-    // Método para que los botones de UI puedan reanudar el juego (ej: Botón 'Reanudar')
-    public void ResumeGameButton()
+    // =========================================================================
+    // LÓGICA DE ACTUALIZACIÓN DE UI (CONEXIÓN DEL SLIDER)
+    // =========================================================================
+
+    /// <summary>
+    /// Actualiza el slider de Limpieza (se llama desde GameEvents.Progress).
+    /// </summary>
+    private void UpdateCleaningUI(int cleaned, int total)
     {
-        if (isPaused)
+        if (total > 0)
         {
-            TogglePause();
+            if (cleaningProgressSlider != null)
+            {
+                // CLAVE: El max value debe ser el total combinado.
+                cleaningProgressSlider.maxValue = total;
+                cleaningProgressSlider.value = cleaned;
+            }
+
+            if (cleaningProgressText != null)
+            {
+                cleaningProgressText.text = $"Limpieza: {cleaned} / {total}";
+            }
+        }
+        else
+        {
+            if (cleaningProgressSlider != null)
+            {
+                cleaningProgressSlider.maxValue = 1;
+                cleaningProgressSlider.value = 0;
+            }
+            if (cleaningProgressText != null)
+            {
+                cleaningProgressText.text = "Limpieza: 0 / 0";
+            }
         }
     }
 
-    // =========================================================================
-    // LÓGICA DE ACTUALIZACIÓN DE UI
-    // =========================================================================
+    /// <summary>
+    /// Actualiza el slider de Score (se llama desde GameEvents.OnSentimentalScoreUpdate).
+    /// </summary>
+    private void UpdateSentimentalUI(int currentBalance, int currentAccumulation)
+    {
+        if (taskManager == null) return;
 
-    // 📢 NUEVA FUNCIÓN: Controla los colores de los sliders
+        // Balance Emocional
+        int minBalance = taskManager.minBalanceForGoodEnding;
+        // El máximo del slider es 2x el mínimo de victoria, para visualizar la zona segura
+        emotionalBalanceSlider.maxValue = minBalance > 0 ? minBalance * 2 : 100;
+        emotionalBalanceSlider.value = currentBalance;
+        emotionalBalanceText.text = $"Balance Emocional: {currentBalance} / {minBalance} (Mínimo)";
+
+        UpdateSliderColor(emotionalBalanceFillImage, currentBalance, minBalance, minBalance * 0.5f, false);
+
+        // Acumulación
+        int maxAccumulation = taskManager.maxAccumulationForGoodEnding;
+        accumulationSlider.maxValue = maxAccumulation > 0 ? maxAccumulation : 100;
+        accumulationSlider.value = currentAccumulation;
+        accumulationText.text = $"Acumulación: {currentAccumulation} / {maxAccumulation} (Límite)";
+
+        UpdateSliderColor(accumulationFillImage, currentAccumulation, maxAccumulation, 0, true);
+    }
+
     private void UpdateSliderColor(Image fillImage, float currentValue, float goodThreshold, float badThreshold, bool isAccumulation)
     {
         if (fillImage == null) return;
@@ -164,101 +215,43 @@ public class UIPauseController : MonoBehaviour
 
         if (isAccumulation)
         {
-            // Lógica de Acumulación: Más cerca del límite (goodThreshold) es peor.
-            if (currentValue < goodThreshold * 0.7f) // Buena gestión (menos del 70% del límite)
+            // Lógica de Acumulación: Cuanto más cerca del límite, peor.
+            if (currentValue >= goodThreshold)
             {
-                fillImage.color = good;
+                fillImage.color = critical; // ROJO: ¡Límite excedido o alcanzado!
             }
-            else if (currentValue < goodThreshold) // Cerca del límite (70% - 100%)
+            else if (currentValue > goodThreshold * 0.7f)
             {
-                fillImage.color = warning;
+                fillImage.color = warning; // AMARILLO: Cerca del 70% del límite.
             }
-            else // Sobre el límite (Mala gestión/Acumulador)
+            else
             {
-                fillImage.color = critical;
+                fillImage.color = good; // VERDE: Nivel seguro.
             }
         }
-        else
+        else // Balance Emocional
         {
-            // Lógica de Balance Emocional: Alcanzar el mínimo (goodThreshold) es bueno.
-            if (currentValue >= goodThreshold) // Balance Óptimo
+            // Lógica de Balance: Cuanto más cerca del mínimo, mejor.
+            if (currentValue >= goodThreshold)
             {
-                fillImage.color = good;
+                fillImage.color = good; // VERDE: Se alcanzó o superó el mínimo.
             }
-            else if (currentValue > badThreshold) // Zona de Alerta (usamos 50% del mínimo como "bad threshold")
+            else if (currentValue > badThreshold)
             {
-                fillImage.color = warning;
+                fillImage.color = warning; // AMARILLO: Por encima de la zona crítica, pero bajo el mínimo.
             }
-            else // Balance Muy Bajo (Riesgo de final malo)
+            else
             {
-                fillImage.color = critical;
+                fillImage.color = critical; // ROJO: En zona crítica.
             }
         }
     }
 
-    // Actualización de Limpieza (Suscrita a GameEvents.OnProgressUpdate)
-    private void UpdateCleaningUI(int cleaned, int total)
+    public void ResumeGameButton()
     {
-        if (total > 0)
+        if (isPaused)
         {
-            if (cleaningProgressSlider != null)
-            {
-                cleaningProgressSlider.maxValue = total;
-                cleaningProgressSlider.value = cleaned;
-            }
-
-            if (cleaningProgressText != null)
-            {
-                cleaningProgressText.text = $"Limpieza: {cleaned} / {total}";
-            }
+            TogglePause();
         }
-        else // total == 0
-        {
-            if (cleaningProgressSlider != null)
-            {
-                cleaningProgressSlider.maxValue = 1;
-                cleaningProgressSlider.value = 1;
-            }
-            if (cleaningProgressText != null)
-            {
-                cleaningProgressText.text = "Limpieza: 100% (Listo)";
-            }
-        }
-    }
-
-    // Actualización Sentimental (Suscrita a GameEvents.OnSentimentalScoreUpdate)
-    private void UpdateSentimentalUI(int currentBalance, int currentAccumulation)
-    {
-        if (scoreManager == null) return;
-
-        // Balance Emocional
-        int minBalance = scoreManager.minBalanceForGoodEnding;
-        emotionalBalanceSlider.maxValue = minBalance * 2;
-        emotionalBalanceSlider.value = currentBalance;
-        emotionalBalanceText.text = $"Balance Emocional: {currentBalance} / {minBalance} (Mínimo)";
-
-        // Aplica el color. Balance Emocional es bueno si es alto.
-        UpdateSliderColor(
-            emotionalBalanceFillImage,
-            currentBalance,
-            minBalance,
-            minBalance * 0.5f, // Umbral de advertencia al 50% del mínimo
-            false // No es acumulación
-        );
-
-        // Acumulación
-        int maxAccumulation = scoreManager.maxAccumulationForGoodEnding;
-        accumulationSlider.maxValue = maxAccumulation;
-        accumulationSlider.value = currentAccumulation;
-        accumulationText.text = $"Acumulación: {currentAccumulation} / {maxAccumulation} (Límite)";
-
-        // Aplica el color. Acumulación es buena si es baja.
-        UpdateSliderColor(
-            accumulationFillImage,
-            currentAccumulation,
-            maxAccumulation,
-            0, // Umbral no usado en esta lógica, pero se pasa.
-            true // Es acumulación
-        );
     }
 }

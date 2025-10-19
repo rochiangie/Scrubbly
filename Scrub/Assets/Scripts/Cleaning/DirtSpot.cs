@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Events; // Necesario si tu OnAllCleaned usa esto
 using System.Collections; // Necesario para Coroutines
 
 public class DirtSpot : MonoBehaviour
@@ -7,7 +8,6 @@ public class DirtSpot : MonoBehaviour
     //               VARIABLES PÚBLICAS Y PRIVADAS
     // ===============================================
 
-    // 🔴 NUEVA PROPIEDAD: Requerida por TaskManager para contar la suciedad al inicio.
     /// <summary>Bandera para indicar si este punto de suciedad ya ha sido limpiado.</summary>
     public bool IsCleaned { get; private set; } = false; // Empieza como sucio (false)
 
@@ -33,7 +33,6 @@ public class DirtSpot : MonoBehaviour
     private string requiredToolId = "Sponge";
 
     private float currentHealth;
-    // La bandera isDestroyed ahora se usará como sinónimo de IsCleaned
     private bool isHandlingDestruction = false;
 
     // ===============================================
@@ -43,27 +42,16 @@ public class DirtSpot : MonoBehaviour
     void Awake()
     {
         currentHealth = maxHealth;
-        isHandlingDestruction = false; // Asegurar estado inicial
+        isHandlingDestruction = false;
 
         // Inicialización de la transparencia
         dirtRenderer = GetComponent<Renderer>();
         if (dirtRenderer != null)
         {
-            // Crea una instancia del material para que solo este objeto se vea afectado
             dirtMaterial = dirtRenderer.material;
-
-            // Configurar el material para soportar transparencia
             SetMaterialToFadeMode(dirtMaterial);
-
-            // Establecer la opacidad inicial (completamente visible)
             UpdateVisualAppearance();
         }
-    }
-
-    void Start()
-    {
-        // NOTA: Se eliminó la dependencia de DirtManager.Instance.RegisterDirtItem();
-        // El TaskManager ya encuentra todos los DirtSpots con FindObjectsOfType<DirtSpot>().
     }
 
     // ===============================================
@@ -72,10 +60,8 @@ public class DirtSpot : MonoBehaviour
 
     public bool CanBeCleanedBy(string toolId)
     {
-        // Si ya está limpio o en proceso de destrucción, no se puede limpiar más.
         if (IsCleaned || isHandlingDestruction) return false;
 
-        // Si no se requiere una herramienta específica, cualquier herramienta funciona.
         if (string.IsNullOrEmpty(requiredToolId))
         {
             return true;
@@ -88,14 +74,17 @@ public class DirtSpot : MonoBehaviour
     /// </summary>
     public void CleanHit(float damage)
     {
+        // Si ya estamos manejando la destrucción, ignorar golpes.
         if (isHandlingDestruction) return;
 
+        // 1. Aplica el daño
         currentHealth -= damage;
-        currentHealth = Mathf.Max(0f, currentHealth); // Asegurar que la salud no sea negativa
+        Debug.Log($"[Dirt HIT] {gameObject.name} recibió {damage:F2} de daño. Vida restante: {currentHealth:F2}");
 
-        // Llama a la función para desvanecer el objeto
+        // 2. Actualiza la apariencia visual inmediatamente
         UpdateVisualAppearance();
 
+        // 3. Comprueba si debe destruirse
         if (currentHealth <= 0)
         {
             HandleDestruction();
@@ -110,24 +99,26 @@ public class DirtSpot : MonoBehaviour
     {
         if (isHandlingDestruction) return;
         isHandlingDestruction = true;
-        IsCleaned = true; // 🔴 MARCAR COMO LIMPIO PARA EL TaskManager
+        IsCleaned = true; // MARCAR COMO LIMPIO PARA EL TaskManager
 
-        // 1. NOTIFICAR AL MANAGER DEL PROGRESO
-        // 🔴 CRITICAL FIX: Usar el evento global que escucha el TaskManager
-        //GameEvents.OnAnyDirtCleaned?.Invoke();
-        GameEvents.DirtCleaned();
+        // 🛑 1. NOTIFICAR AL TASKMANAGER (CORRECCIÓN CLAVE)
+        if (TaskManager.Instance != null)
+        {
+            // La función correcta es NotifySpotCleaned()
+            TaskManager.Instance.NotifySpotCleaned();
+        }
 
-
-        // 2. LLAMADA CRÍTICA A SFX: Disparar el sonido de limpieza antes de destruirse
-        // (Aunque PlayCleanSFX ya se llama en CleaningController, este podría ser un sonido final de "desaparición").
+        // 2. LLAMADA CRÍTICA A SFX
         if (AudioManager.Instance != null)
         {
-            AudioManager.Instance.PlayCleanSFX();
+            // Asume que AudioManager existe
+            // AudioManager.Instance.PlayCleanSFX(); 
         }
 
         // 3. INSTANCIAR PARTÍCULAS
         if (destructionEffectPrefab != null)
         {
+            // Usamos StartCoroutine para que las partículas se ejecuten mientras destruimos el objeto
             StartCoroutine(DestroyWithParticles(destructionEffectPrefab));
         }
 
@@ -145,13 +136,11 @@ public class DirtSpot : MonoBehaviour
     {
         GameObject effectInstance = Instantiate(effectPrefab, transform.position, Quaternion.identity);
 
-        // Buscar el ParticleSystem más largo para determinar el tiempo de vida
         float maxDuration = 0f;
         ParticleSystem[] allParticleSystems = effectInstance.GetComponentsInChildren<ParticleSystem>(true);
 
         if (allParticleSystems.Length == 0)
         {
-            // Si no hay PS, simplemente destruir
             Destroy(effectInstance, 2.0f);
             yield break;
         }
@@ -159,25 +148,18 @@ public class DirtSpot : MonoBehaviour
         foreach (ParticleSystem ps in allParticleSystems)
         {
             var main = ps.main;
-
-            // Si el prefab tiene loop=true accidentalmente, lo corregimos
             main.loop = false;
-
-            // Usamos StartDelay + Duration para el cálculo
             float duration = main.startDelay.constant + main.duration;
             if (duration > maxDuration)
             {
                 maxDuration = duration;
             }
-
             ps.Play();
         }
 
-        // Esperar la duración máxima de las partículas + un pequeño margen
         float destroyDelay = maxDuration + 0.1f;
         yield return new WaitForSeconds(destroyDelay);
 
-        // Asegurarse de que el objeto de partículas se destruya si aún existe
         if (effectInstance != null)
         {
             Destroy(effectInstance);
@@ -192,7 +174,10 @@ public class DirtSpot : MonoBehaviour
     {
         if (dirtMaterial == null) return;
 
-        float healthRatio = currentHealth / maxHealth;
+        // El ratio va de 0 (limpio) a 1 (sucio)
+        float healthRatio = Mathf.Clamp01(currentHealth / maxHealth);
+
+        // El factor de opacidad va de minOpacity (cuando está casi limpio) a 1f (sucio)
         float currentOpacity = Mathf.Lerp(minOpacity, 1f, healthRatio);
 
         Color color = dirtMaterial.color;

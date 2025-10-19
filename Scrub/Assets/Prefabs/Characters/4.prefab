@@ -2276,7 +2276,7 @@ GameObject:
   - component: {fileID: 5419062881097326856}
   m_Layer: 8
   m_Name: RightHandPinky2
-  m_TagString: Untagged
+  m_TagString: ToolSlot
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3769,6 +3769,8 @@ GameObject:
   - component: {fileID: 7261247539198215325}
   - component: {fileID: 8804371444759974126}
   - component: {fileID: 8808740468718605473}
+  - component: {fileID: -5210997474698369223}
+  - component: {fileID: -11114260915657454}
   m_Layer: 8
   m_Name: 4
   m_TagString: Player
@@ -3795,6 +3797,7 @@ Transform:
   - {fileID: 3614182940785677695}
   - {fileID: 1096555529905404463}
   - {fileID: 7073116879507003688}
+  - {fileID: 4437068033825728924}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!205 &412691167275328205
@@ -3926,7 +3929,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 1
+  m_CollisionDetection: 2
 --- !u!114 &1356503752764592277
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3940,7 +3943,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 5
-  rotationSpeed: 180
   jumpForce: 6
   jumpKey: 32
   animator: {fileID: 0}
@@ -4012,12 +4014,12 @@ MonoBehaviour:
   generalInteractKey: 101
   pickupKey: 101
   attackKey: 102
+  scorePanelToggleKey: 271
   attackRange: 2.5
   attackableLayer:
     serializedVersion: 2
     m_Bits: 8
   memorieTag: Memorie
-  scorePanelToggleKey: 9
 --- !u!114 &-1310710929017546439
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4050,18 +4052,19 @@ MonoBehaviour:
     m_Bits: 128
   pickupRange: 3.5
   dropForce: 1.5
-  generalInteractKey: 101
+  pickupKey: 101
   cleanKey: 114
-  damageMultiplier: 1
+  trashKey: 102
+  damagePerHit: 2
   requireCorrectTool: 1
   validToolIds:
   - Sponge
-  - Mop
+  - Escoba
   - Vacuum
   dirtTag: Dirt
+  trashTag: Basura
   cleaningLayerName: Clean
   layerBlendSpeed: 12
-  debugLogs: 0
 --- !u!114 &8804371444759974126
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4074,11 +4077,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de73acfa817aa2448ad7fc3beee6b35c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mouseSensitivity: 200
+  mouseSensitivity: 500
   upLimit: 85
   downLimit: -85
   headLookTarget: {fileID: 5325467271139161213}
-  controlsActive: 1
+  _controlsActive: 1
 --- !u!114 &8808740468718605473
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4093,6 +4096,34 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterID: 4
   displayName: 
+--- !u!114 &-5210997474698369223
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3599570790234534221}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbf140a9c3f331e46b845dfc3075db5e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  detectionRadius: 2.5
+--- !u!114 &-11114260915657454
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3599570790234534221}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7db2576cb7b317d48a3b00de80635c3f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  toolSlot: {fileID: 5419062881097326856}
+  slidersManager: {fileID: 0}
+  mouseLook: {fileID: 0}
 --- !u!1 &3601537494100441701
 GameObject:
   m_ObjectHideFlags: 0
@@ -9563,7 +9594,7 @@ GameObject:
   - component: {fileID: 5278061391884730175}
   m_Layer: 8
   m_Name: RightHandPinky2
-  m_TagString: Untagged
+  m_TagString: ToolSlot
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -9584,3 +9615,69 @@ Transform:
   - {fileID: 8626797401259328648}
   m_Father: {fileID: 2240993045666165524}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &6870209330733930000
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 6445120322364139522}
+    m_Modifications:
+    - target: {fileID: 1360870840794939657, guid: 7b83488c750b98a469041a4f138e1f21, type: 3}
+      propertyPath: m_Name
+      value: ToolItemaManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 7116887127724670860, guid: 7b83488c750b98a469041a4f138e1f21, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 45.330704
+      objectReference: {fileID: 0}
+    - target: {fileID: 7116887127724670860, guid: 7b83488c750b98a469041a4f138e1f21, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 18.415047
+      objectReference: {fileID: 0}
+    - target: {fileID: 7116887127724670860, guid: 7b83488c750b98a469041a4f138e1f21, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -3.3753548
+      objectReference: {fileID: 0}
+    - target: {fileID: 7116887127724670860, guid: 7b83488c750b98a469041a4f138e1f21, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7116887127724670860, guid: 7b83488c750b98a469041a4f138e1f21, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7116887127724670860, guid: 7b83488c750b98a469041a4f138e1f21, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7116887127724670860, guid: 7b83488c750b98a469041a4f138e1f21, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7116887127724670860, guid: 7b83488c750b98a469041a4f138e1f21, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7116887127724670860, guid: 7b83488c750b98a469041a4f138e1f21, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7116887127724670860, guid: 7b83488c750b98a469041a4f138e1f21, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8924315600412539737, guid: 7b83488c750b98a469041a4f138e1f21, type: 3}
+      propertyPath: playerHandSlot
+      value: 
+      objectReference: {fileID: 5419062881097326856}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 7b83488c750b98a469041a4f138e1f21, type: 3}
+--- !u!4 &4437068033825728924 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7116887127724670860, guid: 7b83488c750b98a469041a4f138e1f21, type: 3}
+  m_PrefabInstance: {fileID: 6870209330733930000}
+  m_PrefabAsset: {fileID: 0}
