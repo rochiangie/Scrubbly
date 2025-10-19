@@ -1,13 +1,13 @@
-﻿using UnityEngine;
+﻿// PlayerInteraction.cs
+using UnityEngine;
 using System;
 using System.Linq;
 
 // ----------------------------------------------------
-// INTERFACES 
+// INTERFACES (Asumo que existen)
 // ----------------------------------------------------
 public interface IInteractable { void Interact(); }
 public interface IAttackable { void ReceiveAttack(); }
-// NOTA: Asumo que tienes una clase GameEvents para el ToggleScorePanel
 
 public class PlayerInteraction : MonoBehaviour
 {
@@ -15,8 +15,9 @@ public class PlayerInteraction : MonoBehaviour
     public Transform holdPoint;
     public PlayerAnimationController animCtrl;
 
-    // 🚨 REFERENCIA AL TOOL HANDLER (Declaración es correcta)
-    private ToolHandler toolHandler;
+    // 🚨 REFERENCIAS A LOS GESTORES DE COMPONENTES 🚨
+    private ToolItemManager toolItemManager;
+    private ToolPanelIdea toolPanelIdea; // Para abrir el panel con TogglePause()
 
     private CleaningController cleaningController;
     private Carryable carried;
@@ -48,13 +49,17 @@ public class PlayerInteraction : MonoBehaviour
 
     void Awake()
     {
-        toolHandler = GetComponent<ToolHandler>();
+        // 1. Obtener la referencia al ToolItemManager
+        toolItemManager = GetComponent<ToolItemManager>();
+        if (toolItemManager == null)
+            Debug.LogError("PlayerInteraction: No se encontró el ToolItemManager. La limpieza por F fallará.", this);
 
-        if (toolHandler == null)
-        {
-            Debug.LogError("ToolHandler no se pudo encontrar en este objeto.", this);
-        }
-        
+        // 2. Obtener la referencia al ToolPanelIdea (Apertura del Panel/Pausa)
+        toolPanelIdea = GetComponent<ToolPanelIdea>();
+        if (toolPanelIdea == null)
+            Debug.LogWarning("PlayerInteraction: No se encontró ToolPanelIdea. La apertura del panel (Enter) no funcionará.");
+
+        // 3. Obtener el resto de componentes...
         cleaningController = GetComponent<CleaningController>();
         if (cleaningController == null)
             Debug.LogError("PlayerInteraction: No se encontró el CleaningController.");
@@ -64,44 +69,69 @@ public class PlayerInteraction : MonoBehaviour
         playerColliders = GetComponentsInChildren<Collider>();
     }
 
+    // =========================================================================
+    // FUNCIÓN UPDATE MODIFICADA
+    // =========================================================================
+
     void Update()
     {
-        // LÓGICA DE AGARRE/DECISIÓN (TECLA T)
-        if (Input.GetKeyDown(pickupKey))
-            TryPickup();
-
-        // LÓGICA DE INTERACCIÓN GENERAL (TECLA E)
-        if (Input.GetKeyDown(generalInteractKey))
-            TryGeneralInteract();
-
-        // TOGGLE DEL PANEL DE PUNTUACIÓN
-        if (Input.GetKeyDown(scorePanelToggleKey))
+        // -----------------------------------------------------------------
+        // 🚨 LÓGICA DE USO Y DESTRUCCIÓN DE LA HERRAMIENTA (TECLA F) 🚨
+        // -----------------------------------------------------------------
+        if (toolItemManager != null)
         {
-            // Asumo que tienes una clase estática GameEvents
-            // GameEvents.ToggleScorePanel(); 
+            GameObject activeTool = toolItemManager.GetCurrentTool();
+
+            // Lógica de Limpieza: Presionar F
+            if (Input.GetKeyDown(attackKey))
+            {
+                if (activeTool != null)
+                {
+                    CleanTool cleanScript = activeTool.GetComponent<CleanTool>();
+                    if (cleanScript != null)
+                    {
+                        cleanScript.Clean();
+                        Debug.Log("Limpiando con la herramienta activa (F).");
+                    }
+                }
+            }
+
+            // Lógica de Destrucción: Soltar F
+            if (Input.GetKeyUp(attackKey))
+            {
+                toolItemManager.DestroyCurrentTool();
+            }
         }
 
         // -----------------------------------------------------------------
-        // ➡️ LÓGICA DE APERTURA DEL PANEL DE HERRAMIENTAS (TECLA ENTER/RETURN)
+        // LÓGICA DE AGARRE/DECISIÓN (TECLA T)
         // -----------------------------------------------------------------
+        if (Input.GetKeyDown(pickupKey))
+            TryPickup();
+
+        // -----------------------------------------------------------------
+        // LÓGICA DE APERTURA DE PANELES (Enter)
+        // -----------------------------------------------------------------
+        if (Input.GetKeyDown(generalInteractKey))
+            TryGeneralInteract();
+
+        if (Input.GetKeyDown(scorePanelToggleKey))
+        {
+            // GameEvents.ToggleScorePanel(); 
+        }
+
         if (Input.GetKeyDown(KeyCode.Return)) // Tecla Enter (Return)
         {
-            // El debug ya verificó que la tecla se presiona, ahora verifica la referencia
-            if (toolHandler != null)
+            if (toolPanelIdea != null)
             {
-                toolHandler.ToggleToolSelectionPanel();
-            }
-            else
-            {
-                // El error ya se detectó en Awake, pero lo mantenemos para feedback inmediato
-                Debug.LogError("Error FATAL: La referencia 'toolHandler' es NULL en PlayerInteraction. No se puede abrir el panel.");
+                // 🚨 LLAMADA A LA FUNCIÓN DE APERTURA DEL PANEL 🚨
+                toolPanelIdea.TogglePause();
             }
         }
     }
 
     // =========================================================================
-    // EL RESTO DE TUS FUNCIONES (TryPickup, TryGeneralInteract, Triggers) 
-    // ESTÁN CORRECTAS Y SE MANTIENEN IGUALES
+    // EL RESTO DE TUS FUNCIONES SE MANTIENEN IGUALES
     // =========================================================================
 
     // FUNCIÓN PRINCIPAL: AGARRAR/SOLTAR/DECIDIR (Tecla T)
@@ -114,19 +144,14 @@ public class PlayerInteraction : MonoBehaviour
                            cleaningController.CurrentTool != null &&
                            carried.GetComponent<ToolDescriptor>() == cleaningController.CurrentTool);
 
-            // Si es una herramienta activa, la destruye/suelta de forma controlada
             if (isTool)
             {
-                // NOTA: El ToolHandler se encarga ahora de la instanciación/destrucción de la herramienta activa.
-                // Esta lógica parece ser para herramientas NO instanciadas por el panel, sino recogidas del suelo.
-                // Se mantiene la lógica original de tu script.
                 cleaningController.DropCurrentTool();
             }
             else
             {
                 carried.Drop();
                 animCtrl?.SetHolding(false);
-                // Lógica de SFX...
             }
 
             carried = null;

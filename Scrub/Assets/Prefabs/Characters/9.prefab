@@ -6839,6 +6839,7 @@ Transform:
   - {fileID: 9141088112494422161}
   - {fileID: 6019499508111766820}
   - {fileID: 3054350451539037967}
+  - {fileID: 60709617865155445}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!205 &5389045497737169333
@@ -7167,7 +7168,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7db2576cb7b317d48a3b00de80635c3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectionPanelUI: {fileID: 7379211190014833698, guid: 59956f75ee0baa242b6fe807956720f9, type: 3}
   toolSlot: {fileID: 7106858006191209290}
   slidersManager: {fileID: 0}
   mouseLook: {fileID: 0}
@@ -10466,7 +10466,7 @@ GameObject:
   - component: {fileID: 7106858006191209290}
   m_Layer: 8
   m_Name: RightHandPinky2
-  m_TagString: Untagged
+  m_TagString: ToolSlot
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -10580,3 +10580,65 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1718683440572063165}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &7067251938254478585
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 5829839737267163605}
+    m_Modifications:
+    - target: {fileID: 1360870840794939657, guid: 7b83488c750b98a469041a4f138e1f21, type: 3}
+      propertyPath: m_Name
+      value: ToolItemaManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 7116887127724670860, guid: 7b83488c750b98a469041a4f138e1f21, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 45.330704
+      objectReference: {fileID: 0}
+    - target: {fileID: 7116887127724670860, guid: 7b83488c750b98a469041a4f138e1f21, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 18.415047
+      objectReference: {fileID: 0}
+    - target: {fileID: 7116887127724670860, guid: 7b83488c750b98a469041a4f138e1f21, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -3.3753548
+      objectReference: {fileID: 0}
+    - target: {fileID: 7116887127724670860, guid: 7b83488c750b98a469041a4f138e1f21, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7116887127724670860, guid: 7b83488c750b98a469041a4f138e1f21, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7116887127724670860, guid: 7b83488c750b98a469041a4f138e1f21, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7116887127724670860, guid: 7b83488c750b98a469041a4f138e1f21, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7116887127724670860, guid: 7b83488c750b98a469041a4f138e1f21, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7116887127724670860, guid: 7b83488c750b98a469041a4f138e1f21, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7116887127724670860, guid: 7b83488c750b98a469041a4f138e1f21, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 7b83488c750b98a469041a4f138e1f21, type: 3}
+--- !u!4 &60709617865155445 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7116887127724670860, guid: 7b83488c750b98a469041a4f138e1f21, type: 3}
+  m_PrefabInstance: {fileID: 7067251938254478585}
+  m_PrefabAsset: {fileID: 0}

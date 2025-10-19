@@ -343,6 +343,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 8
       objectReference: {fileID: 0}
+    - target: {fileID: 4018128568367562181, guid: 1d35e4ca5cce84c489209a330c303156, type: 3}
+      propertyPath: m_TagString
+      value: ToolSlot
+      objectReference: {fileID: 0}
     - target: {fileID: 4726409036192810516, guid: 1d35e4ca5cce84c489209a330c303156, type: 3}
       propertyPath: m_Layer
       value: 8
@@ -437,6 +441,68 @@ SkinnedMeshRenderer:
 SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: -1746430974445881718, guid: 1d35e4ca5cce84c489209a330c303156, type: 3}
   m_PrefabInstance: {fileID: 4383320173793155560}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &5450961208200101236
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 8796175943201088575}
+    m_Modifications:
+    - target: {fileID: 1360870840794939657, guid: 7b83488c750b98a469041a4f138e1f21, type: 3}
+      propertyPath: m_Name
+      value: ToolItemaManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 7116887127724670860, guid: 7b83488c750b98a469041a4f138e1f21, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 45.330704
+      objectReference: {fileID: 0}
+    - target: {fileID: 7116887127724670860, guid: 7b83488c750b98a469041a4f138e1f21, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 18.415047
+      objectReference: {fileID: 0}
+    - target: {fileID: 7116887127724670860, guid: 7b83488c750b98a469041a4f138e1f21, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -3.3753548
+      objectReference: {fileID: 0}
+    - target: {fileID: 7116887127724670860, guid: 7b83488c750b98a469041a4f138e1f21, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7116887127724670860, guid: 7b83488c750b98a469041a4f138e1f21, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7116887127724670860, guid: 7b83488c750b98a469041a4f138e1f21, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7116887127724670860, guid: 7b83488c750b98a469041a4f138e1f21, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7116887127724670860, guid: 7b83488c750b98a469041a4f138e1f21, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7116887127724670860, guid: 7b83488c750b98a469041a4f138e1f21, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7116887127724670860, guid: 7b83488c750b98a469041a4f138e1f21, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 7b83488c750b98a469041a4f138e1f21, type: 3}
+--- !u!4 &2981936507522597624 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7116887127724670860, guid: 7b83488c750b98a469041a4f138e1f21, type: 3}
+  m_PrefabInstance: {fileID: 5450961208200101236}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &9050249635874669524
 PrefabInstance:
@@ -1150,6 +1216,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 8
       objectReference: {fileID: 0}
+    - target: {fileID: 4018128568367562181, guid: f14962bf8c2a50544b362f1694bf4149, type: 3}
+      propertyPath: m_TagString
+      value: ToolSlot
+      objectReference: {fileID: 0}
     - target: {fileID: 4461088807339474105, guid: f14962bf8c2a50544b362f1694bf4149, type: 3}
       propertyPath: m_Layer
       value: 8
@@ -1356,6 +1426,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: f14962bf8c2a50544b362f1694bf4149, type: 3}
       insertIndex: 0
       addedObject: {fileID: 5838950608366082394}
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: f14962bf8c2a50544b362f1694bf4149, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2981936507522597624}
     - targetCorrespondingSourceObject: {fileID: -6932637613890145018, guid: f14962bf8c2a50544b362f1694bf4149, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6216130727139876506}
@@ -1857,7 +1930,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7db2576cb7b317d48a3b00de80635c3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectionPanelUI: {fileID: 7379211190014833698, guid: 59956f75ee0baa242b6fe807956720f9, type: 3}
   toolSlot: {fileID: 3968057931717919110}
   slidersManager: {fileID: 0}
   mouseLook: {fileID: 0}
