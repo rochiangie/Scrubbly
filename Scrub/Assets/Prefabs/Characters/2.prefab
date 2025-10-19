@@ -1407,7 +1407,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7db2576cb7b317d48a3b00de80635c3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  toolSlot: {fileID: 2258357962537865974}
+  selectionPanelUI: {fileID: 0}
   slidersManager: {fileID: 0}
   mouseLook: {fileID: 0}
 --- !u!4 &6512698727919198498 stripped
@@ -1808,6 +1808,11 @@ SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: 8963497676660213602, guid: a10f81b6957ffb049bef4a7217b81e1a, type: 3}
   m_PrefabInstance: {fileID: 7130429541021808690}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &2917754619923970656 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -3852356975776185774, guid: a10f81b6957ffb049bef4a7217b81e1a, type: 3}
+  m_PrefabInstance: {fileID: 7130429541021808690}
+  m_PrefabAsset: {fileID: 0}
 --- !u!137 &4142104475193737688 stripped
 SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: 6597749198722234858, guid: a10f81b6957ffb049bef4a7217b81e1a, type: 3}
@@ -1840,6 +1845,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ToolItemaManager
       objectReference: {fileID: 0}
+    - target: {fileID: 5058883026119516105, guid: 7b83488c750b98a469041a4f138e1f21, type: 3}
+      propertyPath: toolSlot
+      value: 
+      objectReference: {fileID: 2917754619923970656}
     - target: {fileID: 7116887127724670860, guid: 7b83488c750b98a469041a4f138e1f21, type: 3}
       propertyPath: m_LocalPosition.x
       value: 45.330704

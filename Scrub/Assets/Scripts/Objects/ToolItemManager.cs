@@ -1,56 +1,39 @@
 ﻿// ToolItemManager.cs
 using UnityEngine;
-using System.Linq;
 
 public class ToolItemManager : MonoBehaviour
 {
-    private Transform toolSlot;
-    private const string HandSlotTag = "ToolSlot";
+    // 🚨 CAMBIO CRÍTICO: Variable pública para arrastrar un objeto de escena 🚨
+    [Header("Posición de la Herramienta")]
+    [Tooltip("Arrastra un GameObject vacío de la Escena (el punto de anclaje) aquí.")]
+    public Transform toolSlot;
+
     private GameObject currentToolObject;
 
-    void Awake()
-    {
-        // NO AÑADIR NADA AQUÍ PARA EVITAR CONFLICTOS CON LA CARGA DEL ANIMATOR
-    }
-
-    void Start()
-    {
-        // 🚨 CAMBIO EN LA LÓGICA DE BÚSQUEDA: Buscamos el Transform con el Tag solo en los hijos. 🚨
-
-        // Obtenemos todos los Transforms hijos (pero no el padre).
-        // El argumento 'true' en GetComponentsInChildren asegura que busca también en inactivos.
-        // Usamos .gameObject.CompareTag para verificar el tag del GameObject.
-
-        toolSlot = transform.GetComponentsInChildren<Transform>(true)
-                            .FirstOrDefault(t => t != transform && t.gameObject.CompareTag(HandSlotTag));
-
-        if (toolSlot == null)
-        {
-            Debug.LogError($"[TOOL MANAGER] ERROR FATAL: No se encontró el slot con el Tag '{HandSlotTag}'. La instanciación fallará. ¡Verifica que RightHandPinky2 tiene el Tag ToolSlot!", this);
-        }
-        else
-        {
-            Debug.Log($"[TOOL MANAGER] Slot '{HandSlotTag}' encontrado con éxito: {toolSlot.name}. Listo para instanciar.");
-        }
-    }
+    // Eliminamos Awake(), Start(), Singleton y Coroutine.
 
     // =========================================================================
-    // MÉTODOS PÚBLICOS PARA EL ONCLICK DE LOS BOTONES
+    // LÓGICA DE INSTANCIACIÓN Y DESTRUCCIÓN
     // =========================================================================
 
     public void SelectAndInstantiateTool(GameObject toolPrefab)
     {
+        // 1. Destruir anterior
         DestroyCurrentTool();
 
         if (toolSlot != null && toolPrefab != null)
         {
+            // 2. Instanciar en el punto de la escena
             currentToolObject = Instantiate(toolPrefab, toolSlot.position, toolSlot.rotation, toolSlot);
-            Debug.Log($"[TOOL MANAGER] Herramienta '{toolPrefab.name}' instanciada en la mano.");
+            Debug.Log($"[TOOL MANAGER] 🟢 ¡ÉXITO! Herramienta '{toolPrefab.name}' instanciada en el punto de escena.");
+
+            // 3. Opcional: Cerrar panel
+            // GetComponent<ToolPanelIdea>()?.TogglePause(); 
         }
         else
         {
-            // El debug que estás viendo: Tool Slot es NULL: True.
-            Debug.LogError($"Fallo al instanciar: Tool Slot es NULL: {toolSlot == null}. Prefab es NULL: {toolPrefab == false}.", this);
+            // Este error te dirá si olvidaste arrastrar el objeto vacío o el Prefab al botón.
+            Debug.LogError($"Fallo al instanciar. Verifica que el Prefab del botón y el Tool Slot (Inspector) estén asignados. Slot es NULL: {toolSlot == null}.", this);
         }
     }
 

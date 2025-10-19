@@ -1933,7 +1933,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7db2576cb7b317d48a3b00de80635c3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  toolSlot: {fileID: 1987986179021668200}
+  selectionPanelUI: {fileID: 0}
   slidersManager: {fileID: 0}
   mouseLook: {fileID: 0}
 --- !u!4 &6818505374472424636 stripped
@@ -2003,6 +2003,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: ToolItemaManager
       objectReference: {fileID: 0}
+    - target: {fileID: 1360870840794939657, guid: 7b83488c750b98a469041a4f138e1f21, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5058883026119516105, guid: 7b83488c750b98a469041a4f138e1f21, type: 3}
+      propertyPath: toolSlot
+      value: 
+      objectReference: {fileID: 1987986179021668200}
     - target: {fileID: 7116887127724670860, guid: 7b83488c750b98a469041a4f138e1f21, type: 3}
       propertyPath: m_LocalPosition.x
       value: 45.330704
@@ -2013,7 +2021,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7116887127724670860, guid: 7b83488c750b98a469041a4f138e1f21, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -3.3753548
+      value: 11.4
       objectReference: {fileID: 0}
     - target: {fileID: 7116887127724670860, guid: 7b83488c750b98a469041a4f138e1f21, type: 3}
       propertyPath: m_LocalRotation.w
@@ -2043,6 +2051,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8924315600412539737, guid: 7b83488c750b98a469041a4f138e1f21, type: 3}
+      propertyPath: playerHandSlot
+      value: 
+      objectReference: {fileID: 4401324006900364566}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2422,6 +2434,11 @@ SkinnedMeshRenderer:
 --- !u!137 &3609059473149049239 stripped
 SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: -4212839168324956461, guid: 466f60274cb30d6468231824db3101bf, type: 3}
+  m_PrefabInstance: {fileID: 8619055573174662980}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &4401324006900364566 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -3852356975776185774, guid: 466f60274cb30d6468231824db3101bf, type: 3}
   m_PrefabInstance: {fileID: 8619055573174662980}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &8077118098346365103 stripped

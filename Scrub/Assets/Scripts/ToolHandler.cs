@@ -1,162 +1,78 @@
-﻿// ToolHandler.cs
+﻿// ToolHandler.cs (Limpio y Finalizado para la Pausa)
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro; // Mantenemos por si es necesario en otras partes
 
 public class ToolHandler : MonoBehaviour
 {
-    [Header("Tool Configuration")]
-    [Tooltip("La posición (Transform) donde se instanciará la herramienta (ej. en la mano del jugador).")]
-    public Transform toolSlot;
+    [Header("UI References")]
+    [Tooltip("El GameObject del panel de selección de herramientas (Canvas/Panel contenedor).")]
+    public GameObject selectionPanelUI; // Mantenemos esta variable si TogglePause la usa.
 
-    // Si tienes un manager de sliders, asígnalo aquí para cerrarlo cuando se abra el panel de herramientas.
     [Header("Interoperabilidad UI")]
-    [Tooltip("Referencia al Manager que controla el panel de Sliders (opcional).")]
     public MonoBehaviour slidersManager;
-    [Tooltip("Referencia al componente de control de cámara/mouse del jugador (Ej: MouseLook, FirstPersonController).")]
     public MonoBehaviour mouseLook;
 
-    // Referencia que se asignará en Awake() buscando por Tag
-    private GameObject selectionPanelUI;
-    private ToolSelectionPanel toolSelectionPanelScript;
+    // ❌ ELIMINAMOS ESTAS VARIABLES OBSOLETAS ❌
+    // private ToolSelectionPanel toolSelectionPanelScript;
+    // private GameObject currentToolObject; 
 
-    // Variables de estado
-    private GameObject currentToolObject;
-    private bool isToolsPanelOpen = false;
-
-    // 🚨 CONSTANTE DE TAG: ASEGÚRATE DE USAR ESTE TAG EN EL OBJETO UI DE TU ESCENA
-    private const string ToolPanelTag = "ToolPanelUI";
+    private bool isToolsPanelOpen = false; // Usaremos esta para el estado del panel
 
     void Awake()
     {
-        // 1. BUSCAR EL PANEL EN LA ESCENA POR TAG (SOLUCIÓN AL PROBLEMA DE PREFABS)
-        GameObject panelObj = GameObject.FindGameObjectWithTag(ToolPanelTag);
+        // NO HACER GetComponent<ToolSelectionPanel>() aquí.
 
-        if (panelObj != null)
+        if (selectionPanelUI != null)
         {
-            selectionPanelUI = panelObj;
-
-            // 2. Continúa la lógica de inicialización
             selectionPanelUI.SetActive(false);
-            toolSelectionPanelScript = selectionPanelUI.GetComponent<ToolSelectionPanel>();
-        }
-        else
-        {
-            Debug.LogError($"FATAL ERROR: El Panel de Herramientas no se encontró en la escena. Asegúrate de que tiene el tag '{ToolPanelTag}'.", this);
         }
     }
 
     void Start()
     {
-        // Inicialización cruzada del Panel UI
-        if (toolSelectionPanelScript != null)
-        {
-            toolSelectionPanelScript.Initialize(this);
-        }
-        else if (selectionPanelUI != null)
-        {
-            Debug.LogError("ToolSelectionPanel Script no encontrado en el GameObject del Panel. ¿Está adjunto?", selectionPanelUI);
-        }
+        // NO HACER .Initialize() aquí.
     }
 
-    void Update()
-    {
-        // Lógica de uso y destrucción de la herramienta
-        if (currentToolObject != null)
-        {
-            if (Input.GetKeyDown(KeyCode.F))
-            {
-                CleanTool cleanScript = currentToolObject.GetComponent<CleanTool>();
-                cleanScript?.Clean();
-            }
+    // Nota: Si este script NO maneja las herramientas, la función Update() puede ir vacía.
+    // Si este script es el ToolPanelIdea.cs (que contiene TogglePause), Update() detecta Enter.
 
-            if (Input.GetKeyUp(KeyCode.F))
-            {
-                DestroyCurrentTool();
-            }
-        }
-    }
-
-    /// <summary>
-    /// Alterna la visibilidad del panel de herramientas sin pausar el tiempo, 
-    /// y gestiona el control de mouse/cámara.
-    /// </summary>
-    public void ToggleToolSelectionPanel()
+    // -------------------------------------------------------------------------
+    // ➡️ TogglePause() [Usamos la versión más reciente con Mouse Locker y sin TimeScale] 
+    // -------------------------------------------------------------------------
+    public void TogglePause()
     {
+        // Si tienes TaskManager, lo pones aquí: if (TaskManager.IsDecisionActive) return; 
+
         if (selectionPanelUI != null)
         {
             isToolsPanelOpen = !isToolsPanelOpen;
 
             if (isToolsPanelOpen)
             {
-                // -- LÓGICA DE ABRIR PANEL --
-
-                // 1. Cerrar otros paneles (ej. Sliders)
-                if (slidersManager != null && slidersManager.gameObject.activeSelf)
-                {
-                    slidersManager.gameObject.SetActive(false);
-                }
-
-                // 2. Activa el panel de herramientas
+                // ABRIR
                 selectionPanelUI.SetActive(true);
+                slidersManager?.gameObject.SetActive(false);
 
-                // 3. Desactiva el control de mouse/cámara
-                SetMouseControlsActive(false);
+                if (mouseLook != null)
+                    mouseLook.SendMessage("SetControlsActive", false, SendMessageOptions.DontRequireReceiver);
 
-                // ❌ OMITIMOS Time.timeScale = 0f; ❌
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
             }
             else
             {
-                // -- LÓGICA DE CERRAR PANEL --
-
-                // 1. Desactiva el panel de herramientas
+                // CERRAR
                 selectionPanelUI.SetActive(false);
 
-                // 2. Reactiva el control de mouse/cámara
-                SetMouseControlsActive(true);
+                if (mouseLook != null)
+                    mouseLook.SendMessage("SetControlsActive", true, SendMessageOptions.DontRequireReceiver);
 
-                // ❌ OMITIMOS Time.timeScale = 1f; ❌
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
             }
 
             Debug.Log($"[TOOL HANDLER] Panel de Herramientas {(isToolsPanelOpen ? "ABIERTO" : "CERRADO")}.");
-        }
-    }
-
-    // Función auxiliar para llamar a SetControlsActive y gestionar el cursor.
-    private void SetMouseControlsActive(bool isActive)
-    {
-        if (mouseLook != null)
-        {
-            // Usamos SendMessage para llamar a un método que no podemos referenciar directamente.
-            // Requiere que tu script de control de mouse tenga un método público: 
-            // 'public void SetControlsActive(bool state)'
-            mouseLook.SendMessage("SetControlsActive", isActive, SendMessageOptions.DontRequireReceiver);
-
-            // Gestión del Cursor
-            Cursor.lockState = isActive ? CursorLockMode.Locked : CursorLockMode.None;
-            Cursor.visible = !isActive;
-        }
-    }
-
-    // Función pública llamada por ToolSelectionPanel para instanciar la herramienta
-    public void SelectAndInstantiateTool(GameObject toolPrefab)
-    {
-        DestroyCurrentTool();
-
-        if (toolSlot != null && toolPrefab != null)
-        {
-            currentToolObject = Instantiate(toolPrefab, toolSlot.position, toolSlot.rotation, toolSlot);
-        }
-
-        // Cerrar el panel después de la selección
-        ToggleToolSelectionPanel();
-    }
-
-    private void DestroyCurrentTool()
-    {
-        if (currentToolObject != null)
-        {
-            Destroy(currentToolObject);
-            currentToolObject = null;
         }
     }
 }

@@ -478,6 +478,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ToolItemaManager
       objectReference: {fileID: 0}
+    - target: {fileID: 5058883026119516105, guid: 7b83488c750b98a469041a4f138e1f21, type: 3}
+      propertyPath: toolSlot
+      value: 
+      objectReference: {fileID: 2588429364943027432}
     - target: {fileID: 7116887127724670860, guid: 7b83488c750b98a469041a4f138e1f21, type: 3}
       propertyPath: m_LocalPosition.x
       value: 45.330704
@@ -1790,12 +1794,12 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7323757511219053547}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7db2576cb7b317d48a3b00de80635c3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  toolSlot: {fileID: 2588429364943027432}
+  selectionPanelUI: {fileID: 7082137273719020698, guid: 87c909dffc7a2124db35c3197011fc12, type: 3}
   slidersManager: {fileID: 0}
   mouseLook: {fileID: 0}
 --- !u!4 &7412219846133534524 stripped

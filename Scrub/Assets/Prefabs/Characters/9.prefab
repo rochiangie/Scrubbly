@@ -10592,6 +10592,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ToolItemaManager
       objectReference: {fileID: 0}
+    - target: {fileID: 5058883026119516105, guid: 7b83488c750b98a469041a4f138e1f21, type: 3}
+      propertyPath: toolSlot
+      value: 
+      objectReference: {fileID: 7106858006191209290}
     - target: {fileID: 7116887127724670860, guid: 7b83488c750b98a469041a4f138e1f21, type: 3}
       propertyPath: m_LocalPosition.x
       value: 45.330704
@@ -10632,6 +10636,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8924315600412539737, guid: 7b83488c750b98a469041a4f138e1f21, type: 3}
+      propertyPath: playerHandSlot
+      value: 
+      objectReference: {fileID: 7106858006191209290}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

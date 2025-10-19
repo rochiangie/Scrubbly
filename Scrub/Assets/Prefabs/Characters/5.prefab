@@ -1786,6 +1786,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 76d36199a007ebb4bb3973882a0bf1d2, type: 3}
+--- !u!4 &1716655501533483130 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -3852356975776185774, guid: 76d36199a007ebb4bb3973882a0bf1d2, type: 3}
+  m_PrefabInstance: {fileID: 6727081144954868264}
+  m_PrefabAsset: {fileID: 0}
 --- !u!137 &1902113196105136122 stripped
 SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: -4089605500013992494, guid: 76d36199a007ebb4bb3973882a0bf1d2, type: 3}
@@ -1828,6 +1833,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ToolItemaManager
       objectReference: {fileID: 0}
+    - target: {fileID: 5058883026119516105, guid: 7b83488c750b98a469041a4f138e1f21, type: 3}
+      propertyPath: toolSlot
+      value: 
+      objectReference: {fileID: 1716655501533483130}
     - target: {fileID: 7116887127724670860, guid: 7b83488c750b98a469041a4f138e1f21, type: 3}
       propertyPath: m_LocalPosition.x
       value: 45.330704
@@ -1868,6 +1877,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8924315600412539737, guid: 7b83488c750b98a469041a4f138e1f21, type: 3}
+      propertyPath: playerHandSlot
+      value: 
+      objectReference: {fileID: 1716655501533483130}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

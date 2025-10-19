@@ -31,7 +31,7 @@ public class ToolPanelIdea : MonoBehaviour
     {
         // Estado inicial: Cursor bloqueado y oculto (modo de juego)
         Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        Cursor.visible = true;
 
         if (mouseLookComponent == null)
         {
