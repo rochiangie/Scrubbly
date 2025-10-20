@@ -71,7 +71,11 @@ PrefabInstance:
     - target: {fileID: 5855977660759077857, guid: 0793318420fa5964c800276ebbb12ad4, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: d79085d3d5fa1f44f9e1a1ddedebe560, type: 2}
+      objectReference: {fileID: 2100000, guid: f089c83691f48394cabdf67f7e964e59, type: 2}
+    - target: {fileID: 6576828876552234837, guid: 0793318420fa5964c800276ebbb12ad4, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6576828876552234837, guid: 0793318420fa5964c800276ebbb12ad4, type: 3}
       propertyPath: m_IsKinematic
       value: 0

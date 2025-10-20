@@ -29,8 +29,16 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2836450630892503134, guid: 0793318420fa5964c800276ebbb12ad4, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2836450630892503134, guid: 0793318420fa5964c800276ebbb12ad4, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.07447941
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2836450630892503134, guid: 0793318420fa5964c800276ebbb12ad4, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2836450630892503134, guid: 0793318420fa5964c800276ebbb12ad4, type: 3}
       propertyPath: m_LocalPosition.x
@@ -77,6 +85,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2100000, guid: 545763f450819914290c3b03dd74cd95, type: 2}
     - target: {fileID: 6576828876552234837, guid: 0793318420fa5964c800276ebbb12ad4, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6576828876552234837, guid: 0793318420fa5964c800276ebbb12ad4, type: 3}
       propertyPath: m_IsKinematic
       value: 0
       objectReference: {fileID: 0}
@@ -100,9 +112,17 @@ PrefabInstance:
       propertyPath: toolPower
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 8850195514559335487, guid: 0793318420fa5964c800276ebbb12ad4, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: -1152462018950919332, guid: 20963f0a812cbec499ccafbbc9a7b7ea, type: 3}
     - target: {fileID: 8850317729276807323, guid: 0793318420fa5964c800276ebbb12ad4, type: 3}
       propertyPath: m_Name
       value: escoba1 Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 9080320191733925568, guid: 0793318420fa5964c800276ebbb12ad4, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 2661675758573432742, guid: 0793318420fa5964c800276ebbb12ad4, type: 3}

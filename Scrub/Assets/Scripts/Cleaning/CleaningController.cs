@@ -242,7 +242,7 @@ public class CleaningController : MonoBehaviour
         if (TaskManager.Instance != null)
         {
             // Esta llamada es correcta y no da error.
-            TaskManager.Instance.NotifyTrashCleaned();
+            TaskManager.Instance.NotifyTrashCleaned(gameObject.name);
         }
 
         closestTrash.EliminateTrash();
