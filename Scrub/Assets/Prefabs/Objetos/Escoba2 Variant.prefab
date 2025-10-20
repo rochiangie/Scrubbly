@@ -30,15 +30,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2836450630892503134, guid: 0793318420fa5964c800276ebbb12ad4, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.14427717
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2836450630892503134, guid: 0793318420fa5964c800276ebbb12ad4, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.12451468
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2836450630892503134, guid: 0793318420fa5964c800276ebbb12ad4, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.33084923
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2836450630892503134, guid: 0793318420fa5964c800276ebbb12ad4, type: 3}
       propertyPath: m_LocalPosition.x
@@ -85,6 +85,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2100000, guid: b86b7854bf2235a418430e43a5bc9e66, type: 2}
     - target: {fileID: 6576828876552234837, guid: 0793318420fa5964c800276ebbb12ad4, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6576828876552234837, guid: 0793318420fa5964c800276ebbb12ad4, type: 3}
       propertyPath: m_IsKinematic
       value: 0
       objectReference: {fileID: 0}
@@ -108,6 +112,10 @@ PrefabInstance:
       propertyPath: toolPower
       value: 15
       objectReference: {fileID: 0}
+    - target: {fileID: 8850195514559335487, guid: 0793318420fa5964c800276ebbb12ad4, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: -864264135143778140, guid: a3d32346e0c641647a9b08bc30177416, type: 3}
     - target: {fileID: 8850317729276807323, guid: 0793318420fa5964c800276ebbb12ad4, type: 3}
       propertyPath: m_Name
       value: Escoba2 Variant

@@ -105,7 +105,7 @@ public class DirtSpot : MonoBehaviour
         if (TaskManager.Instance != null)
         {
             // La función correcta es NotifySpotCleaned()
-            TaskManager.Instance.NotifySpotCleaned();
+            TaskManager.Instance.NotifySpotCleaned(gameObject.name);
         }
 
         // 2. LLAMADA CRÍTICA A SFX

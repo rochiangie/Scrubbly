@@ -1,48 +1,42 @@
-﻿// ToolHandler.cs (Limpio y Finalizado para la Pausa)
+﻿// ToolHandler.cs
 using UnityEngine;
-using UnityEngine.UI;
-using TMPro; // Mantenemos por si es necesario en otras partes
 
 public class ToolHandler : MonoBehaviour
 {
     [Header("UI References")]
     [Tooltip("El GameObject del panel de selección de herramientas (Canvas/Panel contenedor).")]
-    public GameObject selectionPanelUI; // Mantenemos esta variable si TogglePause la usa.
+    public GameObject selectionPanelUI;
 
     [Header("Interoperabilidad UI")]
+    [Tooltip("El Manager que controla otros sliders o paneles que deben ocultarse.")]
     public MonoBehaviour slidersManager;
+    [Tooltip("El script que controla el movimiento de la cámara/mouse.")]
     public MonoBehaviour mouseLook;
 
-    // ❌ ELIMINAMOS ESTAS VARIABLES OBSOLETAS ❌
-    // private ToolSelectionPanel toolSelectionPanelScript;
-    // private GameObject currentToolObject; 
-
-    private bool isToolsPanelOpen = false; // Usaremos esta para el estado del panel
+    private bool isToolsPanelOpen = false; // Estado actual del panel
 
     void Awake()
     {
-        // NO HACER GetComponent<ToolSelectionPanel>() aquí.
-
+        // Asegura que el panel esté oculto al iniciar el juego.
         if (selectionPanelUI != null)
         {
             selectionPanelUI.SetActive(false);
         }
+        // ❌ NO SE INICIALIZA NINGÚN OTRO SCRIPT AQUÍ ❌
     }
 
     void Start()
     {
-        // NO HACER .Initialize() aquí.
+        // NO HACER NADA AQUÍ.
     }
 
-    // Nota: Si este script NO maneja las herramientas, la función Update() puede ir vacía.
-    // Si este script es el ToolPanelIdea.cs (que contiene TogglePause), Update() detecta Enter.
-
     // -------------------------------------------------------------------------
-    // ➡️ TogglePause() [Usamos la versión más reciente con Mouse Locker y sin TimeScale] 
+    // ➡️ TogglePause() [Función principal llamada por PlayerInteraction al presionar Enter]
     // -------------------------------------------------------------------------
     public void TogglePause()
     {
-        // Si tienes TaskManager, lo pones aquí: if (TaskManager.IsDecisionActive) return; 
+        // Opcional: Si TaskManager es Singleton, puedes bloquear la pausa durante decisiones.
+        // if (TaskManager.Instance != null && TaskManager.IsDecisionActive) return;
 
         if (selectionPanelUI != null)
         {
@@ -50,24 +44,28 @@ public class ToolHandler : MonoBehaviour
 
             if (isToolsPanelOpen)
             {
-                // ABRIR
+                // ABRIR MENÚ
                 selectionPanelUI.SetActive(true);
                 slidersManager?.gameObject.SetActive(false);
 
+                // Bloquea el movimiento de la cámara (mouseLook.SendMessage usa el método SetControlsActive)
                 if (mouseLook != null)
                     mouseLook.SendMessage("SetControlsActive", false, SendMessageOptions.DontRequireReceiver);
 
+                // Libera el cursor para que pueda hacer clic en los botones.
                 Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;
             }
             else
             {
-                // CERRAR
+                // CERRAR MENÚ
                 selectionPanelUI.SetActive(false);
 
+                // Reactiva el movimiento de la cámara
                 if (mouseLook != null)
                     mouseLook.SendMessage("SetControlsActive", true, SendMessageOptions.DontRequireReceiver);
 
+                // Bloquea el cursor para el control de la cámara en el juego.
                 Cursor.lockState = CursorLockMode.Locked;
                 Cursor.visible = false;
             }
