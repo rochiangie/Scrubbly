@@ -82,7 +82,7 @@ public class MemorieDecisionUI : MonoBehaviour
 
         // Mostrar el panel, pausar, y notificar al manager del estado
         decisionPanel.SetActive(true);
-        SentimentalScoreManager.SetDecisionActive(true);
+        TaskManager.SetDecisionActive(true);
         Time.timeScale = 0f; // Pausa el juego
 
         // 🛑 Importante: Mantenemos el cursor bloqueado y oculto.
@@ -110,7 +110,7 @@ public class MemorieDecisionUI : MonoBehaviour
 
         // Ocultar la UI y reanudar el juego
         decisionPanel.SetActive(false);
-        SentimentalScoreManager.SetDecisionActive(false);
+        TaskManager.SetDecisionActive(false);
         Time.timeScale = 1f; // Reanuda el juego
 
         // Bloquear el cursor de nuevo (si la cámara no se movió, esto es redundante, pero seguro)

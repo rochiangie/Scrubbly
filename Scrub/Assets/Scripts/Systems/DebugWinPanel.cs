@@ -46,7 +46,7 @@ public class DebugWinPanel : MonoBehaviour
     // Método para simular un Score de Victoria (Equilibrio)
     public void SetGoodScore()
     {
-        SentimentalScoreManager manager = SentimentalScoreManager.Instance;
+        TaskManager manager = TaskManager.Instance;
         if (manager == null)
         {
             Debug.LogError("No se encontró el SentimentalScoreManager.");
@@ -67,7 +67,7 @@ public class DebugWinPanel : MonoBehaviour
     // Método para simular un Score de Derrota (Acumulador o Desequilibrio)
     public void SetBadScore()
     {
-        SentimentalScoreManager manager = SentimentalScoreManager.Instance;
+        TaskManager manager = TaskManager.Instance;
         if (manager == null)
         {
             Debug.LogError("No se encontró el SentimentalScoreManager.");

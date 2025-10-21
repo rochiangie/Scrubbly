@@ -295,6 +295,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dee3e8a67a58f8a4ba2088c49239d4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trashName: 
+  destructionEffectPrefab: {fileID: 0}
 --- !u!65 &18739251
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1166,6 +1168,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dee3e8a67a58f8a4ba2088c49239d4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trashName: 
+  destructionEffectPrefab: {fileID: 0}
 --- !u!1 &71240210
 GameObject:
   m_ObjectHideFlags: 0
@@ -1294,6 +1298,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dee3e8a67a58f8a4ba2088c49239d4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trashName: 
+  destructionEffectPrefab: {fileID: 0}
 --- !u!65 &75594202
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1719,6 +1725,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dee3e8a67a58f8a4ba2088c49239d4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trashName: 
+  destructionEffectPrefab: {fileID: 0}
 --- !u!65 &131694256
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1762,6 +1770,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dee3e8a67a58f8a4ba2088c49239d4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trashName: 
+  destructionEffectPrefab: {fileID: 0}
 --- !u!65 &136272946
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1991,6 +2001,7 @@ MonoBehaviour:
   itemThresholdToActivateList: 10
   damageMultiplier: 1
   requireCorrectTool: 1
+  allCleanableObjects: []
 --- !u!4 &164706694
 Transform:
   m_ObjectHideFlags: 0
@@ -2617,6 +2628,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dee3e8a67a58f8a4ba2088c49239d4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trashName: 
+  destructionEffectPrefab: {fileID: 0}
 --- !u!65 &213710723
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2843,6 +2856,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dee3e8a67a58f8a4ba2088c49239d4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trashName: 
+  destructionEffectPrefab: {fileID: 0}
 --- !u!65 &262242631
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3714,6 +3729,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dee3e8a67a58f8a4ba2088c49239d4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trashName: 
+  destructionEffectPrefab: {fileID: 0}
 --- !u!65 &305104844
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3896,6 +3913,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dee3e8a67a58f8a4ba2088c49239d4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trashName: 
+  destructionEffectPrefab: {fileID: 0}
 --- !u!54 &306148407
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -4171,6 +4190,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dee3e8a67a58f8a4ba2088c49239d4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trashName: 
+  destructionEffectPrefab: {fileID: 0}
 --- !u!65 &326905129
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4904,6 +4925,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dee3e8a67a58f8a4ba2088c49239d4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trashName: 
+  destructionEffectPrefab: {fileID: 0}
 --- !u!65 &346839923
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5183,6 +5206,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dee3e8a67a58f8a4ba2088c49239d4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trashName: 
+  destructionEffectPrefab: {fileID: 0}
 --- !u!65 &377949342
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5686,6 +5711,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dee3e8a67a58f8a4ba2088c49239d4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trashName: 
+  destructionEffectPrefab: {fileID: 0}
 --- !u!65 &421102129
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5729,6 +5756,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dee3e8a67a58f8a4ba2088c49239d4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trashName: 
+  destructionEffectPrefab: {fileID: 0}
 --- !u!65 &440773692
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6217,6 +6246,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dee3e8a67a58f8a4ba2088c49239d4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trashName: 
+  destructionEffectPrefab: {fileID: 0}
 --- !u!65 &484692157
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6238,6 +6269,19 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.25, y: 0.25, z: 0.25}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &484692158
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 484692153}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f66cac6c0758ad94c87aa13bae39d21b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  defaultDropForce: 3
 --- !u!1 &514230924
 GameObject:
   m_ObjectHideFlags: 0
@@ -6521,6 +6565,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dee3e8a67a58f8a4ba2088c49239d4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trashName: 
+  destructionEffectPrefab: {fileID: 0}
 --- !u!1 &541377000 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 461692670688170993, guid: d3887f0097534cc4baf4263f1b8093ff, type: 3}
@@ -6543,6 +6589,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dee3e8a67a58f8a4ba2088c49239d4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trashName: 
+  destructionEffectPrefab: {fileID: 0}
 --- !u!65 &541377004
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6747,6 +6795,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dee3e8a67a58f8a4ba2088c49239d4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trashName: 
+  destructionEffectPrefab: {fileID: 0}
 --- !u!65 &553203985
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6790,6 +6840,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dee3e8a67a58f8a4ba2088c49239d4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trashName: 
+  destructionEffectPrefab: {fileID: 0}
 --- !u!65 &557161399
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -7522,6 +7574,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dee3e8a67a58f8a4ba2088c49239d4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trashName: 
+  destructionEffectPrefab: {fileID: 0}
 --- !u!65 &594734956
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -7933,6 +7987,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dee3e8a67a58f8a4ba2088c49239d4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trashName: 
+  destructionEffectPrefab: {fileID: 0}
 --- !u!54 &651071482
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -8010,6 +8066,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dee3e8a67a58f8a4ba2088c49239d4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trashName: 
+  destructionEffectPrefab: {fileID: 0}
 --- !u!65 &666852396
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -8841,6 +8899,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dee3e8a67a58f8a4ba2088c49239d4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trashName: 
+  destructionEffectPrefab: {fileID: 0}
 --- !u!1 &733299414
 GameObject:
   m_ObjectHideFlags: 0
@@ -9548,6 +9608,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dee3e8a67a58f8a4ba2088c49239d4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trashName: 
+  destructionEffectPrefab: {fileID: 0}
 --- !u!1 &797792725 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8026716730602672792, guid: f532cc1fa8fce844b951cf0e372a8ff0, type: 3}
@@ -9570,6 +9632,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dee3e8a67a58f8a4ba2088c49239d4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trashName: 
+  destructionEffectPrefab: {fileID: 0}
 --- !u!65 &797792733
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -9713,6 +9777,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dee3e8a67a58f8a4ba2088c49239d4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trashName: 
+  destructionEffectPrefab: {fileID: 0}
 --- !u!1 &809801156 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3071565827729380618, guid: 57589b00c237bc04281e5cd0bc0bb28c, type: 3}
@@ -9756,6 +9822,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dee3e8a67a58f8a4ba2088c49239d4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trashName: 
+  destructionEffectPrefab: {fileID: 0}
 --- !u!1 &816996814 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5317335580716376189, guid: 2c3b7cb9660f44c438470cecbd8a6c4d, type: 3}
@@ -9778,6 +9846,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dee3e8a67a58f8a4ba2088c49239d4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trashName: 
+  destructionEffectPrefab: {fileID: 0}
 --- !u!65 &816996822
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -9821,6 +9891,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dee3e8a67a58f8a4ba2088c49239d4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trashName: 
+  destructionEffectPrefab: {fileID: 0}
 --- !u!65 &821904333
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -10036,6 +10108,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dee3e8a67a58f8a4ba2088c49239d4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trashName: 
+  destructionEffectPrefab: {fileID: 0}
 --- !u!54 &838877118
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -10211,6 +10285,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dee3e8a67a58f8a4ba2088c49239d4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trashName: 
+  destructionEffectPrefab: {fileID: 0}
 --- !u!65 &857774400
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -10350,6 +10426,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dee3e8a67a58f8a4ba2088c49239d4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trashName: 
+  destructionEffectPrefab: {fileID: 0}
 --- !u!65 &866940548
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -11837,6 +11915,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dee3e8a67a58f8a4ba2088c49239d4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trashName: 
+  destructionEffectPrefab: {fileID: 0}
 --- !u!65 &934540329
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -13018,6 +13098,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dee3e8a67a58f8a4ba2088c49239d4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trashName: 
+  destructionEffectPrefab: {fileID: 0}
 --- !u!65 &989530396
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -13138,6 +13220,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dee3e8a67a58f8a4ba2088c49239d4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trashName: 
+  destructionEffectPrefab: {fileID: 0}
 --- !u!65 &995595749
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -13323,6 +13407,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dee3e8a67a58f8a4ba2088c49239d4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trashName: 
+  destructionEffectPrefab: {fileID: 0}
 --- !u!54 &1012365675
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -13372,6 +13458,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dee3e8a67a58f8a4ba2088c49239d4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trashName: 
+  destructionEffectPrefab: {fileID: 0}
 --- !u!65 &1014947715
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -13415,6 +13503,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dee3e8a67a58f8a4ba2088c49239d4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trashName: 
+  destructionEffectPrefab: {fileID: 0}
 --- !u!65 &1019441916
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -14053,6 +14143,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dee3e8a67a58f8a4ba2088c49239d4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trashName: 
+  destructionEffectPrefab: {fileID: 0}
 --- !u!54 &1057227869
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -15003,6 +15095,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dee3e8a67a58f8a4ba2088c49239d4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trashName: 
+  destructionEffectPrefab: {fileID: 0}
 --- !u!65 &1163239270
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -15046,6 +15140,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dee3e8a67a58f8a4ba2088c49239d4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trashName: 
+  destructionEffectPrefab: {fileID: 0}
 --- !u!65 &1188284289
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -15953,6 +16049,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 698171396981000514, guid: b29faf6740cb849438e53d55497b58ee, type: 3}
       insertIndex: -1
       addedObject: {fileID: 484692157}
+    - targetCorrespondingSourceObject: {fileID: 698171396981000514, guid: b29faf6740cb849438e53d55497b58ee, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 484692158}
   m_SourcePrefab: {fileID: 100100000, guid: b29faf6740cb849438e53d55497b58ee, type: 3}
 --- !u!1 &1255114172 stripped
 GameObject:
@@ -16151,6 +16250,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dee3e8a67a58f8a4ba2088c49239d4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trashName: 
+  destructionEffectPrefab: {fileID: 0}
 --- !u!65 &1303318300
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -16255,6 +16356,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dee3e8a67a58f8a4ba2088c49239d4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trashName: 
+  destructionEffectPrefab: {fileID: 0}
 --- !u!1 &1325308710 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 372292419298398389, guid: ee3f5e0dc21460742a2bdcb3f48bbee3, type: 3}
@@ -16298,6 +16401,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dee3e8a67a58f8a4ba2088c49239d4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trashName: 
+  destructionEffectPrefab: {fileID: 0}
 --- !u!1001 &1327205064
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -16666,6 +16771,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dee3e8a67a58f8a4ba2088c49239d4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trashName: 
+  destructionEffectPrefab: {fileID: 0}
 --- !u!1001 &1340276154
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -17134,6 +17241,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dee3e8a67a58f8a4ba2088c49239d4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trashName: 
+  destructionEffectPrefab: {fileID: 0}
 --- !u!65 &1356394303
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -19258,6 +19367,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dee3e8a67a58f8a4ba2088c49239d4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trashName: 
+  destructionEffectPrefab: {fileID: 0}
 --- !u!65 &1525330124
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -20249,6 +20360,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dee3e8a67a58f8a4ba2088c49239d4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trashName: 
+  destructionEffectPrefab: {fileID: 0}
 --- !u!1001 &1590432311
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -21128,6 +21241,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dee3e8a67a58f8a4ba2088c49239d4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trashName: 
+  destructionEffectPrefab: {fileID: 0}
 --- !u!65 &1606498279
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -21368,6 +21483,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dee3e8a67a58f8a4ba2088c49239d4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trashName: 
+  destructionEffectPrefab: {fileID: 0}
 --- !u!65 &1618996676
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -21597,6 +21714,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dee3e8a67a58f8a4ba2088c49239d4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trashName: 
+  destructionEffectPrefab: {fileID: 0}
 --- !u!65 &1655283873
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -22771,6 +22890,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dee3e8a67a58f8a4ba2088c49239d4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trashName: 
+  destructionEffectPrefab: {fileID: 0}
 --- !u!1001 &1786603746
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -22882,6 +23003,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dee3e8a67a58f8a4ba2088c49239d4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trashName: 
+  destructionEffectPrefab: {fileID: 0}
 --- !u!65 &1797917486
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -23134,6 +23257,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dee3e8a67a58f8a4ba2088c49239d4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trashName: 
+  destructionEffectPrefab: {fileID: 0}
 --- !u!65 &1821049243
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -23861,6 +23986,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dee3e8a67a58f8a4ba2088c49239d4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trashName: 
+  destructionEffectPrefab: {fileID: 0}
 --- !u!65 &1862251599
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -23985,6 +24112,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dee3e8a67a58f8a4ba2088c49239d4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trashName: 
+  destructionEffectPrefab: {fileID: 0}
 --- !u!65 &1882703128
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -24109,6 +24238,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dee3e8a67a58f8a4ba2088c49239d4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trashName: 
+  destructionEffectPrefab: {fileID: 0}
 --- !u!1 &1902452856
 GameObject:
   m_ObjectHideFlags: 0
@@ -25518,6 +25649,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dee3e8a67a58f8a4ba2088c49239d4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trashName: 
+  destructionEffectPrefab: {fileID: 0}
 --- !u!65 &2007926789
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -26110,6 +26243,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dee3e8a67a58f8a4ba2088c49239d4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trashName: 
+  destructionEffectPrefab: {fileID: 0}
 --- !u!1 &2060443832 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 698171396981000514, guid: b29faf6740cb849438e53d55497b58ee, type: 3}
@@ -26132,6 +26267,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dee3e8a67a58f8a4ba2088c49239d4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trashName: 
+  destructionEffectPrefab: {fileID: 0}
 --- !u!65 &2060443836
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -26153,6 +26290,19 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.25, y: 0.25, z: 0.25}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &2060443837
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2060443832}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f66cac6c0758ad94c87aa13bae39d21b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  defaultDropForce: 3
 --- !u!1001 &2065005128
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -26348,7 +26498,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2176078599250161769, guid: b29faf6740cb849438e53d55497b58ee, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1.593029
+      value: -1.65
       objectReference: {fileID: 0}
     - target: {fileID: 2176078599250161769, guid: b29faf6740cb849438e53d55497b58ee, type: 3}
       propertyPath: m_LocalRotation.w
@@ -26396,6 +26546,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 698171396981000514, guid: b29faf6740cb849438e53d55497b58ee, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2060443836}
+    - targetCorrespondingSourceObject: {fileID: 698171396981000514, guid: b29faf6740cb849438e53d55497b58ee, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2060443837}
   m_SourcePrefab: {fileID: 100100000, guid: b29faf6740cb849438e53d55497b58ee, type: 3}
 --- !u!1 &2082973676
 GameObject:
@@ -27005,6 +27158,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dee3e8a67a58f8a4ba2088c49239d4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trashName: 
+  destructionEffectPrefab: {fileID: 0}
 --- !u!65 &2107382153
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -27577,6 +27732,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dee3e8a67a58f8a4ba2088c49239d4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trashName: 
+  destructionEffectPrefab: {fileID: 0}
 --- !u!65 &2134664633
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -27620,6 +27777,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dee3e8a67a58f8a4ba2088c49239d4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trashName: 
+  destructionEffectPrefab: {fileID: 0}
 --- !u!65 &2134953356
 BoxCollider:
   m_ObjectHideFlags: 0
