@@ -29,7 +29,7 @@ public class CleaningController : MonoBehaviour
     [SerializeField] private bool requireCorrectTool = true;
     [SerializeField] private string[] validToolIds = { "Mop", "Sponge", "Vacuum", "Escoba" };
     [SerializeField] private string dirtTag = "Dirt";
-    [SerializeField] private string trashTag = "Basura"; // Usamos el tag "Basura"
+    [SerializeField] private string trashTag = "Basura";
 
     // ---------------- Animación ----------------
     [Header("Animation Layer")]
@@ -42,7 +42,6 @@ public class CleaningController : MonoBehaviour
     private List<TrashObject> nearbyTrash = new List<TrashObject>();
 
     private int cleaningLayerIndex = -1;
-
 
     // ================== Unity ==================
     private void Awake()
@@ -143,6 +142,7 @@ public class CleaningController : MonoBehaviour
             if (dirt != null && !nearbyDirt.Contains(dirt))
             {
                 nearbyDirt.Add(dirt);
+                Debug.Log($"🧹 DirtSpot detectado: {dirt.name}");
             }
         }
 
@@ -152,6 +152,7 @@ public class CleaningController : MonoBehaviour
             if (trash != null && !nearbyTrash.Contains(trash))
             {
                 nearbyTrash.Add(trash);
+                Debug.Log($"🗑️ TrashObject detectado: {trash.name}");
             }
         }
     }
@@ -193,19 +194,22 @@ public class CleaningController : MonoBehaviour
         if (closestDirt == null) return;
 
         bool successfullyUsed = CurrentTool.TryUse();
-        if (!successfullyUsed) { CurrentTool = null; return; }
+        if (!successfullyUsed)
+        {
+            CurrentTool = null;
+            return;
+        }
 
         float damage = damagePerHit * CurrentTool.ToolPower;
 
-        if (requireCorrectTool && !closestDirt.CanBeCleanedBy(CurrentTool.ToolId)) { return; }
+        if (requireCorrectTool && !closestDirt.CanBeCleanedBy(CurrentTool.ToolId))
+        {
+            Debug.LogWarning($"[Clean Hit] Herramienta incorrecta: {CurrentTool.ToolId} para {closestDirt.name}");
+            return;
+        }
 
         closestDirt.CleanHit(damage);
-
-        // 🛑 CORRECCIÓN 1: Notifica que se limpió un Spot (DirtSpot.cs ya llama a NotifySpotCleaned en HandleDestruction)
-        // Por lo general, esta llamada no es necesaria aquí si CleanHit() es lo que destruye el objeto.
-        // Si tu lógica requiere una llamada aquí:
-        // if (TaskManager.Instance != null) { TaskManager.Instance.NotifySpotCleaned(); }
-        // Si no, confiar en que el DirtSpot lo hace al destruirse.
+        Debug.Log($"🧹 Aplicando {damage} de daño a {closestDirt.name}");
 
         if (AudioManager.Instance != null)
         {
@@ -238,16 +242,27 @@ public class CleaningController : MonoBehaviour
             return;
         }
 
-        // 🛑 CORRECCIÓN 2: Llama a la notificación del TaskManager ANTES de la destrucción.
-        if (TaskManager.Instance != null)
+        // ✅ CORRECCIÓN: Usar el método correcto del TrashObject
+        if (closestTrash != null)
         {
-            // Esta llamada es correcta y no da error.
-            TaskManager.Instance.NotifyTrashCleaned(gameObject.name);
+            // 🛑 EL PROBLEMA ESTABA AQUÍ - Verificar qué métodos tiene TrashObject
+            if (closestTrash.GetType().GetMethod("CleanTrash") != null)
+            {
+                closestTrash.CleanTrash(); // Método del script corregido anteriormente
+            }
+            else if (closestTrash.GetType().GetMethod("EliminateTrash") != null)
+            {
+                closestTrash.EliminateTrash(); // Método alternativo
+            }
+            else
+            {
+                Debug.LogError($"❌ TrashObject no tiene métodos CleanTrash() ni EliminateTrash()");
+                return;
+            }
+
+            Debug.Log($"🗑️ Basura eliminada: {closestTrash.name}");
+            nearbyTrash.Remove(closestTrash);
         }
-
-        closestTrash.EliminateTrash();
-
-        nearbyTrash.Remove(closestTrash);
     }
 
     // ================== LÓGICA INTERNA DE EQUIPO ==================
@@ -285,11 +300,11 @@ public class CleaningController : MonoBehaviour
         {
             if (td.TryGetComponent<Carryable>(out var carryable))
             {
-                // El 'null' asume que el PickUp en Carryable no necesita los colliders aquí
                 carryable.PickUp(holdPoint, null);
             }
 
             RegisterTool(td);
+            Debug.Log($"🛠️ Herramienta recogida: {td.ToolId}");
         }
     }
 
@@ -329,6 +344,28 @@ public class CleaningController : MonoBehaviour
             float tgt = shouldUseCleaning ? 1f : 0f;
 
             anim.SetLayerWeight(cleaningLayerIndex, Mathf.MoveTowards(cur, tgt, Time.deltaTime * layerBlendSpeed));
+        }
+    }
+
+    // ✅ NUEVO: Método para debug
+    [ContextMenu("Debug Nearby Objects")]
+    public void DebugNearbyObjects()
+    {
+        Debug.Log($"=== 🎯 DEBUG NEARBY OBJECTS ===");
+        Debug.Log($"Dirt Spots cercanos: {nearbyDirt.Count}");
+        Debug.Log($"Trash Objects cercanos: {nearbyTrash.Count}");
+        Debug.Log($"Herramienta actual: {(CurrentTool != null ? CurrentTool.ToolId : "Ninguna")}");
+
+        foreach (var dirt in nearbyDirt)
+        {
+            if (dirt != null)
+                Debug.Log($"🧹 Dirt: {dirt.name} - Limpiado: {dirt.IsCleaned}");
+        }
+
+        foreach (var trash in nearbyTrash)
+        {
+            if (trash != null)
+                Debug.Log($"🗑️ Trash: {trash.name} - Limpiado: {trash.IsCleaned}");
         }
     }
 }

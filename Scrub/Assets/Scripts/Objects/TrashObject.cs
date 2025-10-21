@@ -1,19 +1,82 @@
-// Scripts/Objects/TrashObject.cs
+ï»¿using UnityEngine;
+using System.Collections;
 
-using UnityEngine;
-
-// Asegúrate de que los objetos de basura tengan el Tag "Basura" y estén en el Layer "Interactable".
 public class TrashObject : MonoBehaviour
 {
-    // Función pública llamada por el script del jugador para iniciar la destrucción
+    [Header("ConfiguraciÃ³n de Basura")]
+    public string trashName;
+    public bool IsCleaned { get; private set; } = false;
+
+    [Header("Efectos")]
+    public GameObject destructionEffectPrefab;
+
+    private bool alreadyNotified = false;
+    private Renderer trashRenderer;
+    private Collider trashCollider;
+
+    void Awake()
+    {
+        trashRenderer = GetComponent<Renderer>();
+        trashCollider = GetComponent<Collider>();
+        alreadyNotified = false;
+
+        if (string.IsNullOrEmpty(trashName))
+            trashName = gameObject.name;
+    }
+
+    void Start()
+    {
+        // âœ… Verificar que estamos en la lista del TaskManager
+        if (TaskManager.Instance != null && !TaskManager.Instance.remainingItemNames.Contains(trashName))
+        {
+            Debug.LogWarning($"âš ï¸ TrashObject {trashName} no estÃ¡ en la lista del TaskManager. Agregando...");
+            TaskManager.Instance.remainingItemNames.Add(trashName);
+        }
+    }
+
+    /// <summary>
+    /// Llamado cuando el jugador interactÃºa con esta basura
+    /// </summary>
     public void EliminateTrash()
     {
-        Debug.Log($"Basura '{gameObject.name}' eliminada al instante.");
+        Debug.Log($"ğŸ†˜ EliminateTrash() llamado en {trashName}");
+        CleanTrash(); // Llama al mÃ©todo que SÃ funciona
+    }
 
-        // Aquí podrías añadir un efecto de sonido o partículas antes de la destrucción
-        // ...
+    // âœ… MÃ‰TODO ALTERNATIVO
+    public void CleanTrash()
+    {
+        if (IsCleaned)
+        {
+            Debug.LogWarning($"âš ï¸ {trashName} ya estaba limpiado");
+            return;
+        }
 
-        // Destruye este objeto
-        Destroy(gameObject);
+        IsCleaned = true;
+
+        // Notificar al TaskManager
+        if (TaskManager.Instance != null)
+        {
+            TaskManager.Instance.NotifyTrashCleaned(trashName);
+            Debug.Log($"âœ… Notificado TaskManager: {trashName}");
+        }
+
+        // Efectos visuales
+        if (destructionEffectPrefab != null)
+        {
+            Instantiate(destructionEffectPrefab, transform.position, Quaternion.identity);
+        }
+
+        // Desactivar y destruir
+        if (trashRenderer != null) trashRenderer.enabled = false;
+        if (trashCollider != null) trashCollider.enabled = false;
+
+        Destroy(gameObject, 0.1f);
+    }
+
+    // âœ… Para debug
+    void OnMouseDown()
+    {
+        Debug.Log($"ğŸ—‘ï¸ TrashObject: {trashName}, Limpiado: {IsCleaned}");
     }
 }

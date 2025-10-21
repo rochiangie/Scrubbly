@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
-using UnityEngine.Events; // Necesario si tu OnAllCleaned usa esto
-using System.Collections; // Necesario para Coroutines
+using UnityEngine.Events;
+using System.Collections;
 
 public class DirtSpot : MonoBehaviour
 {
@@ -9,7 +9,7 @@ public class DirtSpot : MonoBehaviour
     // ===============================================
 
     /// <summary>Bandera para indicar si este punto de suciedad ya ha sido limpiado.</summary>
-    public bool IsCleaned { get; private set; } = false; // Empieza como sucio (false)
+    public bool IsCleaned { get; private set; } = false;
 
     [Header("Efecto de Destrucción")]
     [Tooltip("Prefab del sistema de partículas que se instanciará al destruirse.")]
@@ -20,8 +20,8 @@ public class DirtSpot : MonoBehaviour
     [Range(0f, 1f)]
     public float minOpacity = 0.1f;
 
-    private Renderer dirtRenderer; // Componente Renderer para acceder al Material
-    private Material dirtMaterial; // El material que vamos a modificar
+    private Renderer dirtRenderer;
+    private Material dirtMaterial;
 
     [Header("Salud y Requisitos")]
     [Tooltip("La vida máxima que tiene la suciedad.")]
@@ -35,6 +35,9 @@ public class DirtSpot : MonoBehaviour
     private float currentHealth;
     private bool isHandlingDestruction = false;
 
+    // ✅ NUEVO: Para evitar notificaciones duplicadas
+    private bool alreadyNotified = false;
+
     // ===============================================
     //               MÉTODOS DE UNITY
     // ===============================================
@@ -43,6 +46,7 @@ public class DirtSpot : MonoBehaviour
     {
         currentHealth = maxHealth;
         isHandlingDestruction = false;
+        alreadyNotified = false;
 
         // Inicialización de la transparencia
         dirtRenderer = GetComponent<Renderer>();
@@ -51,6 +55,16 @@ public class DirtSpot : MonoBehaviour
             dirtMaterial = dirtRenderer.material;
             SetMaterialToFadeMode(dirtMaterial);
             UpdateVisualAppearance();
+        }
+    }
+
+    void Start()
+    {
+        // ✅ Verificar que estamos en la lista del TaskManager
+        if (TaskManager.Instance != null && !TaskManager.Instance.remainingItemNames.Contains(gameObject.name))
+        {
+            Debug.LogWarning($"⚠️ DirtSpot {gameObject.name} no está en la lista del TaskManager. Agregando...");
+            TaskManager.Instance.remainingItemNames.Add(gameObject.name);
         }
     }
 
@@ -75,7 +89,7 @@ public class DirtSpot : MonoBehaviour
     public void CleanHit(float damage)
     {
         // Si ya estamos manejando la destrucción, ignorar golpes.
-        if (isHandlingDestruction) return;
+        if (isHandlingDestruction || IsCleaned) return;
 
         // 1. Aplica el daño
         currentHealth -= damage;
@@ -97,28 +111,31 @@ public class DirtSpot : MonoBehaviour
 
     private void HandleDestruction()
     {
-        if (isHandlingDestruction) return;
+        if (isHandlingDestruction || alreadyNotified) return;
         isHandlingDestruction = true;
-        IsCleaned = true; // MARCAR COMO LIMPIO PARA EL TaskManager
+        alreadyNotified = true; // ✅ EVITAR NOTIFICACIONES DUPLICADAS
+        IsCleaned = true;
 
-        // 🛑 1. NOTIFICAR AL TASKMANAGER (CORRECCIÓN CLAVE)
+        // 🛑 1. NOTIFICAR AL TASKMANAGER (CON VALIDACIÓN)
         if (TaskManager.Instance != null)
         {
-            // La función correcta es NotifySpotCleaned()
             TaskManager.Instance.NotifySpotCleaned(gameObject.name);
+            Debug.Log($"✅ DirtSpot {gameObject.name} notificado al TaskManager");
+        }
+        else
+        {
+            Debug.LogError($"❌ TaskManager.Instance es NULL al intentar notificar {gameObject.name}");
         }
 
         // 2. LLAMADA CRÍTICA A SFX
         if (AudioManager.Instance != null)
         {
-            // Asume que AudioManager existe
             // AudioManager.Instance.PlayCleanSFX(); 
         }
 
         // 3. INSTANCIAR PARTÍCULAS
         if (destructionEffectPrefab != null)
         {
-            // Usamos StartCoroutine para que las partículas se ejecuten mientras destruimos el objeto
             StartCoroutine(DestroyWithParticles(destructionEffectPrefab));
         }
 
@@ -127,7 +144,7 @@ public class DirtSpot : MonoBehaviour
         Collider collider = GetComponent<Collider>();
         if (collider != null) collider.enabled = false;
 
-        // 5. DESTRUIR EL OBJETO ACTUAL (LA SUCIEDAD) después de un pequeño retraso
+        // 5. DESTRUIR EL OBJETO ACTUAL después de un pequeño retraso
         Destroy(gameObject, 0.1f);
     }
 
@@ -187,7 +204,6 @@ public class DirtSpot : MonoBehaviour
 
     private void SetMaterialToFadeMode(Material material)
     {
-        // Esto es una configuración de shader estándar para transparencia tipo "Fade"
         material.SetOverrideTag("RenderType", "Transparent");
         material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
         material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
@@ -196,5 +212,11 @@ public class DirtSpot : MonoBehaviour
         material.EnableKeyword("_ALPHABLEND_ON");
         material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
         material.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
+    }
+
+    // ✅ NUEVO: Para debug
+    void OnMouseDown()
+    {
+        Debug.Log($"🧹 DirtSpot: {gameObject.name}, Salud: {currentHealth}/{maxHealth}, Limpiado: {IsCleaned}");
     }
 }

@@ -26,7 +26,7 @@ public class MemorieObject : MonoBehaviour
             );
 
             // 🛑 Importante: Indicamos al sistema que la UI de decisión está activa.
-            SentimentalScoreManager.SetDecisionActive(true);
+            TaskManager.SetDecisionActive(true);
         }
         else
         {
@@ -56,6 +56,6 @@ public class MemorieObject : MonoBehaviour
         Destroy(gameObject);
 
         // 3. Importante: Indicamos que la UI de decisión se ha cerrado.
-        SentimentalScoreManager.SetDecisionActive(false);
+        TaskManager.SetDecisionActive(false);
     }
 }
