@@ -164,8 +164,11 @@ public class PlayerInteraction : MonoBehaviour
     // =========================================================================
     // 🖱️ FUNCIÓN PARA LIMPIEZA CON CLICK DEL MOUSE
     // =========================================================================
+    // PlayerInteraction.cs (Fragmento de HandleMouseClickCleaning)
+
     private void HandleMouseClickCleaning()
     {
+        // Solo interactuamos si el juego no está en pausa (Time.timeScale > 0)
         if (Input.GetMouseButtonDown(0) && Time.timeScale > 0)
         {
             if (mainCamera == null) return;
@@ -177,9 +180,23 @@ public class PlayerInteraction : MonoBehaviour
             {
                 GameObject hitObject = hit.collider.gameObject;
 
+                // 🚨 VERIFICACIÓN CRÍTICA DE HERRAMIENTA 🚨
+                // Obtenemos la herramienta activa (asumiendo que se requiere una para cualquier limpieza de click)
+                ToolDescriptor activeTool = cleaningController?.CurrentTool;
+
+                // Si NO hay herramienta activa, salimos del proceso de limpieza por mouse
+                if (activeTool == null)
+                {
+                    Debug.LogWarning("[Click Cleaning] No se puede limpiar/destruir. Necesitas una herramienta equipada.");
+                    return;
+                }
+
                 // 1. INTENTAR DESTRUIR BASURA (Tag: Basura)
                 if (hitObject.CompareTag(trashTag))
                 {
+                    // Opcional: Si quieres que la basura SOLO se elimine con la escoba (ToolId específico)
+                    // if (activeTool.ToolId != "Escoba") return; 
+
                     if (TaskManager.Instance != null)
                     {
                         TaskManager.Instance.NotifyTrashCleaned(hitObject.name);
@@ -188,6 +205,8 @@ public class PlayerInteraction : MonoBehaviour
                     {
                         Instantiate(clickCleaningEffect, hit.point, Quaternion.identity);
                     }
+
+                    // 🛑 Si llegamos aquí, se tenía una herramienta y se destruye el objeto.
                     Destroy(hitObject);
                     return;
                 }
@@ -198,12 +217,12 @@ public class PlayerInteraction : MonoBehaviour
                 {
                     if (cleaningController != null)
                     {
-                        ToolDescriptor activeTool = cleaningController.CurrentTool;
-                        if (activeTool != null && dirtSpot.CanBeCleanedBy(activeTool.ToolId))
+                        // Si la herramienta es la correcta para esta mancha (CanBeCleanedBy)
+                        if (dirtSpot.CanBeCleanedBy(activeTool.ToolId))
                         {
                             float damage = activeTool.ToolPower;
                             dirtSpot.CleanHit(damage);
-                            activeTool.TryUse();
+                            activeTool.TryUse(); // Consume durabilidad
 
                             if (clickCleaningEffect != null)
                             {
