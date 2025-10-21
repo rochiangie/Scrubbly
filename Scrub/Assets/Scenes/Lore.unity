@@ -1104,7 +1104,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -1.1768, y: -0.9104}
+  m_AnchoredPosition: {x: -0.55, y: -1.62}
   m_SizeDelta: {x: 3.8286, y: 4.5774}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1672395998
@@ -1767,14 +1767,14 @@ MonoBehaviour:
       en mi casa.\u201D\nDesde entonces, se sientan a tomar mate cada tarde, mirando
       c\xF3mo el viento se lleva lo que ya no necesitan."
   - characterID: 9
-    loreText: "Camila es psic\xF3loga y padece TOC de limpieza desde chica. Su pareja,
-      Juli, acumula cosas: frascos, cables, papeles, hasta las entradas del cine
-      de su primera cita.\nCada discusi\xF3n termina igual: ella limpiando llorando,
-      \xE9l juntando lo que ella tir\xF3.\nUn d\xEDa, en terapia, Camila entiende
-      que ambos limpian distinto: ella limpia para no sentir, \xE9l acumula para
+    loreText: "Lorenzo es psic\xF3logo y padece TOC de limpieza desde chico. Su pareja,
+      Julia, acumula cosas: frascos, cables, papeles, hasta las entradas del cine
+      de su primera cita.\nCada discusi\xF3n termina igual: \xE9l limpiando llorando,
+      ella juntando lo que \xE9l tir\xF3.\nUn d\xEDa, en terapia, Lorenzo entiende
+      que ambos \"limpian\" distinto: \xE9l limpia para no sentir, ella acumula para
       no olvidar.\nDeciden construir una nueva casa juntos, donde haya un cuarto
-      para cada uno: uno blanco, otro lleno de cosas.\nEl equilibrio se convierte
-      en su cura compartida."
+      para cada uno: uno blanco y ordenado, otro lleno de cosas.\nEl equilibrio se
+      convierte en su cura compartida."
 --- !u!1 &1982011784
 GameObject:
   m_ObjectHideFlags: 0
