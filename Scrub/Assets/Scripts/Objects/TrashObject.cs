@@ -5,10 +5,14 @@ public class TrashObject : MonoBehaviour
 {
     [Header("Configuración de Basura")]
     public string trashName;
-    public bool IsCleaned { get; private set; } = false;
 
-    [Header("Efectos")]
-    public GameObject destructionEffectPrefab;
+    [Header("Efectos de Destrucción")]
+    // Usaremos estas variables para los efectos.
+    public AudioClip destroySound;          // El clip de audio para el sonido de destrucción
+    public GameObject destructionParticlesPrefab; // La Prefab del sistema de partículas
+    public float destroyDelay = 0.1f;
+
+    public bool IsCleaned { get; private set; } = false;
 
     private bool alreadyNotified = false;
     private Renderer trashRenderer;
@@ -40,10 +44,10 @@ public class TrashObject : MonoBehaviour
     public void EliminateTrash()
     {
         Debug.Log($"🆘 EliminateTrash() llamado en {trashName}");
-        CleanTrash(); // Llama al método que SÍ funciona
+        CleanTrash(); // Llama al método principal de limpieza
     }
 
-    // ✅ MÉTODO ALTERNATIVO
+    // ✅ MÉTODO PRINCIPAL DE LIMPIEZA
     public void CleanTrash()
     {
         if (IsCleaned)
@@ -54,24 +58,39 @@ public class TrashObject : MonoBehaviour
 
         IsCleaned = true;
 
-        // Notificar al TaskManager
+        // 1. Notificar al TaskManager
         if (TaskManager.Instance != null)
         {
             TaskManager.Instance.NotifyTrashCleaned(trashName);
             Debug.Log($"✅ Notificado TaskManager: {trashName}");
         }
 
-        // Efectos visuales
-        if (destructionEffectPrefab != null)
+        // --- INICIO DE EFECTOS (SONIDO Y PARTÍCULAS) ---
+
+        // 2. Reproducir Sonido
+        if (destroySound != null)
         {
-            Instantiate(destructionEffectPrefab, transform.position, Quaternion.identity);
+            // Reproduce el sonido una sola vez en la posición del objeto
+            AudioSource.PlayClipAtPoint(destroySound, transform.position);
         }
 
-        // Desactivar y destruir
+        // 3. Instanciar Partículas
+        if (destructionParticlesPrefab != null)
+        {
+            // Crea las partículas en la posición de la basura
+            Instantiate(destructionParticlesPrefab, transform.position, Quaternion.identity);
+        }
+
+        // --- FIN DE EFECTOS ---
+
+        // 4. Desactivar Componentes de Interacción
+        // Esto previene interacciones adicionales mientras esperamos la destrucción
         if (trashRenderer != null) trashRenderer.enabled = false;
         if (trashCollider != null) trashCollider.enabled = false;
 
-        Destroy(gameObject, 0.1f);
+        // 5. Destruir
+        // Usamos destroyDelay para permitir que los efectos se inicien antes de que el objeto desaparezca
+        Destroy(gameObject, destroyDelay);
     }
 
     // ✅ Para debug
