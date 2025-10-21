@@ -1,74 +1,116 @@
-using UnityEngine;
+Ôªøusing UnityEngine;
+using System.Collections.Generic;
 
 public class PlayerTrashInteraction : MonoBehaviour
 {
-    [Header("ConfiguraciÛn de InteracciÛn de Basura")]
-    [Tooltip("Radio de proximidad para detectar la basura con el Tag 'Basura' al presionar 'F'.")]
-    public float detectionRadius = 2.5f; // Valor por defecto
+    [Header("Configuraci√≥n de Interacci√≥n")]
+    [Tooltip("Distancia m√°xima para detectar basura")]
+    public float interactionRange = 3f;
 
-    private const string TrashTag = "Basura";
+    [Header("Input")]
+    [Tooltip("Tecla para eliminar basura")]
+    public KeyCode trashInteractionKey = KeyCode.F;
 
-    // Nota: El PlayerCamera e InteractableLayer no son necesarios para esta lÛgica.
+    [Header("Layer Mask")]
+    [Tooltip("Layers en los que buscar basura")]
+    public LayerMask trashLayerMask = -1; // -1 = todos los layers
+
+    private TrashObject currentTrash;
+    private List<TrashObject> nearbyTrash = new List<TrashObject>();
 
     void Update()
     {
-        // Comprueba si se presiona la tecla 'F' y si el panel de decisiÛn no est· activo
-        if (Input.GetKeyDown(KeyCode.F) && !SentimentalScoreManager.IsDecisionActive)
+        FindNearestTrash();
+
+        if (Input.GetKeyDown(trashInteractionKey))
         {
-            TryEliminateTrash();
+            TryInteractWithTrash();
         }
     }
 
-    private void TryEliminateTrash()
+    void FindNearestTrash()
     {
-        // 1. Detectar todos los colliders cercanos en un radio
-        // Usamos la posiciÛn del Player (transform.position) como centro
-        Collider[] hitColliders = Physics.OverlapSphere(transform.position, detectionRadius);
+        // Limpiar lista de basura cercana
+        nearbyTrash.Clear();
 
-        TrashObject closestTrash = null;
-        // Usamos la distancia cuadrada para optimizar las comparaciones
-        float minDistanceSqr = detectionRadius * detectionRadius;
+        // Buscar todos los objetos TrashObject en el rango
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, interactionRange, trashLayerMask);
 
-        // 2. Iterar, filtrar por Tag y encontrar el objeto m·s cercano
         foreach (var hitCollider in hitColliders)
         {
-            // Filtrar por el Tag "Basura"
-            if (hitCollider.CompareTag(TrashTag))
+            TrashObject trash = hitCollider.GetComponent<TrashObject>();
+            if (trash != null && !trash.IsCleaned)
             {
-                // Calcular la distancia cuadrada (m·s r·pido que la raÌz cuadrada)
-                float distanceSqr = (hitCollider.transform.position - transform.position).sqrMagnitude;
+                nearbyTrash.Add(trash);
+            }
+        }
 
-                // Si es el objeto m·s cercano encontrado hasta ahora
+        // Encontrar la basura m√°s cercana
+        TrashObject closestTrash = null;
+        float minDistanceSqr = interactionRange * interactionRange;
+
+        foreach (var trash in nearbyTrash)
+        {
+            if (trash != null && !trash.IsCleaned)
+            {
+                float distanceSqr = (trash.transform.position - transform.position).sqrMagnitude;
                 if (distanceSqr < minDistanceSqr)
                 {
-                    TrashObject currentTrash = hitCollider.GetComponent<TrashObject>();
-
-                    if (currentTrash != null)
-                    {
-                        // Actualizar el objeto m·s cercano y la distancia mÌnima
-                        closestTrash = currentTrash;
-                        minDistanceSqr = distanceSqr;
-                    }
+                    closestTrash = trash;
+                    minDistanceSqr = distanceSqr;
                 }
             }
         }
 
-        // 3. Eliminar la basura m·s cercana si se encontrÛ una
-        if (closestTrash != null)
+        currentTrash = closestTrash;
+    }
+
+    void TryInteractWithTrash()
+    {
+        if (currentTrash != null && !currentTrash.IsCleaned)
         {
-            closestTrash.EliminateTrash();
+            // ‚úÖ CORRECCI√ìN: Usar el m√©todo correcto
+            currentTrash.CleanTrash(); // O el m√©todo que tenga tu TrashObject
+            Debug.Log($"üóëÔ∏è Basura eliminada: {currentTrash.name}");
         }
         else
         {
-            Debug.Log("No se encontrÛ basura con el Tag 'Basura' en el radio de detecciÛn.");
+            Debug.Log("No se encontr√≥ basura cercana para eliminar");
         }
     }
 
-    // Opcional: Para depuraciÛn, dibuja el radio de detecciÛn en el editor de Unity.
-    private void OnDrawGizmosSelected()
+    // Visualizar el rango de interacci√≥n en el Editor
+    void OnDrawGizmosSelected()
     {
-        // Dibuja el radio solo si el script est· en el objeto actual (el jugador)
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, detectionRadius);
+        Gizmos.DrawWireSphere(transform.position, interactionRange);
+
+        if (currentTrash != null)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawLine(transform.position, currentTrash.transform.position);
+        }
+    }
+
+    // M√©todos para trigger (opcional)
+    void OnTriggerEnter(Collider other)
+    {
+        TrashObject trash = other.GetComponent<TrashObject>();
+        if (trash != null && !trash.IsCleaned)
+        {
+            if (!nearbyTrash.Contains(trash))
+                nearbyTrash.Add(trash);
+        }
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        TrashObject trash = other.GetComponent<TrashObject>();
+        if (trash != null && nearbyTrash.Contains(trash))
+        {
+            nearbyTrash.Remove(trash);
+            if (currentTrash == trash)
+                currentTrash = null;
+        }
     }
 }
