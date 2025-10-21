@@ -39,10 +39,13 @@ public class PlayerInteraction : MonoBehaviour
     [Header("Input Keys")]
     [Tooltip("Tecla para Interacción General (Puertas)")]
     [SerializeField] private KeyCode generalInteractKey = KeyCode.E;
+
     [Tooltip("Tecla para Recoger/Agarrar y Soltar objetos Carryable/Tool")]
-    [SerializeField] private KeyCode pickupKey = KeyCode.T;
+    [SerializeField] private KeyCode pickupKey = KeyCode.Q;  
+
     [Tooltip("Tecla para Atacar/Destruir directamente (Limpieza)")]
     [SerializeField] private KeyCode attackKey = KeyCode.F;
+
     [Tooltip("Tecla para mostrar/ocultar el panel de puntuación sentimental.")]
     [SerializeField] private KeyCode scorePanelToggleKey = KeyCode.Tab;
 
@@ -120,7 +123,7 @@ public class PlayerInteraction : MonoBehaviour
         }
 
         // -----------------------------------------------------------------
-        // LÓGICA DE AGARRE/DECISIÓN (TECLA T)
+        // LÓGICA DE AGARRE/DECISIÓN (TECLA G)
         // -----------------------------------------------------------------
         if (Input.GetKeyDown(pickupKey))
             TryPickup();

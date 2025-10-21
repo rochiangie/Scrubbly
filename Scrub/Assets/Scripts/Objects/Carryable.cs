@@ -96,6 +96,7 @@ public class Carryable : MonoBehaviour
 
         // 5. Actualizar estado
         IsCarried = false;
+      
     }
 
     /// <summary>

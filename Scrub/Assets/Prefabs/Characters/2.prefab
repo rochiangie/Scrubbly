@@ -1297,8 +1297,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   holdPoint: {fileID: 2258357962537865974}
   animCtrl: {fileID: 0}
+  mouseInteractionDistance: 2
+  clickCleaningRadius: 0.5
+  dirtLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  clickCleaningEffect: {fileID: 0}
   generalInteractKey: 101
-  pickupKey: 101
+  pickupKey: 113
   attackKey: 102
   scorePanelToggleKey: 271
   attackRange: 2.5
@@ -1306,6 +1312,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   memorieTag: Memorie
+  trashTag: Basura
 --- !u!114 &8307391258836582406
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1394,7 +1401,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbf140a9c3f331e46b845dfc3075db5e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  detectionRadius: 2.5
+  interactionRange: 3
+  trashInteractionKey: 102
+  trashLayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!114 &1139063850590625810
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -42,7 +42,7 @@ public class MemorieDecisionUI : MonoBehaviour
     }
 
     // ====================================================================
-    // 2. ESCUCHA DE TECLADO (S/N)
+    // 2. ESCUCHA DE TECLADO (Y/N)
     // ====================================================================
     private void Update()
     {
@@ -50,7 +50,7 @@ public class MemorieDecisionUI : MonoBehaviour
         if (decisionPanel.activeSelf)
         {
             // Tecla 'S' (Sí / Keep)
-            if (Input.GetKeyDown(KeyCode.S))
+            if (Input.GetKeyDown(KeyCode.Y))
             {
                 OnDecisionInput(true);
             }
