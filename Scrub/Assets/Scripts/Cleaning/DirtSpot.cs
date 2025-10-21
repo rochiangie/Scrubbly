@@ -101,11 +101,10 @@ public class DirtSpot : MonoBehaviour
         isHandlingDestruction = true;
         IsCleaned = true; // MARCAR COMO LIMPIO PARA EL TaskManager
 
-        // 🛑 1. NOTIFICAR AL TASKMANAGER (CORRECCIÓN CLAVE)
         if (TaskManager.Instance != null)
         {
-            // La función correcta es NotifySpotCleaned()
-            TaskManager.Instance.NotifySpotCleaned(gameObject.name);
+            // 🚨 QUITAR EL ARGUMENTO 🚨
+            TaskManager.Instance.NotifySpotCleaned();
         }
 
         // 2. LLAMADA CRÍTICA A SFX

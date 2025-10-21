@@ -217,6 +217,7 @@ public class CleaningController : MonoBehaviour
 
     private void TryRemoveTrash(string requiredToolId)
     {
+        // Verificación de herramienta y disponibilidad (Lógica intacta)
         if (CurrentTool == null || CurrentTool.ToolId != requiredToolId)
         {
             Debug.LogWarning($"[Trash] Necesitas la herramienta '{requiredToolId}' (Escoba) para barrer.");
@@ -238,15 +239,19 @@ public class CleaningController : MonoBehaviour
             return;
         }
 
-        // 🛑 CORRECCIÓN 2: Llama a la notificación del TaskManager ANTES de la destrucción.
+        // 🛑 CORRECCIÓN CLAVE: Notificar al TaskManager ANTES de la destrucción
         if (TaskManager.Instance != null)
         {
-            // Esta llamada es correcta y no da error.
-            TaskManager.Instance.NotifyTrashCleaned(gameObject.name);
+            // 🚨 AHORA SE ENVÍA EL NOMBRE DEL OBJETO DE BASURA, NO DEL JUGADOR/CONTROLADOR 🚨
+            TaskManager.Instance.NotifyTrashCleaned(closestTrash.gameObject.name);
+
+            Debug.Log($"[Trash Removal] Enviando a TaskManager: {closestTrash.gameObject.name}");
         }
 
+        // Ejecuta la eliminación del objeto de basura
         closestTrash.EliminateTrash();
 
+        // Eliminar de la lista de proximidad
         nearbyTrash.Remove(closestTrash);
     }
 

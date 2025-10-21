@@ -1626,10 +1626,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 6323432133113016708, guid: 87c909dffc7a2124db35c3197011fc12, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 916911716}
+    m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 87c909dffc7a2124db35c3197011fc12, type: 3}
 --- !u!1001 &96500905
@@ -1978,22 +1975,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a07a7367349ced440aff54c914be6c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  totalDirtSpots: 0
-  cleanedDirtSpots: 0
-  totalTrashItems: 0
-  cleanedTrashItems: 0
   maxLevelTime: 500
   currentTime: 0
   timeIsUp: 0
+  totalDirtSpots: 0
+  totalTrashItems: 0
+  cleanedDirtSpots: 0
+  cleanedTrashItems: 0
   emotionalBalanceScore: 15
   accumulationScore: 20
-  totalPositiveMemoriesValue: 0
-  totalNegativeMemoriesValue: 0
   balanceThresholdPercentage: 0.8
   accumulationThresholdPercentage: 0.5
-  itemThresholdToActivateList: 10
+  totalPositiveMemoriesValue: 0
+  totalNegativeMemoriesValue: 0
   damageMultiplier: 1
   requireCorrectTool: 1
+  itemThresholdToActivateList: 10
 --- !u!4 &164706694
 Transform:
   m_ObjectHideFlags: 0
@@ -11525,11 +11522,11 @@ Transform:
   m_GameObject: {fileID: 916911715}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0.966018, z: -0, w: -0.258475}
-  m_LocalPosition: {x: 0, y: -0.5, z: 1.3}
-  m_LocalScale: {x: 645.3869, y: 886.81, z: 417.14072}
+  m_LocalPosition: {x: 0, y: -0.5, z: 1.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1255114173}
+  m_Father: {fileID: 1565165548}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &918385566
 GameObject:
@@ -19796,6 +19793,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2121048806}
+  - {fileID: 916911716}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1565165552

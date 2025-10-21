@@ -156,7 +156,7 @@ public class UIPauseController : MonoBehaviour
         {
             if (cleaningProgressSlider != null)
             {
-                // CLAVE: El max value debe ser el total combinado.
+                // 🚨 CRÍTICO: El max value debe ser el TOTAL GENERAL (111)
                 cleaningProgressSlider.maxValue = total;
                 cleaningProgressSlider.value = cleaned;
             }
@@ -165,17 +165,18 @@ public class UIPauseController : MonoBehaviour
             {
                 cleaningProgressText.text = $"Limpieza: {cleaned} / {total}";
             }
-        }
-        else
-        {
-            if (cleaningProgressSlider != null)
+
+            else
             {
-                cleaningProgressSlider.maxValue = 1;
-                cleaningProgressSlider.value = 0;
-            }
-            if (cleaningProgressText != null)
-            {
-                cleaningProgressText.text = "Limpieza: 0 / 0";
+                if (cleaningProgressSlider != null)
+                {
+                    cleaningProgressSlider.maxValue = 1;
+                    cleaningProgressSlider.value = 0;
+                }
+                if (cleaningProgressText != null)
+                {
+                    cleaningProgressText.text = "Limpieza: 0 / 0";
+                }
             }
         }
     }

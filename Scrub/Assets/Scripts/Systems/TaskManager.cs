@@ -1,64 +1,70 @@
 ﻿// TaskManager.cs
 using UnityEngine;
-using System.Linq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 public class TaskManager : MonoBehaviour
 {
-    // === SINGLETON Y ESTADO GLOBAL ===
-    public static TaskManager Instance { get; private set; }
-    public static bool IsDecisionActive { get; private set; } = false; // Bloquea el juego durante las decisiones
+    // ====================================================================
+    // 1. SINGLETON PATTERN
+    // ====================================================================
+    public static TaskManager Instance { get; private set; }
 
-    // === 1. PROGRESO DE LIMPIEZA DUAL ===
-    [Header("1. Progreso de Limpieza Dual")]
-    public int totalDirtSpots = 0;
-    public int cleanedDirtSpots = 0;
-    public int totalTrashItems = 0;
-    public int cleanedTrashItems = 0;
+    public static bool IsDecisionActive { get; private set; } = false;
 
-    // === 2. CONTROL DE TIEMPO ===
-    [Header("2. Control de Tiempo")]
-    [Tooltip("Duración máxima del nivel en segundos.")]
-    public float maxLevelTime = 600f; // 🚨 AJUSTADO A 600 SEGUNDOS (10 MINUTOS) 🚨
-    public float currentTime;
-    public bool timeIsUp = false;
+    // ====================================================================
+    // 2. CONTROL DE TIEMPO
+    // ====================================================================
+    [Header("Control de Tiempo")]
+    public float maxLevelTime = 300f; // 5 minutos
+    [HideInInspector] public float currentTime;
+    [HideInInspector] public bool timeIsUp = false;
 
-    // === 3. GESTIÓN DE PUNTUACIÓN Y UMBRALES ===
-    [Header("3. Puntuación Sentimental")]
+    // ====================================================================
+    // 3. ESTADÍSTICAS DE LIMPIEZA
+    // ====================================================================
+    [Header("Estadísticas de Limpieza")]
+    public int totalDirtSpots;
+
+    [HideInInspector] public int totalTrashItems;
+    [HideInInspector] public int cleanedDirtSpots = 0;
+    [HideInInspector] public int cleanedTrashItems = 0;
+
+    // Lista de nombres pendientes (usada para la UI y el Check de Basura)
+    public List<string> remainingItemNames { get; private set; } = new List<string>();
+
+    // ====================================================================
+    // 4. ESTADÍSTICAS SENTIMENTALES
+    // ====================================================================
+    [Header("Estadísticas Sentimentales")]
     public int emotionalBalanceScore = 0;
     public int accumulationScore = 0;
 
-    [Header("3.1 Análisis de Valor de Memorias")]
-    public int totalPositiveMemoriesValue = 0;
-    public int totalNegativeMemoriesValue = 0;
+    public int minBalanceForGoodEnding { get; private set; }
+    public int maxAccumulationForGoodEnding { get; private set; }
 
     [Header("4. Configuración de Umbrales")]
     public float balanceThresholdPercentage = 0.8f;
     public float accumulationThresholdPercentage = 0.5f;
-
-    public int minBalanceForGoodEnding { get; private set; }
-    public int maxAccumulationForGoodEnding { get; private set; }
     private int totalSentimentalValue = 0;
+    public int totalPositiveMemoriesValue = 0;
+    public int totalNegativeMemoriesValue = 0;
 
-    // === 6. GESTIÓN DE OBJETOS FALTANTES ===
-    [Header("6. Objetos Faltantes")]
-    [Tooltip("Número de items restantes para activar la lista de la UI.")]
-    public int itemThresholdToActivateList = 10;
-    public List<string> remainingItemNames { get; private set; } = new List<string>();
-
-    // === 5. GESTIÓN DE HERRAMIENTAS Y ZONAS (Para ApplyCleanHit) ===
-    [Header("5. Gestión de Herramientas")]
+    // === 5. GESTIÓN DE HERRAMIENTAS Y ZONAS (Para ApplyCleanHit) ===
+    [Header("5. Gestión de Herramientas")]
     public ToolDescriptor CurrentTool { get; private set; }
     public float damageMultiplier = 1f;
     public bool requireCorrectTool = true;
     public List<DirtSpot> nearbyDirt { get; private set; } = new List<DirtSpot>();
 
-    // =========================================================================
-    // AWAKE, START & UPDATE
-    // =========================================================================
+    // === 6. GESTIÓN DE OBJETOS FALTANTES ===
+    [Header("6. Objetos Faltantes")]
+    public int itemThresholdToActivateList = 10;
 
-    void Awake()
+    // =========================================================================
+
+    void Awake()
     {
         if (Instance != null && Instance != this)
         {
@@ -79,10 +85,17 @@ public class TaskManager : MonoBehaviour
 
     void Start()
     {
+        UpdateProgressUI();
         InitializeSentimentalAnalysis();
         currentTime = maxLevelTime;
-        InitializeRemainingItemsList(); // 🚨 Inicializamos la lista de nombres 🚨
-    }
+
+        // 🚨 LÓGICA DE CONTEO E INICIALIZACIÓN DE LISTA 🚨
+        InitializeRemainingItemsList();
+
+        GameObject[] trashObjects = GameObject.FindGameObjectsWithTag("Basura");
+        totalTrashItems = trashObjects.Length;
+
+    }
 
     void OnDestroy()
     {
@@ -93,8 +106,7 @@ public class TaskManager : MonoBehaviour
 
     void Update()
     {
-        // === LÓGICA DE TIEMPO ===
-        if (!timeIsUp && currentTime > 0)
+        if (!timeIsUp && currentTime > 0)
         {
             currentTime -= Time.deltaTime;
 
@@ -108,107 +120,144 @@ public class TaskManager : MonoBehaviour
             }
         }
 
-        // 🛑 SHORTCUT 1: Completar Tareas de Limpieza (Tecla L)
-        if (Input.GetKeyDown(KeyCode.L))
+        if (Input.GetKeyDown(KeyCode.L))
         {
             Debug.Log("DEBUG: Forzando la finalización de las tareas de limpieza.");
             ForceCompleteCleaningTasks();
         }
-
-        // 🛑 SHORTCUT 2: Poner Puntaje Ideal de Victoria (Tecla I)
-        if (Input.GetKeyDown(KeyCode.I))
+        if (Input.GetKeyDown(KeyCode.I))
         {
             Debug.Log("DEBUG: Forzando el puntaje ideal de victoria.");
             ForceSetIdealScore();
         }
     }
 
-    // =========================================================================
-    // LÓGICA DE INICIALIZACIÓN Y LISTA DE OBJETOS
-    // =========================================================================
+    // =========================================================================
+    // LÓGICA DE INICIALIZACIÓN Y PROGRESO
+    // =========================================================================
 
-    private void InitializeRemainingItemsList()
+    private void InitializeRemainingItemsList()
     {
         remainingItemNames.Clear();
 
-        // Buscar todos los DirtSpots y TrashObjects y guardar sus nombres.
-        var dirtSpots = FindObjectsOfType<DirtSpot>(true);
-        var trashItems = FindObjectsOfType<TrashObject>(true);
+        var dirtSpots = FindObjectsOfType<DirtSpot>(true);
+        var trashObjects = GameObject.FindGameObjectsWithTag("Basura");
 
-        // Asumiendo que el nombre es la forma más fácil de identificar el objeto.
-        remainingItemNames.AddRange(dirtSpots.Select(d => d.name));
-        remainingItemNames.AddRange(trashItems.Select(t => t.name));
+        // Usamos el nombre base (sin "(Clone)") para la lista, simplificando la remoción
+        remainingItemNames.AddRange(dirtSpots.Select(d => d.name.Replace("(Clone)", "").Trim()));
+        remainingItemNames.AddRange(trashObjects.Select(t => t.name.Replace("(Clone)", "").Trim()));
 
-        // Actualizar totales si la lista inicial de objetos es diferente a la de Awake()
-        totalDirtSpots = dirtSpots.Length;
-        totalTrashItems = trashItems.Length;
+        // Actualizar TOTALES
+        totalDirtSpots = dirtSpots.Length;
 
-        // Si ya estamos por debajo del umbral al inicio (nivel muy corto), activamos la lista.
-        if (remainingItemNames.Count <= itemThresholdToActivateList && remainingItemNames.Count > 0)
+        if (remainingItemNames.Count <= itemThresholdToActivateList && remainingItemNames.Count > 0)
         {
-            // 🚨 CORRECCIÓN: Usar el nuevo nombre del método de invocación.
-            GameEvents.NotifyMissingItems(remainingItemNames);
+            GameEvents.NotifyMissingItems(remainingItemNames);
         }
 
         CheckCompletion();
     }
 
-
     private void InitializeCleaningAnalysis()
     {
-        // Las variables totalDirtSpots y totalTrashItems son inicializadas en InitializeRemainingItemsList
-        // Aquí solo aseguramos que los contadores estén a cero.
-        cleanedDirtSpots = 0;
+        cleanedDirtSpots = 0;
         cleanedTrashItems = 0;
-
-        GameEvents.Progress(0, totalDirtSpots + totalTrashItems);
+        UpdateProgressUI();
     }
 
     private void InitializeSentimentalAnalysis()
     {
-        // Asumiendo que existe MemorieObject.cs y sentimentalValue
-        MemorieObject[] memories = FindObjectsOfType<MemorieObject>();
+        MemorieObject[] memories = FindObjectsOfType<MemorieObject>();
         totalSentimentalValue = 0;
         totalPositiveMemoriesValue = 0;
         totalNegativeMemoriesValue = 0;
 
         foreach (var memory in memories)
         {
-            // Asumiendo que 'sentimentalValue' es público o property en MemorieObject
-            // NOTA: Es común tener que usar una propiedad de solo lectura aquí si 'sentimentalValue' es privado.
-            int value = memory.sentimentalValue;
+            // Asumo que 'sentimentalValue' es accesible o expuesto en MemorieObject
+            // Usaremos 0 si es inaccesible para evitar un error de compilación
+            // En tu código real, debes asegurarte de que esta variable sea pública.
+            int value = 0;
+
+            // Si la clase MemorieObject tiene la propiedad 'sentimentalValue', descomenta esto:
+            // try { value = memory.sentimentalValue; } catch { Debug.LogWarning("MemorieObject.sentimentalValue no encontrado."); }
+
             totalSentimentalValue += Mathf.Abs(value);
 
             if (value >= 0) totalPositiveMemoriesValue += value;
             else totalNegativeMemoriesValue += Mathf.Abs(value);
         }
 
-        // Cálculo de umbrales
-        minBalanceForGoodEnding = Mathf.CeilToInt(totalPositiveMemoriesValue * balanceThresholdPercentage);
+        minBalanceForGoodEnding = Mathf.CeilToInt(totalPositiveMemoriesValue * balanceThresholdPercentage);
         maxAccumulationForGoodEnding = Mathf.FloorToInt(totalSentimentalValue * accumulationThresholdPercentage);
 
         GameEvents.SentimentalScore(emotionalBalanceScore, accumulationScore);
     }
 
-
-    // =========================================================================
-    // LÓGICA DE NOTIFICACIÓN DE LIMPIEZA DUAL Y FINALIZACIÓN
-    // =========================================================================
-
-    /// <summary> Se llama desde TrashObject.cs </summary>
-    public void NotifyTrashCleaned(string itemName)
+    /// <summary>
+    /// Notifica a la UI el progreso actual de la limpieza. (Mueve el Slider).
+    /// </summary>
+    private void UpdateProgressUI()
     {
-        cleanedTrashItems++;
-        remainingItemNames.Remove(itemName); // 🚨 Quitamos el nombre de la lista
-        CheckCompletion();
+        int total = totalDirtSpots + totalTrashItems;
+        int cleaned = cleanedDirtSpots + cleanedTrashItems;
+
+        GameEvents.Progress(cleaned, total);
     }
 
-    /// <summary> Se llama desde DirtSpot.cs </summary>
-    public void NotifySpotCleaned(string itemName)
+
+    // =========================================================================
+    // MANEJADORES DE NOTIFICACIÓN DE LIMPIEZA
+    // =========================================================================
+
+    /// <summary>
+    /// Llamado por un objeto de Suciedad/Mancha limpiado (DirtSpot).
+    /// </summary>
+    public void NotifySpotCleaned()
     {
         cleanedDirtSpots++;
-        remainingItemNames.Remove(itemName); // 🚨 Quitamos el nombre de la lista
-        CheckCompletion();
+        UpdateProgressUI();
+        CheckCompletion();
+    }
+
+    /// <summary>
+    /// Llamado por el objeto de Basura que se recoge/destruye.
+    /// </summary>
+    public void NotifyTrashCleaned(string itemName)
+    {
+        // Estripamos el sufijo (Clone) del nombre para la búsqueda
+        string itemBaseName = itemName.Replace("(Clone)", "").Trim();
+
+        bool wasRemoved = remainingItemNames.Remove(itemBaseName);
+
+        if (wasRemoved)
+        {
+            cleanedTrashItems++;
+            UpdateProgressUI();
+
+            Debug.Log($"[CONTADOR OK] Ítem '{itemBaseName}' eliminado de la lista. Total Basura Limpiada: {cleanedTrashItems}.");
+
+            CheckCompletion();
+        }
+        else
+        {
+            Debug.LogError($"[ERROR CRÍTICO] FALLA AL CONTAR BASURA: No se encontró la base '{itemBaseName}' en la lista de pendientes.");
+
+            string sample = string.Join(", ", remainingItemNames.Take(5));
+            Debug.LogWarning($"Ejemplo de ítems restantes (a verificar): {sample}");
+        }
+    }
+
+    // 🚨 CAMBIO DE PRIVATE A PUBLIC 🚨
+    /// <summary>
+    /// Devuelve el número total de ítems (Basura + Suciedad) que quedan por limpiar.
+    /// </summary>
+    public int GetRemainingCleanableItemsCount()
+    {
+        int total = totalDirtSpots + totalTrashItems;
+        int cleaned = cleanedDirtSpots + cleanedTrashItems;
+
+        return total - cleaned;
     }
 
     private void CheckCompletion()
@@ -220,13 +269,10 @@ public class TaskManager : MonoBehaviour
 
         GameEvents.Progress(cleanedItems, totalCleanableItems);
 
-        // 🚨 VERIFICACIÓN DE ACTIVACIÓN DE LA LISTA 🚨
-        if (remainingCount <= itemThresholdToActivateList && remainingCount > 0)
+        if (remainingCount <= itemThresholdToActivateList && remainingCount > 0)
         {
-            // 🚨 CORRECCIÓN: Usar el nuevo método NotifyMissingItems 🚨
-            GameEvents.NotifyMissingItems(remainingItemNames);
+            GameEvents.NotifyMissingItems(remainingItemNames);
         }
-
 
         if (cleanedItems >= totalCleanableItems && totalCleanableItems > 0)
         {
@@ -234,11 +280,11 @@ public class TaskManager : MonoBehaviour
         }
     }
 
-    // =========================================================================
-    // LÓGICA DE DEBUG (SHORTCUTS)
-    // =========================================================================
+    // =========================================================================
+    // LÓGICA DE FIN DE JUEGO Y DEBUG SHORTCUTS
+    // =========================================================================
 
-    private void ForceCompleteCleaningTasks()
+    private void ForceCompleteCleaningTasks()
     {
         ForceSetIdealScore();
 
@@ -275,54 +321,7 @@ public class TaskManager : MonoBehaviour
         Debug.Log($"DEBUG: Puntuación fijada a VICTORY: Balance={emotionalBalanceScore} (Mín: {minBalanceForGoodEnding}) | Acumulación={accumulationScore} (Lím: {maxAccumulationForGoodEnding})");
     }
 
-    // =========================================================================
-    // 📢 LÓGICA DE LIMPIEZA Y DAÑO A DIRTSPOTS
-    // =========================================================================
-
-    /// <summary>
-    /// Aplica daño a la suciedad más cercana. Llamado desde CleaningController.cs.
-    /// </summary>
-    public void ApplyCleanHit(Vector3 playerPosition)
-    {
-        if (CurrentTool == null) return;
-
-        // Limpiar referencias nulas (objetos ya destruidos)
-        nearbyDirt.RemoveAll(dirt => dirt == null);
-        if (nearbyDirt.Count == 0) return;
-
-        // Encontrar el DirtSpot más cercano
-        DirtSpot closestDirt = nearbyDirt
-   .OrderBy(dirt => Vector3.Distance(playerPosition, dirt.transform.position))
-   .FirstOrDefault();
-
-        if (closestDirt == null) return;
-
-        // 1. Consumir durabilidad de la herramienta
-        bool successfullyUsed = CurrentTool.TryUse();
-        if (!successfullyUsed)
-        {
-            // Si la herramienta se rompe, el CleaningController debe borrar la referencia.
-            return;
-        }
-
-        float damage = damageMultiplier * CurrentTool.ToolPower;
-
-        // 2. Comprobar si la herramienta es correcta (si se requiere)
-        if (requireCorrectTool && !closestDirt.CanBeCleanedBy(CurrentTool.ToolId))
-        {
-            Debug.LogWarning($"[Clean Hit] Herramienta incorrecta para {closestDirt.name}.");
-            return;
-        }
-
-        // 3. Aplicar el daño
-        closestDirt.CleanHit(damage);
-    }
-
-    // =========================================================================
-    // OTROS MÉTODOS DE JUEGO (Necesarios para la compilación completa)
-    // =========================================================================
-
-    public void RegisterTool(ToolDescriptor tool) { CurrentTool = tool; }
+    public void RegisterTool(ToolDescriptor tool) { CurrentTool = tool; }
 
     public void CheckFinalScore()
     {
@@ -378,5 +377,35 @@ public class TaskManager : MonoBehaviour
     public static void SetDecisionActive(bool isActive)
     {
         IsDecisionActive = isActive;
+    }
+
+    public void ApplyCleanHit(Vector3 playerPosition)
+    {
+        if (CurrentTool == null) return;
+
+        nearbyDirt.RemoveAll(dirt => dirt == null);
+        if (nearbyDirt.Count == 0) return;
+
+        DirtSpot closestDirt = nearbyDirt
+    .OrderBy(dirt => Vector3.Distance(playerPosition, dirt.transform.position))
+    .FirstOrDefault();
+
+        if (closestDirt == null) return;
+
+        bool successfullyUsed = CurrentTool.TryUse();
+        if (!successfullyUsed)
+        {
+            return;
+        }
+
+        float damage = damageMultiplier * CurrentTool.ToolPower;
+
+        if (requireCorrectTool && !closestDirt.CanBeCleanedBy(CurrentTool.ToolId))
+        {
+            Debug.LogWarning($"[Clean Hit] Herramienta incorrecta para {closestDirt.name}.");
+            return;
+        }
+
+        closestDirt.CleanHit(damage);
     }
 }

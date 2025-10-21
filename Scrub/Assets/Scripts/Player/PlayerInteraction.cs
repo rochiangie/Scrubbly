@@ -2,6 +2,8 @@
 using UnityEngine;
 using System;
 using System.Linq;
+using System.Collections.Generic;
+using System.Text;
 
 // ----------------------------------------------------
 // INTERFACES (Asumo que existen)
@@ -75,6 +77,10 @@ public class PlayerInteraction : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            LogRemainingItemsCount();
+        }
         // -----------------------------------------------------------------
         // 🚨 LÓGICA DE USO Y DESTRUCCIÓN DE LA HERRAMIENTA (TECLA F) 🚨
         // -----------------------------------------------------------------
@@ -129,6 +135,7 @@ public class PlayerInteraction : MonoBehaviour
             }
         }
     }
+
 
     // =========================================================================
     // EL RESTO DE TUS FUNCIONES SE MANTIENEN IGUALES
@@ -235,7 +242,60 @@ public class PlayerInteraction : MonoBehaviour
             nearbyAttackable = a;
         }
     }
+    /// <summary>
+    /// Muestra la cuenta de ítems restantes para limpiar.
+    /// </summary>
+    /// <summary>
+    /// Muestra la cuenta de ítems restantes para limpiar, incluyendo los nombres de los pendientes.
+    /// </summary>
+    private void LogRemainingItemsCount()
+    {
+        if (TaskManager.Instance != null)
+        {
+            // Se asume que GetRemainingCleanableItemsCount() es público en TaskManager
+            int remaining = TaskManager.Instance.GetRemainingCleanableItemsCount();
+            int totalBasura = TaskManager.Instance.totalTrashItems;
+            int totalManchas = TaskManager.Instance.totalDirtSpots;
 
+            // 🚨 Acceso a la lista de pendientes 🚨
+            List<string> faltantes = TaskManager.Instance.remainingItemNames;
+
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("=================================================");
+            sb.AppendLine($"[DEBUG CONTEO 'G'] Ítems Faltantes: {remaining}");
+            sb.AppendLine($"   -> Basura (Total Inicial): {totalBasura}");
+            sb.AppendLine($"   -> Manchas (Total Inicial): {totalManchas}");
+            sb.AppendLine($"   -> (Contador interno de Basura Limpiada: {TaskManager.Instance.cleanedTrashItems})");
+            sb.AppendLine("-------------------------------------------------");
+
+            // 🚨 Lógica para listar los objetos pendientes 🚨
+            sb.AppendLine($"Objetos Pendientes (Total: {faltantes.Count}):");
+
+            if (faltantes.Count > 0)
+            {
+                // Muestra solo los primeros 10 ítems para evitar saturar la consola
+                foreach (string item in faltantes.Take(10))
+                {
+                    sb.AppendLine($"   - {item}");
+                }
+                if (faltantes.Count > 10)
+                {
+                    sb.AppendLine($"(... {faltantes.Count - 10} más no mostrados)");
+                }
+            }
+            else
+            {
+                sb.AppendLine("   - ¡Todo limpio!");
+            }
+
+            sb.AppendLine("=================================================");
+            Debug.Log(sb.ToString());
+        }
+        else
+        {
+            Debug.LogError("[DEBUG] TaskManager no está inicializado. No se puede obtener el conteo.");
+        }
+    }
     private void OnTriggerExit(Collider other)
     {
         Carryable c = other.GetComponent<Carryable>() ?? other.GetComponentInParent<Carryable>();
