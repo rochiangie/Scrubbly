@@ -1139,6 +1139,10 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 1070083404}
+    - target: {fileID: 2670664326669867466, guid: 71f750719f4b576438d2eb186a11fddc, type: 3}
+      propertyPath: m_text
+      value: The Organized Chaos
+      objectReference: {fileID: 0}
     - target: {fileID: 3410141298516935423, guid: 71f750719f4b576438d2eb186a11fddc, type: 3}
       propertyPath: m_IsOn
       value: 1

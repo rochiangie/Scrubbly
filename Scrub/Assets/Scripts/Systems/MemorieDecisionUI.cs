@@ -78,7 +78,7 @@ public class MemorieDecisionUI : MonoBehaviour
         onDecisionMade = callback;
 
         itemNameText.text = $"Objeto: {itemName}";
-        sentimentalValueText.text = $"Valor Sentimental: {value} (SÍ para GUARDAR / NO para TIRAR)";
+        sentimentalValueText.text = $"Valor Sentimental: {value}";
 
         // Mostrar el panel, pausar, y notificar al manager del estado
         decisionPanel.SetActive(true);

@@ -786,7 +786,6 @@ GameObject:
   - component: {fileID: 6323432133113016708}
   - component: {fileID: 280218709445603844}
   - component: {fileID: 2787741416867571855}
-  - component: {fileID: -7578414022532185522}
   - component: {fileID: 1973045477627542133}
   m_Layer: 5
   m_Name: PanelTools
@@ -858,26 +857,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &-7578414022532185522
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7082137273719020698}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4def5cde6acefd14fb22ea1de86a7e7b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  broomPrefab: {fileID: 1927486437793573597, guid: e0441237b3d2dce498aa908bba2d800d, type: 3}
-  spongePrefab: {fileID: 4014498514318459743, guid: 610b7c880ca564a44bf9c129c0e44a14, type: 3}
-  vacuumPrefab: {fileID: 0}
-  dusterPrefab: {fileID: 0}
-  broomButton: {fileID: 3365808709418585107}
-  spongeButton: {fileID: 5467364275017210330}
-  vacuumButton: {fileID: 0}
-  dusterButton: {fileID: 0}
 --- !u!225 &1973045477627542133
 CanvasGroup:
   m_ObjectHideFlags: 0
