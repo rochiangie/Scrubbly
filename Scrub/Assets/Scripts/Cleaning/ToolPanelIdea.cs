@@ -6,90 +6,117 @@ using System;
 
 public class ToolPanelIdea : MonoBehaviour
 {
-    [Header("1. Control de Pausa")]
-    [Tooltip("El GameObject del panel de Tools que debe activarse.")]
+    [Header("1. Referencias de Paneles")]
+    [Tooltip("El GameObject del panel de Tools que NO pausa el juego (ENTER/TAB).")]
     public GameObject toolMenuPanel;
 
-    // 🚨 CAMBIO A REFERENCIA PÚBLICA MANUAL 🚨
+    [Tooltip("El GameObject del panel de PAUSA que SÍ pausa el juego (ESC).")]
+    public GameObject pauseMenuPanel;
+
     [Header("Dependencias")]
-    [Tooltip("Arrastra el componente MouseLookController (el que mueve la cámara) aquí desde la Jerarquía.")]
     public MouseLookController mouseLookComponent;
 
-    private bool isPaused = false;
+    private bool isPaused = false; // Controla Time.timeScale
+    private bool isToolMenuOpen = false; // Controla el panel de tools
 
     void Awake()
     {
-        // ❌ ELIMINAMOS FindObjectOfType para forzar la asignación manual y evitar fallos de Awake. ❌
-
-        if (toolMenuPanel != null)
-        {
-            toolMenuPanel.SetActive(false);
-        }
+        if (toolMenuPanel != null) toolMenuPanel.SetActive(false);
+        if (pauseMenuPanel != null) pauseMenuPanel.SetActive(false);
     }
 
     void Start()
     {
-        // Estado inicial: Cursor bloqueado y oculto (modo de juego)
         Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = true;
+        Cursor.visible = false;
 
         if (mouseLookComponent == null)
         {
-            Debug.LogError("ToolPanelIdea: El componente MouseLookController NO está asignado en el Inspector. La cámara no se bloqueará.", this);
-        }
-    }
-
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Return))
-        {
-            TogglePause();
+            Debug.LogError("ToolPanelIdea: El componente MouseLookController NO está asignado en el Inspector.", this);
         }
     }
 
     // =========================================================================
-    // LÓGICA DE APERTURA Y BLOQUEO
+    // 1. FUNCIÓN PAUSA PRINCIPAL (Llamada por ESC)
     // =========================================================================
 
     public void TogglePause()
     {
+        // Si el panel de tools está abierto, lo cerramos antes de pausar (o viceversa)
+        if (isToolMenuOpen) ToggleToolsPanel();
+
         isPaused = !isPaused;
 
         if (isPaused)
         {
-            // --- ABRIR MENÚ ---
-            if (toolMenuPanel != null)
-            {
-                toolMenuPanel.SetActive(true);
-            }
+            // --- ABRIR MENÚ PAUSA Y CONGELAR TIEMPO ---
+            if (pauseMenuPanel != null) pauseMenuPanel.SetActive(true);
 
-            // 1. BLOQUEO DIRECTO DE CÁMARA
-            if (mouseLookComponent != null)
-            {
-                mouseLookComponent.enabled = false; // Desactiva el componente que maneja la rotación
-            }
+            Time.timeScale = 0f;
+            HandleCursorAndCamera(true);
+        }
+        else
+        {
+            // --- CERRAR MENÚ PAUSA Y REANUDAR TIEMPO ---
+            if (pauseMenuPanel != null) pauseMenuPanel.SetActive(false);
 
-            // 2. LIBERAR CURSOR
+            Time.timeScale = 1f;
+            HandleCursorAndCamera(false);
+        }
+    }
+
+    // =========================================================================
+    // 2. FUNCIÓN TOOLS PANEL (Llamada por ENTER/TAB)
+    // =========================================================================
+
+    public void ToggleToolsPanel()
+    {
+        // Si el juego está en pausa, no se puede abrir el panel de tools.
+        if (Time.timeScale == 0f) return;
+
+        isToolMenuOpen = !isToolMenuOpen;
+
+        if (toolMenuPanel != null)
+        {
+            toolMenuPanel.SetActive(isToolMenuOpen);
+        }
+
+        // Bloqueo de cámara y cursor, pero Time.timeScale sigue siendo 1.
+        HandleCursorAndCamera(isToolMenuOpen);
+    }
+
+    // =========================================================================
+    // LÓGICA DE GESTIÓN DE ESTADO (Función Unificada)
+    // =========================================================================
+
+    private void HandleCursorAndCamera(bool activateMenu)
+    {
+        // 1. BLOQUEO DIRECTO DE CÁMARA
+        if (mouseLookComponent != null)
+        {
+            // Desactiva la rotación si el menú está activo (activateMenu=true)
+            mouseLookComponent.enabled = !activateMenu;
+        }
+
+        // 2. LIBERAR/BLOQUEAR CURSOR
+        if (activateMenu)
+        {
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
         }
         else
         {
-            // --- CERRAR MENÚ ---
-            if (toolMenuPanel != null)
-            {
-                toolMenuPanel.SetActive(false);
-            }
-
-            // 1. DESBLOQUEO DIRECTO DE CÁMARA
-            if (mouseLookComponent != null)
-            {
-                mouseLookComponent.enabled = true; // Reactiva la rotación de la cámara
-            }
-
-            // 2. BLOQUEAR CURSOR
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
+        }
+    }
+
+    public void ResumeGameButton()
+    {
+        // Asumimos que este botón está en el panel de PAUSA
+        if (isPaused)
+        {
+            TogglePause();
         }
     }
 }

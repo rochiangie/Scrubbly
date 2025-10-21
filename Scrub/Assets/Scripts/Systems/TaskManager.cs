@@ -720,6 +720,22 @@ public class TaskManager : MonoBehaviour
         GameEvents.SentimentalScore(emotionalBalanceScore, accumulationScore);
     }
 
+    /// <summary>
+    /// Devuelve el número total de ítems (Basura + Suciedad) que quedan por limpiar.
+    /// Esta función es pública para ser accesible por la UI y scripts de Debug.
+    /// </summary>
+    public int GetRemainingCleanableItemsCount()
+    {
+        // Suma el total inicial de todos los objetos limpiables.
+        int total = totalDirtSpots + totalTrashItems;
+
+        // Suma el total de objetos ya limpiados.
+        int cleaned = cleanedDirtSpots + cleanedTrashItems;
+
+        // Devuelve la diferencia.
+        return total - cleaned;
+    }
+
     public static void SetDecisionActive(bool isActive)
     {
         IsDecisionActive = isActive;
