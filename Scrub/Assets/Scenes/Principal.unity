@@ -132,7 +132,6 @@ GameObject:
   - component: {fileID: 1318893}
   - component: {fileID: 1318892}
   - component: {fileID: 1318895}
-  - component: {fileID: 1318896}
   m_Layer: 3
   m_Name: PFB_DiningTableSUCIO
   m_TagString: Dirt
@@ -246,24 +245,6 @@ MonoBehaviour:
   minOpacity: 0.1
   maxHealth: 5
   requiredToolId: Sponge
---- !u!114 &1318896
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1318890}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  outlineMode: 0
-  outlineColor: {r: 0.023362402, g: 0.07873552, b: 0.990566, a: 1}
-  outlineWidth: 2
-  precomputeOutline: 0
-  bakeKeys: []
-  bakeValues: []
 --- !u!1 &11594790 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3172472976094506336, guid: 427fa345a14882d4eb769692e5e7128c, type: 3}
@@ -337,8 +318,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.25, y: 0.25, z: 0.25}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0.18006325, y: 0.12828529, z: 0.20589828}
+  m_Center: {x: 0, y: 0.07357073, z: -0.00035095215}
 --- !u!114 &18739252
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -609,8 +590,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.53, y: 0.35, z: 0.22187032}
-  m_Center: {x: 0.0010077953, y: -0.01144871, z: 0.11133715}
+  m_Size: {x: 0.26599672, y: 0.22187036, z: 0.26346305}
+  m_Center: {x: 0.0010077953, y: -0.011448875, z: 0.11133715}
 --- !u!4 &44895850 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: f811d04ba7bea9840bd789e2041c84e0, type: 3}
@@ -818,8 +799,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 1, y: 0.18, z: 1}
+  m_Size: {x: 0.5278338, y: 0.44196853, z: 0.5470838}
+  m_Center: {x: -0.00084733963, y: -0.0016765893, z: 0.22101794}
 --- !u!4 &50751514 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: e7c9626fe50f8f943b08f47e8fbdffc2, type: 3}
@@ -1222,8 +1203,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.29, y: 0.13, z: 0.25}
-  m_Center: {x: 0, y: 0.24, z: 1.3}
+  m_Size: {x: 0.3646829, y: 0.8352599, z: 1.0529385}
+  m_Center: {x: -0.07776738, y: 0.41716456, z: 0.00007151812}
 --- !u!4 &66349570 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: bf30024ce8d251d40941085e44298d88, type: 3}
@@ -1441,8 +1422,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.25, y: 0.25, z: 0.25}
-  m_Center: {x: 0, y: -0.00067900476, z: 0.00013991431}
+  m_Size: {x: 0.011508789, y: 0.0025909196, z: 0.017021466}
+  m_Center: {x: 0, y: -0.00067908847, z: 0.00013991194}
 --- !u!114 &75594203
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1907,8 +1888,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.25, y: 0.25, z: 0.25}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0.14926907, y: 0.18187031, z: 0.14902362}
+  m_Center: {x: 0.0059309006, y: 0.08293104, z: 0.00021362305}
 --- !u!114 &131694257
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1972,8 +1953,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.25, y: 0.25, z: 0.25}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0.61253846, y: 0.2736895, z: 0.6446724}
+  m_Center: {x: -0.00022184849, y: 0.13136363, z: -0.020627975}
 --- !u!114 &136272947
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2461,8 +2442,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.54, y: 1.39, z: 1.9}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0.3646825, y: 0.8352598, z: 1.0529423}
+  m_Center: {x: -0.077766426, y: 0.4171646, z: 0.00007151812}
 --- !u!54 &179918078
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2825,8 +2806,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.05, y: 0.05, z: 0.02}
-  m_Center: {x: 0.0049893493, y: 0.00009484263, z: -0.000105496576}
+  m_Size: {x: 0.0113934195, y: 0.009966363, z: 0.0075787683}
+  m_Center: {x: 0.0049893493, y: 0.00009484291, z: -0.0001054974}
 --- !u!4 &211393818 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 432446, guid: bfe9900043c59b04ab9e2d58f97d900a, type: 3}
@@ -2895,8 +2876,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.25, y: 0.25, z: 0.25}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0.08305448, y: 0.09476612, z: 0.080920085}
+  m_Center: {x: -0.0013849735, y: 0.04412067, z: -0.001707077}
 --- !u!114 &213710724
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3144,8 +3125,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.001, y: 0.025, z: 0.025}
-  m_Center: {x: -4.27304e-10, y: 0.00000149007, z: -0.002867588}
+  m_Size: {x: 0.0018958187, y: 0.0039755343, z: 0.001730104}
+  m_Center: {x: -5.1276336e-12, y: -1.6227767e-11, z: -0.00002867581}
 --- !u!114 &262242632
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3724,8 +3705,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.25, y: 0.25, z: 0.25}
-  m_Center: {x: 0, y: 0.32, z: 0}
+  m_Size: {x: 1.3268528, y: 0.8300817, z: 0.56171036}
+  m_Center: {x: -0.0046818256, y: 0.41504067, z: 0}
 --- !u!4 &279637496 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 22fb715b13926714d9269de822cc3026, type: 3}
@@ -3906,8 +3887,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.59999996, y: 0.47081068, z: 0.45684892}
-  m_Center: {x: 0, y: 0.022961177, z: 0.22840896}
+  m_Size: {x: 0.4709701, y: 0.4570132, z: 0.59999996}
+  m_Center: {x: 0, y: 0.02296123, z: 0.22840898}
 --- !u!4 &296960870 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: c0148e9c123304848bd106b690b22ec4, type: 3}
@@ -4085,8 +4066,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.25, y: 0.25, z: 0.25}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0.1904478, y: 0.45595774, z: 0.2830482}
+  m_Center: {x: -0.011795998, y: 0.17670864, z: 0.003435135}
 --- !u!114 &305104845
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4250,8 +4231,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: -0.77}
+  m_Size: {x: 0.10662556, y: 0.09268355, z: 0.2403965}
+  m_Center: {x: -0.0000019073343, y: 0.046346307, z: 0.000112533584}
 --- !u!4 &306148405 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 78bed2d0e6852444286f196db6874ddf, type: 3}
@@ -4370,7 +4351,6 @@ GameObject:
   - component: {fileID: 318615965}
   - component: {fileID: 318615964}
   - component: {fileID: 318615967}
-  - component: {fileID: 318615968}
   m_Layer: 3
   m_Name: PFB_BedroomSofa SUCIO
   m_TagString: Dirt
@@ -4484,24 +4464,6 @@ MonoBehaviour:
   minOpacity: 0.1
   maxHealth: 5
   requiredToolId: Sponge
---- !u!114 &318615968
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 318615962}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  outlineMode: 0
-  outlineColor: {r: 0.023362402, g: 0.07873552, b: 0.990566, a: 1}
-  outlineWidth: 2
-  precomputeOutline: 0
-  bakeKeys: []
-  bakeValues: []
 --- !u!1001 &323930521
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4608,8 +4570,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.25, y: 0.25, z: 0.25}
-  m_Center: {x: 0, y: 0.000090571746, z: 0.003632671}
+  m_Size: {x: 0.0018041163, y: 0.008919537, z: 0.0017158174}
+  m_Center: {x: 0, y: 0.00009057609, z: 0.0036326712}
 --- !u!114 &326905130
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5258,8 +5220,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.25, y: 0.25, z: 0.25}
-  m_Center: {x: 0, y: -0.00067906437, z: 0.00013991058}
+  m_Size: {x: 0.011508789, y: 0.0025909196, z: 0.017021466}
+  m_Center: {x: 0, y: -0.00067908847, z: 0.00013991194}
 --- !u!114 &346839924
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5408,8 +5370,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.3207783, y: 0.9065743, z: 0.43636495}
-  m_Center: {x: 0.0018359497, y: -0.000000013952925, z: 0.21818247}
+  m_Size: {x: 0.20672658, y: 0.436437, z: 0.3207783}
+  m_Center: {x: 0.0018358231, y: -0.00000014901161, z: 0.21818246}
 --- !u!4 &347611353 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 289878fe69fcd7c4cbd8f6e920af8049, type: 3}
@@ -5583,8 +5545,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2, y: 2, z: 2}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0.07620144, y: 0.13275433, z: 0.07620239}
+  m_Center: {x: 0.0008430481, y: 0.067436576, z: -0.0007276535}
 --- !u!114 &377949343
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5616,7 +5578,6 @@ GameObject:
   - component: {fileID: 390322360}
   - component: {fileID: 390322359}
   - component: {fileID: 390322358}
-  - component: {fileID: 390322362}
   m_Layer: 3
   m_Name: PFB_CoffeeTable SUCIO
   m_TagString: Dirt
@@ -5730,24 +5691,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 390322356}
   m_Mesh: {fileID: 4300002, guid: 87dbd671cf01c4a2092308da3db7c073, type: 3}
---- !u!114 &390322362
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 390322356}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  outlineMode: 0
-  outlineColor: {r: 0.023362402, g: 0.07873552, b: 0.990566, a: 1}
-  outlineWidth: 2
-  precomputeOutline: 0
-  bakeKeys: []
-  bakeValues: []
 --- !u!1001 &396634481
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6130,8 +6073,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0.95091045, y: 0.7370002, z: 0.6366291}
+  m_Center: {x: 0.14151883, y: 0.23952776, z: 0.04501152}
 --- !u!114 &421102130
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6195,8 +6138,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.25, y: 0.25, z: 0.25}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0.5014553, y: 0.216494, z: 0.45658875}
+  m_Center: {x: 0.04711008, y: 0.03521508, z: 0.06569004}
 --- !u!114 &440773693
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6392,7 +6335,6 @@ GameObject:
   - component: {fileID: 456182575}
   - component: {fileID: 456182574}
   - component: {fileID: 456182577}
-  - component: {fileID: 456182578}
   m_Layer: 3
   m_Name: PFB_DiningChairSUCIO
   m_TagString: Dirt
@@ -6506,24 +6448,6 @@ MonoBehaviour:
   minOpacity: 0.1
   maxHealth: 5
   requiredToolId: Sponge
---- !u!114 &456182578
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 456182572}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  outlineMode: 0
-  outlineColor: {r: 0.023362402, g: 0.07873552, b: 0.990566, a: 1}
-  outlineWidth: 2
-  precomputeOutline: 0
-  bakeKeys: []
-  bakeValues: []
 --- !u!1001 &467952958
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6654,8 +6578,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.26599672, y: 0.26346302, z: 0.22187032}
-  m_Center: {x: 0.0010077953, y: -0.01144871, z: 0.11133715}
+  m_Size: {x: 0.26599672, y: 0.22187036, z: 0.26346305}
+  m_Center: {x: 0.0010080338, y: -0.011448875, z: 0.11133718}
 --- !u!4 &467952968 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: f811d04ba7bea9840bd789e2041c84e0, type: 3}
@@ -6751,8 +6675,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.25, y: 0.25, z: 0.25}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0.07000288, y: 0.08548319, z: 0.07246399}
+  m_Center: {x: -0.00000166893, y: 0.043257654, z: -0.0012702942}
 --- !u!114 &484692158
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6810,8 +6734,8 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 514230924}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -323.87}
-  m_LocalScale: {x: 0.02, y: 0.02, z: 0.02}
+  m_LocalPosition: {x: 0, y: 0, z: -321.45}
+  m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 137838033}
@@ -6823,7 +6747,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -691.65, y: 111.84}
+  m_AnchoredPosition: {x: -690.4, y: 111.839966}
   m_SizeDelta: {x: -1589.956, y: -2081.266}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &514230926
@@ -6994,8 +6918,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.60000014, y: 0.47081098, z: 0.45684925}
-  m_Center: {x: -0.000000017943112, y: 0.02296091, z: 0.22840907}
+  m_Size: {x: 0.62411463, y: 0.45709237, z: 0.7104995}
+  m_Center: {x: -0.00000004703179, y: 0.022961333, z: 0.22840899}
 --- !u!4 &535031236 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: c0148e9c123304848bd106b690b22ec4, type: 3}
@@ -7075,8 +6999,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 1.2319161, y: 0.3980487, z: 1.155376}
+  m_Center: {x: -0.051090658, y: 0.035603583, z: -0.028100014}
 --- !u!114 &536190817
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7156,8 +7080,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.64, y: 0.25, z: 0.25}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0.18006319, y: 0.1552813, z: 0.21382809}
+  m_Center: {x: 0, y: 0.07486862, z: 0.0038928986}
 --- !u!114 &541377005
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7306,8 +7230,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.25, y: 0.25, z: 0.25}
-  m_Center: {x: 0, y: 0, z: 0.2187131}
+  m_Size: {x: 0.42535517, y: 0.4373527, z: 0.44236284}
+  m_Center: {x: 0, y: -0.000000029802322, z: 0.21871309}
 --- !u!4 &542918413 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 46a2a27bcd19b0c4e866b4d83e3a5c8d, type: 3}
@@ -7403,8 +7327,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.25, y: 0.25, z: 0.25}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0.6541567, y: 0.46963155, z: 0.7186203}
+  m_Center: {x: -0.033417225, y: 0.042137206, z: -0.009819984}
 --- !u!114 &553203986
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7468,8 +7392,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.25, y: 0.25, z: 0.25}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0.11066945, y: 0.267289, z: 0.11066945}
+  m_Center: {x: 0, y: 0.14260423, z: 0}
 --- !u!114 &557161400
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7642,8 +7566,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0.56, z: 0}
+  m_Size: {x: 1.3268528, y: 0.8300817, z: 0.56171036}
+  m_Center: {x: -0.0046818256, y: 0.41504073, z: 0}
 --- !u!4 &557951662 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 22fb715b13926714d9269de822cc3026, type: 3}
@@ -7708,7 +7632,6 @@ GameObject:
   - component: {fileID: 558498560}
   - component: {fileID: 558498559}
   - component: {fileID: 558498558}
-  - component: {fileID: 558498563}
   m_Layer: 3
   m_Name: door04 SUCIO
   m_TagString: Dirt
@@ -7835,24 +7758,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 558498556}
   m_Mesh: {fileID: 4300034, guid: 14cf328cd0a9046e5a177954438c6a56, type: 3}
---- !u!114 &558498563
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 558498556}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  outlineMode: 0
-  outlineColor: {r: 0.023362402, g: 0.07873552, b: 0.990566, a: 1}
-  outlineWidth: 2
-  precomputeOutline: 0
-  bakeKeys: []
-  bakeValues: []
 --- !u!1001 &570345999
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7955,8 +7860,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.01, y: 0.01, z: 0.01}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0.009048, y: 0.012258109, z: 0.008358016}
+  m_Center: {x: -0.000000021457671, y: -0.0007482624, z: 0.00072166964}
 --- !u!114 &572143138
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8281,8 +8186,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.25, y: 0.25, z: 0.25}
-  m_Center: {x: 0, y: -0.00067906437, z: 0.00013991058}
+  m_Size: {x: 0.011508789, y: 0.0025909196, z: 0.017021466}
+  m_Center: {x: 0, y: -0.00067908847, z: 0.00013991194}
 --- !u!114 &594734957
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8459,8 +8364,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.6, y: 0.4708108, z: 0.45684904}
-  m_Center: {x: 4.3874e-10, y: 0.022961158, z: 0.22840899}
+  m_Size: {x: 0.7505044, y: 0.4570926, z: 0.6964906}
+  m_Center: {x: -0.00000032875687, y: 0.022961527, z: 0.22840896}
 --- !u!4 &624347203 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: c0148e9c123304848bd106b690b22ec4, type: 3}
@@ -8696,8 +8601,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0.3125143, y: 0.11177349, z: 0.13961315}
+  m_Center: {x: -0.0000023841858, y: 0.055892587, z: 0.0006465912}
 --- !u!4 &651071480 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 78bed2d0e6852444286f196db6874ddf, type: 3}
@@ -8837,8 +8742,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0.42891717, y: 0.5294583, z: 0.5337639}
+  m_Center: {x: 0.002128601, y: 0.30484354, z: -0.014618874}
 --- !u!114 &666852397
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8898,7 +8803,6 @@ GameObject:
   - component: {fileID: 669561405}
   - component: {fileID: 669561407}
   - component: {fileID: 669561408}
-  - component: {fileID: 669561409}
   m_Layer: 3
   m_Name: BathroomSink_BottomSUCIO
   m_TagString: Dirt
@@ -9012,24 +8916,6 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300010, guid: cdc73258ef2d5ee449fe6d18ccf0122f, type: 3}
---- !u!114 &669561409
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 669561403}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  outlineMode: 0
-  outlineColor: {r: 0.023362402, g: 0.07873552, b: 0.990566, a: 1}
-  outlineWidth: 2
-  precomputeOutline: 0
-  bakeKeys: []
-  bakeValues: []
 --- !u!1001 &686126290
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9160,8 +9046,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0.25, z: 0.075618714}
+  m_Size: {x: 0.78679746, y: 0.5, z: 0.6712356}
+  m_Center: {x: -0.14339876, y: 0.25, z: 0.075618744}
 --- !u!4 &686126300 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: 72b369626c991784a901d44918508a5e, type: 3}
@@ -9501,7 +9387,6 @@ GameObject:
   - component: {fileID: 716296370}
   - component: {fileID: 716296369}
   - component: {fileID: 716296372}
-  - component: {fileID: 716296373}
   m_Layer: 3
   m_Name: PFB_TV SUCIO
   m_TagString: Dirt
@@ -9615,24 +9500,6 @@ MonoBehaviour:
   minOpacity: 0.35
   maxHealth: 1
   requiredToolId: Sponge
---- !u!114 &716296373
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 716296367}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  outlineMode: 0
-  outlineColor: {r: 0.023362402, g: 0.07873552, b: 0.990566, a: 1}
-  outlineWidth: 2
-  precomputeOutline: 0
-  bakeKeys: []
-  bakeValues: []
 --- !u!1 &719182930 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 92168370863816083, guid: e49bcf1985a184d49a540b41d1c6ad71, type: 3}
@@ -9657,8 +9524,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.009, y: 0.005, z: 0.001}
-  m_Center: {x: 0.005, y: 0, z: 0}
+  m_Size: {x: 0.0038624448, y: 0.0005652859, z: 0.0038624445}
+  m_Center: {x: 0, y: 9.464729e-12, z: -0.0000900606}
 --- !u!54 &719182932
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -10003,8 +9870,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.08, y: 0.06, z: 0.07}
-  m_Center: {x: 0, y: 0.0000007529742, z: -0.001332321}
+  m_Size: {x: 0.009723354, y: 0.0011403053, z: 0.009723354}
+  m_Center: {x: -0.000455716, y: 0.00000075412635, z: -0.0013323207}
 --- !u!114 &747939016
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10172,7 +10039,6 @@ GameObject:
   - component: {fileID: 758089278}
   - component: {fileID: 758089280}
   - component: {fileID: 758089281}
-  - component: {fileID: 758089282}
   m_Layer: 3
   m_Name: BathroomSink_Top SUCIO
   m_TagString: Dirt
@@ -10286,24 +10152,6 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300008, guid: cdc73258ef2d5ee449fe6d18ccf0122f, type: 3}
---- !u!114 &758089282
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 758089276}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  outlineMode: 0
-  outlineColor: {r: 0.023362402, g: 0.07873552, b: 0.990566, a: 1}
-  outlineWidth: 2
-  precomputeOutline: 0
-  bakeKeys: []
-  bakeValues: []
 --- !u!1 &765541271
 GameObject:
   m_ObjectHideFlags: 0
@@ -10317,7 +10165,6 @@ GameObject:
   - component: {fileID: 765541274}
   - component: {fileID: 765541273}
   - component: {fileID: 765541276}
-  - component: {fileID: 765541277}
   m_Layer: 3
   m_Name: PFB_Fridge SUCIO
   m_TagString: Dirt
@@ -10431,24 +10278,6 @@ MonoBehaviour:
   minOpacity: 0.1
   maxHealth: 5
   requiredToolId: Sponge
---- !u!114 &765541277
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 765541271}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  outlineMode: 0
-  outlineColor: {r: 0.023362402, g: 0.07873552, b: 0.990566, a: 1}
-  outlineWidth: 2
-  precomputeOutline: 0
-  bakeKeys: []
-  bakeValues: []
 --- !u!1001 &784272471
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10606,8 +10435,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.8, y: 0.88, z: 1.27}
-  m_Center: {x: -0.0035919696, y: 0.14590798, z: -0.0031805634}
+  m_Size: {x: 0.78040123, y: 0.29181597, z: 0.6914187}
+  m_Center: {x: -0.0035920143, y: 0.145908, z: -0.0031805038}
 --- !u!4 &784272481 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: f78191dbce572154697845711316ab6f, type: 3}
@@ -10660,8 +10489,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 1.2319161, y: 0.3980487, z: 1.155376}
+  m_Center: {x: -0.051090717, y: 0.035603583, z: -0.02809906}
 --- !u!114 &794889905
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10741,8 +10570,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0.010662302, y: 0.08099374, z: 0.008594453}
+  m_Size: {x: 0.9112289, y: 0.69598085, z: 0.63662815}
+  m_Center: {x: 0.14986074, y: 0.08099377, z: 0.045012474}
 --- !u!114 &797792734
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10872,8 +10701,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 1.4014723, y: 0.18517369, z: 1.3573166}
+  m_Center: {x: 0.020015597, y: 0.05062431, z: 0.011821747}
 --- !u!114 &804372910
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10937,8 +10766,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 1.4014723, y: 0.18517369, z: 1.3573166}
+  m_Center: {x: 0.020015717, y: 0.05062431, z: 0.011821747}
 --- !u!114 &809801160
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11018,8 +10847,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.01, y: 0.01, z: 0.01}
-  m_Center: {x: 0, y: 0.01, z: -0.00008877797}
+  m_Size: {x: 0.0029088696, y: 0.0014667439, z: 0.0028359382}
+  m_Center: {x: 0, y: 0.000040713672, z: -0.00008877788}
 --- !u!114 &816996823
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11083,8 +10912,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.25, y: 0.25, z: 0.25}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0.1700965, y: 0.25541547, z: 0.09776255}
+  m_Center: {x: -0.0005326271, y: 0.10469103, z: 0.0008869171}
 --- !u!114 &821904334
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11281,8 +11110,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0.24039555, y: 0.09268355, z: 0.10862446}
+  m_Center: {x: -0.0000019073486, y: 0.046346307, z: 0.0011119843}
 --- !u!4 &838877116 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 78bed2d0e6852444286f196db6874ddf, type: 3}
@@ -11362,7 +11191,6 @@ GameObject:
   - component: {fileID: 844073761}
   - component: {fileID: 844073760}
   - component: {fileID: 844073763}
-  - component: {fileID: 844073764}
   m_Layer: 3
   m_Name: Base SUCIO
   m_TagString: Dirt
@@ -11476,24 +11304,6 @@ MonoBehaviour:
   minOpacity: 0.1
   maxHealth: 5
   requiredToolId: Sponge
---- !u!114 &844073764
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 844073758}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  outlineMode: 0
-  outlineColor: {r: 0.023362402, g: 0.07873552, b: 0.990566, a: 1}
-  outlineWidth: 2
-  precomputeOutline: 0
-  bakeKeys: []
-  bakeValues: []
 --- !u!1 &857774392 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1451059453151559047, guid: 4d39bc6d308dfff4881a3a11d574e4ed, type: 3}
@@ -11539,7 +11349,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.25, y: 0.25, z: 0.25}
+  m_Size: {x: 0.009290882, y: 0.013471192, z: 0.009290881}
   m_Center: {x: 0, y: 0, z: 0.0015447014}
 --- !u!114 &857774401
 MonoBehaviour:
@@ -11836,8 +11646,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.25, y: 0.25, z: 0.25}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0.6605587, y: 0.7710452, z: 0.08904266}
+  m_Center: {x: 0.0019445419, y: -0.005509615, z: 0.04585457}
 --- !u!114 &866940549
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11951,7 +11761,6 @@ GameObject:
   - component: {fileID: 872245063}
   - component: {fileID: 872245062}
   - component: {fileID: 872245065}
-  - component: {fileID: 872245066}
   m_Layer: 3
   m_Name: PFB_Towel SUCIO
   m_TagString: Dirt
@@ -12065,24 +11874,6 @@ MonoBehaviour:
   minOpacity: 0.1
   maxHealth: 5
   requiredToolId: Sponge
---- !u!114 &872245066
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 872245060}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  outlineMode: 0
-  outlineColor: {r: 0.023362402, g: 0.07873552, b: 0.990566, a: 1}
-  outlineWidth: 2
-  precomputeOutline: 0
-  bakeKeys: []
-  bakeValues: []
 --- !u!1 &874130190 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 9076078963676544771, guid: 909a0ffddb69bcf43a347f82a02e859d, type: 3}
@@ -12141,8 +11932,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.25, y: 0.25, z: 0.25}
-  m_Center: {x: 0.00026544265, y: -0.00018430932, z: 0.00021461998}
+  m_Size: {x: 0.0029333706, y: 0.00947131, z: 0.009589461}
+  m_Center: {x: 0.00026544408, y: -0.00018431403, z: 0.0002146125}
 --- !u!114 &879839061
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12243,8 +12034,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.02, y: 0.01, z: 0.08}
-  m_Center: {x: 0.000000008149072, y: -0.0007434576, z: 0.00052973826}
+  m_Size: {x: 0.009048, y: 0.012445364, z: 0.0084600095}
+  m_Center: {x: 0.000000008150225, y: -0.0007434559, z: 0.00052973855}
 --- !u!114 &881364794
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12459,8 +12250,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.15034808, y: 0.25157598, z: 0.34178194}
-  m_Center: {x: 0.000000003725292, y: -0.12466026, z: -0.000013396207}
+  m_Size: {x: 0.15034804, y: 0.34186965, z: 0.25169522}
+  m_Center: {x: 0, y: -0.124660514, z: -0.000013455749}
 --- !u!54 &884576282
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -12687,7 +12478,6 @@ GameObject:
   - component: {fileID: 891450490}
   - component: {fileID: 891450492}
   - component: {fileID: 891450493}
-  - component: {fileID: 891450494}
   m_Layer: 3
   m_Name: BedBlanket SUCIO
   m_TagString: Dirt
@@ -12801,24 +12591,6 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300004, guid: 78cca8ac5dce04729af9f9377e69636c, type: 3}
---- !u!114 &891450494
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 891450488}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  outlineMode: 0
-  outlineColor: {r: 0.023362402, g: 0.07873552, b: 0.990566, a: 1}
-  outlineWidth: 2
-  precomputeOutline: 0
-  bakeKeys: []
-  bakeValues: []
 --- !u!1 &895566067
 GameObject:
   m_ObjectHideFlags: 0
@@ -12832,7 +12604,6 @@ GameObject:
   - component: {fileID: 895566070}
   - component: {fileID: 895566069}
   - component: {fileID: 895566072}
-  - component: {fileID: 895566073}
   m_Layer: 3
   m_Name: PFB_DiningChair SUCIO
   m_TagString: Dirt
@@ -12946,24 +12717,6 @@ MonoBehaviour:
   minOpacity: 0.1
   maxHealth: 5
   requiredToolId: Sponge
---- !u!114 &895566073
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 895566067}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  outlineMode: 0
-  outlineColor: {r: 0.023362402, g: 0.07873552, b: 0.990566, a: 1}
-  outlineWidth: 2
-  precomputeOutline: 0
-  bakeKeys: []
-  bakeValues: []
 --- !u!1 &909095297
 GameObject:
   m_ObjectHideFlags: 0
@@ -13282,8 +13035,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.025, y: 0.025, z: 0.025}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0.0029088694, y: 0.0014667439, z: 0.002835938}
+  m_Center: {x: 0, y: 0.00004071511, z: -0.00008877933}
 --- !u!54 &929036867
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -13472,8 +13225,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.25, y: 0.25, z: 0.25}
-  m_Center: {x: 0, y: -0.00067906437, z: 0.00013991384}
+  m_Size: {x: 0.011508789, y: 0.0025909196, z: 0.017021466}
+  m_Center: {x: 0, y: -0.00067908847, z: 0.00013991194}
 --- !u!114 &934540330
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13706,8 +13459,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0.5045643, y: 0.61552095, z: 0.5087166}
+  m_Center: {x: 0.0011296272, y: 0.30776042, z: 0.0051107407}
 --- !u!4 &938155060 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 4f8b192b8df73ac419c91696a83513e6, type: 3}
@@ -14142,8 +13895,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: -0.14339873, y: 0.25, z: 0.075618714}
+  m_Size: {x: 0.78679746, y: 0.5, z: 0.6712356}
+  m_Center: {x: -0.14339876, y: 0.25, z: 0.075618744}
 --- !u!4 &952305490 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: 72b369626c991784a901d44918508a5e, type: 3}
@@ -14561,8 +14314,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0.5532379, y: 0.11235297, z: 0.5532379}
+  m_Center: {x: 0, y: 0.05621934, z: 0}
 --- !u!4 &972501486 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 6055d1c203640d048b39c134b353eea1, type: 3}
@@ -14744,8 +14497,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.25, y: 0.25, z: 0.25}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0.07261038, y: 0.19694674, z: 0.072610855}
+  m_Center: {x: 0, y: 0.09820223, z: 0}
 --- !u!114 &989530397
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14897,8 +14650,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.25, y: 0.25, z: 0.25}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0.07261038, y: 0.19694674, z: 0.072610855}
+  m_Center: {x: 0, y: 0.09820211, z: 0}
 --- !u!114 &995595750
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15039,8 +14792,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.0005, y: 0.0025, z: 0.0025}
-  m_Center: {x: 0.01, y: 0.000000014900703, z: -0.000028675882}
+  m_Size: {x: 0.0020359382, y: 0.0039755334, z: 0.0021158098}
+  m_Center: {x: 1.2819084e-12, y: -2.704628e-12, z: -0.00002867581}
 --- !u!114 &1012365657
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15178,8 +14931,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.25, y: 0.25, z: 0.25}
-  m_Center: {x: -0.000000059604645, y: 0.00055071706, z: 0.02116804}
+  m_Size: {x: 0.030596811, y: 0.062336076, z: 0.030596813}
+  m_Center: {x: 0, y: 0.00055075285, z: 0.021168029}
 --- !u!114 &1014947716
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15243,8 +14996,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.25, y: 0.25, z: 0.25}
-  m_Center: {x: -0.00095356314, y: 0.00002115126, z: -0.0011604339}
+  m_Size: {x: 0.025656017, y: 0.020803124, z: 0.015598948}
+  m_Center: {x: -0.0009535516, y: 0.000021148488, z: -0.0011604324}
 --- !u!114 &1019441917
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15278,7 +15031,6 @@ GameObject:
   - component: {fileID: 1032942905}
   - component: {fileID: 1032942904}
   - component: {fileID: 1032942903}
-  - component: {fileID: 1032942909}
   m_Layer: 3
   m_Name: DoorSingle SUCIO
   m_TagString: Dirt
@@ -15336,8 +15088,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.15, y: 2.5, z: 0.12051574}
-  m_Center: {x: 0.57528025, y: 1.26, z: 0}
+  m_Size: {x: 0.16107439, y: 2.5048633, z: 1.1677527}
+  m_Center: {x: 0.58240855, y: 1.2679453, z: 0}
 --- !u!54 &1032942905
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -15440,24 +15192,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1032942901}
   m_Mesh: {fileID: 4300002, guid: 03e880133708442c4b8533df94284924, type: 3}
---- !u!114 &1032942909
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1032942901}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  outlineMode: 0
-  outlineColor: {r: 0.023362402, g: 0.07873552, b: 0.990566, a: 1}
-  outlineWidth: 2
-  precomputeOutline: 0
-  bakeKeys: []
-  bakeValues: []
 --- !u!1 &1036680866 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3425550960444887891, guid: e64b3ed26bdbe6f40bebf5d84f9d6211, type: 3}
@@ -15482,8 +15216,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.01, y: 0.01, z: 0.01}
-  m_Center: {x: 0.00001931021, y: 0.00024371296, z: 0.002253432}
+  m_Size: {x: 0.008136433, y: 0.018457977, z: 0.016618147}
+  m_Center: {x: 0.000019309922, y: 0.000243714, z: 0.0022534325}
 --- !u!114 &1036680869
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15907,8 +15641,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0.6, y: 0.06, z: 0}
+  m_Size: {x: 0.23853874, y: 0.08888531, z: 0.3338852}
+  m_Center: {x: 0.00049829483, y: 0.111423254, z: -0.08899689}
 --- !u!4 &1057227867 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 78bed2d0e6852444286f196db6874ddf, type: 3}
@@ -16432,8 +16166,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.009, y: 0.025, z: 0.025}
-  m_Center: {x: 0.00255, y: 0.01, z: 0.0001}
+  m_Size: {x: 0.003355241, y: 0.0018782145, z: 0.0035490545}
+  m_Center: {x: 0.000005918121, y: -0.00018895014, z: 0.000065029744}
 --- !u!54 &1107548363
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -16534,8 +16268,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.25, y: 0.25, z: 0.25}
-  m_Center: {x: -0.0009535337, y: 0.000021144167, z: -0.0011604332}
+  m_Size: {x: 0.02935546, y: 0.020803124, z: 0.028966008}
+  m_Center: {x: -0.00095352513, y: 0.00002114665, z: -0.0011604326}
 --- !u!54 &1127776789
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -16969,8 +16703,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.01, y: 0.01, z: 0.01}
-  m_Center: {x: -0.0000000037252903, y: 0.001, z: -0.00006882219}
+  m_Size: {x: 0.001558334, y: 0.0013235011, z: 0.0014820638}
+  m_Center: {x: 0, y: 0.00006977081, z: -0.00006882189}
 --- !u!114 &1163239271
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17034,8 +16768,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.25, y: 0.25, z: 0.25}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0.10177349, y: 0.06318586, z: 0.100230716}
+  m_Center: {x: -0.0036871433, y: 0.03358382, z: -0.003452301}
 --- !u!114 &1188284290
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17398,8 +17132,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.06, y: 0.01, z: 0.05}
-  m_Center: {x: 0, y: 5.820765e-11, z: 0.000014807066}
+  m_Size: {x: 0.004000491, y: 0.0010982744, z: 0.003870124}
+  m_Center: {x: 0, y: -1.5213467e-12, z: 0.000014807449}
 --- !u!54 &1232237982
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -18084,8 +17818,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.25, y: 0.25, z: 0.25}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0.07261041, y: 0.19694678, z: 0.07260957}
+  m_Center: {x: 0, y: 0.098202266, z: 0}
 --- !u!114 &1303318301
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18128,8 +17862,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.01, y: 0.01, z: 0.001}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0.0033616223, y: 0.0011049029, z: 0.0027889847}
+  m_Center: {x: -0.00039594172, y: -9.3132255e-12, z: 0.00006232023}
 --- !u!54 &1323841760
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -18238,8 +17972,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 1.2319161, y: 0.3980487, z: 1.155376}
+  m_Center: {x: -0.051090717, y: 0.035603583, z: -0.028100014}
 --- !u!114 &1325308714
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18605,8 +18339,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.5, y: 0.5, z: 0.5}
-  m_Center: {x: 0.61, y: 0.21, z: 0}
+  m_Size: {x: 0.24039555, y: 0.09268355, z: 0.13462448}
+  m_Center: {x: -0.0000019073486, y: 0.046346307, z: 0.0141124725}
 --- !u!4 &1337529406 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 78bed2d0e6852444286f196db6874ddf, type: 3}
@@ -18877,8 +18611,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.59999996, y: 0.4708107, z: 0.45684895}
-  m_Center: {x: -0.00000000229009, y: 0.022961173, z: 0.22840896}
+  m_Size: {x: 0.751494, y: 0.4570134, z: 0.6989589}
+  m_Center: {x: -0.000000004656613, y: 0.022961617, z: 0.22840898}
 --- !u!4 &1345688678 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: c0148e9c123304848bd106b690b22ec4, type: 3}
@@ -18942,7 +18676,6 @@ GameObject:
   - component: {fileID: 1351133002}
   - component: {fileID: 1351133001}
   - component: {fileID: 1351133004}
-  - component: {fileID: 1351133005}
   m_Layer: 3
   m_Name: chestOfDraws_BaseSUCIO
   m_TagString: Dirt
@@ -19056,24 +18789,6 @@ MonoBehaviour:
   minOpacity: 0.1
   maxHealth: 5
   requiredToolId: Sponge
---- !u!114 &1351133005
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1351132999}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  outlineMode: 0
-  outlineColor: {r: 0.023362402, g: 0.07873552, b: 0.990566, a: 1}
-  outlineWidth: 2
-  precomputeOutline: 0
-  bakeKeys: []
-  bakeValues: []
 --- !u!1001 &1356394299
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -19210,8 +18925,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.025, y: 0.025, z: 0.025}
-  m_Center: {x: -4.2730403e-13, y: 0.000000014900703, z: -0.000028675882}
+  m_Size: {x: 0.0020359382, y: 0.0039755334, z: 0.0021158098}
+  m_Center: {x: 1.2819084e-12, y: -2.704628e-12, z: -0.00002867581}
 --- !u!114 &1356394304
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19296,7 +19011,6 @@ GameObject:
   - component: {fileID: 1377930374}
   - component: {fileID: 1377930373}
   - component: {fileID: 1377930376}
-  - component: {fileID: 1377930377}
   m_Layer: 3
   m_Name: PFB_Basket SUCIO
   m_TagString: Dirt
@@ -19410,24 +19124,6 @@ MonoBehaviour:
   minOpacity: 0.1
   maxHealth: 5
   requiredToolId: Sponge
---- !u!114 &1377930377
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1377930371}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  outlineMode: 0
-  outlineColor: {r: 0.023362402, g: 0.07873552, b: 0.990566, a: 1}
-  outlineWidth: 2
-  precomputeOutline: 0
-  bakeKeys: []
-  bakeValues: []
 --- !u!1001 &1386594831
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -19797,7 +19493,6 @@ GameObject:
   - component: {fileID: 1429174788}
   - component: {fileID: 1429174787}
   - component: {fileID: 1429174790}
-  - component: {fileID: 1429174791}
   m_Layer: 3
   m_Name: PFB_SofaSUCIO
   m_TagString: Dirt
@@ -19911,24 +19606,6 @@ MonoBehaviour:
   minOpacity: 0.1
   maxHealth: 5
   requiredToolId: Sponge
---- !u!114 &1429174791
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1429174785}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  outlineMode: 0
-  outlineColor: {r: 0.023362402, g: 0.07873552, b: 0.990566, a: 1}
-  outlineWidth: 2
-  precomputeOutline: 0
-  bakeKeys: []
-  bakeValues: []
 --- !u!1001 &1431607270
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -20064,8 +19741,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.42535517, y: 0.44236276, z: 0.4373526}
-  m_Center: {x: 0, y: 0.0000009536743, z: 0.21871315}
+  m_Size: {x: 0.42535517, y: 0.4373527, z: 0.44236284}
+  m_Center: {x: 0, y: -0.000000029802322, z: 0.21871309}
 --- !u!54 &1431607289
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -20206,7 +19883,6 @@ GameObject:
   - component: {fileID: 1450817755}
   - component: {fileID: 1450817754}
   - component: {fileID: 1450817757}
-  - component: {fileID: 1450817758}
   m_Layer: 3
   m_Name: PFB_DiningChair SUCIO
   m_TagString: Dirt
@@ -20320,24 +19996,6 @@ MonoBehaviour:
   minOpacity: 0.1
   maxHealth: 5
   requiredToolId: Sponge
---- !u!114 &1450817758
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1450817752}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  outlineMode: 0
-  outlineColor: {r: 0.023362402, g: 0.07873552, b: 0.990566, a: 1}
-  outlineWidth: 2
-  precomputeOutline: 0
-  bakeKeys: []
-  bakeValues: []
 --- !u!1 &1458888099
 GameObject:
   m_ObjectHideFlags: 0
@@ -20653,8 +20311,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.26599672, y: 0.26346302, z: 0.22187032}
-  m_Center: {x: 0.0010077953, y: -0.01144871, z: 0.11133715}
+  m_Size: {x: 0.26599672, y: 0.22187036, z: 0.26346305}
+  m_Center: {x: 0.0010080338, y: -0.011447921, z: 0.11133718}
 --- !u!4 &1472657580 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: f811d04ba7bea9840bd789e2041c84e0, type: 3}
@@ -21379,8 +21037,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.25, y: 0.25, z: 0.25}
-  m_Center: {x: 4.656613e-10, y: 0, z: 0}
+  m_Size: {x: 0.011674196, y: 0.0048726774, z: 0.0048726774}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &1524222061
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21502,8 +21160,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.1, y: 0.1, z: 0.1}
-  m_Center: {x: -0.000000014202669, y: 0.00029900594, z: 0.006459186}
+  m_Size: {x: 0.013960887, y: 0.018156573, z: 0.013610858}
+  m_Center: {x: -0.00000001382487, y: 0.0002990035, z: 0.0064591845}
 --- !u!114 &1525330125
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21623,7 +21281,6 @@ GameObject:
   - component: {fileID: 1537447091}
   - component: {fileID: 1537447090}
   - component: {fileID: 1537447093}
-  - component: {fileID: 1537447094}
   m_Layer: 3
   m_Name: PFB_SofaSmall SUCIO
   m_TagString: Dirt
@@ -21737,24 +21394,6 @@ MonoBehaviour:
   minOpacity: 0.1
   maxHealth: 5
   requiredToolId: Sponge
---- !u!114 &1537447094
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1537447088}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  outlineMode: 0
-  outlineColor: {r: 0.023362402, g: 0.07873552, b: 0.990566, a: 1}
-  outlineWidth: 2
-  precomputeOutline: 0
-  bakeKeys: []
-  bakeValues: []
 --- !u!1001 &1540358951
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -21893,8 +21532,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.15034808, y: 0.25157598, z: 0.34178194}
-  m_Center: {x: 0.000000003725292, y: -0.12466026, z: -0.000013396207}
+  m_Size: {x: 0.15034804, y: 0.34186965, z: 0.25169522}
+  m_Center: {x: 0, y: -0.124660514, z: -0.000013455749}
 --- !u!54 &1540358962
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -22161,8 +21800,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 9
   playerCamera: {fileID: 0}
-  searchInChildren: 1
-  sphereCastRadius: 0.1
+  showDebugRays: 1
 --- !u!1001 &1566862893
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -22609,8 +22247,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.1, y: 0.1, z: 0.1}
-  m_Center: {x: -15.7, y: 0.4, z: -12.3}
+  m_Size: {x: 0.04199361, y: 0.004790409, z: 0.03851989}
+  m_Center: {x: -15.736073, y: 0.40385666, z: -12.258079}
 --- !u!114 &1581445445
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22877,7 +22515,6 @@ GameObject:
   - component: {fileID: 1594716418}
   - component: {fileID: 1594716417}
   - component: {fileID: 1594716416}
-  - component: {fileID: 1594716421}
   m_Layer: 3
   m_Name: door02 SUCIO
   m_TagString: Dirt
@@ -23004,24 +22641,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1594716414}
   m_Mesh: {fileID: 4300026, guid: 14cf328cd0a9046e5a177954438c6a56, type: 3}
---- !u!114 &1594716421
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1594716414}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  outlineMode: 0
-  outlineColor: {r: 0.023362402, g: 0.07873552, b: 0.990566, a: 1}
-  outlineWidth: 2
-  precomputeOutline: 0
-  bakeKeys: []
-  bakeValues: []
 --- !u!1001 &1598900166
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -23160,8 +22779,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.15034801, y: 0.25157592, z: 0.34178188}
-  m_Center: {x: 0.0000000037252903, y: -0.12466026, z: -0.0000134184975}
+  m_Size: {x: 0.15034801, y: 0.34186965, z: 0.25169516}
+  m_Center: {x: 0, y: -0.124660514, z: -0.0000134781}
 --- !u!54 &1598900177
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -23650,8 +23269,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.64, y: 0.74, z: 0.19}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 1.1127934, y: 0.31668645, z: 2.261581}
+  m_Center: {x: -0.27985954, y: 0.0027192414, z: 0.01555306}
 --- !u!4 &1606235258 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: c0a634df197861849842f9ad7a14c9ec, type: 3}
@@ -23747,8 +23366,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.25, y: 0.25, z: 0.25}
-  m_Center: {x: -0.0010868598, y: 0.00007201319, z: 0.0029563494}
+  m_Size: {x: 0.004998528, y: 0.0064482247, z: 0.0030184682}
+  m_Center: {x: -0.0010868515, y: 0.00007205472, z: 0.0029563466}
 --- !u!114 &1606498280
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24012,8 +23631,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.25, y: 0.25, z: 0.25}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0.18515164, y: 0.42727113, z: 0.18515205}
+  m_Center: {x: 0, y: 0.20945293, z: 0}
 --- !u!114 &1618996677
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24269,8 +23888,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 6, y: 4.18, z: 7.88}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 3.701642, y: 2.3433073, z: 3.9912972}
+  m_Center: {x: 0.85504675, y: 1.0507435, z: 0.0013656794}
 --- !u!54 &1655283874
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -24373,8 +23992,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.25, y: 0.25, z: 0.25}
-  m_Center: {x: 0, y: -0.00018564086, z: 0.00009369791}
+  m_Size: {x: 0.010514371, y: 0.005062157, z: 0.0053928825}
+  m_Center: {x: 0, y: -0.00018562766, z: 0.00009369712}
 --- !u!114 &1680625591
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24889,8 +24508,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.025, y: 0.01, z: 0.01}
-  m_Center: {x: 0.000019310513, y: 0.00024371405, z: 0.0022534316}
+  m_Size: {x: 0.008929573, y: 0.018457973, z: 0.016968857}
+  m_Center: {x: 0.000019308669, y: 0.00024371356, z: 0.0022534311}
 --- !u!114 &1733179717
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25250,8 +24869,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.25, y: 0.25, z: 0.25}
-  m_Center: {x: 0.05421211, y: 0.33685678, z: 0.11062297}
+  m_Size: {x: 0.7912667, y: 0.6737136, z: 0.90408766}
+  m_Center: {x: 0.054212213, y: 0.33685684, z: 0.110622644}
 --- !u!65 &1758788907
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -25320,8 +24939,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.007, y: 0.007, z: 0.009}
-  m_Center: {x: -0.00045570126, y: -0.01, z: 0.0017696971}
+  m_Size: {x: 0.009723388, y: 0.0073443423, z: 0.009723454}
+  m_Center: {x: -0.00045570135, y: 0.00000075378324, z: 0.0017696968}
 --- !u!114 &1760543308
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25509,8 +25128,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 1.4014723, y: 0.18517369, z: 1.3573166}
+  m_Center: {x: 0.020015597, y: 0.05062431, z: 0.01182236}
 --- !u!114 &1762684655
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25682,8 +25301,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.76, y: 0.43, z: 0.25}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0.07620168, y: 0.13275409, z: 0.07620239}
+  m_Center: {x: 0.0013520718, y: 0.067436576, z: 0.0012722015}
 --- !u!114 &1797917487
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25880,8 +25499,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0.6166363, y: 1.1818697, z: 1.1946754}
+  m_Center: {x: -0.002632145, y: 0.59056395, z: 0.025925402}
 --- !u!4 &1819931591 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 177b2002803d95c47bce93d05345d431, type: 3}
@@ -25977,8 +25596,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.01, y: 0.01, z: 0.01}
-  m_Center: {x: 0.00050493004, y: 0.001, z: -0.0059105223}
+  m_Size: {x: -0.02324441, y: -0.041909438, z: -0.020796716}
+  m_Center: {x: 0.0005050158, y: -0.00039823912, z: -0.005910528}
 --- !u!114 &1821049244
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26127,8 +25746,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.3739518, y: 0.5813021, z: 2.063442}
-  m_Center: {x: 0, y: -0.00000001584652, z: 1.031721}
+  m_Size: {x: 0.58202213, y: 2.0636446, z: 1.3739518}
+  m_Center: {x: 0, y: 0, z: 1.0317209}
 --- !u!4 &1830929139 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 5a924d9ada0c4584e9ce5d0f162fc5de, type: 3}
@@ -26342,7 +25961,6 @@ GameObject:
   - component: {fileID: 1841165025}
   - component: {fileID: 1841165027}
   - component: {fileID: 1841165028}
-  - component: {fileID: 1841165029}
   m_Layer: 3
   m_Name: BedBase SUCIO
   m_TagString: Dirt
@@ -26456,24 +26074,6 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300008, guid: 78cca8ac5dce04729af9f9377e69636c, type: 3}
---- !u!114 &1841165029
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1841165023}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  outlineMode: 0
-  outlineColor: {r: 0.023362402, g: 0.07873552, b: 0.990566, a: 1}
-  outlineWidth: 2
-  precomputeOutline: 0
-  bakeKeys: []
-  bakeValues: []
 --- !u!1 &1851332121
 GameObject:
   m_ObjectHideFlags: 0
@@ -26488,7 +26088,6 @@ GameObject:
   - component: {fileID: 1851332125}
   - component: {fileID: 1851332124}
   - component: {fileID: 1851332123}
-  - component: {fileID: 1851332128}
   m_Layer: 3
   m_Name: door05 SUCIO
   m_TagString: Dirt
@@ -26615,24 +26214,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1851332121}
   m_Mesh: {fileID: 4300038, guid: 14cf328cd0a9046e5a177954438c6a56, type: 3}
---- !u!114 &1851332128
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1851332121}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  outlineMode: 0
-  outlineColor: {r: 0.023362402, g: 0.07873552, b: 0.990566, a: 1}
-  outlineWidth: 2
-  precomputeOutline: 0
-  bakeKeys: []
-  bakeValues: []
 --- !u!1 &1858645916
 GameObject:
   m_ObjectHideFlags: 0
@@ -26646,7 +26227,6 @@ GameObject:
   - component: {fileID: 1858645920}
   - component: {fileID: 1858645919}
   - component: {fileID: 1858645918}
-  - component: {fileID: 1858645922}
   m_Layer: 3
   m_Name: PFB_TVStand SUCIO
   m_TagString: Dirt
@@ -26707,8 +26287,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.96, y: 0.55, z: 0.81}
-  m_Center: {x: 0, y: 0.33, z: 0.54}
+  m_Size: {x: 0.45410997, y: 0.58516467, z: 1.7999997}
+  m_Center: {x: 0, y: 0.29258233, z: 0}
 --- !u!114 &1858645920
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26744,24 +26324,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &1858645922
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1858645916}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  outlineMode: 0
-  outlineColor: {r: 0.023362402, g: 0.07873552, b: 0.990566, a: 1}
-  outlineWidth: 2
-  precomputeOutline: 0
-  bakeKeys: []
-  bakeValues: []
 --- !u!1 &1862251595 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4474382198320302150, guid: 9cd1746789b311d4c9e0add4969236f1, type: 3}
@@ -26807,8 +26369,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.25, y: 0.25, z: 0.25}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0.6210432, y: 0.7666199, z: 0.77285385}
+  m_Center: {x: 0.002128601, y: 0.3538441, z: -0.014619827}
 --- !u!114 &1862251600
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26956,8 +26518,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.25, y: 0.25, z: 0.25}
-  m_Center: {x: -0.0000000011350494, y: 0.0000000010477377, z: -2.3283064e-10}
+  m_Size: {x: 0.001716071, y: 0.00043324372, z: 0.0025891988}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &1882703129
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27382,8 +26944,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.0034437, y: 0.25697955, z: 2.0803103}
-  m_Center: {x: 0, y: -0.12848945, z: 1.0401552}
+  m_Size: {x: 0.25770554, y: 2.0803998, z: 1.0034437}
+  m_Center: {x: 0, y: -0.12848938, z: 1.040155}
 --- !u!4 &1909499446 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 2da1cd71f6bd088429eb736825ded384, type: 3}
@@ -27603,7 +27165,6 @@ GameObject:
   - component: {fileID: 1923107846}
   - component: {fileID: 1923107845}
   - component: {fileID: 1923107848}
-  - component: {fileID: 1923107849}
   m_Layer: 3
   m_Name: PFB_DiningChairSUCIO
   m_TagString: Dirt
@@ -27717,24 +27278,6 @@ MonoBehaviour:
   minOpacity: 0.1
   maxHealth: 5
   requiredToolId: Sponge
---- !u!114 &1923107849
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1923107843}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  outlineMode: 0
-  outlineColor: {r: 0.023362402, g: 0.07873552, b: 0.990566, a: 1}
-  outlineWidth: 2
-  precomputeOutline: 0
-  bakeKeys: []
-  bakeValues: []
 --- !u!4 &1938903530 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6700536915068371423, guid: 795147f6f63d7c342b5efcbe82d11d0b, type: 3}
@@ -27870,8 +27413,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.26599672, y: 0.26346302, z: 0.22187032}
-  m_Center: {x: 0.0010077953, y: -0.01144871, z: 0.11133715}
+  m_Size: {x: 0.26599672, y: 0.22187036, z: 0.26346305}
+  m_Center: {x: 0.0010075569, y: -0.011448875, z: 0.11133718}
 --- !u!4 &1946230264 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: f811d04ba7bea9840bd789e2041c84e0, type: 3}
@@ -28083,7 +27626,6 @@ GameObject:
   - component: {fileID: 1982831697}
   - component: {fileID: 1982831696}
   - component: {fileID: 1982831699}
-  - component: {fileID: 1982831700}
   m_Layer: 3
   m_Name: PFB_FireplaceSUCIO
   m_TagString: Dirt
@@ -28197,24 +27739,6 @@ MonoBehaviour:
   minOpacity: 0.1
   maxHealth: 5
   requiredToolId: Sponge
---- !u!114 &1982831700
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1982831694}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  outlineMode: 0
-  outlineColor: {r: 0.023362402, g: 0.07873552, b: 0.990566, a: 1}
-  outlineWidth: 2
-  precomputeOutline: 0
-  bakeKeys: []
-  bakeValues: []
 --- !u!1 &1985598794
 GameObject:
   m_ObjectHideFlags: 0
@@ -28229,7 +27753,6 @@ GameObject:
   - component: {fileID: 1985598798}
   - component: {fileID: 1985598797}
   - component: {fileID: 1985598796}
-  - component: {fileID: 1985598801}
   m_Layer: 3
   m_Name: door03 SUCIO
   m_TagString: Dirt
@@ -28356,24 +27879,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1985598794}
   m_Mesh: {fileID: 4300030, guid: 14cf328cd0a9046e5a177954438c6a56, type: 3}
---- !u!114 &1985598801
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1985598794}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  outlineMode: 0
-  outlineColor: {r: 0.023362402, g: 0.07873552, b: 0.990566, a: 1}
-  outlineWidth: 2
-  precomputeOutline: 0
-  bakeKeys: []
-  bakeValues: []
 --- !u!1001 &1991539722
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -28612,8 +28117,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.01, y: 0.05, z: 0.01}
-  m_Center: {x: -0.000000013038516, y: 0.02, z: 0.006582475}
+  m_Size: {x: 0.011110154, y: 0.017909994, z: 0.010831598}
+  m_Center: {x: -0.00000001382487, y: 0.0002990035, z: 0.006582475}
 --- !u!114 &2007926790
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -28645,7 +28150,6 @@ GameObject:
   - component: {fileID: 2013169012}
   - component: {fileID: 2013169011}
   - component: {fileID: 2013169014}
-  - component: {fileID: 2013169015}
   m_Layer: 3
   m_Name: PFB_Stove SUCIO
   m_TagString: Dirt
@@ -28759,24 +28263,6 @@ MonoBehaviour:
   minOpacity: 0.1
   maxHealth: 5
   requiredToolId: Sponge
---- !u!114 &2013169015
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2013169009}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  outlineMode: 0
-  outlineColor: {r: 0.023362402, g: 0.07873552, b: 0.990566, a: 1}
-  outlineWidth: 2
-  precomputeOutline: 0
-  bakeKeys: []
-  bakeValues: []
 --- !u!1 &2016570842
 GameObject:
   m_ObjectHideFlags: 0
@@ -28949,7 +28435,6 @@ GameObject:
   - component: {fileID: 2039417562}
   - component: {fileID: 2039417561}
   - component: {fileID: 2039417564}
-  - component: {fileID: 2039417565}
   m_Layer: 3
   m_Name: PFB_ToiletSUCIO
   m_TagString: Dirt
@@ -29063,24 +28548,6 @@ MonoBehaviour:
   minOpacity: 0.1
   maxHealth: 5
   requiredToolId: Sponge
---- !u!114 &2039417565
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2039417559}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  outlineMode: 0
-  outlineColor: {r: 0.023362402, g: 0.07873552, b: 0.990566, a: 1}
-  outlineWidth: 2
-  precomputeOutline: 0
-  bakeKeys: []
-  bakeValues: []
 --- !u!1 &2042780888
 GameObject:
   m_ObjectHideFlags: 0
@@ -29095,7 +28562,6 @@ GameObject:
   - component: {fileID: 2042780892}
   - component: {fileID: 2042780891}
   - component: {fileID: 2042780890}
-  - component: {fileID: 2042780895}
   m_Layer: 3
   m_Name: door01 SUCIO
   m_TagString: Dirt
@@ -29222,24 +28688,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2042780888}
   m_Mesh: {fileID: 4300022, guid: 14cf328cd0a9046e5a177954438c6a56, type: 3}
---- !u!114 &2042780895
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2042780888}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  outlineMode: 0
-  outlineColor: {r: 0.023362402, g: 0.07873552, b: 0.990566, a: 1}
-  outlineWidth: 2
-  precomputeOutline: 0
-  bakeKeys: []
-  bakeValues: []
 --- !u!1 &2045466291 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3071565827729380618, guid: 57589b00c237bc04281e5cd0bc0bb28c, type: 3}
@@ -29269,8 +28717,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 1.4014723, y: 0.18517369, z: 1.3573166}
+  m_Center: {x: 0.020015717, y: 0.05062431, z: 0.011821747}
 --- !u!114 &2045466295
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -29350,8 +28798,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.25, y: 0.25, z: 0.25}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0.07000288, y: 0.08548319, z: 0.0724659}
+  m_Center: {x: -0.00000166893, y: 0.043257654, z: -0.0012708902}
 --- !u!114 &2060443837
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -29517,8 +28965,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.007, y: 0.008, z: 0.08}
-  m_Center: {x: -0.0000054366633, y: -0.00067925354, z: 0.00017948789}
+  m_Size: {x: 0.003695407, y: 0.0055057243, z: 0.0038663882}
+  m_Center: {x: -0.00000543801, y: -0.00067925494, z: 0.00017948721}
 --- !u!4 &2065005139 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 410012, guid: 848098b20205e584ba1d61f0ce0ffb61, type: 3}
@@ -29805,7 +29253,6 @@ GameObject:
   - component: {fileID: 2087856447}
   - component: {fileID: 2087856446}
   - component: {fileID: 2087856445}
-  - component: {fileID: 2087856451}
   m_Layer: 3
   m_Name: DoorSingle SUCIO
   m_TagString: Dirt
@@ -29863,8 +29310,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.15, y: 2.5, z: 0.12051574}
-  m_Center: {x: 0.57528025, y: 1.26, z: 0}
+  m_Size: {x: 0.16107439, y: 2.5048633, z: 1.1677527}
+  m_Center: {x: 0.58240855, y: 1.2679453, z: 0}
 --- !u!54 &2087856447
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -29967,24 +29414,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2087856443}
   m_Mesh: {fileID: 4300002, guid: 03e880133708442c4b8533df94284924, type: 3}
---- !u!114 &2087856451
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2087856443}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  outlineMode: 0
-  outlineColor: {r: 0.023362402, g: 0.07873552, b: 0.990566, a: 1}
-  outlineWidth: 2
-  precomputeOutline: 0
-  bakeKeys: []
-  bakeValues: []
 --- !u!1001 &2094691615
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -30307,8 +29736,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0.6210432, y: 0.7666199, z: 0.77285385}
+  m_Center: {x: 0.0021288395, y: 0.3538441, z: -0.014619827}
 --- !u!114 &2107382154
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30470,7 +29899,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 1.0518951, y: 1.2200601, z: 1.051897}
-  m_Center: {x: -0.000000059604645, y: 0.61003006, z: -0.0000009536743}
+  m_Center: {x: 0, y: 0.61003006, z: 0}
 --- !u!4 &2118479005 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: 0ccc65feebde1d04e921f8c1bc592e5b, type: 3}
@@ -30656,8 +30085,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.01, y: 0.1, z: 0.1}
-  m_Center: {x: -0.01, y: 0.02, z: -0.02}
+  m_Size: {x: 0.050292216, y: 0.028138097, z: 0.012125923}
+  m_Center: {x: 0.003937064, y: 0.015146113, z: 0.0040690545}
 --- !u!54 &2122105831
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -30865,7 +30294,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 0.4576212, y: 0.46709502, z: 0.42277426}
-  m_Center: {x: 0.021349743, y: 0.23354751, z: -0.013879813}
+  m_Center: {x: 0.021349907, y: 0.23354751, z: -0.013879776}
 --- !u!4 &2124210490 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: 990dfdc0273fc324daa3afc755f28fa1, type: 3}
@@ -30961,8 +30390,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0.1330235, y: 0.19614494, z: 0.13302422}
+  m_Center: {x: 0.0002925396, y: 0.09696382, z: 0}
 --- !u!114 &2134664634
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -31026,8 +30455,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.25, y: 0.25, z: 0.25}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0.13918757, y: 0.31304055, z: 0.1359058}
+  m_Center: {x: 0.0013120174, y: 0.007388115, z: 0.001988411}
 --- !u!114 &2134953357
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -33982,8 +33411,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 0
   serializedVersion: 3
-  m_Size: {x: 0.25, y: 0.25, z: 0.25}
-  m_Center: {x: -0.66758156, y: 0, z: -0.00026397128}
+  m_Size: {x: 0.392686, y: 0.058772065, z: 0.2542831}
+  m_Center: {x: -0.66758204, y: 0.00000010803342, z: -0.00026392937}
 --- !u!114 &5733618162176240981
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -34110,8 +33539,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 0
   serializedVersion: 3
-  m_Size: {x: 0.25, y: 0.25, z: 0.25}
-  m_Center: {x: -0.66758156, y: 0, z: -0.00026397133}
+  m_Size: {x: 0.22767097, y: 0.058772117, z: 0.37725005}
+  m_Center: {x: -0.66758156, y: 2.910383e-11, z: -0.000263989}
 --- !u!114 &5733618163442438991
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -34736,8 +34165,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 0
   serializedVersion: 3
-  m_Size: {x: 0.25, y: 0.25, z: 0.25}
-  m_Center: {x: -16.666817, y: 13.224908, z: -0.37676367}
+  m_Size: {x: 0.029483797, y: 0.0013468004, z: 0.029598238}
+  m_Center: {x: -16.666817, y: 13.224889, z: -0.37677136}
 --- !u!114 &6520676729730401877
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -35111,8 +34540,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 0
   serializedVersion: 3
-  m_Size: {x: 0.25, y: 0.25, z: 0.25}
-  m_Center: {x: -16.680996, y: 13.228107, z: -0.37743708}
+  m_Size: {x: 0.17630196, y: 0.0000000146847015, z: 0.12318421}
+  m_Center: {x: -16.681004, y: 13.228131, z: -0.37743893}
 --- !u!114 &6838324102942681683
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -35751,8 +35180,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 0
   serializedVersion: 3
-  m_Size: {x: 0.25, y: 0.25, z: 0.25}
-  m_Center: {x: 0.014484372, y: 0, z: 0}
+  m_Size: {x: 0.227671, y: 0.05930006, z: 0.37725005}
+  m_Center: {x: 0.0144844055, y: 0, z: 0}
 --- !u!114 &8561357407514522360
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -35879,8 +35308,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 0
   serializedVersion: 3
-  m_Size: {x: 0.25, y: 0.25, z: 0.25}
-  m_Center: {x: 0.014484372, y: 0, z: 0}
+  m_Size: {x: 0.227671, y: 0.05930006, z: 0.37725005}
+  m_Center: {x: 0.0144844055, y: 0, z: 0}
 --- !u!114 &8561357408109530354
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -36207,8 +35636,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 0
   serializedVersion: 3
-  m_Size: {x: 0.25, y: 0.25, z: 0.25}
-  m_Center: {x: 0.3405645, y: -0.000000030445136, z: -0.00026399043}
+  m_Size: {x: 0.37839472, y: 0.058772117, z: 0.44000483}
+  m_Center: {x: 0.3405646, y: -0.0000003874302, z: -0.00026400387}
 --- !u!114 &8822683278810411829
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -36307,8 +35736,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.73, y: 0.62, z: 0.05877208}
-  m_Center: {x: 0.21, y: 0, z: -0.00026397133}
+  m_Size: {x: 0.22767097, y: 0.058772117, z: 0.37725005}
+  m_Center: {x: 0.34056425, y: 2.910383e-11, z: -0.0002639294}
 --- !u!114 &8822683279909784879
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -36462,8 +35891,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 0
   serializedVersion: 3
-  m_Size: {x: 0.25, y: 0.25, z: 0.25}
-  m_Center: {x: -16.669785, y: 13.226033, z: -0.37547737}
+  m_Size: {x: 0.034280777, y: 0.0013468307, z: 0.034316067}
+  m_Center: {x: -16.669773, y: 13.226033, z: -0.3754839}
 --- !u!114 &8877222177428457402
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -36590,8 +36019,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 0
   serializedVersion: 3
-  m_Size: {x: 0.25, y: 0.25, z: 0.25}
-  m_Center: {x: 0.66758174, y: -0.000000069607644, z: -0.00026404994}
+  m_Size: {x: 0.40824962, y: 0.058772117, z: 0.283941}
+  m_Center: {x: 0.6675818, y: 0.00000008195639, z: -0.00026404858}
 --- !u!114 &8941426132287074635
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -36718,8 +36147,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 0
   serializedVersion: 3
-  m_Size: {x: 0.25, y: 0.25, z: 0.25}
-  m_Center: {x: 0.6675816, y: 0.00000005972153, z: -0.0002638923}
+  m_Size: {x: 0.4009408, y: 0.058772117, z: 0.26956612}
+  m_Center: {x: 0.66758186, y: 0.00000014156103, z: -0.00026386976}
 --- !u!114 &8941426133351878497
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -36855,8 +36284,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 0
   serializedVersion: 3
-  m_Size: {x: 0.25, y: 0.25, z: 0.25}
-  m_Center: {x: -0.31540847, y: 0, z: -0.00026397133}
+  m_Size: {x: 0.22767097, y: 0.058772117, z: 0.37725005}
+  m_Center: {x: -0.3154087, y: 2.910383e-11, z: -0.000263989}
 --- !u!114 &9007582892203083876
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -36976,8 +36405,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 0
   serializedVersion: 3
-  m_Size: {x: 0.25, y: 0.25, z: 0.25}
-  m_Center: {x: -0.3154085, y: 0, z: -0.00026397128}
+  m_Size: {x: 0.23427546, y: 0.058772065, z: 0.38119867}
+  m_Center: {x: -0.31540847, y: 0.000000018626451, z: -0.00026398897}
 --- !u!114 &9007582893319288446
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -37130,8 +36559,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 0
   serializedVersion: 3
-  m_Size: {x: 0.25, y: 0.25, z: 0.25}
-  m_Center: {x: -16.674812, y: 13.224778, z: -0.3741199}
+  m_Size: {x: 0.038511276, y: 0.0013468014, z: 0.038519863}
+  m_Center: {x: -16.674805, y: 13.224793, z: -0.3741249}
 --- !u!114 &9053472433117394614
 MonoBehaviour:
   m_ObjectHideFlags: 0

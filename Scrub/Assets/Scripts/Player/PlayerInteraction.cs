@@ -233,6 +233,16 @@ public class PlayerInteraction : MonoBehaviour
     // 🖱️ FUNCIÓN PARA LIMPIEZA CON CLICK DEL MOUSE (NO CAMBIA)
     // =========================================================================
 
+    // PlayerInteraction.cs (Fragmento con modificaciones)
+
+    // ... resto de variables y Awake() ...
+
+    // =========================================================================
+    // 🖱️ FUNCIÓN PARA LIMPIEZA CON CLICK DEL MOUSE - ¡MODIFICADA! 🖱️
+    // *************************************************************************
+    // Ahora da prioridad a la toma de decisiones de Memorie sobre la limpieza.
+    // *************************************************************************
+
     private void HandleMouseClickCleaning()
     {
         // Solo interactuamos si el juego no está en pausa (Time.timeScale > 0)
@@ -247,7 +257,24 @@ public class PlayerInteraction : MonoBehaviour
             {
                 GameObject hitObject = hit.collider.gameObject;
 
-                // 🚨 VERIFICACIÓN CRÍTICA DE HERRAMIENTA 🚨
+                // 1. COMPROBACIÓN DE DECISIÓN (Memorie Tag)
+                if (hitObject.CompareTag(memorieTag))
+                {
+                    // CRUCIAL: Buscar el MemorieObject en la jerarquía
+                    MemorieObject mObject = hitObject.GetComponentInParent<MemorieObject>();
+
+                    if (mObject != null)
+                    {
+                        mObject.StartDecisionProcess();
+                        animCtrl?.TriggerInteract();
+                        // Limpiamos la referencia para evitar interacciones no deseadas.
+                        nearbyCarryable = null;
+                        Debug.Log("¡Objeto de Memoria recogido con CLICK! Iniciando proceso de decisión.");
+                        return; // Salimos, ya se interactuó.
+                    }
+                }
+
+                // 2. VERIFICACIÓN CRÍTICA DE HERRAMIENTA para continuar con la limpieza
                 ToolDescriptor activeTool = cleaningController?.CurrentTool;
 
                 if (activeTool == null)
@@ -256,7 +283,7 @@ public class PlayerInteraction : MonoBehaviour
                     return;
                 }
 
-                // 1. INTENTAR DESTRUIR BASURA (Tag: Basura)
+                // 3. INTENTAR DESTRUIR BASURA (Tag: Basura)
                 if (hitObject.CompareTag(trashTag))
                 {
                     if (TaskManager.Instance != null)
@@ -272,8 +299,7 @@ public class PlayerInteraction : MonoBehaviour
                     return;
                 }
 
-                // 2. INTENTAR LIMPIAR MANCHAS (Clase: DirtSpot)
-                // Se asume que DirtSpot.cs está en el objeto que colisiona.
+                // 4. INTENTAR LIMPIAR MANCHAS (Clase: DirtSpot)
                 DirtSpot dirtSpot = hitObject.GetComponent<DirtSpot>();
                 if (dirtSpot != null)
                 {
@@ -299,8 +325,11 @@ public class PlayerInteraction : MonoBehaviour
 
 
     // =========================================================================
-    // LÓGICA DE INTERACCIÓN PRINCIPAL (Tecla Q)
-    // =========================================================================
+    // LÓGICA DE INTERACCIÓN PRINCIPAL (Tecla Q) - ¡MODIFICADA! 
+    // *************************************************************************
+    // Ahora usa nearbyCarryable (detectado por DetectNearbyObjects) y 
+    // ejecuta la lógica MemorieObject si se cumple el Tag.
+    // *************************************************************************
 
     void TryPickup()
     {
@@ -330,9 +359,10 @@ public class PlayerInteraction : MonoBehaviour
         // Lógica 2: Recoger Carryable, Tool o Memorie
         if (nearbyCarryable != null)
         {
-            // Lógica de MemorieObject...
+            // Lógica de MemorieObject... (Tecla Q)
             if (nearbyCarryable.CompareTag(memorieTag))
             {
+                // Nota: Aquí se busca MemorieObject en el componente, no en el Tag.
                 MemorieObject mObject = nearbyCarryable.GetComponent<MemorieObject>();
                 if (mObject != null)
                 {
@@ -344,7 +374,7 @@ public class PlayerInteraction : MonoBehaviour
                 }
             }
 
-            // LÓGICA NORMAL DE RECOGER HERRAMIENTA O CARRYABLE
+            // LÓGICA NORMAL DE RECOGER HERRAMIENTA O CARRYABLE (Si no es Memorie)
             if (!holdPoint)
             {
                 var hp = new GameObject("HoldPoint").transform;
@@ -372,6 +402,8 @@ public class PlayerInteraction : MonoBehaviour
 
         Debug.Log("[Interacción Fallida] No hay objeto que soltar ni recoger (Q).");
     }
+
+    // ... El resto del script PlayerInteraction.cs, incluyendo DetectNearbyObjects(), permanece sin cambios ...
 
     // =========================================================================
     // LÓGICA DE INTERACCIÓN GENERAL (Tecla E)
