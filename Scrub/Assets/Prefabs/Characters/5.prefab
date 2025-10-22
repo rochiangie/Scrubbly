@@ -1195,14 +1195,14 @@ MonoBehaviour:
   clickCleaningRadius: 0.5
   dirtLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 4294967295
   clickCleaningEffect: {fileID: 0}
   generalInteractKey: 101
   pickupKey: 113
   attackKey: 102
   scorePanelToggleKey: 271
-  attackRange: 2.5
-  attackableLayer:
+  interactionRange: 3
+  interactableLayer:
     serializedVersion: 2
     m_Bits: 8
   memorieTag: Memorie
