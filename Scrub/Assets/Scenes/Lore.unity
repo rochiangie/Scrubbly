@@ -220,7 +220,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 228248458}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -1.37}
+  m_LocalPosition: {x: 0, y: 0, z: -2.96}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -228,7 +228,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 2.26, y: -4.28}
+  m_AnchoredPosition: {x: 4.76, y: -4.48}
   m_SizeDelta: {x: 1.9246, y: 0.4334}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &228248460
@@ -1104,7 +1104,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.55, y: -1.62}
+  m_AnchoredPosition: {x: -0.55, y: -2.17}
   m_SizeDelta: {x: 3.8286, y: 4.5774}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1672395998
@@ -1955,7 +1955,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 1.99, y: -1.33}
+  m_AnchoredPosition: {x: 0.59, y: -1.35}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2078542703
@@ -1980,9 +1980,9 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'E para levantar objetos
 
-    Q para interactuar
+    F limpia con esponja
 
-    R para limpiar
+    R limpia con escoba
 
 '
   m_isRightToLeft: 0
