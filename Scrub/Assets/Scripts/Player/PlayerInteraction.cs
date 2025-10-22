@@ -1,9 +1,8 @@
-﻿// PlayerInteraction.cs
-using UnityEngine;
+﻿using UnityEngine;
 using System;
 using System.Linq;
 using System.Text;
-using System.Collections.Generic; // Para List y StringBuilder (Debug G)
+using System.Collections.Generic;
 
 // ----------------------------------------------------
 // INTERFACES (Asumo que existen)
@@ -13,19 +12,25 @@ public interface IAttackable { void ReceiveAttack(); }
 
 public class PlayerInteraction : MonoBehaviour
 {
+    // --- VARIABLES ORIGINALES ---
     [Header("Referencias")]
     public Transform holdPoint;
     public PlayerAnimationController animCtrl;
 
     // 🚨 REFERENCIAS A LOS GESTORES DE COMPONENTES 🚨
     private ToolItemManager toolItemManager;
-    private ToolPanelIdea toolPanelIdea; // Para manejar el panel de Tools/Pausa
-
+    private ToolPanelIdea toolPanelIdea;
     private CleaningController cleaningController;
     private Carryable carried;
+
+    // ***************************************************************
+    // 🗑️ VARIABLES DE DETECCIÓN (USADAS POR EL RAYCAST) 🚀
+    // ***************************************************************
     private IInteractable currentDoorInteractable = null;
     private Carryable nearbyCarryable = null;
     private IAttackable nearbyAttackable = null;
+    private GameObject currentRaycastHitObject = null;
+    // ***************************************************************
 
     private Rigidbody playerRigidbody;
     private Collider[] playerColliders;
@@ -41,7 +46,7 @@ public class PlayerInteraction : MonoBehaviour
     [SerializeField] private KeyCode generalInteractKey = KeyCode.E;
 
     [Tooltip("Tecla para Recoger/Agarrar y Soltar objetos Carryable/Tool")]
-    [SerializeField] private KeyCode pickupKey = KeyCode.Q;  
+    [SerializeField] private KeyCode pickupKey = KeyCode.Q;
 
     [Tooltip("Tecla para Atacar/Destruir directamente (Limpieza)")]
     [SerializeField] private KeyCode attackKey = KeyCode.F;
@@ -49,10 +54,11 @@ public class PlayerInteraction : MonoBehaviour
     [Tooltip("Tecla para mostrar/ocultar el panel de puntuación sentimental.")]
     [SerializeField] private KeyCode scorePanelToggleKey = KeyCode.Tab;
 
-    [Header("Ataque Directo (Limpieza)")]
-    [Tooltip("Distancia máxima para detectar un objeto atacable/destruible.")]
-    public float attackRange = 2.5f;
-    public LayerMask attackableLayer;
+    [Header("Detección Raycast")]
+    [Tooltip("Distancia máxima para detectar objetos recolectables y generales.")]
+    public float interactionRange = 3.0f;
+    [Tooltip("Capas de objetos generales (Puertas, Carryable, Memorie, Atacable)")]
+    public LayerMask interactableLayer;
 
     [Header("Tags de Objetos")]
     [Tooltip("Tag para objetos que inician el proceso de decisión sentimental.")]
@@ -67,7 +73,6 @@ public class PlayerInteraction : MonoBehaviour
         if (toolItemManager == null)
             Debug.LogError("PlayerInteraction: No se encontró el ToolItemManager. La limpieza por F fallará.", this);
 
-        // Usamos FindObjectOfType, ya que el componente ToolPanelIdea suele estar en un Canvas distinto.
         toolPanelIdea = FindObjectOfType<ToolPanelIdea>();
         if (toolPanelIdea == null)
             Debug.LogWarning("PlayerInteraction: No se encontró ToolPanelIdea. La apertura del panel no funcionará.");
@@ -86,23 +91,21 @@ public class PlayerInteraction : MonoBehaviour
     }
 
     // =========================================================================
-    // FUNCIÓN UPDATE MODIFICADA - SEPARACIÓN DE INPUTS ESC/ENTER
+    // FUNCIÓN UPDATE
     // =========================================================================
 
     void Update()
     {
-        // -----------------------------------------------------------------
-        // 🖱️ LÓGICA DE LIMPIEZA CON CLICK DEL MOUSE 🖱️
-        // -----------------------------------------------------------------
+        DetectNearbyObjects();
+
+        // --- Lógica de Input y Limpieza ---
         HandleMouseClickCleaning();
 
-        // -----------------------------------------------------------------
-        // 🚨 LÓGICA DE USO Y DESTRUCCIÓN DE LA HERRAMIENTA (TECLA F) 🚨
-        // -----------------------------------------------------------------
         if (toolItemManager != null)
         {
             GameObject activeTool = toolItemManager.GetCurrentTool();
 
+            // Lógica de Ataque (F)
             if (Input.GetKeyDown(attackKey))
             {
                 if (activeTool != null)
@@ -114,6 +117,11 @@ public class PlayerInteraction : MonoBehaviour
                         Debug.Log("Limpiando con la herramienta activa (F).");
                     }
                 }
+                else if (nearbyAttackable != null)
+                {
+                    nearbyAttackable.ReceiveAttack();
+                    Debug.Log($"Ataque directo (F) ejecutado sobre {currentRaycastHitObject.name}.");
+                }
             }
 
             if (Input.GetKeyUp(attackKey))
@@ -122,39 +130,23 @@ public class PlayerInteraction : MonoBehaviour
             }
         }
 
-        // -----------------------------------------------------------------
-        // LÓGICA DE AGARRE/DECISIÓN (TECLA G)
-        // -----------------------------------------------------------------
+        // Lógica de Agarre/Decisión (Q)
         if (Input.GetKeyDown(pickupKey))
             TryPickup();
 
-        // -----------------------------------------------------------------
-        // LÓGICA DE INTERACCIÓN GENERAL (E)
-        // -----------------------------------------------------------------
+        // Lógica de Interacción General (E)
         if (Input.GetKeyDown(generalInteractKey))
             TryGeneralInteract();
 
-        // 🚨 SEPARACIÓN DE INPUTS DE PAUSA/PANEL 🚨
-
-        // 1. PAUSA PRINCIPAL (Escape)
+        // Lógica de Pausa/Panel
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (toolPanelIdea != null)
-            {
-                // TogglePause() debe congelar el tiempo y mostrar el menú principal de pausa.
-                toolPanelIdea.TogglePause();
-            }
+            toolPanelIdea?.TogglePause();
         }
 
-        // 2. PANEL DE TOOLS / SCORE (Tab o Enter)
         if (Input.GetKeyDown(scorePanelToggleKey) || Input.GetKeyDown(KeyCode.Return))
         {
-            if (toolPanelIdea != null)
-            {
-                // 🚨 CRÍTICO: ToggleToolsPanel() NO debe congelar el tiempo (Time.timeScale = 1).
-                // Si esta función no existe en ToolPanelIdea.cs, compilará con error.
-                toolPanelIdea.ToggleToolsPanel();
-            }
+            toolPanelIdea?.ToggleToolsPanel();
         }
 
         // DEBUG: LÓGICA DE CONTEO (TECLA G)
@@ -164,10 +156,82 @@ public class PlayerInteraction : MonoBehaviour
         }
     }
 
+
     // =========================================================================
-    // 🖱️ FUNCIÓN PARA LIMPIEZA CON CLICK DEL MOUSE
+    // 🚀 FUNCIÓN CORREGIDA: DETECCIÓN CENTRALIZADA CON RAYCAST 🚀
+    // *************************************************************************
+    // Ahora prioriza la búsqueda de componentes en el objeto raíz, donde se 
+    // encuentran Carryable.cs y MemorieObject.cs en jerarquías complejas.
+    // *************************************************************************
+
+    /// <summary>
+    /// Lanza un Raycast para detectar el objeto más cercano y actualiza las referencias de interacción.
+    /// </summary>
+    private void DetectNearbyObjects()
+    {
+        // 1. Limpiar todas las referencias en cada frame
+        nearbyCarryable = null;
+        nearbyAttackable = null;
+        currentDoorInteractable = null;
+        currentRaycastHitObject = null;
+
+        RaycastHit hit;
+        Vector3 rayOrigin = mainCamera.transform.position;
+        Vector3 rayDirection = mainCamera.transform.forward;
+
+        // 2. Lanzar Raycast
+        if (Physics.Raycast(rayOrigin, rayDirection, out hit, interactionRange, interactableLayer))
+        {
+            GameObject hitObject = hit.collider.gameObject;
+            currentRaycastHitObject = hitObject;
+
+            // Referencia al GameObject principal/raíz de la jerarquía del objeto golpeado.
+            // Esto es CRÍTICO si los colliders están en objetos hijos, pero los scripts
+            // (Carryable.cs, IInteractable, etc.) están en el objeto raíz.
+            Transform rootTransform = hit.collider.transform.root;
+
+            // 3. DETECCIÓN DE CARRYABLE (TECLA Q)
+            if (carried == null)
+            {
+                // Buscamos el Carryable directamente en la raíz y en el objeto golpeado.
+                Carryable c = rootTransform.GetComponent<Carryable>() ?? hitObject.GetComponentInParent<Carryable>();
+
+                if (c != null)
+                {
+                    nearbyCarryable = c;
+                    // Debug para confirmar que la detección de Q funciona.
+                    Debug.Log($"[Raycast OK] Carryable detectado: {c.name}. Listo para recoger (Q).");
+                }
+            }
+
+            // 4. DETECCIÓN DE ATAQUE (IAttackable - Tecla F)
+            // Usamos GetComponentInParent para buscar hacia arriba desde el objeto golpeado.
+            IAttackable a = hitObject.GetComponentInParent<IAttackable>();
+            if (a != null)
+            {
+                nearbyAttackable = a;
+            }
+
+            // 5. DETECCIÓN DE INTERACCIÓN GENERAL (IInteractable - Tecla E)
+            // Usamos GetComponentInParent para buscar hacia arriba desde el objeto golpeado.
+            IInteractable i = hitObject.GetComponentInParent<IInteractable>();
+            if (i != null)
+            {
+                currentDoorInteractable = i;
+            }
+
+            // Opcional: Si el OutlineController usa una interfaz como IHighlightable
+            // y está en el objeto raíz, puedes activarlo aquí.
+            // Ejemplo: rootTransform.GetComponent<IHighlightable>()?.Highlight();
+        }
+        // Si no golpeamos nada, el OutlineController debería encargarse de desactivar el outline.
+    }
+
+    // El resto del script PlayerInteraction.cs permanece igual...
+
     // =========================================================================
-    // PlayerInteraction.cs (Fragmento de HandleMouseClickCleaning)
+    // 🖱️ FUNCIÓN PARA LIMPIEZA CON CLICK DEL MOUSE (NO CAMBIA)
+    // =========================================================================
 
     private void HandleMouseClickCleaning()
     {
@@ -184,10 +248,8 @@ public class PlayerInteraction : MonoBehaviour
                 GameObject hitObject = hit.collider.gameObject;
 
                 // 🚨 VERIFICACIÓN CRÍTICA DE HERRAMIENTA 🚨
-                // Obtenemos la herramienta activa (asumiendo que se requiere una para cualquier limpieza de click)
                 ToolDescriptor activeTool = cleaningController?.CurrentTool;
 
-                // Si NO hay herramienta activa, salimos del proceso de limpieza por mouse
                 if (activeTool == null)
                 {
                     Debug.LogWarning("[Click Cleaning] No se puede limpiar/destruir. Necesitas una herramienta equipada.");
@@ -197,9 +259,6 @@ public class PlayerInteraction : MonoBehaviour
                 // 1. INTENTAR DESTRUIR BASURA (Tag: Basura)
                 if (hitObject.CompareTag(trashTag))
                 {
-                    // Opcional: Si quieres que la basura SOLO se elimine con la escoba (ToolId específico)
-                    // if (activeTool.ToolId != "Escoba") return; 
-
                     if (TaskManager.Instance != null)
                     {
                         TaskManager.Instance.NotifyTrashCleaned(hitObject.name);
@@ -209,23 +268,22 @@ public class PlayerInteraction : MonoBehaviour
                         Instantiate(clickCleaningEffect, hit.point, Quaternion.identity);
                     }
 
-                    // 🛑 Si llegamos aquí, se tenía una herramienta y se destruye el objeto.
                     Destroy(hitObject);
                     return;
                 }
 
                 // 2. INTENTAR LIMPIAR MANCHAS (Clase: DirtSpot)
+                // Se asume que DirtSpot.cs está en el objeto que colisiona.
                 DirtSpot dirtSpot = hitObject.GetComponent<DirtSpot>();
                 if (dirtSpot != null)
                 {
                     if (cleaningController != null)
                     {
-                        // Si la herramienta es la correcta para esta mancha (CanBeCleanedBy)
                         if (dirtSpot.CanBeCleanedBy(activeTool.ToolId))
                         {
                             float damage = activeTool.ToolPower;
                             dirtSpot.CleanHit(damage);
-                            activeTool.TryUse(); // Consume durabilidad
+                            activeTool.TryUse();
 
                             if (clickCleaningEffect != null)
                             {
@@ -241,7 +299,7 @@ public class PlayerInteraction : MonoBehaviour
 
 
     // =========================================================================
-    // LÓGICA DE INTERACCIÓN PRINCIPAL (Tecla T)
+    // LÓGICA DE INTERACCIÓN PRINCIPAL (Tecla Q)
     // =========================================================================
 
     void TryPickup()
@@ -281,7 +339,7 @@ public class PlayerInteraction : MonoBehaviour
                     mObject.StartDecisionProcess();
                     nearbyCarryable = null;
                     animCtrl?.TriggerInteract();
-                    Debug.Log("¡Objeto de Memoria recogido! Iniciando proceso de decisión (T).");
+                    Debug.Log("¡Objeto de Memoria recogido! Iniciando proceso de decisión (Q).");
                     return;
                 }
             }
@@ -312,64 +370,11 @@ public class PlayerInteraction : MonoBehaviour
             return;
         }
 
-        Debug.Log("[Interacción Fallida] No hay objeto que soltar ni recoger (T).");
+        Debug.Log("[Interacción Fallida] No hay objeto que soltar ni recoger (Q).");
     }
 
     // =========================================================================
-    // FUNCIÓN DE DEBUG (TECLA 'G')
-    // =========================================================================
-
-    /// <summary>
-    /// Muestra la cuenta de ítems restantes para limpiar.
-    /// </summary>
-    private void LogRemainingItemsCount()
-    {
-        if (TaskManager.Instance != null)
-        {
-            int remaining = TaskManager.Instance.GetRemainingCleanableItemsCount();
-            int totalBasura = TaskManager.Instance.totalTrashItems;
-            int totalManchas = TaskManager.Instance.totalDirtSpots;
-
-            List<string> faltantes = TaskManager.Instance.remainingItemNames;
-
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine("=================================================");
-            sb.AppendLine($"[DEBUG CONTEO 'G'] Ítems Faltantes: {remaining}");
-            sb.AppendLine($"   -> Basura (Total Inicial): {totalBasura}");
-            sb.AppendLine($"   -> Manchas (Total Inicial): {totalManchas}");
-            sb.AppendLine($"   -> (Contador interno de Basura Limpiada: {TaskManager.Instance.cleanedTrashItems})");
-            sb.AppendLine("-------------------------------------------------");
-
-            sb.AppendLine($"Objetos Pendientes (Total: {faltantes.Count}):");
-
-            if (faltantes.Count > 0)
-            {
-                foreach (string item in faltantes.Take(10))
-                {
-                    sb.AppendLine($"   - {item}");
-                }
-                if (faltantes.Count > 10)
-                {
-                    sb.AppendLine($"(... {faltantes.Count - 10} más no mostrados)");
-                }
-            }
-            else
-            {
-                sb.AppendLine("   - ¡Todo limpio!");
-            }
-
-            sb.AppendLine("=================================================");
-            Debug.Log(sb.ToString());
-        }
-        else
-        {
-            Debug.LogError("[DEBUG] TaskManager no está inicializado. No se puede obtener el conteo.");
-        }
-    }
-
-
-    // =========================================================================
-    // TRIGGERS Y OTRAS FUNCIONES
+    // LÓGICA DE INTERACCIÓN GENERAL (Tecla E)
     // =========================================================================
 
     void TryGeneralInteract()
@@ -384,39 +389,10 @@ public class PlayerInteraction : MonoBehaviour
         Debug.Log("[Interacción Fallida] No hay Interacción General (Puerta) activa (E).");
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        Carryable c = other.GetComponent<Carryable>() ?? other.GetComponentInParent<Carryable>();
-        if (c != null && carried == null)
-        {
-            nearbyCarryable = c;
-            Debug.Log($"[Proximidad] Carryable detectado: {c.name}");
-        }
+    // =========================================================================
+    // FUNCIONES DE COMPATIBILIDAD
+    // =========================================================================
 
-        IAttackable a = other.GetComponent<IAttackable>() ?? other.GetComponentInParent<IAttackable>();
-        if (a != null)
-        {
-            nearbyAttackable = a;
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        Carryable c = other.GetComponent<Carryable>() ?? other.GetComponentInParent<Carryable>();
-        if (c != null && c == nearbyCarryable)
-        {
-            nearbyCarryable = null;
-            Debug.Log($"[Proximidad] Carryable perdido: {c.name}");
-        }
-
-        IAttackable a = other.GetComponent<IAttackable>() ?? other.GetComponentInParent<IAttackable>();
-        if (a != null && a == nearbyAttackable)
-        {
-            nearbyAttackable = null;
-        }
-    }
-
-    // Funciones de la puerta
     public void SetCurrentInteractable(IInteractable interactable)
     {
         currentDoorInteractable = interactable;
@@ -424,5 +400,54 @@ public class PlayerInteraction : MonoBehaviour
     public void ClearCurrentInteractable()
     {
         currentDoorInteractable = null;
+    }
+
+    // =========================================================================
+    // FUNCIÓN DE DEBUG (TECLA 'G') - NO CAMBIA
+    // =========================================================================
+
+    private void LogRemainingItemsCount()
+    {
+        if (TaskManager.Instance != null)
+        {
+            int remaining = TaskManager.Instance.GetRemainingCleanableItemsCount();
+            int totalBasura = TaskManager.Instance.totalTrashItems;
+            int totalManchas = TaskManager.Instance.totalDirtSpots;
+
+            List<string> faltantes = TaskManager.Instance.remainingItemNames;
+
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("=================================================");
+            sb.AppendLine($"[DEBUG CONTEO 'G'] Ítems Faltantes: {remaining}");
+            sb.AppendLine($"   -> Basura (Total Inicial): {totalBasura}");
+            sb.AppendLine($"   -> Manchas (Total Inicial): {totalManchas}");
+            sb.AppendLine($"   -> (Contador interno de Basura Limpiada: {TaskManager.Instance.cleanedTrashItems})");
+            sb.AppendLine("-------------------------------------------------");
+
+            sb.AppendLine($"Objetos Pendientes (Total: {faltantes.Count}):");
+
+            if (faltantes.Count > 0)
+            {
+                foreach (string item in faltantes.Take(10))
+                {
+                    sb.AppendLine($"   - {item}");
+                }
+                if (faltantes.Count > 10)
+                {
+                    sb.AppendLine($"(... {faltantes.Count - 10} más no mostrados)");
+                }
+            }
+            else
+            {
+                sb.AppendLine("   - ¡Todo limpio!");
+            }
+
+            sb.AppendLine("=================================================");
+            Debug.Log(sb.ToString());
+        }
+        else
+        {
+            Debug.LogError("[DEBUG] TaskManager no está inicializado. No se puede obtener el conteo.");
+        }
     }
 }

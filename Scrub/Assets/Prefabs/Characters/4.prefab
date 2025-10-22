@@ -4015,16 +4015,16 @@ MonoBehaviour:
   clickCleaningRadius: 0.5
   dirtLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8
   clickCleaningEffect: {fileID: 0}
   generalInteractKey: 101
   pickupKey: 113
   attackKey: 102
   scorePanelToggleKey: 271
-  attackRange: 2.5
-  attackableLayer:
+  interactionRange: 3
+  interactableLayer:
     serializedVersion: 2
-    m_Bits: 8
+    m_Bits: 9
   memorieTag: Memorie
   trashTag: Basura
 --- !u!114 &-1310710929017546439
