@@ -4015,16 +4015,16 @@ MonoBehaviour:
   clickCleaningRadius: 0.5
   dirtLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8
   clickCleaningEffect: {fileID: 0}
   generalInteractKey: 101
   pickupKey: 113
   attackKey: 102
   scorePanelToggleKey: 271
-  attackRange: 2.5
-  attackableLayer:
+  interactionRange: 3
+  interactableLayer:
     serializedVersion: 2
-    m_Bits: 8
+    m_Bits: 9
   memorieTag: Memorie
   trashTag: Basura
 --- !u!114 &-1310710929017546439
@@ -9513,7 +9513,7 @@ Transform:
   m_GameObject: {fileID: 9102100509095487501}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 2, z: 0}
+  m_LocalPosition: {x: 0, y: 1.766, z: 0.146}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

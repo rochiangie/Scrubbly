@@ -119,6 +119,81 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &172201137
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 172201138}
+  - component: {fileID: 172201140}
+  - component: {fileID: 172201139}
+  m_Layer: 5
+  m_Name: Image
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &172201138
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 172201137}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 9.07}
+  m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1578427185}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 3.6778, y: 2.5171}
+  m_SizeDelta: {x: 470.4699, y: 276.3056}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &172201139
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 172201137}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 0aca075ff94b7a346b80d243d4ee50c9, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &172201140
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 172201137}
+  m_CullTransparentMesh: 1
 --- !u!1 &228248458
 GameObject:
   m_ObjectHideFlags: 0
@@ -145,7 +220,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 228248458}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -1.37}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -153,7 +228,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.88, y: -4.29}
+  m_AnchoredPosition: {x: 2.26, y: -4.28}
   m_SizeDelta: {x: 1.9246, y: 0.4334}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &228248460
@@ -176,7 +251,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Enter para comenzar
+  m_text: Presiona Enter para descubrir las herramientas
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 6b064eb6d4f14a44e8b30e85a7cbb756, type: 2}
   m_sharedMaterial: {fileID: 743754579194491402, guid: 6b064eb6d4f14a44e8b30e85a7cbb756, type: 2}
@@ -185,8 +260,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4291019372
-  m_fontColor: {r: 0.42172483, g: 0.76041347, b: 0.764151, a: 1}
+    rgba: 4294967279
+  m_fontColor: {r: 0.9386792, g: 0.9992952, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -210,7 +285,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 1
+  m_HorizontalAlignment: 2
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -621,7 +696,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 3a05b2d6c05d14e468a316682c24d696, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -660,8 +735,8 @@ Transform:
   m_GameObject: {fileID: 996224889}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.11, y: 3.2707567, z: -0.22729301}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -0.0461, y: 3.2707567, z: 0.331}
+  m_LocalScale: {x: 2.1205132, y: 1, z: 1.1115854}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1505567297}
@@ -986,6 +1061,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 172201138}
   - {fileID: 989530295}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1028,8 +1104,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.88, y: 0.52}
-  m_SizeDelta: {x: 1.9246, y: 0.4334}
+  m_AnchoredPosition: {x: -0.55, y: -1.62}
+  m_SizeDelta: {x: 3.8286, y: 4.5774}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1672395998
 MonoBehaviour:
@@ -1691,14 +1767,14 @@ MonoBehaviour:
       en mi casa.\u201D\nDesde entonces, se sientan a tomar mate cada tarde, mirando
       c\xF3mo el viento se lleva lo que ya no necesitan."
   - characterID: 9
-    loreText: "Camila es psic\xF3loga y padece TOC de limpieza desde chica. Su pareja,
-      Juli, acumula cosas: frascos, cables, papeles, hasta las entradas del cine
-      de su primera cita.\nCada discusi\xF3n termina igual: ella limpiando llorando,
-      \xE9l juntando lo que ella tir\xF3.\nUn d\xEDa, en terapia, Camila entiende
-      que ambos limpian distinto: ella limpia para no sentir, \xE9l acumula para
+    loreText: "Lorenzo es psic\xF3logo y padece TOC de limpieza desde chico. Su pareja,
+      Julia, acumula cosas: frascos, cables, papeles, hasta las entradas del cine
+      de su primera cita.\nCada discusi\xF3n termina igual: \xE9l limpiando llorando,
+      ella juntando lo que \xE9l tir\xF3.\nUn d\xEDa, en terapia, Lorenzo entiende
+      que ambos \"limpian\" distinto: \xE9l limpia para no sentir, ella acumula para
       no olvidar.\nDeciden construir una nueva casa juntos, donde haya un cuarto
-      para cada uno: uno blanco, otro lleno de cosas.\nEl equilibrio se convierte
-      en su cura compartida."
+      para cada uno: uno blanco y ordenado, otro lleno de cosas.\nEl equilibrio se
+      convierte en su cura compartida."
 --- !u!1 &1982011784
 GameObject:
   m_ObjectHideFlags: 0
@@ -1871,7 +1947,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2078542701}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -4.01}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1879,7 +1955,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 3.39, y: -1.39}
+  m_AnchoredPosition: {x: 1.99, y: -1.33}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2078542703
@@ -1902,11 +1978,13 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'E para interactuar
+  m_text: 'E para levantar objetos
+
+    Q para interactuar
 
     R para limpiar
 
-    A/S para girar'
+'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -2220,8 +2298,8 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1245098660342407551}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
+  m_LocalPosition: {x: 0, y: 0, z: -3.92}
+  m_LocalScale: {x: 0.02, y: 0.02, z: 0.02}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2154683927552398422}
@@ -2229,7 +2307,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 3.39, y: -3.03}
+  m_AnchoredPosition: {x: -2.88, y: -2.58}
   m_SizeDelta: {x: 5.6114, y: 5.8409}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &4149954221302701976
