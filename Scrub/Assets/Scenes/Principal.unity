@@ -1673,31 +1673,31 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3365808709418585107, guid: 87c909dffc7a2124db35c3197011fc12, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3365808709418585107, guid: 87c909dffc7a2124db35c3197011fc12, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 874130195}
     - target: {fileID: 3365808709418585107, guid: 87c909dffc7a2124db35c3197011fc12, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3365808709418585107, guid: 87c909dffc7a2124db35c3197011fc12, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: EquipTool
+      value: SelectEscobaAndClose
       objectReference: {fileID: 0}
     - target: {fileID: 3365808709418585107, guid: 87c909dffc7a2124db35c3197011fc12, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: ToolItemManager, Assembly-CSharp
+      value: UIPauseController, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 3365808709418585107, guid: 87c909dffc7a2124db35c3197011fc12, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
       value: 
-      objectReference: {fileID: 1927486437793573597, guid: e0441237b3d2dce498aa908bba2d800d, type: 3}
+      objectReference: {fileID: 0}
     - target: {fileID: 3365808709418585107, guid: 87c909dffc7a2124db35c3197011fc12, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.GameObject, UnityEngine
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 3977306227873555177, guid: 87c909dffc7a2124db35c3197011fc12, type: 3}
       propertyPath: m_LocalScale.x
@@ -1713,27 +1713,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5467364275017210330, guid: 87c909dffc7a2124db35c3197011fc12, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5467364275017210330, guid: 87c909dffc7a2124db35c3197011fc12, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 874130195}
     - target: {fileID: 5467364275017210330, guid: 87c909dffc7a2124db35c3197011fc12, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: EquipTool
+      value: SelectSegundaToolAndClose
       objectReference: {fileID: 0}
     - target: {fileID: 5467364275017210330, guid: 87c909dffc7a2124db35c3197011fc12, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: ToolItemManager, Assembly-CSharp
+      value: UIPauseController, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 5467364275017210330, guid: 87c909dffc7a2124db35c3197011fc12, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
       value: 
-      objectReference: {fileID: 7346836634008371333, guid: 439cecb63b749bc43b77c23b14a8faf1, type: 3}
+      objectReference: {fileID: 0}
     - target: {fileID: 5467364275017210330, guid: 87c909dffc7a2124db35c3197011fc12, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.GameObject, UnityEngine
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 6125466955249518636, guid: 87c909dffc7a2124db35c3197011fc12, type: 3}
       propertyPath: m_IsActive
@@ -12675,6 +12675,17 @@ MonoBehaviour:
   pauseMenuPanel: {fileID: 5896276174831449428}
   decisionPanelGameObject: {fileID: 514230924}
   mouseLookComponent: {fileID: 0}
+--- !u!114 &874130195 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4438397472853530539, guid: 909a0ffddb69bcf43a347f82a02e859d, type: 3}
+  m_PrefabInstance: {fileID: 2094691615}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 874130190}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4476999ce234c1f41b6d8dae361c0db7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &879839058 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 331827506961022435, guid: 87cfa21c1aecb2942960679079446f27, type: 3}
@@ -31343,9 +31354,17 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 4438397472853530539, guid: 909a0ffddb69bcf43a347f82a02e859d, type: 3}
+      propertyPath: escobaPrefab
+      value: 
+      objectReference: {fileID: 7601699731641134690, guid: ec3491e1243b1804e8c8cd08537499d1, type: 3}
+    - target: {fileID: 4438397472853530539, guid: 909a0ffddb69bcf43a347f82a02e859d, type: 3}
       propertyPath: itemNameText
       value: 
       objectReference: {fileID: 277511664}
+    - target: {fileID: 4438397472853530539, guid: 909a0ffddb69bcf43a347f82a02e859d, type: 3}
+      propertyPath: spawnLocation
+      value: 
+      objectReference: {fileID: 916911716}
     - target: {fileID: 4438397472853530539, guid: 909a0ffddb69bcf43a347f82a02e859d, type: 3}
       propertyPath: toolMenuPanel
       value: 
@@ -31358,6 +31377,14 @@ PrefabInstance:
       propertyPath: accumulationText
       value: 
       objectReference: {fileID: 200616137172565911}
+    - target: {fileID: 4438397472853530539, guid: 909a0ffddb69bcf43a347f82a02e859d, type: 3}
+      propertyPath: spawnLaunchForce
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4438397472853530539, guid: 909a0ffddb69bcf43a347f82a02e859d, type: 3}
+      propertyPath: segundaToolPrefab
+      value: 
+      objectReference: {fileID: 7346836634008371333, guid: 439cecb63b749bc43b77c23b14a8faf1, type: 3}
     - target: {fileID: 4438397472853530539, guid: 909a0ffddb69bcf43a347f82a02e859d, type: 3}
       propertyPath: accumulationSlider
       value: 
