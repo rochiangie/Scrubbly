@@ -49,7 +49,7 @@ public class PlayerInteraction : MonoBehaviour
 
     [Header("Validación de Herramientas")]
     [Tooltip("ID del ToolDescriptor que PUEDE destruir objetos con el Tag 'Basura'.")]
-    // 🚨 ESTE ID DEBE SER EL DE LA ESCOBA/BOLSA DE BASURA.
+    // 🚨 Este ID DEBE ser igual al ToolId de la Escoba (ej. "Escoba").
     [SerializeField] private string trashDestructionToolId = "Escoba";
 
     [Header("Detección Raycast")]
@@ -58,8 +58,7 @@ public class PlayerInteraction : MonoBehaviour
 
     [Header("Tags de Objetos")]
     [SerializeField] private string memorieTag = "Memorie";
-    [SerializeField] private string trashTag = "Basura"; // Tag de la basura
-
+    [SerializeField] private string trashTag = "Basura";
 
     private Camera mainCamera;
 
@@ -201,6 +200,7 @@ public class PlayerInteraction : MonoBehaviour
                             carried = clickCarryable;
                         }
 
+                        // 🚨 Doble seguro de cierre de panel después de recoger con Click
                         if (toolPanelIdea != null && isPaused)
                         {
                             toolPanelIdea.SetIsPaused(false);
@@ -218,8 +218,7 @@ public class PlayerInteraction : MonoBehaviour
                 ToolDescriptor activeTool = heldItemSlot.CurrentTool;
                 if (activeTool == null) return;
 
-                // 🚨 3. INTENTAR DESTRUIR BASURA (TAG: Basura) 🚨
-                // Lógica para herramientas que destruyen objetos con el Tag "Basura" de forma instantánea.
+                // 3. INTENTAR DESTRUIR BASURA (Tag: Basura) 
                 if (hitObject.CompareTag(trashTag))
                 {
                     string activeId = activeTool.ToolId;
@@ -233,7 +232,7 @@ public class PlayerInteraction : MonoBehaviour
                         }
                         activeTool.TryUse();
                         Destroy(hitObject);
-                        Debug.Log($"[Basura SUCCESS] Basura destruida. Herramienta ID: '{activeId}'.");
+                        Debug.Log($"[Basura SUCCESS] Basura destruida. ID Activo: '{activeId}'.");
                         return;
                     }
                     else
@@ -244,7 +243,6 @@ public class PlayerInteraction : MonoBehaviour
                 }
 
                 // 4. INTENTAR LIMPIAR MANCHAS (Clase: DirtSpot)
-                // Lógica para herramientas que limpian de forma gradual (si la herramienta es compatible).
                 DirtSpot dirtSpot = hitObject.GetComponent<DirtSpot>();
                 if (dirtSpot != null)
                 {
@@ -273,6 +271,7 @@ public class PlayerInteraction : MonoBehaviour
 
     // =========================================================================
     // 🚀 FUNCIÓN DE SOLTAR/DESTRUIR (Q) 🚀
+    // 🚨 ESTA LÓGICA DESTRUYE TANTO LA TOOL COMO EL CARRYABLE NORMAL 🚨
     // =========================================================================
     void TryDropOrDestroy()
     {
@@ -295,7 +294,6 @@ public class PlayerInteraction : MonoBehaviour
         // 2. Lógica: DESTRUIR HERRAMIENTA
         if (heldItemSlot.HasTool)
         {
-            // 🚨 Asegúrate de que HeldItemSlot.DestroyCurrentTool() destruye el objeto.
             heldItemSlot.DestroyCurrentTool();
             animCtrl?.SetHolding(false);
             animCtrl?.TriggerInteract();
@@ -359,6 +357,7 @@ public class PlayerInteraction : MonoBehaviour
                 animCtrl?.SetHolding(td != null || carried != null);
                 animCtrl?.TriggerInteract();
 
+                // 🚨 Cierre de panel después de recoger con E
                 if (toolPanelIdea != null && isPaused)
                 {
                     toolPanelIdea.SetIsPaused(false);
