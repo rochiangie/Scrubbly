@@ -4,6 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Collections.Generic;
 
+// ----------------------------------------------------
+// INTERFACES (Asumo que existen)
+// ----------------------------------------------------
 public interface IInteractable { void Interact(); }
 public interface IAttackable { void ReceiveAttack(); }
 
@@ -46,7 +49,8 @@ public class PlayerInteraction : MonoBehaviour
 
     [Header("Validación de Herramientas")]
     [Tooltip("ID del ToolDescriptor que PUEDE destruir objetos con el Tag 'Basura'.")]
-    [SerializeField] private string trashDestructionToolId = "GarbageBagTool";
+    // 🚨 ESTE ID DEBE SER EL DE LA ESCOBA/BOLSA DE BASURA.
+    [SerializeField] private string trashDestructionToolId = "Escoba";
 
     [Header("Detección Raycast")]
     public float interactionRange = 3.0f;
@@ -54,7 +58,8 @@ public class PlayerInteraction : MonoBehaviour
 
     [Header("Tags de Objetos")]
     [SerializeField] private string memorieTag = "Memorie";
-    [SerializeField] private string trashTag = "Basura";
+    [SerializeField] private string trashTag = "Basura"; // Tag de la basura
+
 
     private Camera mainCamera;
 
@@ -90,10 +95,10 @@ public class PlayerInteraction : MonoBehaviour
         HandleAttackAndToolUse();
 
         if (Input.GetKeyDown(pickupKey))
-            TryDropOrDestroy(); // Q ahora destruye todo
+            TryDropOrDestroy();
 
         if (Input.GetKeyDown(generalInteractKey))
-            TryGeneralInteract(); // E recoge y activa interacciones
+            TryGeneralInteract();
     }
 
     // =========================================================================
@@ -135,21 +140,13 @@ public class PlayerInteraction : MonoBehaviour
     }
 
     // =========================================================================
-    // 🖱️ FUNCIÓN PARA LIMPIEZA CON CLICK DEL MOUSE 🖱️
-    // NOTA: Esta versión NO recoge objetos, solo limpia o inicia decisión (Memorie).
-    // =========================================================================
-
-    // EN PlayerInteraction.cs
-
-    // ... (El resto del script permanece igual hasta aquí) ...
-
-    // =========================================================================
-    // 🖱️ FUNCIÓN PARA LIMPIEZA CON CLICK DEL MOUSE 🖱️
-    // 🚨 CORRECCIÓN CLAVE: AHORA INCLUYE LÓGICA DE RECOGIDA 🚨
+    // 🖱️ FUNCIÓN PARA LIMPIEZA/RECOGIDA CON CLICK DEL MOUSE 🖱️
     // =========================================================================
 
     private void HandleMouseClickCleaning()
     {
+        bool isPaused = toolPanelIdea != null && Time.timeScale == 0;
+
         if (Input.GetMouseButtonDown(0) && Time.timeScale > 0)
         {
             if (mainCamera == null) return;
@@ -162,18 +159,14 @@ public class PlayerInteraction : MonoBehaviour
                 GameObject hitObject = hit.collider.gameObject;
 
                 // 1. Prioridad: Recoger Objeto o Herramienta (SOLO si la mano está vacía)
-                // Ya no es necesario que esté en el raycast de Detección, lo chequeamos aquí.
                 if (carried == null && !heldItemSlot.HasTool)
                 {
                     Carryable clickCarryable = hitObject.GetComponentInParent<Carryable>();
 
                     if (clickCarryable != null)
                     {
-                        // Lógica para Equipar/Recoger. Duplicamos la lógica de TryGeneralInteract()
-
                         ToolDescriptor td = clickCarryable.GetComponent<ToolDescriptor>() ?? clickCarryable.GetComponentInParent<ToolDescriptor>();
 
-                        // Si es un objeto de memoria, va a la decisión (caso especial de recogida/interacción)
                         if (clickCarryable.CompareTag(memorieTag))
                         {
                             MemorieObject mObject = clickCarryable.GetComponentInParent<MemorieObject>();
@@ -181,60 +174,98 @@ public class PlayerInteraction : MonoBehaviour
                             {
                                 mObject.StartDecisionProcess(toolPanelIdea);
                                 animCtrl?.TriggerInteract();
-                                if (toolPanelIdea.IsPaused) toolPanelIdea.SetIsPaused(false);
+                                if (toolPanelIdea != null && isPaused)
+                                {
+                                    toolPanelIdea.SetIsPaused(false);
+                                }
                                 return;
                             }
                         }
 
-                        // Si es una Herramienta o Carryable normal
-                        if (td != null || !clickCarryable.CompareTag(memorieTag))
+                        if (!holdPoint)
                         {
-                            if (!holdPoint)
-                            {
-                                var hp = new GameObject("HoldPoint").transform;
-                                hp.SetParent(transform);
-                                hp.localPosition = new Vector3(0, 1.2f, 0.6f);
-                                holdPoint = hp;
-                            }
-
-                            if (td != null)
-                            {
-                                heldItemSlot.EquipToolPrefab(td.gameObject, holdPoint);
-                                Destroy(clickCarryable.gameObject);
-                                Debug.Log($"Herramienta '{td.name}' equipada con Click.");
-                            }
-                            else
-                            {
-                                clickCarryable.PickUp(holdPoint, playerColliders);
-                                carried = clickCarryable;
-                                Debug.Log($"Objeto {carried.name} recogido con Click.");
-                            }
-
-                            // Si recogimos algo, cerramos el panel si estaba abierto (ej. tras dispensar)
-                            if (toolPanelIdea != null && toolPanelIdea.IsPaused)
-                            {
-                                toolPanelIdea.SetIsPaused(false);
-                            }
-
-                            animCtrl?.SetHolding(td != null || carried != null);
-                            animCtrl?.TriggerInteract();
-                            return; // 🚨 IMPORTANTE: Salir del método tras recoger
+                            var hp = new GameObject("HoldPoint").transform;
+                            hp.SetParent(transform);
+                            hp.localPosition = new Vector3(0, 1.2f, 0.6f);
+                            holdPoint = hp;
                         }
+
+                        if (td != null)
+                        {
+                            heldItemSlot.EquipToolPrefab(td.gameObject, holdPoint);
+                            Destroy(clickCarryable.gameObject);
+                        }
+                        else
+                        {
+                            clickCarryable.PickUp(holdPoint, playerColliders);
+                            carried = clickCarryable;
+                        }
+
+                        if (toolPanelIdea != null && isPaused)
+                        {
+                            toolPanelIdea.SetIsPaused(false);
+                            Debug.Log("Panel cerrado tras recoger con CLICK.");
+                        }
+
+                        animCtrl?.SetHolding(td != null || carried != null);
+                        animCtrl?.TriggerInteract();
+                        return;
                     }
                 }
-                // 🚨 Fin de Lógica de Recogida por Click 🚨
 
-
-                // 2. Comprobación de Decisión (Memorie) - Solo si no se recogió en el paso anterior
-                // Tu lógica de MemorieObject para el mouse permanece aquí.
-
-                // 3. Verificación de Herramienta Activa (Limpieza/Destrucción)
+                // 2. Verificación de Herramienta Activa (Limpieza/Destrucción)
                 if (heldItemSlot == null) return;
                 ToolDescriptor activeTool = heldItemSlot.CurrentTool;
                 if (activeTool == null) return;
 
-                // 4. Lógica de Destruir Basura o Limpiar Manchas (usa la herramienta activa)
-                // ... (Esta lógica es la misma que ya teníamos) ...
+                // 🚨 3. INTENTAR DESTRUIR BASURA (TAG: Basura) 🚨
+                // Lógica para herramientas que destruyen objetos con el Tag "Basura" de forma instantánea.
+                if (hitObject.CompareTag(trashTag))
+                {
+                    string activeId = activeTool.ToolId;
+                    string requiredId = trashDestructionToolId;
+
+                    if (activeId == requiredId)
+                    {
+                        if (clickCleaningEffect != null)
+                        {
+                            Instantiate(clickCleaningEffect, hit.point, Quaternion.identity);
+                        }
+                        activeTool.TryUse();
+                        Destroy(hitObject);
+                        Debug.Log($"[Basura SUCCESS] Basura destruida. Herramienta ID: '{activeId}'.");
+                        return;
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"[Basura FAILED] Herramienta incorrecta. Activa: '{activeId}' | Requerida: '{requiredId}'.");
+                        return;
+                    }
+                }
+
+                // 4. INTENTAR LIMPIAR MANCHAS (Clase: DirtSpot)
+                // Lógica para herramientas que limpian de forma gradual (si la herramienta es compatible).
+                DirtSpot dirtSpot = hitObject.GetComponent<DirtSpot>();
+                if (dirtSpot != null)
+                {
+                    if (dirtSpot.CanBeCleanedBy(activeTool.ToolId))
+                    {
+                        float damage = activeTool.ToolPower;
+                        dirtSpot.CleanHit(damage);
+                        activeTool.TryUse();
+
+                        if (clickCleaningEffect != null)
+                        {
+                            Instantiate(clickCleaningEffect, hit.point, Quaternion.identity);
+                        }
+                        Debug.Log($"[DirtSpot SUCCESS] DirtSpot limpiado. ID Activo: '{activeTool.ToolId}'.");
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"[DirtSpot FAILED] DirtSpot requiere otra herramienta. Activa: '{activeTool.ToolId}'.");
+                    }
+                    return;
+                }
             }
         }
     }
@@ -242,7 +273,6 @@ public class PlayerInteraction : MonoBehaviour
 
     // =========================================================================
     // 🚀 FUNCIÓN DE SOLTAR/DESTRUIR (Q) 🚀
-    // 🚨 CORRECCIÓN CLAVE: DESTROIMOS TANTO CARRIABLE COMO TOOLS 🚨
     // =========================================================================
     void TryDropOrDestroy()
     {
@@ -251,7 +281,6 @@ public class PlayerInteraction : MonoBehaviour
         // 1. Lógica: DESTRUIR OBJETO Carryable (que NO es Tool)
         if (carried != null)
         {
-            // 🚨 CAMBIO: Destruimos el objeto en lugar de solo soltarlo (Drop())
             if (carried.gameObject != null)
             {
                 Destroy(carried.gameObject);
@@ -266,6 +295,7 @@ public class PlayerInteraction : MonoBehaviour
         // 2. Lógica: DESTRUIR HERRAMIENTA
         if (heldItemSlot.HasTool)
         {
+            // 🚨 Asegúrate de que HeldItemSlot.DestroyCurrentTool() destruye el objeto.
             heldItemSlot.DestroyCurrentTool();
             animCtrl?.SetHolding(false);
             animCtrl?.TriggerInteract();
@@ -283,12 +313,13 @@ public class PlayerInteraction : MonoBehaviour
     {
         if (heldItemSlot == null) return;
 
+        bool isPaused = toolPanelIdea != null && Time.timeScale == 0;
+
         // 🚨 PRIORIDAD 1: RECOGER/EQUIPAR 🚨
         if (nearbyCarryable != null && carried == null && !heldItemSlot.HasTool)
         {
             ToolDescriptor td = nearbyCarryable.GetComponent<ToolDescriptor>() ?? nearbyCarryable.GetComponentInParent<ToolDescriptor>();
 
-            // Lógica de MemorieObject se mantiene aquí para recogida con 'E'
             if (nearbyCarryable.CompareTag(memorieTag))
             {
                 MemorieObject mObject = nearbyCarryable.GetComponent<MemorieObject>();
@@ -297,12 +328,10 @@ public class PlayerInteraction : MonoBehaviour
                     mObject.StartDecisionProcess(toolPanelIdea);
                     nearbyCarryable = null;
                     animCtrl?.TriggerInteract();
-                    // NO CERRAMOS EL PANEL AQUÍ, LO HACE StartDecisionProcess O EL USUARIO
                     return;
                 }
             }
 
-            // Si es una Herramienta o Carryable normal
             if (td != null || !nearbyCarryable.CompareTag(memorieTag))
             {
                 if (!holdPoint)
@@ -330,12 +359,10 @@ public class PlayerInteraction : MonoBehaviour
                 animCtrl?.SetHolding(td != null || carried != null);
                 animCtrl?.TriggerInteract();
 
-                // 🚨 CORRECCIÓN CLAVE: CERRAR EL PANEL DESPUÉS DE RECOGER LA HERRAMIENTA
-                // Esto es crucial para el flujo de "Botón -> Spawn -> Recoger".
-                if (toolPanelIdea != null && toolPanelIdea.IsPaused)
+                if (toolPanelIdea != null && isPaused)
                 {
                     toolPanelIdea.SetIsPaused(false);
-                    Debug.Log("Panel de herramientas cerrado tras equipar/recoger objeto.");
+                    Debug.Log("Panel de herramientas cerrado tras equipar/recoger objeto con E.");
                 }
 
                 return;

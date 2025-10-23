@@ -55,17 +55,24 @@ public class HeldItemSlot : MonoBehaviour
 
     // EN HeldItemSlot.cs
 
+    // EN HeldItemSlot.cs
+
+    // ... (Resto de tu código) ...
+
+
     public void DestroyCurrentTool()
     {
         if (currentToolObject != null)
         {
-            // Asegurarse de que el objeto destruido no sea el componente HeldItemSlot
+            // 🚨 Destrucción de la Tool en la escena
             Destroy(currentToolObject);
         }
 
-        // Limpiar siempre las referencias
+        // 🚨 Limpiamos TODAS las referencias
         currentToolObject = null;
         currentToolDescriptor = null;
-        currentHandSocket = null;
+        // currentHandSocket = null; // Si usas esta variable, límpiala también
+
+        Debug.Log("HeldItemSlot: Herramienta destruida y referencias limpiadas.");
     }
 }
