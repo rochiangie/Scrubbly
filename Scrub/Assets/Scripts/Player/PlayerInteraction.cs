@@ -9,6 +9,7 @@ using System.Collections.Generic;
 // ----------------------------------------------------
 public interface IInteractable { void Interact(); }
 public interface IAttackable { void ReceiveAttack(); }
+// NOTA: Se asume que HeldItemSlot es el nuevo gestor de herramientas.
 
 public class PlayerInteraction : MonoBehaviour
 {
@@ -17,21 +18,20 @@ public class PlayerInteraction : MonoBehaviour
     public Transform holdPoint;
     public PlayerAnimationController animCtrl;
 
-    // 🚨 CORRECCIÓN FINAL: Tipo de variable coincidente con el Manager de UI 🚨
-    private ToolItemManager toolItemManager;
+    // 🚨 GESTORES CRÍTICOS
+    private HeldItemSlot heldItemSlot; // Nuevo gestor de herramientas
     private UIPauseController toolPanelIdea;
 
     private CleaningController cleaningController;
-    private Carryable carried;
+    private Carryable carried; // Mantenemos carried solo para objetos Carryable NO herramientas
 
     // ***************************************************************
-    // 🗑️ VARIABLES DE DETECCIÓN (USADAS POR EL RAYCAST) 🚀
+    // 🗑️ VARIABLES DE DETECCIÓN (USADAS POR EL RAYCAST) 
     // ***************************************************************
     private IInteractable currentDoorInteractable = null;
     private Carryable nearbyCarryable = null;
     private IAttackable nearbyAttackable = null;
     private GameObject currentRaycastHitObject = null;
-    // ***************************************************************
 
     private Rigidbody playerRigidbody;
     private Collider[] playerColliders;
@@ -48,7 +48,6 @@ public class PlayerInteraction : MonoBehaviour
     [SerializeField] private KeyCode attackKey = KeyCode.F;
     [SerializeField] private KeyCode scorePanelToggleKey = KeyCode.Tab;
 
-    // VALIDACIÓN DE HERRAMIENTA
     [Header("Validación de Herramientas")]
     [Tooltip("ID del ToolDescriptor que PUEDE destruir objetos con el Tag 'Basura'.")]
     [SerializeField] private string trashDestructionToolId = "GarbageBagTool";
@@ -65,14 +64,14 @@ public class PlayerInteraction : MonoBehaviour
 
     void Awake()
     {
-        toolItemManager = GetComponent<ToolItemManager>();
-        if (toolItemManager == null)
-            Debug.LogError("PlayerInteraction: No se encontró el ToolItemManager. La limpieza por F fallará.", this);
+        // 🚨 CRÍTICO: Obtener el nuevo gestor de slot
+        heldItemSlot = GetComponent<HeldItemSlot>();
+        if (heldItemSlot == null)
+            Debug.LogError("PlayerInteraction: No se encontró HeldItemSlot. **Adjunte HeldItemSlot al Player.**");
 
-        // 🚨 CRÍTICO: Buscar el tipo correcto: UIPauseController 🚨
         toolPanelIdea = FindObjectOfType<UIPauseController>();
         if (toolPanelIdea == null)
-            Debug.LogWarning("PlayerInteraction: No se encontró UIPauseController. La apertura del panel no funcionará.");
+            Debug.LogWarning("PlayerInteraction: No se encontró UIPauseController.");
 
         cleaningController = GetComponent<CleaningController>();
         if (cleaningController == null)
@@ -96,9 +95,10 @@ public class PlayerInteraction : MonoBehaviour
         DetectNearbyObjects();
         HandleMouseClickCleaning();
 
-        if (toolItemManager != null)
+        // 🚨 CRÍTICO: Verificar si heldItemSlot es nulo antes de usarlo.
+        if (heldItemSlot != null)
         {
-            GameObject activeTool = toolItemManager.GetCurrentTool();
+            ToolDescriptor activeTool = heldItemSlot.CurrentTool;
 
             if (Input.GetKeyDown(attackKey))
             {
@@ -118,9 +118,13 @@ public class PlayerInteraction : MonoBehaviour
                 }
             }
 
+            // DESTRUIR LA HERRAMIENTA AL SOLTAR F
             if (Input.GetKeyUp(attackKey))
             {
-                toolItemManager.DestroyCurrentTool();
+                if (heldItemSlot.HasTool)
+                {
+                    heldItemSlot.DestroyCurrentTool();
+                }
             }
         }
 
@@ -129,13 +133,6 @@ public class PlayerInteraction : MonoBehaviour
 
         if (Input.GetKeyDown(generalInteractKey))
             TryGeneralInteract();
-
-        // 🛑 ELIMINAMOS INPUT.GETKEYDOWN(ESCAPE) DE AQUÍ. SOLO UIPauseController DEBE GESTIONARLO.
-
-        if (Input.GetKeyDown(KeyCode.G))
-        {
-            LogRemainingItemsCount();
-        }
     }
 
 
@@ -163,18 +160,22 @@ public class PlayerInteraction : MonoBehaviour
 
                     if (mObject != null && toolPanelIdea != null)
                     {
-                        // 🚨 CRÍTICO: Llamada con la nueva firma de función (Texto + Callback) 🚨
-                        toolPanelIdea.ShowToolsPanelAtWorldPosition(mObject.name, mObject.sentimentalValue, mObject.DecideAndNotify);
+                        mObject.StartDecisionProcess(toolPanelIdea);
 
                         animCtrl?.TriggerInteract();
                         nearbyCarryable = null;
-                        Debug.Log("¡Objeto de Memoria recogido con CLICK! Iniciando proceso de decisión.");
                         return;
                     }
                 }
 
                 // 2. VERIFICACIÓN CRÍTICA DE HERRAMIENTA
-                ToolDescriptor activeTool = cleaningController?.CurrentTool;
+                if (heldItemSlot == null)
+                {
+                    Debug.LogWarning("[Click Cleaning] No se puede limpiar: HeldItemSlot es nulo.");
+                    return;
+                }
+
+                ToolDescriptor activeTool = heldItemSlot.CurrentTool;
 
                 if (activeTool == null)
                 {
@@ -197,7 +198,6 @@ public class PlayerInteraction : MonoBehaviour
                         }
 
                         Destroy(hitObject);
-                        Debug.Log($"🗑️ Basura destruida con herramienta correcta: {activeTool.ToolId}");
                         return;
                     }
                     else
@@ -211,21 +211,18 @@ public class PlayerInteraction : MonoBehaviour
                 DirtSpot dirtSpot = hitObject.GetComponent<DirtSpot>();
                 if (dirtSpot != null)
                 {
-                    if (cleaningController != null)
+                    if (dirtSpot.CanBeCleanedBy(activeTool.ToolId))
                     {
-                        if (dirtSpot.CanBeCleanedBy(activeTool.ToolId))
-                        {
-                            float damage = activeTool.ToolPower;
-                            dirtSpot.CleanHit(damage);
-                            activeTool.TryUse();
+                        float damage = activeTool.ToolPower;
+                        dirtSpot.CleanHit(damage);
+                        activeTool.TryUse();
 
-                            if (clickCleaningEffect != null)
-                            {
-                                Instantiate(clickCleaningEffect, hit.point, Quaternion.identity);
-                            }
+                        if (clickCleaningEffect != null)
+                        {
+                            Instantiate(clickCleaningEffect, hit.point, Quaternion.identity);
                         }
-                        return;
                     }
+                    return;
                 }
             }
         }
@@ -236,83 +233,70 @@ public class PlayerInteraction : MonoBehaviour
     // 🚀 FUNCIONES DE RAYCAST Y RECOGIDA (Q) 🚀
     // =========================================================================
 
-    private void DetectNearbyObjects()
-    {
-        nearbyCarryable = null;
-        nearbyAttackable = null;
-        currentDoorInteractable = null;
-        currentRaycastHitObject = null;
-
-        RaycastHit hit;
-        Vector3 rayOrigin = mainCamera.transform.position;
-        Vector3 rayDirection = mainCamera.transform.forward;
-
-        if (Physics.Raycast(rayOrigin, rayDirection, out hit, interactionRange, interactableLayer))
-        {
-            GameObject hitObject = hit.collider.gameObject;
-            currentRaycastHitObject = hitObject;
-
-            Transform rootTransform = hit.collider.transform.root;
-
-            if (carried == null)
-            {
-                Carryable c = rootTransform.GetComponent<Carryable>() ?? hitObject.GetComponentInParent<Carryable>();
-
-                if (c != null)
-                {
-                    nearbyCarryable = c;
-                }
-            }
-
-            IAttackable a = hitObject.GetComponentInParent<IAttackable>();
-            if (a != null)
-            {
-                nearbyAttackable = a;
-            }
-
-            IInteractable i = hitObject.GetComponentInParent<IInteractable>();
-            if (i != null)
-            {
-                currentDoorInteractable = i;
-            }
-        }
-    }
-
     void TryPickup()
     {
-        if (carried)
+        // 🚨 CRÍTICO: Chequeo de nulidad para heldItemSlot.
+        if (heldItemSlot == null) return;
+
+        bool hasToolEquipped = heldItemSlot.HasTool;
+
+        // 1. Lógica: SOLTAR OBJETO (Carryable O herramienta)
+        if (carried != null)
         {
-            bool isTool = (cleaningController != null &&
-                            cleaningController.CurrentTool != null &&
-                            carried.GetComponent<ToolDescriptor>() == cleaningController.CurrentTool);
-
-            if (isTool) cleaningController.DropCurrentTool();
-            else carried.Drop();
-
+            // Solo objetos Carryable (no herramientas)
+            carried.Drop();
             carried = null;
             animCtrl?.SetHolding(false);
             animCtrl?.TriggerInteract();
-            Debug.Log($"Objeto soltado ({pickupKey}).");
+            Debug.Log($"Objeto Carryable soltado ({pickupKey}).");
             return;
         }
 
+        // Si el jugador tiene una herramienta equipada, también se suelta/destruye
+        if (hasToolEquipped)
+        {
+            heldItemSlot.DestroyCurrentTool();
+            animCtrl?.SetHolding(false);
+            animCtrl?.TriggerInteract();
+            Debug.Log($"Herramienta destruida al soltar ({pickupKey}).");
+            return;
+        }
+
+
+        // 2. Lógica: RECOGER OBJETO
         if (nearbyCarryable != null)
         {
+            // A. Si es objeto de memoria
             if (nearbyCarryable.CompareTag(memorieTag))
             {
                 MemorieObject mObject = nearbyCarryable.GetComponent<MemorieObject>();
                 if (mObject != null && toolPanelIdea != null)
                 {
-                    // 🚨 CRÍTICO: Llamada con la nueva firma de función (Texto + Callback) 🚨
-                    toolPanelIdea.ShowToolsPanelAtWorldPosition(mObject.name, mObject.sentimentalValue, mObject.DecideAndNotify);
-
+                    mObject.StartDecisionProcess(toolPanelIdea);
                     nearbyCarryable = null;
                     animCtrl?.TriggerInteract();
-                    Debug.Log("¡Objeto de Memoria recogido! Iniciando proceso de decisión (Q).");
                     return;
                 }
             }
 
+            // B. Si es una Herramienta (ToolDescriptor)
+            ToolDescriptor td = nearbyCarryable.GetComponent<ToolDescriptor>() ?? nearbyCarryable.GetComponentInParent<ToolDescriptor>();
+
+            if (td != null)
+            {
+                // Equipamos la herramienta 
+                heldItemSlot.EquipToolPrefab(td.gameObject);
+
+                // Destruir el objeto del mundo que acabamos de "recoger"
+                Destroy(nearbyCarryable.gameObject);
+
+                nearbyCarryable = null;
+                animCtrl?.SetHolding(true);
+                animCtrl?.TriggerInteract();
+                return;
+            }
+
+            // C. Si es un Carryable (NO herramienta)
             if (!holdPoint)
             {
                 var hp = new GameObject("HoldPoint").transform;
@@ -322,14 +306,7 @@ public class PlayerInteraction : MonoBehaviour
             }
 
             nearbyCarryable.PickUp(holdPoint, playerColliders);
-            ToolDescriptor td = nearbyCarryable.GetComponent<ToolDescriptor>() ?? nearbyCarryable.GetComponentInParent<ToolDescriptor>();
-
-            if (td != null && cleaningController != null)
-            {
-                cleaningController.RegisterTool(td);
-            }
-
-            carried = nearbyCarryable;
+            carried = nearbyCarryable; // Almacenar como objeto Carryable
             nearbyCarryable = null;
             animCtrl?.SetHolding(true);
             animCtrl?.TriggerInteract();
@@ -351,6 +328,57 @@ public class PlayerInteraction : MonoBehaviour
             return;
         }
         Debug.Log("[Interacción Fallida] No hay Interacción General (Puerta) activa (E).");
+    }
+
+    // =========================================================================
+    // Lógica de Detección (Corregida) 
+    // =========================================================================
+    private void DetectNearbyObjects()
+    {
+        nearbyCarryable = null;
+        nearbyAttackable = null;
+        currentDoorInteractable = null;
+        currentRaycastHitObject = null;
+
+        if (mainCamera == null) return;
+
+        RaycastHit hit;
+        Vector3 rayOrigin = mainCamera.transform.position;
+        Vector3 rayDirection = mainCamera.transform.forward;
+
+        if (Physics.Raycast(rayOrigin, rayDirection, out hit, interactionRange, interactableLayer))
+        {
+            GameObject hitObject = hit.collider.gameObject;
+            currentRaycastHitObject = hitObject;
+
+            Transform rootTransform = hit.collider.transform.root;
+
+            // 🚨 SOLUCIÓN: Verificar heldItemSlot y su estado.
+            bool isToolEquipped = (heldItemSlot != null && heldItemSlot.HasTool);
+
+            // Solo buscar Carryable si no llevamos nada.
+            if (carried == null && !isToolEquipped)
+            {
+                Carryable c = rootTransform.GetComponent<Carryable>() ?? hitObject.GetComponentInParent<Carryable>();
+
+                if (c != null)
+                {
+                    nearbyCarryable = c;
+                }
+            }
+
+            IAttackable a = hitObject.GetComponentInParent<IAttackable>();
+            if (a != null)
+            {
+                nearbyAttackable = a;
+            }
+
+            IInteractable i = hitObject.GetComponentInParent<IInteractable>();
+            if (i != null)
+            {
+                currentDoorInteractable = i;
+            }
+        }
     }
 
     // --- FUNCIONES DE COMPATIBILIDAD Y DEBUG ---

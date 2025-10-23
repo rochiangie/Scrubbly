@@ -1442,9 +1442,6 @@ PrefabInstance:
       addedObject: {fileID: 8455405960204968146}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 7f394e12257befb43992c3be83001db7, type: 3}
       insertIndex: -1
-      addedObject: {fileID: -1637847807608862972}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 7f394e12257befb43992c3be83001db7, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 2345121207172374331}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 7f394e12257befb43992c3be83001db7, type: 3}
       insertIndex: -1
@@ -1457,10 +1454,10 @@ PrefabInstance:
       addedObject: {fileID: 7715552108775548526}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 7f394e12257befb43992c3be83001db7, type: 3}
       insertIndex: -1
-      addedObject: {fileID: -5485667893624522796}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 7f394e12257befb43992c3be83001db7, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 2666526680743271702}
+    - targetCorrespondingSourceObject: {fileID: -3605182920710100459, guid: 7f394e12257befb43992c3be83001db7, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8948369944011793344}
   m_SourcePrefab: {fileID: 100100000, guid: 7f394e12257befb43992c3be83001db7, type: 3}
 --- !u!137 &29823792102925756 stripped
 SkinnedMeshRenderer:
@@ -1497,6 +1494,24 @@ SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: -3640903186538654383, guid: 7f394e12257befb43992c3be83001db7, type: 3}
   m_PrefabInstance: {fileID: 5845412110500379962}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &2083128562560325423 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -3605182920710100459, guid: 7f394e12257befb43992c3be83001db7, type: 3}
+  m_PrefabInstance: {fileID: 5845412110500379962}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8948369944011793344
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2083128562560325423}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3334fb2a4773d2a4c9d26f0344bc3799, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  notificationText: {fileID: 1144428245932630314, guid: c7919890a849b2547ad7b1d0c991f2dd, type: 3}
 --- !u!137 &2158512414416271301 stripped
 SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: 5542665340689402623, guid: 7f394e12257befb43992c3be83001db7, type: 3}
@@ -1691,7 +1706,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rb: {fileID: -555963101567099581}
   playerBody: {fileID: 9202828968308938757}
-  heldItemSlot: {fileID: -1637847807608862972}
+  heldItemSlot: {fileID: 0}
   speedSmooth: 8
   cleaningLayerIndex: 1
   cleanKey: 114
@@ -1816,25 +1831,13 @@ MonoBehaviour:
   pickupKey: 113
   attackKey: 102
   scorePanelToggleKey: 271
+  trashDestructionToolId: GarbageBagTool
   interactionRange: 3
   interactableLayer:
     serializedVersion: 2
     m_Bits: 9
   memorieTag: Memorie
   trashTag: Basura
---- !u!114 &-1637847807608862972
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6763978423349608555}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3334fb2a4773d2a4c9d26f0344bc3799, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  holdPoint: {fileID: 1987986179021668200}
 --- !u!114 &2345121207172374331
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1915,23 +1918,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterID: 7
   displayName: 
---- !u!114 &-5485667893624522796
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6763978423349608555}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bbf140a9c3f331e46b845dfc3075db5e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  interactionRange: 3
-  trashInteractionKey: 102
-  trashLayerMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
 --- !u!114 &2666526680743271702
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1939,7 +1925,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6763978423349608555}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7db2576cb7b317d48a3b00de80635c3f, type: 3}
   m_Name: 

@@ -969,9 +969,6 @@ PrefabInstance:
       addedObject: {fileID: -3951364314082775715}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: f14962bf8c2a50544b362f1694bf4149, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 8307391258836582406}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: f14962bf8c2a50544b362f1694bf4149, type: 3}
-      insertIndex: -1
       addedObject: {fileID: -7438762612555831639}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: f14962bf8c2a50544b362f1694bf4149, type: 3}
       insertIndex: -1
@@ -979,9 +976,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: f14962bf8c2a50544b362f1694bf4149, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1319572583702617165}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: f14962bf8c2a50544b362f1694bf4149, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 418189807080717645}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: f14962bf8c2a50544b362f1694bf4149, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1139063850590625810}
@@ -1182,7 +1176,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rb: {fileID: 5590355112871320847}
   playerBody: {fileID: 8896568935344567707}
-  heldItemSlot: {fileID: 8307391258836582406}
+  heldItemSlot: {fileID: 0}
   speedSmooth: 8
   cleaningLayerIndex: 1
   cleanKey: 114
@@ -1307,25 +1301,13 @@ MonoBehaviour:
   pickupKey: 113
   attackKey: 102
   scorePanelToggleKey: 271
+  trashDestructionToolId: GarbageBagTool
   interactionRange: 3
   interactableLayer:
     serializedVersion: 2
     m_Bits: 9
   memorieTag: Memorie
   trashTag: Basura
---- !u!114 &8307391258836582406
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6422002185381309941}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3334fb2a4773d2a4c9d26f0344bc3799, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  holdPoint: {fileID: 2258357962537865974}
 --- !u!114 &-7438762612555831639
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1389,23 +1371,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterID: 2
   displayName: 
---- !u!114 &418189807080717645
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6422002185381309941}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bbf140a9c3f331e46b845dfc3075db5e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  interactionRange: 3
-  trashInteractionKey: 102
-  trashLayerMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
 --- !u!114 &1139063850590625810
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1413,7 +1378,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6422002185381309941}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7db2576cb7b317d48a3b00de80635c3f, type: 3}
   m_Name: 
@@ -1807,13 +1772,34 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8456698217687206332, guid: a10f81b6957ffb049bef4a7217b81e1a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4444957774509338747}
   m_SourcePrefab: {fileID: 100100000, guid: a10f81b6957ffb049bef4a7217b81e1a, type: 3}
 --- !u!137 &1400371954375837607 stripped
 SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: -1037163559241138283, guid: a10f81b6957ffb049bef4a7217b81e1a, type: 3}
   m_PrefabInstance: {fileID: 7130429541021808690}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1704724448711717262 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8456698217687206332, guid: a10f81b6957ffb049bef4a7217b81e1a, type: 3}
+  m_PrefabInstance: {fileID: 7130429541021808690}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &4444957774509338747
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1704724448711717262}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3334fb2a4773d2a4c9d26f0344bc3799, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  notificationText: {fileID: 1144428245932630314, guid: c7919890a849b2547ad7b1d0c991f2dd, type: 3}
 --- !u!137 &2202509011865141072 stripped
 SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: 8963497676660213602, guid: a10f81b6957ffb049bef4a7217b81e1a, type: 3}

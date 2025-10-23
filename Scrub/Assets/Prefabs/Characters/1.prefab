@@ -1122,7 +1122,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4018128568367562181, guid: f14962bf8c2a50544b362f1694bf4149, type: 3}
       propertyPath: m_TagString
-      value: ToolSlot
+      value: Untagged
       objectReference: {fileID: 0}
     - target: {fileID: 4461088807339474105, guid: f14962bf8c2a50544b362f1694bf4149, type: 3}
       propertyPath: m_Layer
@@ -1326,9 +1326,6 @@ PrefabInstance:
       addedObject: {fileID: 5865463591256134175}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: f14962bf8c2a50544b362f1694bf4149, type: 3}
       insertIndex: -1
-      addedObject: {fileID: -1730181286663167620}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: f14962bf8c2a50544b362f1694bf4149, type: 3}
-      insertIndex: -1
       addedObject: {fileID: -2294979099503442935}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: f14962bf8c2a50544b362f1694bf4149, type: 3}
       insertIndex: -1
@@ -1338,10 +1335,10 @@ PrefabInstance:
       addedObject: {fileID: 6255346882897174191}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: f14962bf8c2a50544b362f1694bf4149, type: 3}
       insertIndex: -1
-      addedObject: {fileID: -8509742679597968660}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: f14962bf8c2a50544b362f1694bf4149, type: 3}
-      insertIndex: -1
       addedObject: {fileID: -4857622129060404472}
+    - targetCorrespondingSourceObject: {fileID: -3605182920710100459, guid: f14962bf8c2a50544b362f1694bf4149, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1322784207633892950}
   m_SourcePrefab: {fileID: 100100000, guid: f14962bf8c2a50544b362f1694bf4149, type: 3}
 --- !u!137 &167823368543131158 stripped
 SkinnedMeshRenderer:
@@ -1388,6 +1385,24 @@ SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: 5613003700658788880, guid: f14962bf8c2a50544b362f1694bf4149, type: 3}
   m_PrefabInstance: {fileID: 7593736884950580922}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &2636169608553714863 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -3605182920710100459, guid: f14962bf8c2a50544b362f1694bf4149, type: 3}
+  m_PrefabInstance: {fileID: 7593736884950580922}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1322784207633892950
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2636169608553714863}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3334fb2a4773d2a4c9d26f0344bc3799, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  notificationText: {fileID: 1144428245932630314, guid: c7919890a849b2547ad7b1d0c991f2dd, type: 3}
 --- !u!137 &2669547902780855925 stripped
 SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: 5507476673578592463, guid: f14962bf8c2a50544b362f1694bf4149, type: 3}
@@ -1574,7 +1589,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rb: {fileID: -3085999724516933025}
   playerBody: {fileID: 5173026418188884869}
-  heldItemSlot: {fileID: -1730181286663167620}
+  heldItemSlot: {fileID: 0}
   speedSmooth: 8
   cleaningLayerIndex: 1
   cleanKey: 114
@@ -1699,25 +1714,13 @@ MonoBehaviour:
   pickupKey: 113
   attackKey: 102
   scorePanelToggleKey: 271
+  trashDestructionToolId: GarbageBagTool
   interactionRange: 3
   interactableLayer:
     serializedVersion: 2
     m_Bits: 9
   memorieTag: Memorie
   trashTag: Basura
---- !u!114 &-1730181286663167620
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7323757511219053547}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3334fb2a4773d2a4c9d26f0344bc3799, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  holdPoint: {fileID: 2588429364943027432}
 --- !u!114 &-2294979099503442935
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1781,23 +1784,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterID: 1
   displayName: 
---- !u!114 &-8509742679597968660
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7323757511219053547}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bbf140a9c3f331e46b845dfc3075db5e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  interactionRange: 3
-  trashInteractionKey: 102
-  trashLayerMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
 --- !u!114 &-4857622129060404472
 MonoBehaviour:
   m_ObjectHideFlags: 0

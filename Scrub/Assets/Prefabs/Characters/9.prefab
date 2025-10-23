@@ -5913,6 +5913,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1983485911507133259}
+  - component: {fileID: 7064050676137280339}
   m_Layer: 8
   m_Name: RightHandPinky3
   m_TagString: Untagged
@@ -5935,6 +5936,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1560366960154808273}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7064050676137280339
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5393820366546365071}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3334fb2a4773d2a4c9d26f0344bc3799, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  notificationText: {fileID: 1144428245932630314, guid: c7919890a849b2547ad7b1d0c991f2dd, type: 3}
 --- !u!1 &5401962402026130159
 GameObject:
   m_ObjectHideFlags: 0
@@ -6807,11 +6821,9 @@ GameObject:
   - component: {fileID: -1355752782336773815}
   - component: {fileID: -7899260132915816814}
   - component: {fileID: -4570864935053923125}
-  - component: {fileID: -8850741508234802183}
   - component: {fileID: -7078733372346190777}
   - component: {fileID: 220351430305387981}
   - component: {fileID: 2041989766646978764}
-  - component: {fileID: 6716744985742367874}
   - component: {fileID: -4390171297971300932}
   m_Layer: 8
   m_Name: 9
@@ -6943,7 +6955,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rb: {fileID: 9162677935126176981}
   playerBody: {fileID: 9138288601656680539}
-  heldItemSlot: {fileID: -8850741508234802183}
+  heldItemSlot: {fileID: 0}
   speedSmooth: 8
   cleaningLayerIndex: 1
   cleanKey: 114
@@ -7068,25 +7080,13 @@ MonoBehaviour:
   pickupKey: 113
   attackKey: 102
   scorePanelToggleKey: 271
+  trashDestructionToolId: GarbageBagTool
   interactionRange: 3
   interactableLayer:
     serializedVersion: 2
     m_Bits: 9
   memorieTag: Memorie
   trashTag: Basura
---- !u!114 &-8850741508234802183
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6521118409924740657}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3334fb2a4773d2a4c9d26f0344bc3799, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  holdPoint: {fileID: 1560366960154808273}
 --- !u!114 &-7078733372346190777
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7150,23 +7150,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterID: 9
   displayName: 
---- !u!114 &6716744985742367874
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6521118409924740657}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bbf140a9c3f331e46b845dfc3075db5e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  interactionRange: 3
-  trashInteractionKey: 102
-  trashLayerMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
 --- !u!114 &-4390171297971300932
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7174,7 +7157,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6521118409924740657}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7db2576cb7b317d48a3b00de80635c3f, type: 3}
   m_Name: 
