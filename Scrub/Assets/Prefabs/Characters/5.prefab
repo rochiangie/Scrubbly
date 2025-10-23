@@ -161,15 +161,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 46c5ec54e9c218c4abd9fbeb01ef1d1b, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 46c5ec54e9c218c4abd9fbeb01ef1d1b, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 46c5ec54e9c218c4abd9fbeb01ef1d1b, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 46c5ec54e9c218c4abd9fbeb01ef1d1b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -1202,7 +1202,7 @@ MonoBehaviour:
   attackKey: 102
   scorePanelToggleKey: 271
   trashDestructionToolId: Escoba
-  interactionRange: 3
+  interactionRange: 5
   interactableLayer:
     serializedVersion: 2
     m_Bits: 137
@@ -1257,6 +1257,7 @@ MonoBehaviour:
   downLimit: -85
   headLookTarget: {fileID: 5249473733915914670}
   _controlsActive: 1
+  _isCameraLocked: 0
 --- !u!114 &7618050124910119339
 MonoBehaviour:
   m_ObjectHideFlags: 0
