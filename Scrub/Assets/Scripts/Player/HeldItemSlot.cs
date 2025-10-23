@@ -1,181 +1,111 @@
 using UnityEngine;
-using TMPro;
-using System;
-using System.Collections.Generic;
+
+// [Código de HeldItemSlot.cs (Modificado)]
 
 public class HeldItemSlot : MonoBehaviour
 {
-    // 🚨 1. SINGLETON: Punto de acceso estático para la UI.
-    public static HeldItemSlot Instance { get; private set; }
+    // --- REFERENCIAS PARA EQUIPAMIENTO RÁPIDO (Asignar en Inspector) ---
 
-    private Transform holdPoint;
+    [Header("Tool Prefabs para Equipamiento Rápido")]
+    // 🚨 PASO CRÍTICO: Asigna los prefabs de las 2 herramientas aquí.
+    // Usamos ToolDescriptor para asegurar que el prefab tenga el componente.
+    public ToolDescriptor tool1DescriptorPrefab; // Ejemplo: CleaningTool Prefab
+    public ToolDescriptor tool2DescriptorPrefab; // Ejemplo: CleanTool Prefab
 
-    // Estado interno
-    public ToolDescriptor CurrentTool { get; private set; }
-    public bool HasTool => CurrentTool != null;
+    [Header("Socket")]
+    // Transform que actúa como la 'mano' del jugador
+    public Transform handSocket;
 
-    [Header("Notificación de UI")]
-    public TMP_Text notificationText;
-    private float notificationTimer = 0f;
-    private const float NotificationDuration = 2.0f;
+    private GameObject currentToolObject;
+    private ToolDescriptor currentToolDescriptor;
 
-    // Dependencias
-    private UIPauseController uiController;
+    // --- PROPIEDADES PÚBLICAS ---
 
+    public ToolDescriptor CurrentTool => currentToolDescriptor;
+    public bool HasTool => currentToolObject != null;
 
-    void Awake()
+    void Start()
     {
-        // 🚨 CRÍTICO: Configuración del Singleton
-        if (Instance == null)
+        // Se inicializa handSocket si es necesario (lógica de tu proyecto)
+        if (handSocket == null)
         {
-            Instance = this;
-        }
-        else if (Instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
-
-        // Asignamos el holdPoint al propio transform del WeaponSlot.
-        holdPoint = this.transform;
-        uiController = FindObjectOfType<UIPauseController>();
-    }
-
-    void Update()
-    {
-        // Temporizador de notificación
-        if (notificationTimer > 0)
-        {
-            notificationTimer -= Time.deltaTime;
-            if (notificationTimer <= 0 && notificationText != null)
+            handSocket = transform.Find("HoldPoint");
+            if (handSocket == null)
             {
-                notificationText.text = "";
+                handSocket = new GameObject("HeldItemSocket").transform;
+                handSocket.SetParent(transform);
+                handSocket.localPosition = new Vector3(0, 1.5f, 0.5f);
             }
         }
     }
 
-    // =========================================================================
-    // 🚀 MÉTODOS DE EQUIPAMIENTO (PUNTOS DE ACCESO) 🚀
-    // =========================================================================
-
     /// <summary>
-    /// Método estático llamado por los botones de la UI (Para objetos persistentes).
+    /// Método para recoger una herramienta del mundo (llamado desde PlayerInteraction.TryPickupOrDrop).
     /// </summary>
-    // Fragmento CRÍTICO de HeldItemSlot.cs
-
-    public static void StaticEquipToolPrefab(GameObject toolPrefab)
-    {
-        // 🚨 DEBUG CRÍTICO: Si ves este log, el botón funciona.
-        Debug.Log($"[BOTÓN CLICKED] Intentando equipar: {toolPrefab.name}.");
-
-        if (Instance == null)
-        {
-            Debug.LogError("HeldItemSlot: Intento de equipar herramienta, pero HeldItemSlot.Instance es nulo. Verifique la persistencia del Player.");
-            return;
-        }
-
-        // Ejecutar el método de instancia para el trabajo real.
-        Instance.EquipToolPrefab(toolPrefab);
-    }
-
-    /// <summary>
-    /// 🚨 CRÍTICO: Método de INSTANCIA llamado por PlayerInteraction.cs 🚨
-    /// Este método es el que resuelve el error EquipToolPrefab.
-    /// </summary>
-    public void EquipToolPrefab(GameObject toolPrefab)
+    public void EquipToolPrefab(GameObject toolPrefabToInstantiate)
     {
         DestroyCurrentTool();
 
-        if (toolPrefab == null || holdPoint == null)
+        // Instanciar en handSocket.
+        currentToolObject = Instantiate(toolPrefabToInstantiate, handSocket);
+        currentToolObject.transform.localPosition = Vector3.zero;
+        currentToolObject.transform.localRotation = Quaternion.identity;
+
+        // Obtener el descriptor.
+        currentToolDescriptor = currentToolObject.GetComponent<ToolDescriptor>() ?? currentToolObject.GetComponentInParent<ToolDescriptor>();
+
+        if (currentToolDescriptor == null)
         {
-            Debug.LogError("No se puede equipar: Prefab o punto de agarre es nulo.");
-            return;
+            Debug.LogError($"HeldItemSlot: El objeto instanciado ({toolPrefabToInstantiate.name}) no tiene ToolDescriptor.");
         }
-
-        // 1. Instanciar directamente como hijo del holdPoint (Resuelve el error de Prefab Asset)
-        GameObject newToolInstance = Instantiate(toolPrefab, holdPoint);
-
-        // 2. Alinear al origen del hueso
-        newToolInstance.transform.localPosition = Vector3.zero;
-        newToolInstance.transform.localRotation = Quaternion.identity;
-
-        ToolDescriptor toolDescriptor = newToolInstance.GetComponent<ToolDescriptor>() ?? newToolInstance.GetComponentInParent<ToolDescriptor>();
-
-        if (toolDescriptor == null)
-        {
-            Debug.LogError($"'{toolPrefab.name}' no tiene ToolDescriptor. Destruyendo instancia.");
-            Destroy(newToolInstance);
-            return;
-        }
-
-        // 3. Usar el método de equipamiento (solo para physics/colliders).
-        Equip(toolDescriptor);
-
-        // 4. Notificación y UI
-        ShowNotification($"Herramienta equipada: {toolDescriptor.ToolId}");
-        uiController?.ToggleToolsPanel();
     }
 
     /// <summary>
-    /// Destruye la instancia de la herramienta actualmente equipada.
+    /// 🆕 MÉTODO CORREGIDO: Equipa la herramienta asociada al índice (1 o 2).
+    /// </summary>
+    public void EquipQuickTool(int index)
+    {
+        ToolDescriptor targetDescriptor = null;
+
+        if (index == 1)
+        {
+            targetDescriptor = tool1DescriptorPrefab;
+        }
+        else if (index == 2)
+        {
+            targetDescriptor = tool2DescriptorPrefab;
+        }
+
+        if (targetDescriptor == null)
+        {
+            Debug.LogWarning($"HeldItemSlot: El Prefab para el índice {index} está sin asignar o el índice es inválido.");
+            return;
+        }
+
+        // Si ya tengo esa herramienta equipada, la desequipo (función de toggle)
+        if (currentToolDescriptor != null && currentToolDescriptor.ToolId == targetDescriptor.ToolId)
+        {
+            DestroyCurrentTool();
+            return;
+        }
+
+        // Equipamos la herramienta instanciando su GameObject (el Prefab).
+        EquipToolPrefab(targetDescriptor.gameObject);
+        Debug.Log($"HeldItemSlot: Herramienta {index} equipada: {targetDescriptor.name}");
+    }
+
+
+    /// <summary>
+    /// Método para destruir la herramienta actual (Soltar o Cambiar).
     /// </summary>
     public void DestroyCurrentTool()
     {
-        var toolToDestroy = Unequip();
-
-        if (toolToDestroy != null)
+        if (currentToolObject != null)
         {
-            Destroy(toolToDestroy.gameObject);
-            ShowNotification("Herramienta destruida.");
+            // Nota: Usar DestroyImmediate si estás en modo edición, pero para runtime 'Destroy' es correcto.
+            Destroy(currentToolObject);
+            currentToolObject = null;
+            currentToolDescriptor = null;
         }
-    }
-
-    private void ShowNotification(string message)
-    {
-        if (notificationText != null)
-        {
-            notificationText.text = message;
-            notificationTimer = NotificationDuration;
-        }
-    }
-
-
-    // =========================================================================
-    // MÉTODOS DE GESTIÓN DE TRANSFORM/PHYSICS
-    // =========================================================================
-
-    public void Equip(ToolDescriptor tool)
-    {
-        CurrentTool = tool;
-
-        if (tool.TryGetComponent<Rigidbody>(out var rb))
-        {
-            rb.isKinematic = true;
-            rb.linearVelocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
-        }
-        SetAllCollidersTrigger(tool.gameObject, true);
-    }
-
-    public ToolDescriptor Unequip()
-    {
-        var tool = CurrentTool;
-        if (tool == null) return null;
-
-        if (tool.TryGetComponent<Rigidbody>(out var rb))
-            rb.isKinematic = false;
-
-        SetAllCollidersTrigger(tool.gameObject, false);
-
-        // Quitar al padre (para soltar)
-        tool.transform.SetParent(null, true);
-        CurrentTool = null;
-        return tool;
-    }
-
-    private void SetAllCollidersTrigger(GameObject go, bool isTrigger)
-    {
-        var colliders = go.GetComponentsInChildren<Collider>(true);
-        foreach (var c in colliders) c.isTrigger = isTrigger;
     }
 }

@@ -933,9 +933,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: f14962bf8c2a50544b362f1694bf4149, type: 3}
       insertIndex: 0
       addedObject: {fileID: 5634907409343433915}
-    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: f14962bf8c2a50544b362f1694bf4149, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 362320277231418071}
     - targetCorrespondingSourceObject: {fileID: -6932637613890145018, guid: f14962bf8c2a50544b362f1694bf4149, type: 3}
       insertIndex: -1
       addedObject: {fileID: 451970743407948051}
@@ -979,6 +976,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: f14962bf8c2a50544b362f1694bf4149, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1139063850590625810}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: f14962bf8c2a50544b362f1694bf4149, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -7026355675461337054}
   m_SourcePrefab: {fileID: 100100000, guid: f14962bf8c2a50544b362f1694bf4149, type: 3}
 --- !u!137 &137216327962948452 stripped
 SkinnedMeshRenderer:
@@ -1301,6 +1301,8 @@ MonoBehaviour:
   pickupKey: 113
   attackKey: 102
   scorePanelToggleKey: 271
+  tool1Key: 49
+  tool2Key: 50
   trashDestructionToolId: GarbageBagTool
   interactionRange: 3
   interactableLayer:
@@ -1386,6 +1388,21 @@ MonoBehaviour:
   selectionPanelUI: {fileID: 0}
   slidersManager: {fileID: 0}
   mouseLook: {fileID: 0}
+--- !u!114 &-7026355675461337054
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6422002185381309941}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b67190b778a72a74e91e418eb0fd0264, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cleaningToolPrefab: {fileID: 0}
+  cleanToolPrefab: {fileID: 0}
+  heldItemSocket: {fileID: 0}
 --- !u!4 &6512698727919198498 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1134662855679897990, guid: f14962bf8c2a50544b362f1694bf4149, type: 3}
@@ -1799,15 +1816,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3334fb2a4773d2a4c9d26f0344bc3799, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  notificationText: {fileID: 1144428245932630314, guid: c7919890a849b2547ad7b1d0c991f2dd, type: 3}
+  tool1DescriptorPrefab: {fileID: 0}
+  tool2DescriptorPrefab: {fileID: 0}
+  handSocket: {fileID: 0}
 --- !u!137 &2202509011865141072 stripped
 SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: 8963497676660213602, guid: a10f81b6957ffb049bef4a7217b81e1a, type: 3}
-  m_PrefabInstance: {fileID: 7130429541021808690}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &2917754619923970656 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: -3852356975776185774, guid: a10f81b6957ffb049bef4a7217b81e1a, type: 3}
   m_PrefabInstance: {fileID: 7130429541021808690}
   m_PrefabAsset: {fileID: 0}
 --- !u!137 &4142104475193737688 stripped
@@ -1829,70 +1843,4 @@ Transform:
 SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: 677445045161249593, guid: a10f81b6957ffb049bef4a7217b81e1a, type: 3}
   m_PrefabInstance: {fileID: 7130429541021808690}
-  m_PrefabAsset: {fileID: 0}
---- !u!1001 &7476955585747387739
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 5932463756027049807}
-    m_Modifications:
-    - target: {fileID: 1360870840794939657, guid: 7b83488c750b98a469041a4f138e1f21, type: 3}
-      propertyPath: m_Name
-      value: ToolItemaManager
-      objectReference: {fileID: 0}
-    - target: {fileID: 5058883026119516105, guid: 7b83488c750b98a469041a4f138e1f21, type: 3}
-      propertyPath: toolSlot
-      value: 
-      objectReference: {fileID: 2917754619923970656}
-    - target: {fileID: 7116887127724670860, guid: 7b83488c750b98a469041a4f138e1f21, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 45.330704
-      objectReference: {fileID: 0}
-    - target: {fileID: 7116887127724670860, guid: 7b83488c750b98a469041a4f138e1f21, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 18.415047
-      objectReference: {fileID: 0}
-    - target: {fileID: 7116887127724670860, guid: 7b83488c750b98a469041a4f138e1f21, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -3.3753548
-      objectReference: {fileID: 0}
-    - target: {fileID: 7116887127724670860, guid: 7b83488c750b98a469041a4f138e1f21, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7116887127724670860, guid: 7b83488c750b98a469041a4f138e1f21, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7116887127724670860, guid: 7b83488c750b98a469041a4f138e1f21, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7116887127724670860, guid: 7b83488c750b98a469041a4f138e1f21, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7116887127724670860, guid: 7b83488c750b98a469041a4f138e1f21, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7116887127724670860, guid: 7b83488c750b98a469041a4f138e1f21, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7116887127724670860, guid: 7b83488c750b98a469041a4f138e1f21, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 7b83488c750b98a469041a4f138e1f21, type: 3}
---- !u!4 &362320277231418071 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7116887127724670860, guid: 7b83488c750b98a469041a4f138e1f21, type: 3}
-  m_PrefabInstance: {fileID: 7476955585747387739}
   m_PrefabAsset: {fileID: 0}
