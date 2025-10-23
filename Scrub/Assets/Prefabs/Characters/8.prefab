@@ -1779,6 +1779,7 @@ GameObject:
   - component: {fileID: 3747953244354875878}
   - component: {fileID: 4684878496340677307}
   - component: {fileID: 1330264600918097101}
+  - component: {fileID: 7829040597938598320}
   m_Layer: 8
   m_Name: 8
   m_TagString: Player
@@ -2033,8 +2034,6 @@ MonoBehaviour:
   pickupKey: 113
   attackKey: 102
   scorePanelToggleKey: 271
-  tool1Key: 49
-  tool2Key: 50
   trashDestructionToolId: GarbageBagTool
   interactionRange: 3
   interactableLayer:
@@ -2127,7 +2126,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1532228888865751196}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b67190b778a72a74e91e418eb0fd0264, type: 3}
   m_Name: 
@@ -2135,6 +2134,20 @@ MonoBehaviour:
   cleaningToolPrefab: {fileID: 0}
   cleanToolPrefab: {fileID: 0}
   heldItemSocket: {fileID: 0}
+--- !u!114 &7829040597938598320
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1532228888865751196}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3334fb2a4773d2a4c9d26f0344bc3799, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tool1Prefab: {fileID: 4014498514318459743, guid: 610b7c880ca564a44bf9c129c0e44a14, type: 3}
+  tool2Prefab: {fileID: 1927486437793573597, guid: e0441237b3d2dce498aa908bba2d800d, type: 3}
 --- !u!1 &1535028625442358750
 GameObject:
   m_ObjectHideFlags: 0
@@ -7010,9 +7023,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3334fb2a4773d2a4c9d26f0344bc3799, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tool1DescriptorPrefab: {fileID: 0}
-  tool2DescriptorPrefab: {fileID: 0}
-  handSocket: {fileID: 0}
+  tool1Prefab: {fileID: 0}
+  tool2Prefab: {fileID: 0}
 --- !u!1 &6402281444613818347
 GameObject:
   m_ObjectHideFlags: 0

@@ -46,6 +46,7 @@ public class UIPauseController : MonoBehaviour
     public TMP_Text accumulationText;
     public Image accumulationFillImage;
 
+    public bool IsPaused { get; private set; }
 
     // =========================================================================
 
@@ -308,7 +309,24 @@ public class UIPauseController : MonoBehaviour
             }
         }
     }
+    public void SetIsPaused(bool isPaused)
+    {
+        if (isPaused)
+        {
+            // Lógica para pausar el tiempo y mostrar el UI
+            Time.timeScale = 0f;
+            // ...
+        }
+        else
+        {
+            // Lógica para reanudar el tiempo y ocultar el UI
+            Time.timeScale = 1f;
+            // ...
+        }
 
+        // 🚨 Actualiza la propiedad:
+        IsPaused = isPaused;
+    }
     private void UpdateSentimentalUI(int currentBalance, int currentAccumulation)
     {
         if (taskManager == null) return;
