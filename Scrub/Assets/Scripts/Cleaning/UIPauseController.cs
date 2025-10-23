@@ -301,6 +301,8 @@ public class UIPauseController : MonoBehaviour
 
             // Pausar el juego y mostrar cursor
             Time.timeScale = 0f;
+            // 🚨 CRÍTICO: 'true' activa el menú, lo que llama a mouseLook.SetControlsActive(false)
+            // 🛑 Esto DESACTIVA el movimiento de la cámara.
             HandleCursorAndCamera(true);
             Debug.Log("Panel Tools abierto con tecla Enter/Tab.");
         }
