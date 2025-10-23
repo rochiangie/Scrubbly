@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 3230742903513903843}
   - component: {fileID: 6091743682320490486}
   - component: {fileID: 7684014309128503487}
+  - component: {fileID: -3455031431628089503}
   m_Layer: 7
   m_Name: EscobaNuevaQSY
   m_TagString: Tool
@@ -168,3 +169,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &-3455031431628089503
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7601699731641134690}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e36a02beb55031848a693f7d930edb16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  toolID: Escoba
+  maxUses: 200
+  damagePerUse: 1
