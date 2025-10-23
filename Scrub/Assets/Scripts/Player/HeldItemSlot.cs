@@ -2,56 +2,77 @@ using UnityEngine;
 
 public class HeldItemSlot : MonoBehaviour
 {
-    [SerializeField] private Transform holdPoint;
-    public ToolDescriptor CurrentTool { get; private set; }
+    // --- REFERENCIAS PÚBLICAS (YA NO SE USAN PARA EQUIPAMIENTO RÁPIDO) ---
+    // 🚨 Puedes eliminar tool1Prefab y tool2Prefab si no los necesitas para nada más.
+    [Header("Tool Prefabs para Equipamiento Rápido")]
+    public GameObject tool1Prefab; // Dejamos por si los quieres usar para el spawn
+    public GameObject tool2Prefab; // Dejamos por si los quieres usar para el spawn
 
-    public bool HasTool => CurrentTool != null;
+    // 🚨 YA NO NECESITAMOS ESTA VARIABLE AQUÍ, SE PASA POR PARÁMETRO
+    // public Transform handSocket; 
 
-    public void Equip(ToolDescriptor tool)
+    // --- DECLARACIONES PRIVADAS CRÍTICAS ---
+    private GameObject currentToolObject;
+    private ToolDescriptor currentToolDescriptor;
+    private Transform currentHandSocket; // Mantiene la referencia al socket activo
+
+    // --- PROPIEDADES PÚBLICAS (Para que PlayerInteraction acceda) ---
+    public ToolDescriptor CurrentTool => currentToolDescriptor;
+    public bool HasTool => currentToolObject != null;
+
+    // ... (Start() permanece vacío o con tu lógica de inicialización) ...
+
+    // =========================================================================
+    // EQUIPAMIENTO: Recibe el prefab a instanciar Y el punto donde instanciar.
+    // =========================================================================
+
+    /// <summary>
+    /// Recibe el prefab a instanciar Y el punto de la mano (handSocket).
+    /// </summary>
+    public void EquipToolPrefab(GameObject toolPrefabToInstantiate, Transform targetHandSocket)
     {
-        CurrentTool = tool;
+        DestroyCurrentTool();
 
-        if (tool.TryGetComponent<Rigidbody>(out var rb))
+        currentHandSocket = targetHandSocket;
+
+        currentToolObject = Instantiate(toolPrefabToInstantiate, currentHandSocket);
+        currentToolObject.transform.localPosition = Vector3.zero;
+        currentToolObject.transform.localRotation = Quaternion.identity;
+
+        currentToolDescriptor = currentToolObject.GetComponent<ToolDescriptor>() ?? currentToolObject.GetComponentInParent<ToolDescriptor>();
+
+        if (currentToolDescriptor == null)
         {
-            rb.isKinematic = true;
-            rb.linearVelocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
+            Debug.LogError($"HeldItemSlot: El objeto instanciado ({toolPrefabToInstantiate.name}) NO tiene ToolDescriptor. El sistema de interacción fallará.");
         }
-        SetAllCollidersTrigger(tool.gameObject, true);
-
-        var t = tool.transform;
-
-        // 👉 Mantener escala mundial al re-parentar
-        t.SetParent(holdPoint, true); // worldPositionStays = true (conserva escala/rot/pos en mundo)
-
-        // Alinear a la mano sin tocar la escala
-        t.localPosition = Vector3.zero;
-        t.localRotation = Quaternion.identity;
-
-        // ❌ No tocar la escala:
-        // t.localScale = Vector3.one;  // <--- QUITAR ESTA LÍNEA
     }
 
-    public ToolDescriptor Unequip()
+    // 🚨 ELIMINAMOS COMPLETAMENTE EquipQuickTool() 🚨
+
+    // =========================================================================
+    // DESTRUCCIÓN (Corregida)
+    // =========================================================================
+
+    // EN HeldItemSlot.cs
+
+    // EN HeldItemSlot.cs
+
+    // ... (Resto de tu código) ...
+
+
+    public void DestroyCurrentTool()
     {
-        var tool = CurrentTool;
-        if (tool == null) return null;
+        if (currentToolObject != null)
+        {
+            // 🚨 Destrucción de la Tool en la escena
+            Destroy(currentToolObject);
+        }
 
-        if (tool.TryGetComponent<Rigidbody>(out var rb))
-            rb.isKinematic = false;
+        // 🚨 Limpiamos TODAS las referencias
+        currentToolObject = null;
+        currentToolDescriptor = null;
+        // currentHandSocket = null; // Si usas esta variable, límpiala también
 
-        SetAllCollidersTrigger(tool.gameObject, false);
-
-        // Mantener escala al soltar
-        tool.transform.SetParent(null, true); // true = conserva escala mundial
-        CurrentTool = null;
-        return tool;
-    }
-
-
-    private void SetAllCollidersTrigger(GameObject go, bool isTrigger)
-    {
-        var colliders = go.GetComponentsInChildren<Collider>(true);
-        foreach (var c in colliders) c.isTrigger = isTrigger;
+        Debug.Log("HeldItemSlot: Herramienta destruida y referencias limpiadas.");
     }
 }

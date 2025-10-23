@@ -1,46 +1,44 @@
 ﻿using UnityEngine;
+using System; // Necesario para Action
 
 // Asumo que tienes un script estático llamado GameEvents
 // que contiene el evento OnMemorieDecided.
-// Si no lo tienes, el siguiente paso será crearlo.
 // Esto asume que el objeto tiene el Tag "Memorie"
 public class MemorieObject : MonoBehaviour
 {
     [Header("Valor Sentimental")]
     public int sentimentalValue = 20;
 
-    // Método llamado por PlayerInteraction cuando se recoge con 'E' (o tu tecla de PickUp)
-    public void StartDecisionProcess()
+    // Método llamado por PlayerInteraction cuando se recoge con 'Q' o Click
+    public void StartDecisionProcess(UIPauseController uiController)
     {
         // 1. Delegar la interfaz al Manager de UI
-        if (MemorieDecisionUI.Instance != null)
+        if (uiController != null)
         {
             // Oculta el objeto temporalmente mientras se toma la decisión
             gameObject.SetActive(false);
 
-            // Pasamos la información del objeto y un método de vuelta (callback)
-            MemorieDecisionUI.Instance.ShowDecisionPanel(
+            // Pasamos la información del objeto y el método de vuelta (callback)
+            uiController.ShowToolsPanelAtWorldPosition(
                 gameObject.name,
                 sentimentalValue,
-                DecideAndNotify // Este es el método que se llamará al pulsar el botón
+                DecideAndNotify // Este es el método que se llamará al pulsar Y/N
             );
-
-            // 🛑 Importante: Indicamos al sistema que la UI de decisión está activa.
-            TaskManager.SetDecisionActive(true);
         }
         else
         {
-            // NO DESTRUIR AQUÍ. Solo loguear el error y dejar que el objeto se quede.
-            Debug.LogError("¡MemorieDecisionUI no encontrado! No se puede iniciar la decisión. " +
-                           "Verifica que el script esté en la escena y configurado como Singleton.");
+            Debug.LogError("¡UIPauseController no encontrado! No se puede iniciar la decisión. ");
         }
     }
 
-    // Este método es el CALLBACK, llamado por MemorieDecisionUI.cs cuando se pulsa un botón
-    private void DecideAndNotify(bool isKept)
+    /// <summary>
+    /// Este método es el CALLBACK, llamado por UIPauseController.cs cuando se pulsa Y/N.
+    /// </summary>
+    /// <param name="isKept">True si se guarda (Y), False si se tira/descarta (N).</param>
+    // 🚨 CORRECCIÓN CRÍTICA: Se cambia a PUBLIC para permitir el acceso desde PlayerInteraction.cs 🚨
+    public void DecideAndNotify(bool isKept)
     {
-        // 1. Notificar al sistema de Puntuación (SentimentalScoreManager) a través de eventos
-        // 💡 ESTE EVENTO REEMPLAZA LA LLAMADA A SentimentalScoreManager.Instance.UpdateScore()
+        // 1. Notificar al sistema de Puntuación
         GameEvents.MemorieDecided(isKept, sentimentalValue);
 
         if (isKept)
@@ -55,7 +53,7 @@ public class MemorieObject : MonoBehaviour
         // 2. Eliminar el objeto del juego
         Destroy(gameObject);
 
-        // 3. Importante: Indicamos que la UI de decisión se ha cerrado.
-        TaskManager.SetDecisionActive(false);
+        // 3. Importante: Ya no necesitamos llamar a TaskManager.SetDecisionActive(false) aquí, 
+        // ya que el UIPauseController lo hace inmediatamente después de llamar a este callback.
     }
 }
