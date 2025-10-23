@@ -244,6 +244,9 @@ public class UIPauseController : MonoBehaviour
         Debug.Log("Panel de decisión oculto. Juego reanudado.");
     }
 
+    // EN EL SCRIPT UIPauseController.cs
+    // ... (código anterior)
+
     // =========================================================================
     // LÓGICA DE PAUSA Y TOOLS
     // =========================================================================
@@ -265,6 +268,7 @@ public class UIPauseController : MonoBehaviour
             }
 
             Time.timeScale = 0f;
+            // 🛑 En pausa por ESC: Bloquea Controles/Cámara y muestra Cursor
             HandleCursorAndCamera(true);
         }
         else
@@ -275,6 +279,7 @@ public class UIPauseController : MonoBehaviour
             }
 
             Time.timeScale = 1f;
+            // 🛑 Reanudar: Activa Controles/Cámara y esconde Cursor
             HandleCursorAndCamera(false);
         }
     }
@@ -282,9 +287,7 @@ public class UIPauseController : MonoBehaviour
     public void ToggleToolsPanel()
     {
         // Si el juego está pausado (por ESC) o en decisión, no abrimos/cerramos tools
-        if (Time.timeScale == 0f && !isToolMenuOpen) return;
-        if (TaskManager.IsDecisionActive) return;
-        if (isPaused) return;
+        if (isPaused || TaskManager.IsDecisionActive) return;
 
         if (isToolMenuOpen)
         {
@@ -299,10 +302,18 @@ public class UIPauseController : MonoBehaviour
                 toolMenuPanel.SetActive(true);
             }
 
-            // Pausar el juego y mostrar cursor
-            Time.timeScale = 0f;
-            HandleCursorAndCamera(true);
-            Debug.Log("Panel Tools abierto con tecla Enter/Tab.");
+            // 🛑 BLOQUEO DE CÁMARA E INDEPENDENCIA DE TIEMPO 🛑
+            // No pausamos el tiempo, solo bloqueamos la cámara y mostramos el cursor.
+            if (mouseLook != null)
+            {
+                mouseLook.SetLockState(true); // 🚨 Bloquea explícitamente la cámara 🚨
+            }
+
+            // Muestra el cursor para interactuar con la UI
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+
+            Debug.Log("Panel Tools abierto con tecla Enter/Tab. Cámara bloqueada.");
         }
     }
 
@@ -317,41 +328,36 @@ public class UIPauseController : MonoBehaviour
             toolMenuPanel.SetActive(false); // Ocultar el panel
             isToolMenuOpen = false;
 
-            // Reanudar el juego
-            Time.timeScale = 1f;
-            HandleCursorAndCamera(false);
+            // 🛑 DESBLOQUEO DE CÁMARA 🛑
+            // Solo desbloqueamos la cámara y escondemos el cursor.
+            if (mouseLook != null)
+            {
+                mouseLook.SetLockState(false); // 🚨 Desbloquea explícitamente la cámara 🚨
+            }
+
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
 
             Debug.Log("Panel Tools cerrado.");
         }
     }
-
-    /// <summary>
-    /// Establece el estado de pausa, controlando el tiempo y la visibilidad del panel.
-    /// </summary>
     public void SetIsPaused(bool isPaused)
     {
-        if (this.isPaused == isPaused) return;
-
-        this.isPaused = isPaused;
-        IsPaused = isPaused; // Actualiza la propiedad pública
-
-        if (isPaused)
+        // Solo alternamos la pausa si el estado deseado es diferente al actual.
+        // Esto previene un loop y asegura que TogglePause() haga el trabajo.
+        if (this.isPaused != isPaused)
         {
-            Time.timeScale = 0f;
-        }
-        else
-        {
-            Time.timeScale = 1f;
+            TogglePause();
         }
     }
-
     /// <summary>
-    /// Gestiona el bloqueo del cursor y la activación de los controles.
+    /// Gestiona el bloqueo del cursor y la activación de los controles (USADO SOLO PARA PAUSA/DECISION).
     /// </summary>
     private void HandleCursorAndCamera(bool activateMenu)
     {
         if (mouseLook != null)
         {
+            // En este caso, SetControlsActive desactiva la lógica de Input completa
             mouseLook.SetControlsActive(!activateMenu);
         }
 
@@ -367,6 +373,7 @@ public class UIPauseController : MonoBehaviour
         }
     }
 
+    // ... (resto del código)
 
     // =========================================================================
     // LÓGICA DE ACTUALIZACIÓN DE UI (STATS)

@@ -3801,7 +3801,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3599570790234534221}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.9409145, y: 9.184282, z: 12.853912}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -4036,7 +4036,7 @@ MonoBehaviour:
   attackKey: 102
   scorePanelToggleKey: 271
   trashDestructionToolId: Escoba
-  interactionRange: 3
+  interactionRange: 5
   interactableLayer:
     serializedVersion: 2
     m_Bits: 137
@@ -4091,6 +4091,7 @@ MonoBehaviour:
   downLimit: -85
   headLookTarget: {fileID: 5325467271139161213}
   _controlsActive: 1
+  _isCameraLocked: 0
 --- !u!114 &8808740468718605473
 MonoBehaviour:
   m_ObjectHideFlags: 0

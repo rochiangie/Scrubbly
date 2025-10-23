@@ -14,9 +14,13 @@ public class MouseLookController : MonoBehaviour
     [Tooltip("El objeto que recibirá la rotación vertical (Generalmente la cámara).")]
     public Transform headLookTarget;
 
+    // === Control de Estado ===
     [Header("Control de Estado")]
-    [Tooltip("La variable privada que almacena si los controles están activos.")]
+    [Tooltip("La variable privada que almacena si los controles de juego (movimiento) están activos.")]
     [SerializeField] private bool _controlsActive = true;
+
+    [Tooltip("La variable que bloquea la cámara por UI (e.g., panel de Tools).")]
+    [SerializeField] private bool _isCameraLocked = false; // 🚨 NUEVA BANDERA 🚨
 
     // 📢 PROPIEDAD PÚBLICA: Permite que PlayerMovement y otros scripts lean el estado sin errores.
     public bool ControlsActive
@@ -24,7 +28,11 @@ public class MouseLookController : MonoBehaviour
         get { return _controlsActive; }
     }
 
-    // Quitamos la variable 'toggleControlKey' para evitar conflictos con PauseManager.
+    // 📢 NUEVA PROPIEDAD PÚBLICA para el estado de bloqueo de la cámara.
+    public bool IsCameraLocked
+    {
+        get { return _isCameraLocked; }
+    }
 
     // === Variables privadas ===
     private float rotationX = 0f;
@@ -40,11 +48,10 @@ public class MouseLookController : MonoBehaviour
 
     void Update()
     {
-        // 🛑 Lógica de Escape ELIMINADA: PauseManager se encarga de llamar a SetControlsActive.
-
-        // CRÍTICO: Salir si el control está inactivo (menú)
-        // Esto bloquea la rotación de la cámara cuando el menú de pausa está activo.
-        if (!_controlsActive) return;
+        // 🛑 LÓGICA DE BLOQUEO CRÍTICO 🛑
+        // Salir si el control está inactivo (menú de pausa general)
+        // O si la cámara está bloqueada (panel de Tools)
+        if (!_controlsActive || _isCameraLocked) return; // 🚨 COMPROBACIÓN AÑADIDA 🚨
 
         // 1. Asignación Dinámica
         if (headLookTarget == null)
@@ -70,8 +77,8 @@ public class MouseLookController : MonoBehaviour
     // ================== Funciones de Comunicación y Control ==================
 
     /// <summary>
-    /// Activa o desactiva el control de cámara/cabeza del jugador y ajusta el cursor.
-    /// Este método es llamado por el UIPauseController.
+    /// Activa o desactiva el control de la cámara/cabeza (Usado por UIPauseController para PAUSA/DECISIÓN).
+    /// También gestiona el cursor, asumiendo un estado de pausa total.
     /// </summary>
     public void SetControlsActive(bool active)
     {
@@ -79,7 +86,7 @@ public class MouseLookController : MonoBehaviour
 
         if (active)
         {
-            // MODO JUEGO: Reactivar el control y bloquear el cursor
+            // MODO JUEGO (General): Reactivar el control y bloquear el cursor
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
 
@@ -91,11 +98,37 @@ public class MouseLookController : MonoBehaviour
         else
         {
             // MODO PAUSA/MENÚ: Desactivar el control y liberar el cursor
-            // 📢 Esto permite el clickeo en la UI
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
         }
     }
+
+    /// <summary>
+    /// 🚨 NUEVA FUNCIÓN 🚨
+    /// Bloquea o desbloquea la rotación de la cámara, usado específicamente para Menús Flotantes (Tools)
+    /// donde el juego sigue corriendo pero la cámara debe estar fija.
+    /// </summary>
+    public void SetLockState(bool isLocked)
+    {
+        _isCameraLocked = isLocked;
+
+        // El MouseLookController también puede encargarse de la visibilidad del cursor para este caso
+        if (isLocked)
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
+        else
+        {
+            // Solo si el control de juego general está ACTIVO, volvemos a bloquear el cursor.
+            if (_controlsActive)
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+            }
+        }
+    }
+
 
     /// <summary>
     /// Función llamada por HeadLookRegistrar.cs para asignar la referencia de la cabeza.

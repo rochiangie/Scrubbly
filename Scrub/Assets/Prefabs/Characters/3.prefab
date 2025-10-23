@@ -1788,7 +1788,7 @@ MonoBehaviour:
   attackKey: 102
   scorePanelToggleKey: 271
   trashDestructionToolId: Escoba
-  interactionRange: 3
+  interactionRange: 5
   interactableLayer:
     serializedVersion: 2
     m_Bits: 137
@@ -1843,6 +1843,7 @@ MonoBehaviour:
   downLimit: -85
   headLookTarget: {fileID: 5838950608366082394}
   _controlsActive: 1
+  _isCameraLocked: 0
 --- !u!114 &671873317123131385
 MonoBehaviour:
   m_ObjectHideFlags: 0
