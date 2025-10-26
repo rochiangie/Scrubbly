@@ -12,6 +12,7 @@ public class TrashUIManager : MonoBehaviour
     [Header("Componentes UI")]
     [SerializeField] private TMP_Text trashCountText;
     [SerializeField] private Slider trashSlider;
+    [SerializeField] private TMP_Text timerText; // Texto para el temporizador (debe ser asignado en el Manager y aquí)
 
     [Header("Retardo")]
     [Tooltip("Tiempo en segundos que el panel permanece visible al completar la tarea.")]
@@ -21,8 +22,8 @@ public class TrashUIManager : MonoBehaviour
 
     void Awake()
     {
-        // El Awake corre porque el script está en un objeto activo (Canvas).
-        // Asegura que el Panel referenciado esté inactivo al inicio.
+        // Se ejecuta porque este script está en un objeto activo.
+        // Asegura que el Panel referenciado (el hijo) esté inactivo al inicio.
         if (uiPanelGameObject != null)
         {
             uiPanelGameObject.SetActive(false);
@@ -41,21 +42,23 @@ public class TrashUIManager : MonoBehaviour
 
     void OnEnable()
     {
-        // 1. Se suscribe al evento del manager.
+        // 1. Suscripción a eventos.
         CleaningManager.OnTrashCountUpdated += UpdateTrashUI;
+        CleaningManager.OnTimeUpdated += UpdateTimerUI;
 
-        // 2. 📢 ACTIVACIÓN GARANTIZADA: Forzamos al Manager a enviar el estado inicial.
+        // 2. 📢 ACTIVACIÓN GARANTIZADA: Forzamos al Manager a enviar el estado inicial
+        // Esto asegura que la UI se actualice inmediatamente con 0 / Total.
         if (manager != null)
         {
-            // Nota: Este método debe existir en CleaningManager.cs para enviar el estado.
             manager.SendCurrentState();
         }
     }
 
     void OnDisable()
     {
-        // 3. Limpieza: Desuscribirse y cancelar invocaciones.
+        // 3. Limpieza y desuscripción.
         CleaningManager.OnTrashCountUpdated -= UpdateTrashUI;
+        CleaningManager.OnTimeUpdated -= UpdateTimerUI;
         CancelInvoke(nameof(HidePanel));
     }
 
@@ -74,18 +77,17 @@ public class TrashUIManager : MonoBehaviour
 
         if (totalCount > 0 && cleanedCount < totalCount)
         {
-            // Si hay basura pendiente, asegúrate de que el panel esté ACTIVO.
+            // Si hay basura pendiente, asegura la visibilidad.
             if (uiPanelGameObject != null && !uiPanelGameObject.activeSelf)
             {
                 uiPanelGameObject.SetActive(true);
             }
 
-            // Cancela cualquier ocultación pendiente
             CancelInvoke(nameof(HidePanel));
         }
         else if (cleanedCount >= totalCount)
         {
-            // Tarea completada: programa la ocultación después del retardo.
+            // Tarea completada: programa la ocultación.
             if (uiPanelGameObject != null && uiPanelGameObject.activeSelf)
             {
                 if (!IsInvoking(nameof(HidePanel)))
@@ -96,7 +98,7 @@ public class TrashUIManager : MonoBehaviour
             }
         }
 
-        // 2. Actualiza el Texto
+        // 2. Actualiza el Texto (Basura)
         if (trashCountText != null)
         {
             int remaining = Mathf.Max(0, totalCount - cleanedCount);
@@ -111,6 +113,29 @@ public class TrashUIManager : MonoBehaviour
                 trashSlider.maxValue = totalCount;
             }
             trashSlider.value = cleanedCount;
+        }
+    }
+
+    // 📢 NUEVO: Función para actualizar el texto del tiempo
+    private void UpdateTimerUI(float timeRemaining)
+    {
+        if (timerText != null)
+        {
+            // Formatea el tiempo a minutos y segundos
+            int minutes = Mathf.FloorToInt(timeRemaining / 60f);
+            int seconds = Mathf.FloorToInt(timeRemaining % 60f);
+
+            timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+
+            // Opcional: Cambia de color cuando el tiempo es bajo
+            if (timeRemaining <= 30f)
+            {
+                timerText.color = Color.red;
+            }
+            else
+            {
+                timerText.color = Color.white; // Vuelve a blanco si sube el tiempo
+            }
         }
     }
 }

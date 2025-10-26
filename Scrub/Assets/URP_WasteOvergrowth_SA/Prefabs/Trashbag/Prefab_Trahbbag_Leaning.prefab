@@ -76,7 +76,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
-  scaleFactorOnPickup: 0.5
+  scaleFactorOnPickup: 1
 --- !u!65 &8510201854066240019
 BoxCollider:
   m_ObjectHideFlags: 0

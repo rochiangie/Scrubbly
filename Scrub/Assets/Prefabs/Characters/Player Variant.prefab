@@ -39,6 +39,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -7644809464571998662, guid: 4b714ebab645ff146958795b1d039263, type: 3}
+      propertyPath: rb
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 236794979739545704, guid: 4b714ebab645ff146958795b1d039263, type: 3}
       propertyPath: m_Layer
       value: 8
@@ -527,6 +531,18 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 8
       objectReference: {fileID: 0}
+    - target: {fileID: 5253434761277588105, guid: 4b714ebab645ff146958795b1d039263, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5253434761277588105, guid: 4b714ebab645ff146958795b1d039263, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5253434761277588105, guid: 4b714ebab645ff146958795b1d039263, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5290352816632630829, guid: 4b714ebab645ff146958795b1d039263, type: 3}
       propertyPath: m_Layer
       value: 8
@@ -887,7 +903,7 @@ PrefabInstance:
       addedObject: {fileID: 5049892755463968380}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 4323772801485002626, guid: 4b714ebab645ff146958795b1d039263, type: 3}
-      insertIndex: 5
+      insertIndex: 4
       addedObject: {fileID: 7072186197560003959}
     - targetCorrespondingSourceObject: {fileID: 4323772801485002626, guid: 4b714ebab645ff146958795b1d039263, type: 3}
       insertIndex: -1
@@ -976,11 +992,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae08a95f77bab664091e43ee9bac22dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  interactRange: 3
-  rayOrigin: {fileID: 0}
   holdPoint: {fileID: 7353733565518420197}
-  verticalRayOffset: -0.25
   animCtrl: {fileID: 0}
+  mouseInteractionDistance: 2
+  clickCleaningRadius: 0.5
+  dirtLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  clickCleaningEffect: {fileID: 0}
+  generalInteractKey: 101
+  pickupKey: 113
+  attackKey: 102
+  scorePanelToggleKey: 9
+  trashDestructionToolId: Escoba
+  interactionRange: 3
+  interactableLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  memorieTag: Memorie
+  trashTag: Basura
 --- !u!54 &3143547654296592566
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1021,7 +1051,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 3
-  rotationSpeed: 180
+  runSpeed: 10
+  runKey: 304
+  jumpForce: 6
+  jumpKey: 32
+  animator: {fileID: 0}
   groundCheck: {fileID: 0}
   groundRadius: 0.25
   groundMask:
@@ -1060,7 +1094,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3334fb2a4773d2a4c9d26f0344bc3799, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  holdPoint: {fileID: 7353733565518420197}
+  tool1Prefab: {fileID: 0}
+  tool2Prefab: {fileID: 0}
 --- !u!114 &1253362044702640701
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1103,34 +1138,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d9dddb7ed790ef4aa3a14e7edb5420a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rayCamera: {fileID: 0}
-  holdPoint: {fileID: 7353733565518420197}
+  holdPoints:
+  - {fileID: 0}
   anim: {fileID: 1816423536181753903}
+  playerColliders: []
   toolsLayer:
     serializedVersion: 2
     m_Bits: 128
-  dirtLayer:
+  carryableLayer:
     serializedVersion: 2
-    m_Bits: 8
+    m_Bits: 0
   pickupRange: 3.5
-  cleanRange: 2.5
-  pickupKey: 101
+  dropForce: 1.5
   cleanKey: 114
-  baseCleanRate: 1
+  disposeKey: 102
+  damagePerHit: 1
   requireCorrectTool: 1
   validToolIds:
   - Sponge
-  aimFromHand: 1
-  downBias: 0.35
-  handForwardOffset: 0.12
-  sphereRadius: 0.2
-  overlapRadius: 0.28
+  dirtTag: Dirt
+  carryableTrashTag: Trash
+  sweepableTrashTag: Basura
   cleaningLayerName: Clean
   layerBlendSpeed: 20
-  useCrossFade: 0
-  cleaningStateName: Clean_Loop
-  upperIdleStateName: UpperBody_Idle
-  debugLogs: 0
 --- !u!4 &3102594728226864476 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3984261635038645560, guid: 4b714ebab645ff146958795b1d039263, type: 3}
