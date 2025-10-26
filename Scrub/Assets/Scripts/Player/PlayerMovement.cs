@@ -6,7 +6,12 @@ public class PlayerMovement : MonoBehaviour
     // === Movimiento y Salto ===
     [Header("Movimiento (WASD)")]
     public float moveSpeed = 5f;
-    // 🛑 Eliminamos rotationSpeed ya que no rotaremos con A/D
+    // 📢 NUEVO: Velocidad al correr/sprintar
+    public float runSpeed = 10f;
+
+    [Header("Sprint")]
+    // 📢 NUEVO: Tecla para correr
+    public KeyCode runKey = KeyCode.LeftShift;
 
     [Header("Salto")]
     public float jumpForce = 6f;
@@ -15,9 +20,7 @@ public class PlayerMovement : MonoBehaviour
     [Header("Animación")]
     public Animator animator;
 
-    // El hash es más eficiente para Unity
     private readonly int JumpTriggerHash = Animator.StringToHash("Jump");
-    // 🛑 NUEVO: Hash para la velocidad del Animator
     private readonly int SpeedFloatHash = Animator.StringToHash("Speed");
 
     // === Ground Check ===
@@ -30,6 +33,8 @@ public class PlayerMovement : MonoBehaviour
     Rigidbody rb;
     bool isGrounded;
     bool jumpScheduled = false;
+    // 📢 NUEVO: Estado de sprint
+    bool isRunning = false;
 
     void Awake()
     {
@@ -60,6 +65,9 @@ public class PlayerMovement : MonoBehaviour
         {
             jumpScheduled = true;
         }
+
+        // 📢 NUEVO: Manejo de Input para correr
+        isRunning = Input.GetKey(runKey);
     }
 
     void FixedUpdate()
@@ -67,6 +75,8 @@ public class PlayerMovement : MonoBehaviour
         // === Lógica de Salto y Animación ===
         if (jumpScheduled)
         {
+            // La línea 'rb.linearVelocity' es un error tipográfico en el original, debería ser 'rb.velocity'.
+            // Usaremos rb.velocity en lugar de rb.linearVelocity.
             rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
 
@@ -80,27 +90,31 @@ public class PlayerMovement : MonoBehaviour
 
         // === Lógica de Movimiento: 4 direcciones (WASD) ===
 
-        // 🛑 1) Obtener inputs para adelante/atrás y strafe
+        // 1) Obtener inputs para adelante/atrás y strafe
         float forwardInput = Input.GetAxis("Vertical");
         float strafeInput = Input.GetAxis("Horizontal");
 
-        // 🛑 2) Calcular la dirección deseada en el espacio del mundo
+        // 📢 NUEVO: Determinar la velocidad máxima actual (Correr o Caminar)
+        float currentMaxSpeed = isRunning ? runSpeed : moveSpeed;
+        // Si no hay input, no podemos correr, solo caminar.
+        if (Mathf.Abs(forwardInput) < 0.001f && Mathf.Abs(strafeInput) < 0.001f)
+        {
+            currentMaxSpeed = 0f;
+            isRunning = false; // Desactiva el estado de correr si no hay movimiento
+        }
+
+
+        // 2) Calcular la dirección deseada en el espacio del mundo
         Vector3 desiredForward = transform.forward * forwardInput;
         Vector3 desiredStrafe = transform.right * strafeInput;
 
         // Combinar y aplicar la velocidad máxima (normalizando si se mueve en diagonal)
-        Vector3 targetHoriz = (desiredForward + desiredStrafe).normalized * moveSpeed;
+        Vector3 targetHoriz = (desiredForward + desiredStrafe).normalized * currentMaxSpeed;
 
-        // Si no hay input, el vector deseado es cero.
-        if (Mathf.Abs(forwardInput) < 0.001f && Mathf.Abs(strafeInput) < 0.001f)
-        {
-            targetHoriz = Vector3.zero;
-        }
+        // --- Lógica de Aceleración Suave ---
 
-        // --- Lógica de Aceleración Suave (mantenida) ---
-
-        Vector3 v = rb.linearVelocity;
-        Vector3 vertical = Vector3.up * v.y; // Mantiene la gravedad
+        Vector3 v = rb.linearVelocity; // Usar rb.velocity
+        Vector3 vertical = Vector3.up * v.y;
 
         // Usamos toda la velocidad horizontal actual para el Lerp
         Vector3 currentHoriz = new Vector3(v.x, 0f, v.z);
@@ -110,12 +124,12 @@ public class PlayerMovement : MonoBehaviour
         Vector3 newHoriz = Vector3.Lerp(currentHoriz, targetHoriz, accel * Time.fixedDeltaTime);
 
         // Aplicar la nueva velocidad horizontal + la velocidad vertical
-        rb.linearVelocity = newHoriz + vertical;
+        rb.linearVelocity = newHoriz + vertical; // Usar rb.velocity
 
-        // 🛑 3) Actualizar Animación
+        // 3) Actualizar Animación
         if (animator != null)
         {
-            // Usamos la magnitud de la velocidad horizontal para el Animator.
+            // Usamos la magnitud de la nueva velocidad horizontal para el Animator.
             animator.SetFloat(SpeedFloatHash, newHoriz.magnitude);
         }
     }

@@ -1,22 +1,29 @@
-﻿// Carryable.cs - FINAL
+﻿// Carryable.cs - FINAL Y CORREGIDO CON AJUSTE DE ESCALA
 
 using UnityEngine;
 
 public class Carryable : MonoBehaviour
 {
     // 📢 NUEVO: Propiedad para rastrear el estado de transporte.
-    // Esto resuelve el error 'IsCarried' en el CleaningController y PlayerInteraction.
     public bool IsCarried { get; set; } = false;
 
     [Header("Configuración de Drop")]
     [Tooltip("Fuerza por defecto aplicada al soltar si no se especifica.")]
     public float defaultDropForce = 3f;
 
+    // 📢 NUEVO: Factor para reducir la escala del objeto al ser recogido (ej: 0.5 para la mitad del tamaño)
+    [Header("Configuración de Escala")]
+    [Tooltip("Factor de escala para aplicar al ser recogido. 1.0 = sin cambio.")]
+    public float scaleFactorOnPickup = 0.5f; // Ajusta este valor en el Inspector (0.5 es un buen inicio)
+
     private Rigidbody rb;
     private Collider carryableCollider;
     private CollisionDetectionMode originalMode;
     // Guardaremos los colliders del jugador para deshacer la ignorancia
     private Collider[] playerCollidersReference;
+
+    // 📢 NUEVO: Guardaremos la escala local original.
+    private Vector3 originalLocalScale;
 
     void Awake()
     {
@@ -30,6 +37,9 @@ public class Carryable : MonoBehaviour
         {
             Debug.LogError($"Carryable en {gameObject.name} requiere un Rigidbody.");
         }
+
+        // 📢 NUEVO: Guardamos la escala LOCAL inicial.
+        originalLocalScale = transform.localScale;
     }
 
     /// <summary>
@@ -49,6 +59,9 @@ public class Carryable : MonoBehaviour
         transform.SetParent(parent, true);
         transform.localPosition = Vector3.zero;
         transform.localRotation = Quaternion.identity;
+
+        // 📢 CORRECCIÓN DE ESCALA: Aplicamos la nueva escala al recoger.
+        transform.localScale = originalLocalScale * scaleFactorOnPickup;
 
         // 3. Ignorar Colisiones entre Player y Carryable
         if (carryableCollider != null && playerCollidersReference != null)
@@ -90,13 +103,15 @@ public class Carryable : MonoBehaviour
         // 3. Quitar jerarquía
         transform.SetParent(null);
 
+        // 📢 CORRECCIÓN DE ESCALA: Restablecer la escala a la original.
+        transform.localScale = originalLocalScale;
+
         // 4. Aplicar fuerza
         // Usamos ForceMode.VelocityChange para un impulso instantáneo y controlado.
         rb.AddForce(direction * force, ForceMode.VelocityChange);
 
         // 5. Actualizar estado
         IsCarried = false;
-      
     }
 
     /// <summary>
@@ -104,8 +119,7 @@ public class Carryable : MonoBehaviour
     /// </summary>
     public void Drop()
     {
-        // 📢 MEJORA: Llama a la versión con parámetros, usando la fuerza por defecto y la dirección "hacia adelante" (simplemente Vector3.forward si se necesita, o cero si no se quiere fuerza).
-        // Nota: Si este método es llamado por un objeto sin una dirección clara (como una memoria), es mejor usar fuerza cero.
+        // Llama a la versión con parámetros, usando la fuerza cero.
         Drop(Vector3.zero, 0f);
     }
 }
