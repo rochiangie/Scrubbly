@@ -19998,7 +19998,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f66cac6c0758ad94c87aa13bae39d21b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultDropForce: 3
+  defaultDropForce: 1.5
 --- !u!1001 &626339775
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -37806,6 +37806,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1030985118, guid: abc00000000014833015999044117617, type: 3}
   m_PrefabInstance: {fileID: 1272923044}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &1274444815 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3439392419171968367, guid: 5dbd8464d84e0094dba0a982e91f9806, type: 3}
+  m_PrefabInstance: {fileID: 1856521701}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1274754771
 GameObject:
   m_ObjectHideFlags: 0
@@ -48840,7 +48845,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f66cac6c0758ad94c87aa13bae39d21b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultDropForce: 3
+  defaultDropForce: 1.5
 --- !u!1001 &1619252962
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -51057,6 +51062,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1030994756, guid: abc00000000007851371512938932570, type: 3}
   m_PrefabInstance: {fileID: 1693182628}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &1696106507 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7353733565518420197, guid: 5dbd8464d84e0094dba0a982e91f9806, type: 3}
+  m_PrefabInstance: {fileID: 1856521701}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1697215502
 GameObject:
   m_ObjectHideFlags: 0
@@ -51785,7 +51795,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1030985365, guid: abc00000000015365787584801111105, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -8.93057
+      value: -8.922
       objectReference: {fileID: 0}
     - target: {fileID: 1030985365, guid: abc00000000015365787584801111105, type: 3}
       propertyPath: m_LocalPosition.z
@@ -51839,8 +51849,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 12.7, y: 0.04, z: 9.34}
+  m_Center: {x: 0, y: -0.05, z: 0}
 --- !u!1001 &1713660494
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -57602,6 +57612,10 @@ PrefabInstance:
       value: 136
       objectReference: {fileID: 0}
     - target: {fileID: 4374110369842531278, guid: 5dbd8464d84e0094dba0a982e91f9806, type: 3}
+      propertyPath: 'holdPoints.Array.data[0]'
+      value: 
+      objectReference: {fileID: 1696106507}
+    - target: {fileID: 4374110369842531278, guid: 5dbd8464d84e0094dba0a982e91f9806, type: 3}
       propertyPath: playerColliders.Array.size
       value: 1
       objectReference: {fileID: 0}
@@ -57609,6 +57623,14 @@ PrefabInstance:
       propertyPath: 'playerColliders.Array.data[0]'
       value: 
       objectReference: {fileID: 932270316}
+    - target: {fileID: 6516353649778667317, guid: 5dbd8464d84e0094dba0a982e91f9806, type: 3}
+      propertyPath: validToolIds.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6516353649778667317, guid: 5dbd8464d84e0094dba0a982e91f9806, type: 3}
+      propertyPath: 'validToolIds.Array.data[1]'
+      value: Escoba
+      objectReference: {fileID: 0}
     - target: {fileID: 6861463559516028231, guid: 5dbd8464d84e0094dba0a982e91f9806, type: 3}
       propertyPath: m_Enabled
       value: 0
@@ -57633,8 +57655,37 @@ PrefabInstance:
       propertyPath: m_Center.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7311496808103892201, guid: 5dbd8464d84e0094dba0a982e91f9806, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7311496808103892201, guid: 5dbd8464d84e0094dba0a982e91f9806, type: 3}
+      propertyPath: interactableLayer.m_Bits
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 9030880418800006197, guid: 5dbd8464d84e0094dba0a982e91f9806, type: 3}
+      propertyPath: carryableLayer.m_Bits
+      value: 4294967295
+      objectReference: {fileID: 0}
+    - target: {fileID: 9030880418800006197, guid: 5dbd8464d84e0094dba0a982e91f9806, type: 3}
+      propertyPath: validToolIds.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 9030880418800006197, guid: 5dbd8464d84e0094dba0a982e91f9806, type: 3}
+      propertyPath: 'holdPoints.Array.data[0]'
+      value: 
+      objectReference: {fileID: 1274444815}
+    - target: {fileID: 9030880418800006197, guid: 5dbd8464d84e0094dba0a982e91f9806, type: 3}
+      propertyPath: playerColliders.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9030880418800006197, guid: 5dbd8464d84e0094dba0a982e91f9806, type: 3}
+      propertyPath: 'validToolIds.Array.data[1]'
+      value: Escoba
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 3533009763235141112, guid: 5dbd8464d84e0094dba0a982e91f9806, type: 3}
+    - {fileID: 9030880418800006197, guid: 5dbd8464d84e0094dba0a982e91f9806, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

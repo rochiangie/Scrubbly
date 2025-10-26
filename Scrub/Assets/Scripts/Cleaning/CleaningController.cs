@@ -1,4 +1,3 @@
-// CleaningController.cs - CORREGIDO PARA DISTINTOS TIPOS DE BASURA
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,24 +8,22 @@ public class CleaningController : MonoBehaviour
 {
     // ---------------- Refs ----------------
     [Header("Refs")]
-    [SerializeField] private Transform holdPoint;
+    [SerializeField] private Transform[] holdPoints = new Transform[1];
     [SerializeField] private Animator anim;
-
-    // 📢 REFERENCIA DEL PLAYER
     [SerializeField] private Collider[] playerColliders;
 
     // ---------------- Capas y rangos ----------------
     [Header("Layers & Ranges")]
     [SerializeField] private LayerMask toolsLayer;
-    [SerializeField] private LayerMask carryableLayer; // 📢 Capa para objetos Carryable/Trash
+    [SerializeField] private LayerMask carryableLayer;
     [SerializeField] private float pickupRange = 3.5f;
     [SerializeField] private float dropForce = 1.5f;
 
     // ---------------- Input ----------------
     [Header("Input (teclas simples)")]
-    [SerializeField] private KeyCode pickupDropKey = KeyCode.E;
+    // 📢 CAMBIO: Eliminamos KeyCode.E. Usaremos Input.GetButtonDown("Fire1") para el click.
     [SerializeField] private KeyCode cleanKey = KeyCode.R;
-    [SerializeField] private KeyCode disposeKey = KeyCode.F; // Usado para barrer basura no transportable
+    [SerializeField] private KeyCode disposeKey = KeyCode.F;
 
     // ---------------- Limpieza ----------------
     [Header("Cleaning")]
@@ -34,9 +31,7 @@ public class CleaningController : MonoBehaviour
     [SerializeField] private bool requireCorrectTool = true;
     [SerializeField] private string[] validToolIds = { "Mop", "Sponge", "Vacuum", "Escoba" };
     [SerializeField] private string dirtTag = "Dirt";
-    // 📢 TAG para objetos transportables (bolsas, etc.) que se depositan en el basurero
     [SerializeField] private string carryableTrashTag = "Trash";
-    // 📢 TAG para basura pequeña que se barre (puede ser "TrashObject" o similar)
     [SerializeField] private string sweepableTrashTag = "Basura";
 
     // ---------------- Animación ----------------
@@ -45,15 +40,17 @@ public class CleaningController : MonoBehaviour
     [SerializeField] private float layerBlendSpeed = 12f;
 
     // ---------------- Estado ----------------
-    public ToolDescriptor CurrentTool { get; private set; }
-    public Carryable CurrentCarryable { get; private set; }
+    public List<Carryable> CarriedItems { get; private set; } = new List<Carryable>();
+
+    public Carryable CurrentCarryable => CarriedItems.FirstOrDefault();
+    public ToolDescriptor CurrentTool => CurrentCarryable?.GetComponent<ToolDescriptor>();
+
     private List<DirtSpot> nearbyDirt = new List<DirtSpot>();
-    // Lista para basura que se barre (usando el tag sweepableTrashTag)
     private List<TrashObject> nearbyTrash = new List<TrashObject>();
-    // Lista para objetos Carryable (herramientas O basura transportable)
     private List<Carryable> nearbyCarryables = new List<Carryable>();
 
     private int cleaningLayerIndex = -1;
+    private const int MAX_CARRYABLE_ITEMS = 1; // 📢 Límite de 1 objeto
 
     // ================== Unity ==================
     private void Awake()
@@ -62,21 +59,24 @@ public class CleaningController : MonoBehaviour
         if (anim)
         {
             cleaningLayerIndex = anim.GetLayerIndex(cleaningLayerName);
-            if (cleaningLayerIndex < 0)
-            {
-                Debug.LogError($"Animator no tiene la capa '{cleaningLayerName}'. La transición de peso de capa fallará.");
-            }
+        }
+
+        if (holdPoints.Length < MAX_CARRYABLE_ITEMS)
+        {
+            Debug.LogError($"El CleaningController necesita al menos {MAX_CARRYABLE_ITEMS} punto de agarre asignado en el Inspector.");
         }
     }
 
     private void Update()
     {
-        // ---- PICKUP / DROP (Tecla E) ----
-        if (Input.GetKeyDown(pickupDropKey))
+        // ---- INTERACCIÓN PRINCIPAL (CLICK / Fire1) ----
+        // 📢 CAMBIO: Usamos el botón del ratón (Fire1) para la interacción de recoger/soltar.
+        if (Input.GetButtonDown("Fire1"))
         {
-            if (CurrentTool != null || CurrentCarryable != null)
+            // Si sostenemos algo, lo soltamos (Drop), sino, intentamos recoger (Pickup).
+            if (CarriedItems.Count > 0)
             {
-                DropHeldObject();
+                DropAllHeldItems();
             }
             else
             {
@@ -84,200 +84,169 @@ public class CleaningController : MonoBehaviour
             }
         }
 
-        // ---- DISPOSICIÓN / BARRIDO (Tecla F) ----
-        if (Input.GetKeyDown(disposeKey))
-        {
-            // La lógica de "depositar" una bolsa de basura está ahora en DropHeldObject,
-            // que llama a Carryable.Drop(), y el TrashCan.cs se encarga del resto.
+        // ---- LIMPIEZA CLÁSICA (Tecla R) ----
+        bool cleanPressed = Input.GetKeyDown(cleanKey);
 
-            // Si llevamos la escoba y hay basura que barrer, barremos.
-            if (CurrentTool != null && CurrentTool.ToolId == "Escoba" && nearbyTrash.Count > 0)
-            {
-                TryRemoveTrash("Escoba");
-            }
-            // Si no llevamos nada, podemos intentar recoger basura pequeña (sweepableTrashTag)
-            // Esto es solo un ejemplo de funcionalidad, el "barrido" se asume que elimina la basura pequeña.
-        }
-
-        bool holding = CurrentCarryable != null;
-        bool dirtNearby = nearbyDirt.Count > 0;
-        bool trashNearby = nearbyTrash.Count > 0;
-        bool cleanPressed = Input.GetKeyDown(cleanKey) || Input.GetButtonDown("Fire1");
-
-        if (CurrentTool != null && cleanPressed && dirtNearby)
+        if (CurrentTool != null && cleanPressed && nearbyDirt.Count > 0)
         {
             ApplyCleanHit();
         }
 
-        UpdateCleaningLayer(holding && (dirtNearby || trashNearby));
+        // ---- DISPOSICIÓN / BARRIDO (Tecla F) ----
+        if (Input.GetKeyDown(disposeKey))
+        {
+            if (CurrentTool != null && CurrentTool.ToolId == "Escoba" && nearbyTrash.Count > 0)
+            {
+                TryRemoveTrash("Escoba");
+            }
+        }
+
+        UpdateCleaningLayer(CarriedItems.Count > 0 && (nearbyDirt.Count > 0 || nearbyTrash.Count > 0));
     }
 
     // ================== MÉTODOS PÚBLICOS DE INTERACCIÓN ==================
 
-    // 📢 MÉTODO MODIFICADO
     public void RegisterCarryable(Carryable carryableObject)
     {
-        if (carryableObject == null || CurrentCarryable != null) return;
+        // Verifica el límite de 1
+        if (carryableObject == null || CarriedItems.Count >= MAX_CARRYABLE_ITEMS) return;
 
-        // 1. Verifica si es una herramienta (ToolDescriptor)
-        ToolDescriptor tool = carryableObject.GetComponent<ToolDescriptor>();
-        if (tool != null)
-        {
-            CurrentTool = tool;
-        }
+        // 1. Asignar el punto de agarre (slot 0)
+        int slotIndex = 0;
+        Transform parentPoint = holdPoints[slotIndex];
 
-        // 2. Establece el objeto transportado
-        CurrentCarryable = carryableObject;
+        // 2. Registrar el objeto
+        CarriedItems.Add(carryableObject);
 
-        // 3. Llama al PickUp del Carryable, pasándole los colliders del jugador para ignorar colisiones
-        carryableObject.PickUp(holdPoint, playerColliders);
+        // 3. Llama al PickUp del Carryable
+        carryableObject.PickUp(parentPoint, playerColliders);
 
+        // 4. Configurar colisionadores y animación
         SetAllCollidersTrigger(carryableObject.gameObject, true);
         if (anim != null) anim.SetBool("IsHolding", true);
 
-        Debug.Log($"🛠️ Objeto recogido: {carryableObject.name} (Tipo: {(tool != null ? "Herramienta" : "Basura")})");
+        Debug.Log($"🛠️ Objeto recogido: {carryableObject.name} en slot {slotIndex}");
     }
 
-    // 📢 MÉTODO MODIFICADO
-    public void DropHeldObject()
+    public void DropAllHeldItems()
     {
-        Carryable carryable = CurrentCarryable;
-        if (carryable == null) return;
+        float totalItems = CarriedItems.Count;
 
-        // Limpieza de referencias
-        CurrentCarryable = null;
-        CurrentTool = null;
+        foreach (var carryable in CarriedItems.ToList())
+        {
+            if (carryable != null)
+            {
+                // Dirección de soltado simple
+                carryable.Drop(transform.forward, dropForce);
 
-        // El Carryable se encarga de restaurar la cinemática, la gravedad y la escala.
-        carryable.Drop(transform.forward, dropForce);
+                SetAllCollidersTrigger(carryable.gameObject, false);
+            }
+        }
 
-        // Restaurar colisionadores y animación
-        SetAllCollidersTrigger(carryable.gameObject, false);
+        CarriedItems.Clear();
         if (anim != null) anim.SetBool("IsHolding", false);
+
+        Debug.Log($"Soltados {totalItems} objetos.");
     }
 
     // ================== LÓGICA INTERNA DE EQUIPO ==================
 
-    // 📢 MÉTODO CLAVE MODIFICADO
     private void TryPickupObject()
     {
+        // El límite de recolección a 1 está aquí
+        if (CarriedItems.Count >= MAX_CARRYABLE_ITEMS)
+        {
+            Debug.LogWarning("Ya estás sosteniendo el máximo de objetos.");
+            return;
+        }
+
         Camera rayCamera = Camera.main;
         if (!rayCamera) return;
 
+        LayerMask targetLayer = toolsLayer | carryableLayer;
+
+        Carryable targetCarryable = null;
+
+        // 1. Raycast (Búsqueda más precisa)
+        // Raycast es mejor para interacciones de 'Click', ya que mira donde apunta la cámara.
         Vector3 origin = rayCamera.transform.position + rayCamera.transform.forward * 0.15f;
         Vector3 dir = rayCamera.transform.forward;
 
-        Carryable targetCarryable = null;
-        ToolDescriptor targetTool = null;
-
-        // Combinar capas de herramientas y objetos carryable (basura)
-        LayerMask targetLayer = toolsLayer | carryableLayer;
-
-        // 1. Raycast
         if (Physics.Raycast(origin, dir, out RaycastHit rayHit, pickupRange, targetLayer, QueryTriggerInteraction.Ignore))
         {
             targetCarryable = rayHit.collider.GetComponentInParent<Carryable>();
-            targetTool = targetCarryable?.GetComponent<ToolDescriptor>();
         }
 
-        // 2. Fallback Overlap
+        // 2. Fallback OverlapSphere (Si el Raycast falla, busca alrededor)
         if (targetCarryable == null)
         {
             Vector3 probe = transform.position + transform.forward * 1.0f;
-            var around = Physics.OverlapSphere(probe, 0.85f, targetLayer, QueryTriggerInteraction.Collide);
-            foreach (var c in around)
+            float currentRange = pickupRange * 0.5f;
+            var nearbyColliders = Physics.OverlapSphere(probe, currentRange, targetLayer, QueryTriggerInteraction.Collide);
+
+            foreach (var c in nearbyColliders)
             {
-                if (c.transform.IsChildOf(transform)) continue;
-                targetCarryable = c.GetComponentInParent<Carryable>();
-                if (targetCarryable != null)
+                if (!c.transform.IsChildOf(transform) && c.TryGetComponent<Carryable>(out var carryable) && !CarriedItems.Contains(carryable))
                 {
-                    targetTool = targetCarryable.GetComponent<ToolDescriptor>();
-                    break;
+                    targetCarryable = carryable;
+                    break; // Rompe al encontrar el primer objeto válido.
                 }
             }
         }
 
+        // 3. Registrar el objeto (Si se encontró un ÚNICO objeto válido)
         if (targetCarryable != null)
         {
-            // 📢 Lógica de Prioridad de Recogida:
-            // Prioridad 1: Si es una Herramienta O una Basura Transportable (Carryable + Tag)
-            if (targetTool != null || targetCarryable.CompareTag(carryableTrashTag))
+            if (!CarriedItems.Contains(targetCarryable))
             {
                 RegisterCarryable(targetCarryable);
             }
         }
+
+        if (targetCarryable == null)
+        {
+            Debug.Log("No se encontraron objetos Carryable o herramientas cercanas para recoger.");
+        }
     }
 
+    // ================== LÓGICA DE LIMPIEZA Y BARRIDO ==================
 
-    // ================== DETECCIÓN POR TRIGGER ==================
-
-    // 📢 MÉTODO MODIFICADO (Añadimos Carryable/Trash y corregimos Tags)
-    private void OnTriggerEnter(Collider other)
+    private void ApplyCleanHit()
     {
-        if (other.CompareTag(dirtTag))
+        if (CurrentTool == null) return;
+
+        nearbyDirt.RemoveAll(dirt => dirt == null);
+        if (nearbyDirt.Count == 0) return;
+
+        DirtSpot closestDirt = nearbyDirt
+            .OrderBy(dirt => Vector3.Distance(transform.position, dirt.transform.position))
+            .FirstOrDefault();
+
+        if (closestDirt == null) return;
+
+        bool successfullyUsed = CurrentTool.TryUse();
+        if (!successfullyUsed)
         {
-            DirtSpot dirt = other.GetComponent<DirtSpot>() ?? other.GetComponentInParent<DirtSpot>();
-            if (dirt != null && !nearbyDirt.Contains(dirt))
+            CurrentTool.TryGetComponent<Carryable>(out var brokenCarryable);
+            if (brokenCarryable != null)
             {
-                nearbyDirt.Add(dirt);
-                Debug.Log($"🧹 DirtSpot detectado: {dirt.name}");
+                CarriedItems.Remove(brokenCarryable);
+                Destroy(brokenCarryable.gameObject);
+                if (CarriedItems.Count == 0) UpdateCleaningLayer(false);
             }
+            return;
         }
 
-        // Detección de objetos transportables (Carryable, que pueden ser Trash o Tool)
-        if (other.GetComponent<Carryable>() != null)
+        float damage = damagePerHit * CurrentTool.ToolPower;
+
+        if (requireCorrectTool && !closestDirt.CanBeCleanedBy(CurrentTool.ToolId))
         {
-            Carryable carryable = other.GetComponent<Carryable>() ?? other.GetComponentInParent<Carryable>();
-            if (carryable != null && !nearbyCarryables.Contains(carryable))
-            {
-                nearbyCarryables.Add(carryable);
-            }
+            Debug.LogWarning($"[Clean Hit] Herramienta incorrecta: {CurrentTool.ToolId} para {closestDirt.name}");
+            return;
         }
 
-        // Detección de basura que se barre (Sweepable Trash)
-        if (other.CompareTag(sweepableTrashTag))
-        {
-            TrashObject trash = other.GetComponent<TrashObject>() ?? other.GetComponentInParent<TrashObject>();
-            if (trash != null && !nearbyTrash.Contains(trash))
-            {
-                nearbyTrash.Add(trash);
-                Debug.Log($"🗑️ TrashObject (destruible) detectado: {trash.name}");
-            }
-        }
+        closestDirt.CleanHit(damage);
     }
-
-    // 📢 MÉTODO MODIFICADO
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag(dirtTag))
-        {
-            DirtSpot dirt = other.GetComponent<DirtSpot>() ?? other.GetComponentInParent<DirtSpot>();
-            if (dirt != null && nearbyDirt.Contains(dirt))
-            {
-                nearbyDirt.Remove(dirt);
-            }
-        }
-
-        if (other.GetComponent<Carryable>() != null)
-        {
-            Carryable carryable = other.GetComponent<Carryable>() ?? other.GetComponentInParent<Carryable>();
-            if (carryable != null && nearbyCarryables.Contains(carryable))
-            {
-                nearbyCarryables.Remove(carryable);
-            }
-        }
-
-        if (other.CompareTag(sweepableTrashTag))
-        {
-            TrashObject trash = other.GetComponent<TrashObject>() ?? other.GetComponentInParent<TrashObject>();
-            if (trash != null && nearbyTrash.Contains(trash))
-            {
-                nearbyTrash.Remove(trash);
-            }
-        }
-    }
-
-    // ================== LÓGICA DE BARRIDO ==================
 
     private void TryRemoveTrash(string requiredToolId)
     {
@@ -298,60 +267,59 @@ public class CleaningController : MonoBehaviour
 
         if (!CurrentTool.TryUse())
         {
-            CurrentTool = null;
-            DropHeldObject();
             return;
         }
 
         if (closestTrash != null)
         {
-            // La lógica de eliminación de basura (barrer) va aquí.
             Destroy(closestTrash.gameObject);
-
             Debug.Log($"🗑️ Basura eliminada: {closestTrash.name}");
             nearbyTrash.Remove(closestTrash);
         }
     }
 
-    // Resto de métodos de utilidad (ApplyCleanHit, UpdateCleaningLayer, SetAllCollidersTrigger, DebugNearbyObjects)
-    // se mantienen igual que en el código anterior.
+    // ================== DETECCIÓN Y UTILIDADES ==================
 
-    private void ApplyCleanHit()
+    private void OnTriggerEnter(Collider other)
     {
-        if (CurrentTool == null) return;
-
-        nearbyDirt.RemoveAll(dirt => dirt == null);
-        if (nearbyDirt.Count == 0) return;
-
-        DirtSpot closestDirt = nearbyDirt
-            .OrderBy(dirt => Vector3.Distance(transform.position, dirt.transform.position))
-            .FirstOrDefault();
-
-        if (closestDirt == null) return;
-
-        bool successfullyUsed = CurrentTool.TryUse();
-        if (!successfullyUsed)
+        if (other.CompareTag(dirtTag))
         {
-            CurrentTool = null;
-            DropHeldObject();
-            return;
+            DirtSpot dirt = other.GetComponent<DirtSpot>() ?? other.GetComponentInParent<DirtSpot>();
+            if (dirt != null && !nearbyDirt.Contains(dirt)) nearbyDirt.Add(dirt);
         }
 
-        float damage = damagePerHit * CurrentTool.ToolPower;
-
-        if (requireCorrectTool && !closestDirt.CanBeCleanedBy(CurrentTool.ToolId))
+        if (other.GetComponent<Carryable>() != null)
         {
-            Debug.LogWarning($"[Clean Hit] Herramienta incorrecta: {CurrentTool.ToolId} para {closestDirt.name}");
-            return;
+            Carryable carryable = other.GetComponent<Carryable>() ?? other.GetComponentInParent<Carryable>();
+            if (carryable != null && !nearbyCarryables.Contains(carryable)) nearbyCarryables.Add(carryable);
         }
 
-        closestDirt.CleanHit(damage);
-        Debug.Log($"🧹 Aplicando {damage} de daño a {closestDirt.name}");
+        if (other.CompareTag(sweepableTrashTag))
+        {
+            TrashObject trash = other.GetComponent<TrashObject>() ?? other.GetComponentInParent<TrashObject>();
+            if (trash != null && !nearbyTrash.Contains(trash)) nearbyTrash.Add(trash);
+        }
+    }
 
-        // if (AudioManager.Instance != null)
-        // {
-        //     // AudioManager.Instance.PlayCleanSFX();
-        // }
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag(dirtTag))
+        {
+            DirtSpot dirt = other.GetComponent<DirtSpot>() ?? other.GetComponentInParent<DirtSpot>();
+            if (dirt != null && nearbyDirt.Contains(dirt)) nearbyDirt.Remove(dirt);
+        }
+
+        if (other.GetComponent<Carryable>() != null)
+        {
+            Carryable carryable = other.GetComponent<Carryable>() ?? other.GetComponentInParent<Carryable>();
+            if (carryable != null && nearbyCarryables.Contains(carryable)) nearbyCarryables.Remove(carryable);
+        }
+
+        if (other.CompareTag(sweepableTrashTag))
+        {
+            TrashObject trash = other.GetComponent<TrashObject>() ?? other.GetComponentInParent<TrashObject>();
+            if (trash != null && nearbyTrash.Contains(trash)) nearbyTrash.Remove(trash);
+        }
     }
 
     private void UpdateCleaningLayer(bool shouldUseCleaning)
@@ -359,7 +327,7 @@ public class CleaningController : MonoBehaviour
         if (anim == null) return;
 
         anim.SetBool("IsCleaning", shouldUseCleaning);
-        anim.SetBool("IsHolding", CurrentCarryable != null);
+        anim.SetBool("IsHolding", CarriedItems.Count > 0);
 
         if (cleaningLayerIndex >= 0)
         {
@@ -380,9 +348,7 @@ public class CleaningController : MonoBehaviour
     public void DebugNearbyObjects()
     {
         Debug.Log($"=== 🎯 DEBUG NEARBY OBJECTS ===");
-        Debug.Log($"Dirt Spots cercanos: {nearbyDirt.Count}");
-        Debug.Log($"Carryable Objects cercanos: {nearbyCarryables.Count}");
-        Debug.Log($"Trash Objects (Destruibles) cercanos: {nearbyTrash.Count}");
-        Debug.Log($"Objeto/Herramienta actual: {(CurrentCarryable != null ? CurrentCarryable.name : "Ninguno")}");
+        Debug.Log($"Objetos transportados: {CarriedItems.Count} / {MAX_CARRYABLE_ITEMS}");
+        Debug.Log($"Herramienta activa: {(CurrentTool != null ? CurrentTool.ToolId : "Ninguna")}");
     }
 }
