@@ -8,20 +8,22 @@ public class CleaningController : MonoBehaviour
 {
     // ---------------- Refs ----------------
     [Header("Refs")]
-    [SerializeField] private Transform holdPoint;
+    [SerializeField] private Transform[] holdPoints = new Transform[1];
     [SerializeField] private Animator anim;
+    [SerializeField] private Collider[] playerColliders;
 
     // ---------------- Capas y rangos ----------------
     [Header("Layers & Ranges")]
     [SerializeField] private LayerMask toolsLayer;
+    [SerializeField] private LayerMask carryableLayer;
     [SerializeField] private float pickupRange = 3.5f;
     [SerializeField] private float dropForce = 1.5f;
 
     // ---------------- Input ----------------
     [Header("Input (teclas simples)")]
-    [SerializeField] private KeyCode pickupKey = KeyCode.E;
+    // 📢 CAMBIO: Eliminamos KeyCode.E. Usaremos Input.GetButtonDown("Fire1") para el click.
     [SerializeField] private KeyCode cleanKey = KeyCode.R;
-    [SerializeField] private KeyCode trashKey = KeyCode.F;
+    [SerializeField] private KeyCode disposeKey = KeyCode.F;
 
     // ---------------- Limpieza ----------------
     [Header("Cleaning")]
@@ -29,7 +31,8 @@ public class CleaningController : MonoBehaviour
     [SerializeField] private bool requireCorrectTool = true;
     [SerializeField] private string[] validToolIds = { "Mop", "Sponge", "Vacuum", "Escoba" };
     [SerializeField] private string dirtTag = "Dirt";
-    [SerializeField] private string trashTag = "Basura";
+    [SerializeField] private string carryableTrashTag = "Trash";
+    [SerializeField] private string sweepableTrashTag = "Basura";
 
     // ---------------- Animación ----------------
     [Header("Animation Layer")]
@@ -37,11 +40,17 @@ public class CleaningController : MonoBehaviour
     [SerializeField] private float layerBlendSpeed = 12f;
 
     // ---------------- Estado ----------------
-    public ToolDescriptor CurrentTool { get; private set; }
+    public List<Carryable> CarriedItems { get; private set; } = new List<Carryable>();
+
+    public Carryable CurrentCarryable => CarriedItems.FirstOrDefault();
+    public ToolDescriptor CurrentTool => CurrentCarryable?.GetComponent<ToolDescriptor>();
+
     private List<DirtSpot> nearbyDirt = new List<DirtSpot>();
     private List<TrashObject> nearbyTrash = new List<TrashObject>();
+    private List<Carryable> nearbyCarryables = new List<Carryable>();
 
     private int cleaningLayerIndex = -1;
+    private const int MAX_CARRYABLE_ITEMS = 1; // 📢 Límite de 1 objeto
 
     // ================== Unity ==================
     private void Awake()
@@ -50,135 +59,157 @@ public class CleaningController : MonoBehaviour
         if (anim)
         {
             cleaningLayerIndex = anim.GetLayerIndex(cleaningLayerName);
-            if (cleaningLayerIndex < 0)
-            {
-                Debug.LogError($"Animator no tiene la capa '{cleaningLayerName}'. La transición de peso de capa fallará.");
-            }
+        }
+
+        if (holdPoints.Length < MAX_CARRYABLE_ITEMS)
+        {
+            Debug.LogError($"El CleaningController necesita al menos {MAX_CARRYABLE_ITEMS} punto de agarre asignado en el Inspector.");
         }
     }
 
     private void Update()
     {
-        // ---- PICKUP / DROP ----
-        if (Input.GetKeyDown(pickupKey))
+        // ---- INTERACCIÓN PRINCIPAL (CLICK / Fire1) ----
+        // 📢 CAMBIO: Usamos el botón del ratón (Fire1) para la interacción de recoger/soltar.
+        if (Input.GetButtonDown("Fire1"))
         {
-            if (CurrentTool) DropCurrentTool();
-            else TryPickupTool();
+            // Si sostenemos algo, lo soltamos (Drop), sino, intentamos recoger (Pickup).
+            if (CarriedItems.Count > 0)
+            {
+                DropAllHeldItems();
+            }
+            else
+            {
+                TryPickupObject();
+            }
         }
 
-        // ---- ESTADO DE LAS ZONAS DE LIMPIEZA ----
-        bool holding = CurrentTool != null;
-        bool dirtNearby = nearbyDirt.Count > 0;
-        bool trashNearby = nearbyTrash.Count > 0;
+        // ---- LIMPIEZA CLÁSICA (Tecla R) ----
+        bool cleanPressed = Input.GetKeyDown(cleanKey);
 
-        // ---- LIMPIEZA CLÁSICA (R / Clic) ----
-        bool cleanPressed = Input.GetKeyDown(cleanKey) || Input.GetButtonDown("Fire1");
-
-        if (holding && cleanPressed && dirtNearby)
+        if (CurrentTool != null && cleanPressed && nearbyDirt.Count > 0)
         {
             ApplyCleanHit();
         }
 
-        // ---- ELIMINAR BASURA (F) ----
-        if (Input.GetKeyDown(trashKey) && trashNearby)
+        // ---- DISPOSICIÓN / BARRIDO (Tecla F) ----
+        if (Input.GetKeyDown(disposeKey))
         {
-            TryRemoveTrash("Escoba");
+            if (CurrentTool != null && CurrentTool.ToolId == "Escoba" && nearbyTrash.Count > 0)
+            {
+                TryRemoveTrash("Escoba");
+            }
         }
 
-        UpdateCleaningLayer(holding && (dirtNearby || trashNearby));
+        UpdateCleaningLayer(CarriedItems.Count > 0 && (nearbyDirt.Count > 0 || nearbyTrash.Count > 0));
     }
 
     // ================== MÉTODOS PÚBLICOS DE INTERACCIÓN ==================
 
-    public void RegisterTool(ToolDescriptor tool)
+    public void RegisterCarryable(Carryable carryableObject)
     {
-        if (tool == null)
+        // Verifica el límite de 1
+        if (carryableObject == null || CarriedItems.Count >= MAX_CARRYABLE_ITEMS) return;
+
+        // 1. Asignar el punto de agarre (slot 0)
+        int slotIndex = 0;
+        Transform parentPoint = holdPoints[slotIndex];
+
+        // 2. Registrar el objeto
+        CarriedItems.Add(carryableObject);
+
+        // 3. Llama al PickUp del Carryable
+        carryableObject.PickUp(parentPoint, playerColliders);
+
+        // 4. Configurar colisionadores y animación
+        SetAllCollidersTrigger(carryableObject.gameObject, true);
+        if (anim != null) anim.SetBool("IsHolding", true);
+
+        Debug.Log($"🛠️ Objeto recogido: {carryableObject.name} en slot {slotIndex}");
+    }
+
+    public void DropAllHeldItems()
+    {
+        float totalItems = CarriedItems.Count;
+
+        foreach (var carryable in CarriedItems.ToList())
         {
-            Debug.LogError("[REGISTER FAIL] Se intentó registrar una herramienta nula.");
+            if (carryable != null)
+            {
+                // Dirección de soltado simple
+                carryable.Drop(transform.forward, dropForce);
+
+                SetAllCollidersTrigger(carryable.gameObject, false);
+            }
+        }
+
+        CarriedItems.Clear();
+        if (anim != null) anim.SetBool("IsHolding", false);
+
+        Debug.Log($"Soltados {totalItems} objetos.");
+    }
+
+    // ================== LÓGICA INTERNA DE EQUIPO ==================
+
+    private void TryPickupObject()
+    {
+        // El límite de recolección a 1 está aquí
+        if (CarriedItems.Count >= MAX_CARRYABLE_ITEMS)
+        {
+            Debug.LogWarning("Ya estás sosteniendo el máximo de objetos.");
             return;
         }
 
-        if (tool.TryGetComponent<Carryable>(out var carryable))
+        Camera rayCamera = Camera.main;
+        if (!rayCamera) return;
+
+        LayerMask targetLayer = toolsLayer | carryableLayer;
+
+        Carryable targetCarryable = null;
+
+        // 1. Raycast (Búsqueda más precisa)
+        // Raycast es mejor para interacciones de 'Click', ya que mira donde apunta la cámara.
+        Vector3 origin = rayCamera.transform.position + rayCamera.transform.forward * 0.15f;
+        Vector3 dir = rayCamera.transform.forward;
+
+        if (Physics.Raycast(origin, dir, out RaycastHit rayHit, pickupRange, targetLayer, QueryTriggerInteraction.Ignore))
         {
-            carryable.IsCarried = true;
+            targetCarryable = rayHit.collider.GetComponentInParent<Carryable>();
         }
 
-        Equip(tool);
-
-        if (anim != null) anim.SetBool("IsHolding", true);
-    }
-
-    public void DropCurrentTool()
-    {
-        if (!CurrentTool) return;
-
-        var tool = CurrentTool;
-        CurrentTool = null;
-
-        if (tool.TryGetComponent<Carryable>(out var carryable))
+        // 2. Fallback OverlapSphere (Si el Raycast falla, busca alrededor)
+        if (targetCarryable == null)
         {
-            carryable.Drop(transform.forward, dropForce);
-        }
-        else
-        {
-            tool.transform.SetParent(null);
-            if (tool.TryGetComponent<Rigidbody>(out var rb))
+            Vector3 probe = transform.position + transform.forward * 1.0f;
+            float currentRange = pickupRange * 0.5f;
+            var nearbyColliders = Physics.OverlapSphere(probe, currentRange, targetLayer, QueryTriggerInteraction.Collide);
+
+            foreach (var c in nearbyColliders)
             {
-                rb.AddForce(transform.forward * dropForce, ForceMode.Impulse);
+                if (!c.transform.IsChildOf(transform) && c.TryGetComponent<Carryable>(out var carryable) && !CarriedItems.Contains(carryable))
+                {
+                    targetCarryable = carryable;
+                    break; // Rompe al encontrar el primer objeto válido.
+                }
             }
         }
 
-        SetAllCollidersTrigger(tool.gameObject, false);
-        if (anim != null) anim.SetBool("IsHolding", false);
-    }
-
-    // ================== DETECCIÓN POR TRIGGER ==================
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag(dirtTag))
+        // 3. Registrar el objeto (Si se encontró un ÚNICO objeto válido)
+        if (targetCarryable != null)
         {
-            DirtSpot dirt = other.GetComponent<DirtSpot>() ?? other.GetComponentInParent<DirtSpot>();
-            if (dirt != null && !nearbyDirt.Contains(dirt))
+            if (!CarriedItems.Contains(targetCarryable))
             {
-                nearbyDirt.Add(dirt);
-                Debug.Log($"🧹 DirtSpot detectado: {dirt.name}");
+                RegisterCarryable(targetCarryable);
             }
         }
 
-        if (other.CompareTag(trashTag))
+        if (targetCarryable == null)
         {
-            TrashObject trash = other.GetComponent<TrashObject>() ?? other.GetComponentInParent<TrashObject>();
-            if (trash != null && !nearbyTrash.Contains(trash))
-            {
-                nearbyTrash.Add(trash);
-                Debug.Log($"🗑️ TrashObject detectado: {trash.name}");
-            }
+            Debug.Log("No se encontraron objetos Carryable o herramientas cercanas para recoger.");
         }
     }
 
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag(dirtTag))
-        {
-            DirtSpot dirt = other.GetComponent<DirtSpot>() ?? other.GetComponentInParent<DirtSpot>();
-            if (dirt != null && nearbyDirt.Contains(dirt))
-            {
-                nearbyDirt.Remove(dirt);
-            }
-        }
-
-        if (other.CompareTag(trashTag))
-        {
-            TrashObject trash = other.GetComponent<TrashObject>() ?? other.GetComponentInParent<TrashObject>();
-            if (trash != null && nearbyTrash.Contains(trash))
-            {
-                nearbyTrash.Remove(trash);
-            }
-        }
-    }
-
-    // ================== LÓGICA DE LIMPIEZA CLÁSICA ==================
+    // ================== LÓGICA DE LIMPIEZA Y BARRIDO ==================
 
     private void ApplyCleanHit()
     {
@@ -196,7 +227,13 @@ public class CleaningController : MonoBehaviour
         bool successfullyUsed = CurrentTool.TryUse();
         if (!successfullyUsed)
         {
-            CurrentTool = null;
+            CurrentTool.TryGetComponent<Carryable>(out var brokenCarryable);
+            if (brokenCarryable != null)
+            {
+                CarriedItems.Remove(brokenCarryable);
+                Destroy(brokenCarryable.gameObject);
+                if (CarriedItems.Count == 0) UpdateCleaningLayer(false);
+            }
             return;
         }
 
@@ -209,15 +246,7 @@ public class CleaningController : MonoBehaviour
         }
 
         closestDirt.CleanHit(damage);
-        Debug.Log($"🧹 Aplicando {damage} de daño a {closestDirt.name}");
-
-        if (AudioManager.Instance != null)
-        {
-            // AudioManager.Instance.PlayCleanSFX();
-        }
     }
-
-    // ================== LÓGICA DE BASURA (TECLA F) ==================
 
     private void TryRemoveTrash(string requiredToolId)
     {
@@ -238,97 +267,59 @@ public class CleaningController : MonoBehaviour
 
         if (!CurrentTool.TryUse())
         {
-            CurrentTool = null;
             return;
         }
 
-        // ✅ CORRECCIÓN: Usar el método correcto del TrashObject
         if (closestTrash != null)
         {
-            // 🛑 EL PROBLEMA ESTABA AQUÍ - Verificar qué métodos tiene TrashObject
-            if (closestTrash.GetType().GetMethod("CleanTrash") != null)
-            {
-                closestTrash.CleanTrash(); // Método del script corregido anteriormente
-            }
-            else if (closestTrash.GetType().GetMethod("EliminateTrash") != null)
-            {
-                closestTrash.EliminateTrash(); // Método alternativo
-            }
-            else
-            {
-                Debug.LogError($"❌ TrashObject no tiene métodos CleanTrash() ni EliminateTrash()");
-                return;
-            }
-
+            Destroy(closestTrash.gameObject);
             Debug.Log($"🗑️ Basura eliminada: {closestTrash.name}");
             nearbyTrash.Remove(closestTrash);
         }
     }
 
-    // ================== LÓGICA INTERNA DE EQUIPO ==================
+    // ================== DETECCIÓN Y UTILIDADES ==================
 
-    private void TryPickupTool()
+    private void OnTriggerEnter(Collider other)
     {
-        Camera rayCamera = Camera.main;
-        if (!rayCamera) return;
-
-        Vector3 origin = rayCamera.transform.position + rayCamera.transform.forward * 0.15f;
-        Vector3 dir = rayCamera.transform.forward;
-
-        ToolDescriptor td = null;
-
-        // 1. Raycast
-        if (Physics.Raycast(origin, dir, out RaycastHit rayHit, pickupRange, toolsLayer, QueryTriggerInteraction.Ignore))
+        if (other.CompareTag(dirtTag))
         {
-            td = rayHit.collider.GetComponentInParent<ToolDescriptor>();
+            DirtSpot dirt = other.GetComponent<DirtSpot>() ?? other.GetComponentInParent<DirtSpot>();
+            if (dirt != null && !nearbyDirt.Contains(dirt)) nearbyDirt.Add(dirt);
         }
 
-        // 2. Fallback Overlap
-        if (td == null)
+        if (other.GetComponent<Carryable>() != null)
         {
-            Vector3 probe = transform.position + transform.forward * 1.0f;
-            var around = Physics.OverlapSphere(probe, 0.85f, toolsLayer, QueryTriggerInteraction.Collide);
-            foreach (var c in around)
-            {
-                if (c.transform.IsChildOf(transform)) continue;
-                td = c.GetComponentInParent<ToolDescriptor>();
-                if (td != null) break;
-            }
+            Carryable carryable = other.GetComponent<Carryable>() ?? other.GetComponentInParent<Carryable>();
+            if (carryable != null && !nearbyCarryables.Contains(carryable)) nearbyCarryables.Add(carryable);
         }
 
-        if (td != null)
+        if (other.CompareTag(sweepableTrashTag))
         {
-            if (td.TryGetComponent<Carryable>(out var carryable))
-            {
-                carryable.PickUp(holdPoint, null);
-            }
-
-            RegisterTool(td);
-            Debug.Log($"🛠️ Herramienta recogida: {td.ToolId}");
+            TrashObject trash = other.GetComponent<TrashObject>() ?? other.GetComponentInParent<TrashObject>();
+            if (trash != null && !nearbyTrash.Contains(trash)) nearbyTrash.Add(trash);
         }
     }
 
-    private void Equip(ToolDescriptor tool)
+    private void OnTriggerExit(Collider other)
     {
-        CurrentTool = tool;
-
-        SetAllCollidersTrigger(tool.gameObject, true);
-
-        var t = tool.transform;
-        if (holdPoint != null)
+        if (other.CompareTag(dirtTag))
         {
-            t.SetParent(holdPoint, true);
-            t.localPosition = Vector3.zero;
-            t.localRotation = Quaternion.identity;
+            DirtSpot dirt = other.GetComponent<DirtSpot>() ?? other.GetComponentInParent<DirtSpot>();
+            if (dirt != null && nearbyDirt.Contains(dirt)) nearbyDirt.Remove(dirt);
         }
-    }
 
-    // ================== UTILITIES Y ANIMACIÓN ==================
+        if (other.GetComponent<Carryable>() != null)
+        {
+            Carryable carryable = other.GetComponent<Carryable>() ?? other.GetComponentInParent<Carryable>();
+            if (carryable != null && nearbyCarryables.Contains(carryable)) nearbyCarryables.Remove(carryable);
+        }
 
-    private static void SetAllCollidersTrigger(GameObject go, bool isTrigger)
-    {
-        var cols = go.GetComponentsInChildren<Collider>(true);
-        foreach (var c in cols) c.isTrigger = isTrigger;
+        if (other.CompareTag(sweepableTrashTag))
+        {
+            TrashObject trash = other.GetComponent<TrashObject>() ?? other.GetComponentInParent<TrashObject>();
+            if (trash != null && nearbyTrash.Contains(trash)) nearbyTrash.Remove(trash);
+        }
     }
 
     private void UpdateCleaningLayer(bool shouldUseCleaning)
@@ -336,7 +327,7 @@ public class CleaningController : MonoBehaviour
         if (anim == null) return;
 
         anim.SetBool("IsCleaning", shouldUseCleaning);
-        anim.SetBool("IsHolding", CurrentTool != null);
+        anim.SetBool("IsHolding", CarriedItems.Count > 0);
 
         if (cleaningLayerIndex >= 0)
         {
@@ -347,25 +338,17 @@ public class CleaningController : MonoBehaviour
         }
     }
 
-    // ✅ NUEVO: Método para debug
+    private static void SetAllCollidersTrigger(GameObject go, bool isTrigger)
+    {
+        var cols = go.GetComponentsInChildren<Collider>(true);
+        foreach (var c in cols) c.isTrigger = isTrigger;
+    }
+
     [ContextMenu("Debug Nearby Objects")]
     public void DebugNearbyObjects()
     {
         Debug.Log($"=== 🎯 DEBUG NEARBY OBJECTS ===");
-        Debug.Log($"Dirt Spots cercanos: {nearbyDirt.Count}");
-        Debug.Log($"Trash Objects cercanos: {nearbyTrash.Count}");
-        Debug.Log($"Herramienta actual: {(CurrentTool != null ? CurrentTool.ToolId : "Ninguna")}");
-
-        foreach (var dirt in nearbyDirt)
-        {
-            if (dirt != null)
-                Debug.Log($"🧹 Dirt: {dirt.name} - Limpiado: {dirt.IsCleaned}");
-        }
-
-        foreach (var trash in nearbyTrash)
-        {
-            if (trash != null)
-                Debug.Log($"🗑️ Trash: {trash.name} - Limpiado: {trash.IsCleaned}");
-        }
+        Debug.Log($"Objetos transportados: {CarriedItems.Count} / {MAX_CARRYABLE_ITEMS}");
+        Debug.Log($"Herramienta activa: {(CurrentTool != null ? CurrentTool.ToolId : "Ninguna")}");
     }
 }

@@ -271,37 +271,57 @@ public class PlayerInteraction : MonoBehaviour
 
     // =========================================================================
     // 🚀 FUNCIÓN DE SOLTAR/DESTRUIR (Q) 🚀
-    // 🚨 ESTA LÓGICA DESTRUYE TANTO LA TOOL COMO EL CARRYABLE NORMAL 🚨
+    // 📢 CORRECCIÓN: SOLO DESTRUYE LA TOOL, LOS CARRYABLES NORMALES SE SUELTAN.
     // =========================================================================
     void TryDropOrDestroy()
     {
-        if (heldItemSlot == null) return;
+        if (heldItemSlot == null && carried == null) return;
 
-        // 1. Lógica: DESTRUIR OBJETO Carryable (que NO es Tool)
+        // 1. Lógica: DESTRUIR HERRAMIENTA (Prioridad alta si existe)
+        // Asumimos que heldItemSlot.DestroyCurrentTool() destruye el objeto.
+        if (heldItemSlot != null && heldItemSlot.HasTool)
+        {
+            heldItemSlot.DestroyCurrentTool();
+            animCtrl?.SetHolding(false);
+            animCtrl?.TriggerInteract();
+            Debug.Log($"Herramienta destruida/desequipada ({pickupKey}).");
+
+            // **IMPORTANTE:** Si la Tool es destruida, también limpiamos la referencia de Carryable.
+            // Asumiendo que ToolDescriptor y Carryable están en el mismo GameObject.
+            carried = null;
+
+            return;
+        }
+
+        // 2. Lógica: SOLTAR OBJETO Carryable (que NO es Tool)
+        // Solo si 'carried' tiene valor, y no fue destruido como Tool en el paso anterior.
         if (carried != null)
         {
-            if (carried.gameObject != null)
+            // 📢 NUEVO: Asumimos que carried tiene un método Drop() o una función para soltarlo.
+            // Si el carried es un objeto que debe ser soltado (ej. bolsa de basura),
+            // necesitas una función para liberarlo del transform.
+
+            // Lógica de Soltar (reemplaza la destrucción)
+            // **IMPORTANTE:** Reemplaza esta línea con el método de tu Carryable para soltar.
+            // Por ejemplo: carried.GetComponent<Carryable>()?.Drop(transform.forward, dropForce);
+            // Si no tienes una función Drop, solo libera la jerarquía y activa las físicas:
+
+            carried.transform.SetParent(null);
+            if (carried.TryGetComponent<Rigidbody>(out var rb))
             {
-                Destroy(carried.gameObject);
-                Debug.Log($"Objeto Carryable {carried.name} destruido ({pickupKey}).");
+                rb.isKinematic = false;
+                rb.useGravity = true;
+                // Opcional: rb.AddForce(transform.forward * dropForce, ForceMode.Impulse);
             }
+
+            Debug.Log($"Objeto Carryable {carried.name} soltado ({pickupKey}).");
             carried = null;
             animCtrl?.SetHolding(false);
             animCtrl?.TriggerInteract();
             return;
         }
 
-        // 2. Lógica: DESTRUIR HERRAMIENTA
-        if (heldItemSlot.HasTool)
-        {
-            heldItemSlot.DestroyCurrentTool();
-            animCtrl?.SetHolding(false);
-            animCtrl?.TriggerInteract();
-            Debug.Log($"Herramienta destruida/desequipada ({pickupKey}).");
-            return;
-        }
-
-        Debug.Log("[Interacción Fallida] No hay objeto que destruir (Q).");
+        Debug.Log("[Interacción Fallida] No hay objeto que destruir o soltar (Q).");
     }
 
     // =========================================================================
