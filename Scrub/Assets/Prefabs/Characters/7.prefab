@@ -1458,6 +1458,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 7f394e12257befb43992c3be83001db7, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2558555786678423696}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 7f394e12257befb43992c3be83001db7, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -5610558014987335678}
     - targetCorrespondingSourceObject: {fileID: -3605182920710100459, guid: 7f394e12257befb43992c3be83001db7, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8948369944011793344}
@@ -1594,6 +1597,11 @@ SkinnedMeshRenderer:
 --- !u!137 &5829715896412404987 stripped
 SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: 141965507136831937, guid: 7f394e12257befb43992c3be83001db7, type: 3}
+  m_PrefabInstance: {fileID: 5845412110500379962}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &5917772225599357666 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8989407901053222952, guid: 7f394e12257befb43992c3be83001db7, type: 3}
   m_PrefabInstance: {fileID: 5845412110500379962}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &6239079936336419537 stripped
@@ -1858,7 +1866,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   holdPoints:
-  - {fileID: 0}
+  - {fileID: 5917772225599357666}
   anim: {fileID: 0}
   playerColliders: []
   toolsLayer:
@@ -1976,6 +1984,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tool1Prefab: {fileID: 4014498514318459743, guid: 610b7c880ca564a44bf9c129c0e44a14, type: 3}
   tool2Prefab: {fileID: 1927486437793573597, guid: e0441237b3d2dce498aa908bba2d800d, type: 3}
+--- !u!114 &-5610558014987335678
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6763978423349608555}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 928d637e1fbc2b9449d940d9935e514f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rightHandAnchor: {fileID: 5917772225599357666}
 --- !u!4 &6818505374472424636 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1134662855679897990, guid: 7f394e12257befb43992c3be83001db7, type: 3}

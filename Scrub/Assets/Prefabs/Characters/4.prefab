@@ -3786,6 +3786,7 @@ GameObject:
   - component: {fileID: -11114260915657454}
   - component: {fileID: 3412018906212019866}
   - component: {fileID: 3533879728378830940}
+  - component: {fileID: 7550645222232956862}
   m_Layer: 8
   m_Name: 4
   m_TagString: Player
@@ -4058,7 +4059,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   holdPoints:
-  - {fileID: 0}
+  - {fileID: 8626797401259328648}
   anim: {fileID: 0}
   playerColliders: []
   toolsLayer:
@@ -4158,6 +4159,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tool1Prefab: {fileID: 4014498514318459743, guid: 610b7c880ca564a44bf9c129c0e44a14, type: 3}
   tool2Prefab: {fileID: 1927486437793573597, guid: e0441237b3d2dce498aa908bba2d800d, type: 3}
+--- !u!114 &7550645222232956862
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3599570790234534221}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 928d637e1fbc2b9449d940d9935e514f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rightHandAnchor: {fileID: 8626797401259328648}
 --- !u!1 &3601537494100441701
 GameObject:
   m_ObjectHideFlags: 0
