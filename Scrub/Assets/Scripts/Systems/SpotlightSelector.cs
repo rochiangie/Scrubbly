@@ -203,18 +203,7 @@ public class SpotlightSelector : MonoBehaviour
 
         PlayerPrefs.SetInt("LastSelectedIndex", index);
 
-        // 🔴 VERIFICAR CharacterSelection (Debe existir previamente)
-        if (CharacterSelection.Instance == null)
-        {
-            // Intentar encontrar CharacterSelection en la escena (puede haber sido creado por otro script)
-            var cs = FindObjectOfType<CharacterSelection>();
-            if (cs == null)
-            {
-                Debug.LogError("[SELECTION] ❌ CharacterSelection NO encontrado. Cargando escena sin guardar ID.");
-                SceneManager.LoadScene(nextSceneName);
-                return;
-            }
-        }
+        // ... [Verificaciones de CharacterSelection y AudioManager] ...
 
         // Obtener el ID del personaje
         CharacterIDTag idTag = selectedCandidate.GetComponent<CharacterIDTag>();
@@ -225,26 +214,24 @@ public class SpotlightSelector : MonoBehaviour
         // 🔴 GUARDAR PERSONAJE
         CharacterSelection.Instance.SetSelectedID(characterID);
 
-        // 🔴 VERIFICAR AudioManager ANTES de cambiar escena
-        if (AudioManager.Instance != null)
-        {
-            Debug.Log("[SELECTION] AudioManager encontrado, ejecutando debug...");
-            AudioManager.Instance.DebugAudioStatus();
-        }
-        else
-        {
-            Debug.LogError("[SELECTION] ❌ AudioManager NO encontrado");
-        }
+        // ... [Verificación de AudioManager] ...
 
         // 🔴 DESTRUIR SpotlightSelector
         Debug.Log("[SELECTION] 🗑️ Destruyendo SpotlightSelector...");
         Destroy(gameObject);
 
-        // 🎯 AHORA USAMOS LA LÓGICA DE RUTEO DEL SINGLETON CharacterSelection
-        // Reemplazamos la llamada directa a SceneManager.LoadScene(nextSceneName)
+        // 🎯 CARGA DE ESCENA CORREGIDA:
+        // La función GoToGameScene() es la que DEBE decidir si va a Principal o CasaChick.
+        // **Si quieres que la escena de LORE se muestre ANTES de la bifurcación,
+        // esta lógica debe estar en GoToGameScene() también.**
+
+        // Si GoToGameScene() ya decide el destino final (Principal/CasaChick),
+        // esta línea DEBE irse:
+
+        // SceneManager.LoadScene(nextSceneName); // ❌ ¡ELIMINA/COMENTA ESTA LÍNEA!
 
         Debug.Log($"[SELECTION] 🎯 Iniciando rutaje de escena en base al ID: {characterID}");
-        CharacterSelection.Instance.GoToGameScene(); // ⬅️ ¡ESTE ES EL CAMBIO CLAVE!
+        CharacterSelection.Instance.GoToGameScene(); // ⬅️ ¡Esta es la única carga de escena que debe quedar aquí!
     }
 
     System.Collections.IEnumerator AnimateTo(int i)

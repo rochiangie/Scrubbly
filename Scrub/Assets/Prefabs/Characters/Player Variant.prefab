@@ -1147,7 +1147,7 @@ MonoBehaviour:
     m_Bits: 128
   carryableLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 4294967295
   pickupRange: 3.5
   dropForce: 1.5
   cleanKey: 114
@@ -1156,6 +1156,7 @@ MonoBehaviour:
   requireCorrectTool: 1
   validToolIds:
   - Sponge
+  - Escoba
   dirtTag: Dirt
   carryableTrashTag: Trash
   sweepableTrashTag: Basura

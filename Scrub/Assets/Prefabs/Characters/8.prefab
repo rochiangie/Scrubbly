@@ -1957,6 +1957,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 5
+  runSpeed: 10
+  runKey: 304
   jumpForce: 6
   jumpKey: 32
   animator: {fileID: 0}
@@ -2054,16 +2056,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d9dddb7ed790ef4aa3a14e7edb5420a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  holdPoint: {fileID: 0}
+  holdPoints:
+  - {fileID: 0}
   anim: {fileID: 0}
+  playerColliders: []
   toolsLayer:
     serializedVersion: 2
     m_Bits: 128
+  carryableLayer:
+    serializedVersion: 2
+    m_Bits: 4294967295
   pickupRange: 3.5
   dropForce: 1.5
-  pickupKey: 101
   cleanKey: 114
-  trashKey: 102
+  disposeKey: 102
   damagePerHit: 2
   requireCorrectTool: 1
   validToolIds:
@@ -2071,7 +2077,8 @@ MonoBehaviour:
   - Escoba
   - Vacuum
   dirtTag: Dirt
-  trashTag: Basura
+  carryableTrashTag: Trash
+  sweepableTrashTag: Basura
   cleaningLayerName: Clean
   layerBlendSpeed: 12
 --- !u!114 &6089838089333151501
