@@ -24131,11 +24131,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1030989961, guid: abc00000000004166359873731868689, type: 3}
   m_PrefabInstance: {fileID: 715490324}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &715891300 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 6098897247484244717, guid: 5dbd8464d84e0094dba0a982e91f9806, type: 3}
-  m_PrefabInstance: {fileID: 1856521701}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &721483651
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -39583,7 +39578,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 368.69998, y: 161.05763}
+  m_AnchoredPosition: {x: 241.69997, y: 89.85765}
   m_SizeDelta: {x: 115.8715, y: 30.9636}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1248597353
@@ -41300,6 +41295,7 @@ GameObject:
   - component: {fileID: 1279726282}
   - component: {fileID: 1279726281}
   - component: {fileID: 1279726283}
+  - component: {fileID: 1279726284}
   m_Layer: 0
   m_Name: CinemachineCamera
   m_TagString: Untagged
@@ -41368,7 +41364,7 @@ MonoBehaviour:
   m_StreamingVersion: 20241001
   m_LegacyPriority: 0
   Target:
-    TrackingTarget: {fileID: 715891300}
+    TrackingTarget: {fileID: 0}
     LookAtTarget: {fileID: 0}
     CustomLookAtTarget: 0
   Lens:
@@ -41404,6 +41400,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Damping: 0
+--- !u!114 &1279726284
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1279726278}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fad1e63616a6db444bc767794b34d8fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Vcam: {fileID: 1279726282}
+  PlayerTag: Player
+  HeadObjectName: Head
 --- !u!1001 &1294636962
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -52160,7 +52171,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 284.1, y: 155.62659}
+  m_AnchoredPosition: {x: 157.09999, y: 84.426605}
   m_SizeDelta: {x: 92.6972, y: 12.3855}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1614432385
@@ -52380,7 +52391,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 312.80002, y: 167.69998}
+  m_AnchoredPosition: {x: 185.8, y: 96.5}
   m_SizeDelta: {x: 279.8392, y: 22.9323}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1621809667
@@ -53548,7 +53559,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 298, y: 161.2}
+  m_AnchoredPosition: {x: 171, y: 90}
   m_SizeDelta: {x: 43.0115, y: 11.0515}
   m_Pivot: {x: 0.5, y: 0.49999994}
 --- !u!114 &1643008754
