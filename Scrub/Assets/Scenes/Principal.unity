@@ -571,6 +571,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!65 &44895848
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -753,6 +754,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!54 &50751508
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1249,6 +1251,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!65 &66349569
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2601,6 +2604,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!4 &179918075 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: bf30024ce8d251d40941085e44298d88, type: 3}
@@ -2923,6 +2927,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!65 &211393816
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3305,6 +3310,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!54 &262242636
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -3838,6 +3844,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!65 &279637494
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4020,6 +4027,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!65 &296960868
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4091,88 +4099,11 @@ MonoBehaviour:
   precomputeOutline: 0
   bakeKeys: []
   bakeValues: []
---- !u!1 &298415732
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 298415734}
-  - component: {fileID: 298415733}
-  - component: {fileID: 298415735}
-  m_Layer: 0
-  m_Name: 'CharacterLoader '
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &298415733
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 298415732}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8e8f715040d72b4429da03618b28dcd4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  FallbackCharacterID: 1
-  AvailableCharacters:
-  - ID: 1
-    Prefab: {fileID: 7323757511219053547, guid: 14398d2d9683cdc41b672635e201fac0, type: 3}
-  - ID: 2
-    Prefab: {fileID: 6422002185381309941, guid: eed46729d2edb90448f72a6f8cbd5d57, type: 3}
-  - ID: 3
-    Prefab: {fileID: 8167730674303123077, guid: ceefa8b3ffff2264bbbe4cb7e7533410, type: 3}
-  - ID: 4
-    Prefab: {fileID: 3599570790234534221, guid: d62efa6573b1d1d4389faff49807cb3b, type: 3}
-  - ID: 5
-    Prefab: {fileID: 1316996708007013917, guid: 976281ff04ff6ea4d941f57950adc597, type: 3}
-  - ID: 6
-    Prefab: {fileID: 4323772801485002626, guid: 4b714ebab645ff146958795b1d039263, type: 3}
-  - ID: 7
-    Prefab: {fileID: 6763978423349608555, guid: 9ed5b504eb520c4439c30b9e59d319f1, type: 3}
-  - ID: 8
-    Prefab: {fileID: 1532228888865751196, guid: af3476e1237e18c4b98f1de98714adf3, type: 3}
-  - ID: 9
-    Prefab: {fileID: 6521118409924740657, guid: 55a7a65203397ac4f8c63fa56c8dbecd, type: 3}
-  SpawnPoint: {fileID: 298415734}
-  PlayerTag: Player
---- !u!4 &298415734
+--- !u!4 &298415734 stripped
 Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 5906732913504171234, guid: ce96c935d28717241961308b846895f3, type: 3}
+  m_PrefabInstance: {fileID: 236382284064074716}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 298415732}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 0.95, y: 0.69286853, z: -11.06}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
---- !u!114 &298415735
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 298415732}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fad1e63616a6db444bc767794b34d8fb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Vcam: {fileID: 1565165547}
-  PlayerTag: Player
-  HeadObjectName: Head
 --- !u!1 &305104840 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7262956993760990891, guid: 546453e5a2230d547b7b5d65f27e6331, type: 3}
@@ -4364,6 +4295,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!65 &306148403
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5560,6 +5492,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!65 &347611351
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6271,6 +6204,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!1 &440773688 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1963023906503628687, guid: c7f3a70624a8a894191b344c9629f3fc, type: 3}
@@ -6737,6 +6671,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!65 &467952966
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6868,6 +6803,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!114 &484692159
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6991,6 +6927,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!1 &514230924
 GameObject:
   m_ObjectHideFlags: 0
@@ -7182,6 +7119,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!65 &535031234
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -7494,6 +7432,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!65 &542918412
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -7842,6 +7781,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!65 &557951660
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -8183,6 +8123,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!4 &572143144 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7281506254714713799, guid: 4dfd675d2cc167b44b58eada6d53e3db, type: 3}
@@ -8640,6 +8581,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!65 &624347201
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -8877,6 +8819,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!65 &651071478
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -9426,6 +9369,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!65 &686126299
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -9978,6 +9922,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!4 &719182939 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7973239343787239037, guid: e49bcf1985a184d49a540b41d1c6ad71, type: 3}
@@ -10297,6 +10242,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!4 &747939022 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4346602923199802821, guid: 1e899aaec6ac6f84b963aa652ffce6ff, type: 3}
@@ -10807,6 +10753,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!54 &784272475
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -11706,6 +11653,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!65 &838877114
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -12606,6 +12554,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!4 &879839067 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8460676805129867878, guid: 87cfa21c1aecb2942960679079446f27, type: 3}
@@ -12708,6 +12657,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!4 &881364800 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5718301682613739873, guid: 185560490d85eb6478c67e20e0454c48, type: 3}
@@ -12877,6 +12827,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!65 &884576279
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -13979,6 +13930,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!4 &929036874 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3006424547328665478, guid: 2c3b7cb9660f44c438470cecbd8a6c4d, type: 3}
@@ -14329,6 +14281,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!65 &938155058
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -14717,6 +14670,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!54 &952305484
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -15184,6 +15138,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!65 &972501484
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -15730,6 +15685,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!4 &1012365663 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5617490527015976088, guid: dcfa826603e8b9a4894ed2af56a4cdcf, type: 3}
@@ -16154,6 +16110,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!4 &1036680875 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1303591431517445159, guid: e64b3ed26bdbe6f40bebf5d84f9d6211, type: 3}
@@ -16536,6 +16493,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!65 &1057227865
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -17061,6 +17019,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!4 &1107548370 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3322692732565855383, guid: 08169b886f1c6a240836303dae669fef, type: 3}
@@ -17308,6 +17267,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!4 &1127776796 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7353067289508354338, guid: d94579692f0c1194f994a562253e6e77, type: 3}
@@ -18268,6 +18228,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!4 &1232237989 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2461541260580441385, guid: be910cea9ce86cc4eab79500ae29bb05, type: 3}
@@ -18985,6 +18946,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!4 &1323841767 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3176161774869147057, guid: e1d60de9afe6d384fa5b1b7611efbba8, type: 3}
@@ -19401,6 +19363,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!65 &1337529404
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -19673,6 +19636,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!65 &1345688676
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -20034,6 +19998,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!54 &1356394308
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -20168,6 +20133,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!114 &1364863612
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20999,6 +20965,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!4 &1431607280 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 46a2a27bcd19b0c4e866b4d83e3a5c8d, type: 3}
@@ -21574,6 +21541,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!65 &1472657578
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -22347,6 +22315,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!4 &1524222067 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 213887876213765514, guid: a3f2f26060e367f41bf242770838f23a, type: 3}
@@ -22795,6 +22764,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!65 &1540358959
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -24048,6 +24018,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!65 &1598900174
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -24538,6 +24509,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!65 &1606235256
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -25308,6 +25280,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!4 &1680625597 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7201775853319183329, guid: 35cea9585d9f7674a9889d4bdf0c7227, type: 3}
@@ -25752,6 +25725,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!1 &1733179714 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3425550960444887891, guid: e64b3ed26bdbe6f40bebf5d84f9d6211, type: 3}
@@ -25804,6 +25778,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!4 &1733179723 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1303591431517445159, guid: e64b3ed26bdbe6f40bebf5d84f9d6211, type: 3}
@@ -26015,6 +25990,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!54 &1758788902
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -26159,6 +26135,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!4 &1760543314 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 575765151629464786, guid: 509a30bc507687945a6eeaffeb694184, type: 3}
@@ -26748,6 +26725,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!65 &1819931589
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -26995,6 +26973,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!65 &1830929137
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -28144,6 +28123,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!65 &1909499444
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -28613,6 +28593,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!65 &1946230262
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -30070,6 +30051,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!114 &2060443838
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30203,6 +30185,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!65 &2065005138
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -31175,6 +31158,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!65 &2118479003
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -31436,6 +31420,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!4 &2122105838 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7339027781610972602, guid: c279cd098243e454eae160b9adf2cc95, type: 3}
@@ -31570,6 +31555,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!65 &2124210488
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -31876,6 +31862,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!1001 &2136283782
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -32076,6 +32063,67 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1001 &236382284064074716
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2963892566268928781, guid: ce96c935d28717241961308b846895f3, type: 3}
+      propertyPath: m_Name
+      value: 'CharacterLoader '
+      objectReference: {fileID: 0}
+    - target: {fileID: 5906732913504171234, guid: ce96c935d28717241961308b846895f3, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.95
+      objectReference: {fileID: 0}
+    - target: {fileID: 5906732913504171234, guid: ce96c935d28717241961308b846895f3, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.69286853
+      objectReference: {fileID: 0}
+    - target: {fileID: 5906732913504171234, guid: ce96c935d28717241961308b846895f3, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -11.06
+      objectReference: {fileID: 0}
+    - target: {fileID: 5906732913504171234, guid: ce96c935d28717241961308b846895f3, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5906732913504171234, guid: ce96c935d28717241961308b846895f3, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5906732913504171234, guid: ce96c935d28717241961308b846895f3, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5906732913504171234, guid: ce96c935d28717241961308b846895f3, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5906732913504171234, guid: ce96c935d28717241961308b846895f3, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5906732913504171234, guid: ce96c935d28717241961308b846895f3, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 180
+      objectReference: {fileID: 0}
+    - target: {fileID: 5906732913504171234, guid: ce96c935d28717241961308b846895f3, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8243376783585595400, guid: ce96c935d28717241961308b846895f3, type: 3}
+      propertyPath: Vcam
+      value: 
+      objectReference: {fileID: 1565165547}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: ce96c935d28717241961308b846895f3, type: 3}
 --- !u!114 &286325125230941231
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -33656,6 +33704,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!54 &3593268102256023627
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -34768,6 +34817,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!54 &5733618162176240983
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -34896,6 +34946,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!54 &5733618163442438993
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -35283,6 +35334,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!54 &6253070734278259342
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -35522,6 +35574,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!54 &6520676729730401879
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -35897,6 +35950,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!54 &6838324102942681685
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -36537,6 +36591,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!54 &8561357407514522362
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -36665,6 +36720,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!54 &8561357408109530356
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -36993,6 +37049,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!54 &8822683278810411831
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -37093,6 +37150,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!54 &8822683279909784881
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -37248,6 +37306,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!54 &8877222177428457404
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -37376,6 +37435,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!54 &8941426132287074637
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -37504,6 +37564,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!54 &8941426133351878499
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -37641,6 +37702,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!54 &9007582892203083878
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -37762,6 +37824,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!54 &9007582893319288448
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -37916,6 +37979,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDropForce: 3
+  scaleFactorOnPickup: 0.5
 --- !u!54 &9053472433117394616
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -38019,7 +38083,7 @@ SceneRoots:
   - {fileID: 164706694}
   - {fileID: 2121048806}
   - {fileID: 1565165548}
-  - {fileID: 298415734}
+  - {fileID: 236382284064074716}
   - {fileID: 171393964}
   - {fileID: 1894411233}
   - {fileID: 937243653}
