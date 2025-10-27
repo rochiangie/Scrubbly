@@ -2,10 +2,23 @@
 using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Linq;
+using TMPro; // NECESARIO para la UI
 
 public class SpotlightSelector : MonoBehaviour
 {
+    // ===================================
+    // NUEVAS REFERENCIAS PARA EL LORE
+    // ===================================
+    [Header("UI y Lore")]
+    [Tooltip("El componente TextMeshProUGUI que mostrará la descripción del personaje.")]
+    public TextMeshProUGUI loreTextComponent;
+    [Tooltip("Distancia máxima de raycast para detectar el personaje.")]
+    public float detectionDistance = 50f;
+    // ----------------------------------
+
     private Transform[] candidates;
+    private CharacterData currentSelectionData; // Cache del script de datos del personaje actual
+    private Light spotLight; // Referencia a la luz del Spot
 
     [Header("Etiqueta para la búsqueda automática")]
     [Tooltip("Etiqueta que tienen TODOS los personajes seleccionables en la escena.")]
@@ -44,7 +57,7 @@ public class SpotlightSelector : MonoBehaviour
     [SerializeField] LayerMask raycastLayer;
 
     [Header("Flujo")]
-    [SerializeField] string nextSceneName = "Lore";
+    [SerializeField] string nextSceneName = "Lore"; // No se usa para la carga final.
     [SerializeField] bool wrapAround = true;
     [SerializeField] bool usePrefabs = true;
 
@@ -54,6 +67,7 @@ public class SpotlightSelector : MonoBehaviour
 
     void Awake()
     {
+        spotLight = GetComponent<Light>();
         if (raycastLayer.value == 0)
         {
             raycastLayer = ~0;
@@ -67,13 +81,19 @@ public class SpotlightSelector : MonoBehaviour
         isTransitioning = false;
         index = 0;
         isInputBlocked = true;
+        currentSelectionData = null;
 
         if (candidates != null && candidates.Length > 0)
         {
-            // Usar la llave correcta para PlayerPrefs, aunque la gestiona CharacterSelection
             int lastIndex = PlayerPrefs.GetInt("LastSelectedIndex", 0);
             index = Mathf.Clamp(lastIndex, 0, candidates.Length - 1);
             SnapTo(index);
+            // Ejecutar la lógica de UI después del Snap inicial.
+            CharacterData initialData = candidates[index].GetComponent<CharacterData>();
+            if (initialData != null)
+            {
+                UpdateLoreUI(initialData);
+            }
         }
         else
         {
@@ -115,6 +135,9 @@ public class SpotlightSelector : MonoBehaviour
             return;
         }
 
+        // Detección de foco para actualizar el Lore
+        DetectCharacterInFocus();
+
         if (Input.GetKeyDown(prev1) || Input.GetKeyDown(prev2))
         {
             Focus(-1);
@@ -123,6 +146,7 @@ public class SpotlightSelector : MonoBehaviour
         {
             Focus(+1);
         }
+        // 🟢 Añadimos el botón del panel (si existe) como opción de confirmación
         else if (Input.GetKeyDown(confirmKey) || Input.GetKeyDown(confirmAlt) || Input.GetKeyDown(KeyCode.KeypadEnter))
         {
             Confirm();
@@ -133,6 +157,51 @@ public class SpotlightSelector : MonoBehaviour
         }
     }
 
+    // FUNCIÓN: Detecta si un personaje está bajo el foco de la luz
+    private void DetectCharacterInFocus()
+    {
+        if (spotLight == null || loreTextComponent == null) return;
+
+        Vector3 origin = spotLight.transform.position;
+        Vector3 direction = spotLight.transform.forward;
+
+        if (Physics.Raycast(origin, direction, out RaycastHit hit, detectionDistance, raycastLayer))
+        {
+            CharacterData hitData = hit.collider.GetComponentInParent<CharacterData>();
+
+            if (hitData != null && hitData != currentSelectionData)
+            {
+                UpdateLoreUI(hitData);
+            }
+        }
+        else if (currentSelectionData != null)
+        {
+            // Opcional: Si el foco se va, podrías resetear el texto
+            // UpdateLoreUI(null); 
+        }
+    }
+
+    // FUNCIÓN: Actualiza el Canvas y el Singleton (CharacterSelection)
+    private void UpdateLoreUI(CharacterData newSelection)
+    {
+        currentSelectionData = newSelection;
+
+        if (currentSelectionData != null)
+        {
+            loreTextComponent.text = currentSelectionData.loreText;
+
+            if (CharacterSelection.Instance != null)
+            {
+                // Guarda el nombre del prefab para la carga en la escena de juego.
+                CharacterSelection.Instance.SetSelectedID(currentSelectionData.prefabName);
+            }
+        }
+        else if (loreTextComponent != null)
+        {
+            loreTextComponent.text = "Dirige el foco al personaje para ver su historia.";
+        }
+    }
+
     void HandleMouseClick()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -140,7 +209,6 @@ public class SpotlightSelector : MonoBehaviour
 
         if (Physics.Raycast(ray, out hit, 100f, raycastLayer))
         {
-            // Buscar el Transform raíz del candidato
             Transform clickedRoot = hit.transform;
             while (clickedRoot != null && !clickedRoot.CompareTag(CandidateTag))
             {
@@ -161,6 +229,12 @@ public class SpotlightSelector : MonoBehaviour
 
                 if (clickedIndex != -1)
                 {
+                    CharacterData clickedData = clickedRoot.GetComponent<CharacterData>();
+                    if (clickedData != null)
+                    {
+                        UpdateLoreUI(clickedData);
+                    }
+
                     if (clickedIndex == index)
                     {
                         Confirm();
@@ -185,11 +259,19 @@ public class SpotlightSelector : MonoBehaviour
         if (newIndex == index) return;
 
         index = newIndex;
+
+        if (candidates[index] != null)
+        {
+            CharacterData newFocusedData = candidates[index].GetComponent<CharacterData>();
+            UpdateLoreUI(newFocusedData);
+        }
+
         StopAllCoroutines();
         StartCoroutine(AnimateTo(index));
     }
 
-    void Confirm()
+    // 🟢 FUNCIÓN CONFIRM CORREGIDA PARA ELIMINAR EL ERROR DE DESTRUCCIÓN TEMPRANA
+    public void Confirm()
     {
         if (candidates == null || candidates.Length == 0) return;
 
@@ -203,35 +285,26 @@ public class SpotlightSelector : MonoBehaviour
 
         PlayerPrefs.SetInt("LastSelectedIndex", index);
 
-        // ... [Verificaciones de CharacterSelection y AudioManager] ...
+        CharacterData finalData = selectedCandidate.GetComponent<CharacterData>();
 
-        // Obtener el ID del personaje
-        CharacterIDTag idTag = selectedCandidate.GetComponent<CharacterIDTag>();
-        string characterID = (idTag != null) ? idTag.characterID : selectedCandidate.name;
+        if (finalData != null && CharacterSelection.Instance != null)
+        {
+            // 1. Guarda el ID del prefab
+            CharacterSelection.Instance.SetSelectedID(finalData.prefabName);
+            Debug.Log($"[SELECTION] 🔥 Confirmando personaje y guardando ID: {finalData.prefabName}");
 
-        Debug.Log($"[SELECTION] 🔥 Confirmando personaje: {characterID}");
+            // 2. CARGA DE ESCENA: Llama a la lógica de bifurcación Principal/CasaChick.
+            Debug.Log($"[SELECTION] 🎯 Iniciando rutaje de escena en base al ID: {finalData.prefabName}");
+            CharacterSelection.Instance.GoToGameScene();
 
-        // 🔴 GUARDAR PERSONAJE
-        CharacterSelection.Instance.SetSelectedID(characterID);
-
-        // ... [Verificación de AudioManager] ...
-
-        // 🔴 DESTRUIR SpotlightSelector
-        Debug.Log("[SELECTION] 🗑️ Destruyendo SpotlightSelector...");
-        Destroy(gameObject);
-
-        // 🎯 CARGA DE ESCENA CORREGIDA:
-        // La función GoToGameScene() es la que DEBE decidir si va a Principal o CasaChick.
-        // **Si quieres que la escena de LORE se muestre ANTES de la bifurcación,
-        // esta lógica debe estar en GoToGameScene() también.**
-
-        // Si GoToGameScene() ya decide el destino final (Principal/CasaChick),
-        // esta línea DEBE irse:
-
-        // SceneManager.LoadScene(nextSceneName); // ❌ ¡ELIMINA/COMENTA ESTA LÍNEA!
-
-        Debug.Log($"[SELECTION] 🎯 Iniciando rutaje de escena en base al ID: {characterID}");
-        CharacterSelection.Instance.GoToGameScene(); // ⬅️ ¡Esta es la única carga de escena que debe quedar aquí!
+            // 3. DESTRUIR: Se destruye al final, después de la carga.
+            Debug.Log("[SELECTION] 🗑️ Destruyendo SpotlightSelector...");
+            Destroy(gameObject);
+        }
+        else
+        {
+            Debug.LogError("Error crítico: CharacterData no disponible o CharacterSelection no inicializado. Cancelando carga.");
+        }
     }
 
     System.Collections.IEnumerator AnimateTo(int i)
