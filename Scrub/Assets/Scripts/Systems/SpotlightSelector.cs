@@ -240,9 +240,11 @@ public class SpotlightSelector : MonoBehaviour
         Debug.Log("[SELECTION] 🗑️ Destruyendo SpotlightSelector...");
         Destroy(gameObject);
 
-        // 🔴 CAMBIAR A ESCENA LORE
-        Debug.Log($"[SELECTION] 🎯 Cargando escena: {nextSceneName}");
-        SceneManager.LoadScene(nextSceneName);
+        // 🎯 AHORA USAMOS LA LÓGICA DE RUTEO DEL SINGLETON CharacterSelection
+        // Reemplazamos la llamada directa a SceneManager.LoadScene(nextSceneName)
+
+        Debug.Log($"[SELECTION] 🎯 Iniciando rutaje de escena en base al ID: {characterID}");
+        CharacterSelection.Instance.GoToGameScene(); // ⬅️ ¡ESTE ES EL CAMBIO CLAVE!
     }
 
     System.Collections.IEnumerator AnimateTo(int i)
