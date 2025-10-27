@@ -5,29 +5,27 @@ using System;
 
 public class TrashUIManager : MonoBehaviour
 {
-    // 📢 CRUCIAL: Referencia al GameObject del Panel COMPLETO que está inactivo (Arrastra el Panel aquí).
+    // 📢 CRUCIAL: Referencia al GameObject del Panel COMPLETO.
+    // Aunque ya no controlamos su visibilidad, la necesitamos para saber qué objeto contiene los componentes.
     [Header("Panel Principal")]
     [SerializeField] private GameObject uiPanelGameObject;
 
     [Header("Componentes UI")]
     [SerializeField] private TMP_Text trashCountText;
     [SerializeField] private Slider trashSlider;
-    [SerializeField] private TMP_Text timerText; // Texto para el temporizador (debe ser asignado en el Manager y aquí)
+    [SerializeField] private TMP_Text timerText;
 
+    // 🛑 ELIMINAMOS EL RETARDO: Ya no se usa para ocultar el panel.
     [Header("Retardo")]
-    [Tooltip("Tiempo en segundos que el panel permanece visible al completar la tarea.")]
+    [Tooltip("El retardo ya no se usa, el panel estará siempre visible.")]
     [SerializeField] private float hideDelay = 3f;
 
     private CleaningManager manager;
 
     void Awake()
     {
-        // Se ejecuta porque este script está en un objeto activo.
-        // Asegura que el Panel referenciado (el hijo) esté inactivo al inicio.
-        if (uiPanelGameObject != null)
-        {
-            uiPanelGameObject.SetActive(false);
-        }
+        // 🛑 ELIMINAMOS LA LÓGICA DE OCULTAR AL INICIO.
+        // El panel debe estar activo en el Editor de Unity.
     }
 
     void Start()
@@ -38,6 +36,12 @@ public class TrashUIManager : MonoBehaviour
         {
             Debug.LogError("TrashUIManager no encontró el CleaningManager.");
         }
+
+        // 📢 Configuración del Panel en el Editor
+        if (uiPanelGameObject != null && !uiPanelGameObject.activeSelf)
+        {
+            Debug.LogWarning("El Panel de UI está inactivo en el Editor. Actívalo manualmente para que sea visible.");
+        }
     }
 
     void OnEnable()
@@ -46,8 +50,7 @@ public class TrashUIManager : MonoBehaviour
         CleaningManager.OnTrashCountUpdated += UpdateTrashUI;
         CleaningManager.OnTimeUpdated += UpdateTimerUI;
 
-        // 2. 📢 ACTIVACIÓN GARANTIZADA: Forzamos al Manager a enviar el estado inicial
-        // Esto asegura que la UI se actualice inmediatamente con 0 / Total.
+        // 2. Activación Garantizada: Forzamos al Manager a enviar el estado inicial.
         if (manager != null)
         {
             manager.SendCurrentState();
@@ -59,53 +62,23 @@ public class TrashUIManager : MonoBehaviour
         // 3. Limpieza y desuscripción.
         CleaningManager.OnTrashCountUpdated -= UpdateTrashUI;
         CleaningManager.OnTimeUpdated -= UpdateTimerUI;
-        CancelInvoke(nameof(HidePanel));
+        // 🛑 Eliminamos CancelInvoke(nameof(HidePanel));
     }
 
-    // Método privado que realmente oculta el panel
-    private void HidePanel()
-    {
-        if (uiPanelGameObject != null)
-        {
-            uiPanelGameObject.SetActive(false);
-        }
-    }
+    // 🛑 Eliminamos el método HidePanel().
 
     private void UpdateTrashUI(int cleanedCount, int totalCount)
     {
-        // 1. LÓGICA DE ACTIVACIÓN/DESACTIVACIÓN DEL PANEL
+        // 🛑 ELIMINAMOS TODA LA LÓGICA DE ACTIVACIÓN/DESACTIVACIÓN DEL PANEL.
 
-        if (totalCount > 0 && cleanedCount < totalCount)
-        {
-            // Si hay basura pendiente, asegura la visibilidad.
-            if (uiPanelGameObject != null && !uiPanelGameObject.activeSelf)
-            {
-                uiPanelGameObject.SetActive(true);
-            }
-
-            CancelInvoke(nameof(HidePanel));
-        }
-        else if (cleanedCount >= totalCount)
-        {
-            // Tarea completada: programa la ocultación.
-            if (uiPanelGameObject != null && uiPanelGameObject.activeSelf)
-            {
-                if (!IsInvoking(nameof(HidePanel)))
-                {
-                    Invoke(nameof(HidePanel), hideDelay);
-                    Debug.Log($"Tarea completada. Panel se ocultará en {hideDelay} segundos.");
-                }
-            }
-        }
-
-        // 2. Actualiza el Texto (Basura)
+        // 1. Actualiza el Texto (Basura)
         if (trashCountText != null)
         {
             int remaining = Mathf.Max(0, totalCount - cleanedCount);
             trashCountText.text = $"{remaining} / {totalCount} Restante";
         }
 
-        // 3. Actualiza el Slider
+        // 2. Actualiza el Slider
         if (trashSlider != null)
         {
             if (trashSlider.maxValue != totalCount)
@@ -116,7 +89,6 @@ public class TrashUIManager : MonoBehaviour
         }
     }
 
-    // 📢 NUEVO: Función para actualizar el texto del tiempo
     private void UpdateTimerUI(float timeRemaining)
     {
         if (timerText != null)
@@ -127,14 +99,14 @@ public class TrashUIManager : MonoBehaviour
 
             timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
 
-            // Opcional: Cambia de color cuando el tiempo es bajo
+            // Lógica de color de tiempo bajo (mantenida para visualización)
             if (timeRemaining <= 30f)
             {
                 timerText.color = Color.red;
             }
             else
             {
-                timerText.color = Color.white; // Vuelve a blanco si sube el tiempo
+                timerText.color = Color.white;
             }
         }
     }
