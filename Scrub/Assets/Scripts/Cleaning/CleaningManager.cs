@@ -124,7 +124,6 @@ public class CleaningManager : MonoBehaviour
     /// <summary>
     /// Termina el juego, muestra el panel correspondiente y programa la transición de escena.
     /// </summary>
-// 📢 CAMBIO: Eliminamos la invocación y usamos una corrutina.
     private void EndGame(bool success)
     {
         isGameOver = true;
@@ -139,7 +138,7 @@ public class CleaningManager : MonoBehaviour
             activePanel.SetActive(true);
             Debug.Log($"FIN DEL JUEGO: {(success ? "VICTORIA" : "DERROTA")}");
 
-            // 2. 📢 INICIAMOS LA CORRUTINA PARA PAUSAR Y CONTAR TIEMPO REAL
+            // 2. INICIAMOS LA CORRUTINA PARA PAUSAR Y CONTAR TIEMPO REAL
             StartCoroutine(EndGameSequence());
         }
         else
@@ -149,13 +148,13 @@ public class CleaningManager : MonoBehaviour
         }
     }
 
-    // 📢 NUEVO: Coroutine para manejar el tiempo sin escala.
+    // Coroutine para manejar el tiempo de visualización de la pantalla final sin escala.
     private IEnumerator EndGameSequence()
     {
         // 1. Pausa el juego para el jugador
         Time.timeScale = 0f;
 
-        // 2. Espera el tiempo de visualización de la pantalla final (usando tiempo real, no afectado por la pausa)
+        // 2. Espera el tiempo de visualización de la pantalla final (usando tiempo real)
         float timer = 0f;
         while (timer < endScreenDisplayTime)
         {

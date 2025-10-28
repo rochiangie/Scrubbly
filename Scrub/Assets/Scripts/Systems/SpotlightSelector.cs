@@ -2,7 +2,7 @@
 using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Linq;
-using TMPro; // NECESARIO para la UI
+using TMPro;
 
 public class SpotlightSelector : MonoBehaviour
 {
@@ -10,11 +10,16 @@ public class SpotlightSelector : MonoBehaviour
     // NUEVAS REFERENCIAS PARA EL LORE
     // ===================================
     [Header("UI y Lore")]
-    [Tooltip("El componente TextMeshProUGUI que mostrará la descripción del personaje.")]
+    [Tooltip("El componente TextMeshProUGUI que mostrará la descripción del personaje (Lore).")]
     public TextMeshProUGUI loreTextComponent;
+
+    // 🟢 NUEVA REFERENCIA
+    [Tooltip("El componente TextMeshProUGUI que mostrará la Tarea/Misión del personaje.")]
+    public TextMeshProUGUI tasksTextComponent;
+    // ----------------------------------
+
     [Tooltip("Distancia máxima de raycast para detectar el personaje.")]
     public float detectionDistance = 50f;
-    // ----------------------------------
 
     private Transform[] candidates;
     private CharacterData currentSelectionData; // Cache del script de datos del personaje actual
@@ -57,7 +62,7 @@ public class SpotlightSelector : MonoBehaviour
     [SerializeField] LayerMask raycastLayer;
 
     [Header("Flujo")]
-    [SerializeField] string nextSceneName = "Lore"; // No se usa para la carga final.
+    [SerializeField] string nextSceneName = "Lore";
     [SerializeField] bool wrapAround = true;
     [SerializeField] bool usePrefabs = true;
 
@@ -88,7 +93,7 @@ public class SpotlightSelector : MonoBehaviour
             int lastIndex = PlayerPrefs.GetInt("LastSelectedIndex", 0);
             index = Mathf.Clamp(lastIndex, 0, candidates.Length - 1);
             SnapTo(index);
-            // Ejecutar la lógica de UI después del Snap inicial.
+
             CharacterData initialData = candidates[index].GetComponent<CharacterData>();
             if (initialData != null)
             {
@@ -135,7 +140,6 @@ public class SpotlightSelector : MonoBehaviour
             return;
         }
 
-        // Detección de foco para actualizar el Lore
         DetectCharacterInFocus();
 
         if (Input.GetKeyDown(prev1) || Input.GetKeyDown(prev2))
@@ -146,7 +150,6 @@ public class SpotlightSelector : MonoBehaviour
         {
             Focus(+1);
         }
-        // 🟢 Añadimos el botón del panel (si existe) como opción de confirmación
         else if (Input.GetKeyDown(confirmKey) || Input.GetKeyDown(confirmAlt) || Input.GetKeyDown(KeyCode.KeypadEnter))
         {
             Confirm();
@@ -157,7 +160,6 @@ public class SpotlightSelector : MonoBehaviour
         }
     }
 
-    // FUNCIÓN: Detecta si un personaje está bajo el foco de la luz
     private void DetectCharacterInFocus()
     {
         if (spotLight == null || loreTextComponent == null) return;
@@ -167,17 +169,15 @@ public class SpotlightSelector : MonoBehaviour
 
         if (Physics.Raycast(origin, direction, out RaycastHit hit, detectionDistance, raycastLayer))
         {
-            CharacterData hitData = hit.collider.GetComponentInParent<CharacterData>();
-
-            if (hitData != null && hitData != currentSelectionData)
+            if (hit.collider != null)
             {
-                UpdateLoreUI(hitData);
+                CharacterData hitData = hit.collider.GetComponentInParent<CharacterData>();
+
+                if (hitData != null && hitData != currentSelectionData)
+                {
+                    UpdateLoreUI(hitData);
+                }
             }
-        }
-        else if (currentSelectionData != null)
-        {
-            // Opcional: Si el foco se va, podrías resetear el texto
-            // UpdateLoreUI(null); 
         }
     }
 
@@ -186,19 +186,72 @@ public class SpotlightSelector : MonoBehaviour
     {
         currentSelectionData = newSelection;
 
+        // Comprobación de referencia de texto principal
+        if (loreTextComponent == null)
+        {
+            Debug.LogError("🚨 Lore Text Component no está asignado.");
+            return;
+        }
+
+        // Comprobación de referencia de texto de tareas
+        if (tasksTextComponent == null)
+        {
+            Debug.LogError("🚨 Tasks Text Component no está asignado.");
+            // Permitimos que continúe si el loreTextComponent sí existe.
+        }
+
         if (currentSelectionData != null)
         {
+            string characterID = currentSelectionData.prefabName;
+
+            // 1. Mostrar el texto de lore
             loreTextComponent.text = currentSelectionData.loreText;
 
+            // 2. Lógica para el texto de TAREAS
+            if (tasksTextComponent != null)
+            {
+                string taskText = "";
+                string separator = "\n\n"; // Doble salto de línea para párrafos
+
+                // Suponemos que el ID del personaje es convertible a int (o usamos el string)
+                if (int.TryParse(characterID, out int id) && id == 1) // Elara (Limpieza)
+                {
+                    taskText = "🎯 **El Santuario de la Perfección** 🧼" + separator +
+                        "Tu objetivo es alcanzar la esterilidad total y el orden absoluto." + separator +
+                        "**1. Descontaminación Total (Dirt):** Usa tu equipo de limpieza para eliminar cualquier rastro de mugre o gérmenes. Cada mancha visible debe desaparecer." + separator +
+                        "**2. Purificación del Exterior (Bolsas):** Recoge y saca todas las bolsas contaminantes del área. Transportar y desechar estos objetos fuera del espacio habitable es tu ritual para mantener el control.";
+                }
+                else if (int.TryParse(characterID, out int id2) && id2 == 9) // Daniel (Acumulación)
+                {
+                    taskText = "🎯 **La Liberación de la Memoria** 🗑️" + separator +
+                        "Debes liberar tu mente y tu hogar del peso de la acumulación." + separator +
+                        "**1. Descontaminación Total (Dirt):** (Mecánica compartida) Elimina activamente la suciedad." + separator +
+                        "**2. Deshacerse del Exceso (Acumulables):** Identifica y descarta los objetos acumulables sin valor. Supera el pánico a desechar, ya que cada objeto liberado es un paso hacia la recuperación de tu espacio y tu vida.";
+                }
+                else
+                {
+                    taskText = $"🎯 Tarea asignada (ID: {characterID}): Explora el mundo y descubre tu destino.";
+                }
+
+                // 🟢 NOTA: Si usas TextMeshPro, puedes usar negritas (<b>) y emojis.
+                // He añadido formato para mejorar la presentación.
+
+                tasksTextComponent.text = taskText;
+            }
+
+            // 3. Guardar el ID en el Singleton
             if (CharacterSelection.Instance != null)
             {
-                // Guarda el nombre del prefab para la carga en la escena de juego.
-                CharacterSelection.Instance.SetSelectedID(currentSelectionData.prefabName);
+                CharacterSelection.Instance.SetSelectedID(characterID);
             }
         }
-        else if (loreTextComponent != null)
+        else // Si newSelection es null
         {
             loreTextComponent.text = "Dirige el foco al personaje para ver su historia.";
+            if (tasksTextComponent != null)
+            {
+                tasksTextComponent.text = "Selecciona un personaje para ver su misión.";
+            }
         }
     }
 
@@ -270,7 +323,6 @@ public class SpotlightSelector : MonoBehaviour
         StartCoroutine(AnimateTo(index));
     }
 
-    // 🟢 FUNCIÓN CONFIRM CORREGIDA PARA ELIMINAR EL ERROR DE DESTRUCCIÓN TEMPRANA
     public void Confirm()
     {
         if (candidates == null || candidates.Length == 0) return;
@@ -289,15 +341,17 @@ public class SpotlightSelector : MonoBehaviour
 
         if (finalData != null && CharacterSelection.Instance != null)
         {
-            // 1. Guarda el ID del prefab
-            CharacterSelection.Instance.SetSelectedID(finalData.prefabName);
-            Debug.Log($"[SELECTION] 🔥 Confirmando personaje y guardando ID: {finalData.prefabName}");
+            string characterID = finalData.prefabName; // Usamos el ID del CharacterData
 
-            // 2. CARGA DE ESCENA: Llama a la lógica de bifurcación Principal/CasaChick.
-            Debug.Log($"[SELECTION] 🎯 Iniciando rutaje de escena en base al ID: {finalData.prefabName}");
+            // 1. Guarda el ID del prefab
+            CharacterSelection.Instance.SetSelectedID(characterID);
+            Debug.Log($"[SELECTION] 🔥 Confirmando personaje y guardando ID: {characterID}");
+
+            // 2. CARGA DE ESCENA
+            Debug.Log($"[SELECTION] 🎯 Iniciando rutaje de escena en base al ID: {characterID}");
             CharacterSelection.Instance.GoToGameScene();
 
-            // 3. DESTRUIR: Se destruye al final, después de la carga.
+            // 3. DESTRUIR
             Debug.Log("[SELECTION] 🗑️ Destruyendo SpotlightSelector...");
             Destroy(gameObject);
         }

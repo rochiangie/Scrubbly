@@ -1,0 +1,82 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &883676054553774155
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2949956571149209409}
+  - component: {fileID: 2408490969388210608}
+  - component: {fileID: 687452797511631706}
+  m_Layer: 0
+  m_Name: TaskManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2949956571149209409
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 883676054553774155}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.7464787, y: 2.2838202, z: -16.253016}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2408490969388210608
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 883676054553774155}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a07a7367349ced440aff54c914be6c7d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  goodEndingSceneName: GoodEndingScene
+  badEndingSceneName: BadEndingScene
+  totalDirtSpots: 0
+  cleanedDirtSpots: 0
+  totalTrashItems: 0
+  cleanedTrashItems: 0
+  maxLevelTime: 500
+  currentTime: 0
+  timeIsUp: 0
+  emotionalBalanceScore: 0
+  accumulationScore: 0
+  totalPositiveMemoriesValue: 0
+  totalNegativeMemoriesValue: 0
+  balanceThresholdPercentage: 0.8
+  accumulationThresholdPercentage: 0.5
+  itemThresholdToActivateList: 10
+  damageMultiplier: 1
+  requireCorrectTool: 1
+  allCleanableObjects: []
+--- !u!114 &687452797511631706
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 883676054553774155}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73b60a9698287cf46b0d8ed60488a957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  victoryPanel: {fileID: 0}
+  defeatPanel: {fileID: 0}
+  menuSceneIndex: 4
+  waitTimeBeforeMenu: 3
