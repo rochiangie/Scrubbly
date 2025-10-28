@@ -3654,7 +3654,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7991890477311842641, guid: 14398d2d9683cdc41b672635e201fac0, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -2.5417938
+      value: 1.378
       objectReference: {fileID: 0}
     - target: {fileID: 7991890477311842641, guid: 14398d2d9683cdc41b672635e201fac0, type: 3}
       propertyPath: m_LocalRotation.w
@@ -4590,10 +4590,10 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
+  m_fontSize: 72
   m_fontSizeBase: 36
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
@@ -4628,7 +4628,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: -293.95105}
+  m_margin: {x: 0, y: 0, z: 0, w: -179.60907}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -9901,7 +9901,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea7b54ce5e9bf9a44bfd316671ab5c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  loreTextComponent: {fileID: 0}
+  loreTextComponent: {fileID: 128979840}
   detectionDistance: 50
   CandidateTag: Player
   playerPrefabs:

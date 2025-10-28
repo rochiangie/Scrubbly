@@ -41,7 +41,7 @@ public class SelectionPanelController : MonoBehaviour
         // Puedes cambiar este texto en el Inspector o aquí si lo deseas.
         if (fixedText != null)
         {
-            fixedText.text = "Selección de Personaje MTP";
+            fixedText.text = "Selección de Personaje";
         }
 
         // 3. Asignar la función de confirmación al botón
