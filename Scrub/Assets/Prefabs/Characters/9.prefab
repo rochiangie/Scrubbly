@@ -6828,6 +6828,8 @@ GameObject:
   - component: {fileID: -4390171297971300932}
   - component: {fileID: -2979288119714032161}
   - component: {fileID: 4465232900872935001}
+  - component: {fileID: 3738710818484944275}
+  - component: {fileID: -9044816450729764071}
   m_Layer: 8
   m_Name: 9
   m_TagString: Player
@@ -7005,6 +7007,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 5
+  runSpeed: 10
+  runKey: 304
   jumpForce: 6
   jumpKey: 32
   animator: {fileID: 0}
@@ -7102,16 +7106,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d9dddb7ed790ef4aa3a14e7edb5420a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  holdPoint: {fileID: 0}
+  holdPoints:
+  - {fileID: 1983485911507133259}
   anim: {fileID: 0}
+  playerColliders:
+  - {fileID: -1355752782336773815}
+  - {fileID: -7899260132915816814}
   toolsLayer:
     serializedVersion: 2
     m_Bits: 128
+  carryableLayer:
+    serializedVersion: 2
+    m_Bits: 4294967295
   pickupRange: 3.5
   dropForce: 1.5
-  pickupKey: 101
   cleanKey: 114
-  trashKey: 102
+  disposeKey: 102
   damagePerHit: 2
   requireCorrectTool: 1
   validToolIds:
@@ -7119,7 +7129,8 @@ MonoBehaviour:
   - Escoba
   - Vacuum
   dirtTag: Dirt
-  trashTag: Basura
+  carryableTrashTag: Trash
+  sweepableTrashTag: Basura
   cleaningLayerName: Clean
   layerBlendSpeed: 12
 --- !u!114 &220351430305387981
@@ -7198,6 +7209,33 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tool1Prefab: {fileID: 4014498514318459743, guid: 610b7c880ca564a44bf9c129c0e44a14, type: 3}
   tool2Prefab: {fileID: 1927486437793573597, guid: e0441237b3d2dce498aa908bba2d800d, type: 3}
+--- !u!114 &3738710818484944275
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6521118409924740657}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 928d637e1fbc2b9449d940d9935e514f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rightHandAnchor: {fileID: 1983485911507133259}
+--- !u!114 &-9044816450729764071
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6521118409924740657}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a9af444c813dd84b8b897f84434dd83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefabName: 9
+  loreText: Soy una persona con que le gusta limpiar
 --- !u!1 &6530007388250323192
 GameObject:
   m_ObjectHideFlags: 0

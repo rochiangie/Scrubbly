@@ -3786,6 +3786,8 @@ GameObject:
   - component: {fileID: -11114260915657454}
   - component: {fileID: 3412018906212019866}
   - component: {fileID: 3533879728378830940}
+  - component: {fileID: 7550645222232956862}
+  - component: {fileID: -8506990437191126304}
   m_Layer: 8
   m_Name: 4
   m_TagString: Player
@@ -3958,6 +3960,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 5
+  runSpeed: 10
+  runKey: 304
   jumpForce: 6
   jumpKey: 32
   animator: {fileID: 0}
@@ -4055,16 +4059,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d9dddb7ed790ef4aa3a14e7edb5420a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  holdPoint: {fileID: 0}
+  holdPoints:
+  - {fileID: 8626797401259328648}
   anim: {fileID: 0}
+  playerColliders: []
   toolsLayer:
     serializedVersion: 2
     m_Bits: 128
+  carryableLayer:
+    serializedVersion: 2
+    m_Bits: 4294967295
   pickupRange: 3.5
   dropForce: 1.5
-  pickupKey: 101
   cleanKey: 114
-  trashKey: 102
+  disposeKey: 102
   damagePerHit: 2
   requireCorrectTool: 1
   validToolIds:
@@ -4072,7 +4080,8 @@ MonoBehaviour:
   - Escoba
   - Vacuum
   dirtTag: Dirt
-  trashTag: Basura
+  carryableTrashTag: Trash
+  sweepableTrashTag: Basura
   cleaningLayerName: Clean
   layerBlendSpeed: 12
 --- !u!114 &8804371444759974126
@@ -4151,6 +4160,33 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tool1Prefab: {fileID: 4014498514318459743, guid: 610b7c880ca564a44bf9c129c0e44a14, type: 3}
   tool2Prefab: {fileID: 1927486437793573597, guid: e0441237b3d2dce498aa908bba2d800d, type: 3}
+--- !u!114 &7550645222232956862
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3599570790234534221}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 928d637e1fbc2b9449d940d9935e514f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rightHandAnchor: {fileID: 8626797401259328648}
+--- !u!114 &-8506990437191126304
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3599570790234534221}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a9af444c813dd84b8b897f84434dd83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefabName: 
+  loreText: 
 --- !u!1 &3601537494100441701
 GameObject:
   m_ObjectHideFlags: 0

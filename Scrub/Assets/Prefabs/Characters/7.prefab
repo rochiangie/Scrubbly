@@ -1458,6 +1458,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 7f394e12257befb43992c3be83001db7, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2558555786678423696}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 7f394e12257befb43992c3be83001db7, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -5610558014987335678}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 7f394e12257befb43992c3be83001db7, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4746094411816929446}
     - targetCorrespondingSourceObject: {fileID: -3605182920710100459, guid: 7f394e12257befb43992c3be83001db7, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8948369944011793344}
@@ -1594,6 +1600,11 @@ SkinnedMeshRenderer:
 --- !u!137 &5829715896412404987 stripped
 SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: 141965507136831937, guid: 7f394e12257befb43992c3be83001db7, type: 3}
+  m_PrefabInstance: {fileID: 5845412110500379962}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &5917772225599357666 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8989407901053222952, guid: 7f394e12257befb43992c3be83001db7, type: 3}
   m_PrefabInstance: {fileID: 5845412110500379962}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &6239079936336419537 stripped
@@ -1758,6 +1769,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 5
+  runSpeed: 10
+  runKey: 304
   jumpForce: 6
   jumpKey: 32
   animator: {fileID: 0}
@@ -1855,16 +1868,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d9dddb7ed790ef4aa3a14e7edb5420a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  holdPoint: {fileID: 0}
+  holdPoints:
+  - {fileID: 5917772225599357666}
   anim: {fileID: 0}
+  playerColliders: []
   toolsLayer:
     serializedVersion: 2
     m_Bits: 128
+  carryableLayer:
+    serializedVersion: 2
+    m_Bits: 4294967295
   pickupRange: 3.5
   dropForce: 1.5
-  pickupKey: 101
   cleanKey: 114
-  trashKey: 102
+  disposeKey: 102
   damagePerHit: 2
   requireCorrectTool: 1
   validToolIds:
@@ -1872,7 +1889,8 @@ MonoBehaviour:
   - Escoba
   - Vacuum
   dirtTag: Dirt
-  trashTag: Basura
+  carryableTrashTag: Trash
+  sweepableTrashTag: Basura
   cleaningLayerName: Clean
   layerBlendSpeed: 12
 --- !u!114 &8052347113307703801
@@ -1969,6 +1987,33 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tool1Prefab: {fileID: 4014498514318459743, guid: 610b7c880ca564a44bf9c129c0e44a14, type: 3}
   tool2Prefab: {fileID: 1927486437793573597, guid: e0441237b3d2dce498aa908bba2d800d, type: 3}
+--- !u!114 &-5610558014987335678
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6763978423349608555}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 928d637e1fbc2b9449d940d9935e514f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rightHandAnchor: {fileID: 5917772225599357666}
+--- !u!114 &4746094411816929446
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6763978423349608555}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a9af444c813dd84b8b897f84434dd83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefabName: 
+  loreText: 
 --- !u!4 &6818505374472424636 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1134662855679897990, guid: 7f394e12257befb43992c3be83001db7, type: 3}

@@ -1,31 +1,29 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
-using System.Collections; // Necesario para la Coroutine
+using System.Collections;
 
 public class SceneFlowManager : MonoBehaviour
 {
     // ================== SINGLETON Y PERSISTENCIA ==================
 
-    // El patrón Singleton permite que cualquier script acceda a esta instancia con SceneFlowManager.Instance
     public static SceneFlowManager Instance { get; private set; }
 
     [Header("Persistencia de Personaje")]
-    // Almacena el nombre (o ID) del personaje seleccionado. 
-    // ¡Asegúrate de que este nombre coincida con el Prefab!
     public string selectedCharacterName = "";
 
     [Header("Configuración de Escenas")]
     // 🛑 AJUSTA ESTOS NOMBRES con los de tus escenas.
     private const string GameSceneName = "Principal";
+    // 🟢 NUEVA CONSTANTE: Agregamos la escena conflictiva a la lista
+    private const string CasaChickSceneName = "CasaChick";
     private const string LoreSceneName = "LoreScene";
-    private const string SeleccionPersonajeSceneName = "SeleccionPersonaje"; // Nombre corregido
-    private const string InitialSceneName = "Menu"; // Asume el nombre de la primera escena
+    private const string SeleccionPersonajeSceneName = "SeleccionPersonaje";
+    private const string InitialSceneName = "Menu";
 
     [Header("Referencias de Escena de Juego")]
     [Tooltip("Arrastra aquí el Spot Light principal del jugador/escena de juego para apagarlo al salir.")]
     public GameObject playerSpotLight;
 
-    // Asumimos que esta clase tiene el método 'SetControlsActive(bool active)'
     private MouseLookController playerController;
 
     private void Awake()
@@ -34,7 +32,7 @@ public class SceneFlowManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject); // CRÍTICO: Mantiene este objeto vivo entre escenas
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -44,9 +42,6 @@ public class SceneFlowManager : MonoBehaviour
 
     // ================== GESTIÓN DEL PERSONAJE SELECCIONADO ==================
 
-    /// <summary>
-    /// Función a llamar desde el botón/UI de selección de personaje en la escena "SeleccionPersonaje".
-    /// </summary>
     public void SetSelectedCharacter(string characterName)
     {
         selectedCharacterName = characterName;
@@ -56,9 +51,6 @@ public class SceneFlowManager : MonoBehaviour
 
     // ================== Carga de Escenas (Llamadas Públicas) ==================
 
-    /// <summary>
-    /// Carga la escena de Lore, deshabilitando el Spot Light y el control del ratón antes.
-    /// </summary>
     public void LoadLoreScene()
     {
         // 1. Desactivar el control de cámara ANTES de cargar la nueva escena.
@@ -75,12 +67,15 @@ public class SceneFlowManager : MonoBehaviour
         SceneManager.LoadScene(LoreSceneName);
     }
 
-    /// <summary>
-    /// Función ASIGNADA AL BOTÓN "COMENZAR" en la escena "Lore".
-    /// </summary>
     public void LoadGameScene()
     {
         SceneManager.LoadScene(GameSceneName);
+    }
+
+    // Función de ejemplo para cargar la CasaChick
+    public void LoadCasaChickScene()
+    {
+        SceneManager.LoadScene(CasaChickSceneName);
     }
 
     // ================== CONTROL DE ESCENAS, CURSOR Y JUGADOR ==================
@@ -90,14 +85,22 @@ public class SceneFlowManager : MonoBehaviour
         // Limpiamos la referencia para obligar a buscar la nueva instancia del Player
         playerController = null;
 
-        if (scene.name == GameSceneName) // 🟢 ESCENA DE JUEGO (Principal)
+        // 🟢 CORRECCIÓN CLAVE: Agregamos CasaChick a las escenas que requieren bloqueo
+        bool isPlayableScene = scene.name == GameSceneName || scene.name == CasaChickSceneName;
+
+        if (isPlayableScene) // 🟢 ESCENAS DE JUEGO (Principal y CasaChick)
         {
-            // 1. Bloqueo del Cursor
+            // 1. Bloqueo del Cursor: Necesario para que el MouseLookController funcione
             Cursor.lockState = CursorLockMode.Locked; // Bloquea en el centro
-            Cursor.visible = false;                   // Oculta el puntero
+            Cursor.visible = false;                   // Oculta el puntero
 
             // 2. Instanciación y Activación de Controles
-            InstantiateSelectedCharacter();
+            // NOTA: Solo instanciar si es el primer nivel o si el personaje no persiste
+            if (scene.name == GameSceneName)
+            {
+                InstantiateSelectedCharacter();
+            }
+
             StartCoroutine(WaitAndActivateControls()); // Activa el MouseLookController
 
             // 3. Reactivar el Spot Light
@@ -106,13 +109,13 @@ public class SceneFlowManager : MonoBehaviour
                 playerSpotLight.SetActive(true);
             }
         }
-        else // 🔵 ESCENAS DE MENÚ/UI (LoreScene, SeleccionPersonaje, Menu)
+        else // 🔵 ESCENAS DE MENÚ/UI (LoreScene, SeleccionPersonaje, Menu, etc.)
         {
             // 1. Liberación del Cursor
             Cursor.lockState = CursorLockMode.None; // Libera el cursor para usar la UI
-            Cursor.visible = true;                  // Muestra el puntero
+            Cursor.visible = true;                  // Muestra el puntero
 
-            // 2. Desactivar controles (por si el jugador persiste)
+            // 2. Desactivar controles
             FindAndSetPlayerController(false);
         }
     }
@@ -128,16 +131,13 @@ public class SceneFlowManager : MonoBehaviour
             return;
         }
 
-        // 🚨 CRÍTICO: El prefab del personaje DEBE estar en una carpeta 'Resources'
         GameObject characterPrefab = Resources.Load<GameObject>(selectedCharacterName);
 
         if (characterPrefab != null)
         {
-            // Busca el punto de inicio.
             GameObject playerSpawn = GameObject.FindGameObjectWithTag("PlayerSpawn");
             Vector3 spawnPosition = playerSpawn != null ? playerSpawn.transform.position : Vector3.zero;
 
-            // Instanciar el personaje
             GameObject playerInstance = Instantiate(characterPrefab, spawnPosition, Quaternion.identity);
             playerInstance.tag = "Player"; // Asegura la etiqueta
 
@@ -188,13 +188,11 @@ public class SceneFlowManager : MonoBehaviour
 
     private void OnEnable()
     {
-        // Suscribirse al evento de carga de escenas.
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
     private void OnDisable()
     {
-        // Desuscribirse para evitar fugas de memoria y errores.
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 }

@@ -28,12 +28,12 @@ public class CameraFollowAssigner : MonoBehaviour
             return;
         }
 
-        // 🛑 LÓGICA CLAVE: Buscar el Transform del objeto hijo ("Head")
-        Transform headTarget = player.transform.Find(HeadObjectName);
+        // 🛑 LÓGICA CLAVE: Buscar el Transform del objeto hijo en toda la jerarquía
+        Transform headTarget = FindDeepChild(player.transform, HeadObjectName);
 
         if (headTarget == null)
         {
-            Debug.LogError($"[CAMERA] No se encontró el objeto hijo '{HeadObjectName}' dentro de '{player.name}'. Usando el cuerpo principal como fallback.");
+            Debug.LogError($"[CAMERA] No se encontró el objeto hijo '{HeadObjectName}' en la jerarquía del Player. Usando el cuerpo principal como fallback.");
             headTarget = player.transform; // Fallback: usa el cuerpo principal
         }
 
@@ -50,5 +50,25 @@ public class CameraFollowAssigner : MonoBehaviour
         Vcam.Target = target;
 
         Debug.Log("[CAMERA] Cinemachine (CM3) asignado a: " + headTarget.name);
+    }
+
+    // 🔍 FUNCIÓN AGREGADA: Busca un hijo por nombre en la jerarquía profunda
+    private Transform FindDeepChild(Transform aParent, string aName)
+    {
+        // 1. Verificar si el padre actual es el objetivo
+        if (aParent.name == aName) return aParent;
+
+        // 2. Iterar sobre todos los hijos
+        foreach (Transform child in aParent)
+        {
+            // 3. Llamada recursiva a la función
+            Transform result = FindDeepChild(child, aName);
+
+            // 4. Si se encuentra el resultado, lo devuelve
+            if (result != null)
+                return result;
+        }
+        // 5. Si no se encuentra en esta rama, devuelve null
+        return null;
     }
 }

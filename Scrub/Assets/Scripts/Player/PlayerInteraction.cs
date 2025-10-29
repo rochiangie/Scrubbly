@@ -23,6 +23,8 @@ public class PlayerInteraction : MonoBehaviour
     private CleaningController cleaningController;
     private Carryable carried;
 
+    public string toolTag = "CleaningTool";
+
     // ***************************************************************
     // 🗑️ VARIABLES DE DETECCIÓN
     // ***************************************************************
