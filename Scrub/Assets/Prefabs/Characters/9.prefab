@@ -7027,7 +7027,7 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 4294967295
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -7036,7 +7036,7 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.33
+  m_Radius: 0.2
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
@@ -7077,6 +7077,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   holdPoint: {fileID: 1560366960154808273}
   animCtrl: {fileID: 0}
+  toolTag: CleaningTool
   mouseInteractionDistance: 2
   clickCleaningRadius: 0.5
   dirtLayer:
@@ -7109,9 +7110,7 @@ MonoBehaviour:
   holdPoints:
   - {fileID: 1983485911507133259}
   anim: {fileID: 0}
-  playerColliders:
-  - {fileID: -1355752782336773815}
-  - {fileID: -7899260132915816814}
+  playerColliders: []
   toolsLayer:
     serializedVersion: 2
     m_Bits: 128
@@ -7235,7 +7234,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefabName: 9
-  loreText: Soy una persona con que le gusta limpiar
+  loreText: Aguante yo
 --- !u!1 &6530007388250323192
 GameObject:
   m_ObjectHideFlags: 0

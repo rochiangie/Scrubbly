@@ -3,6 +3,7 @@ using UnityEngine.SceneManagement; // 🚀 Necesario para cambiar de escena
 using System.Linq;
 using System;
 using System.Collections.Generic;
+using System.Collections; // 🚀 AÑADIDO: Para Coroutines
 
 public class TaskManager : MonoBehaviour
 {
@@ -14,12 +15,16 @@ public class TaskManager : MonoBehaviour
     private bool isCheckingFinalScore = false;
     private bool gameEnded = false;
 
-    // 🚀 AÑADIDO: ESCENAS DE FIN DE JUEGO
+    // 🚀 AÑADIDO: ESCENAS DE FIN DE JUEGO Y TIEMPO DE PANTALLA
     [Header("8. Escenas de Fin de Juego")]
     [Tooltip("Nombre de la escena de 'Final Bueno' (Victoria)")]
     public string goodEndingSceneName = "GoodEndingScene";
     [Tooltip("Nombre de la escena de 'Final Malo' (Derrota)")]
     public string badEndingSceneName = "BadEndingScene";
+    [Tooltip("Nombre de la escena de Créditos")] // 🚀 NUEVO
+    public string creditsSceneName = "Credits"; // 🚀 NUEVO
+    [Tooltip("Tiempo de visualización de la pantalla final (antes de créditos)")] // 🚀 NUEVO
+    public float endScreenDisplayTime = 5f; // 🚀 NUEVO
 
     // === 1. PROGRESO DE LIMPIEZA DUAL ===
     [Header("1. Progreso de Limpieza Dual")]
@@ -34,6 +39,10 @@ public class TaskManager : MonoBehaviour
     public float maxLevelTime = 600f;
     public float currentTime;
     public bool timeIsUp = false;
+
+    // 🚀 AÑADIDO: EVENTOS DE TIEMPO Y BASURA (de CleaningManager)
+    public static event Action<float> OnTimeUpdated; // 🚀 MIGRADO
+    public static event Action<int, int> OnTrashCountUpdated; // 🚀 MIGRADO
 
     // === 3. GESTIÓN DE PUNTUACIÓN Y UMBRALES ===
     [Header("3. Puntuación Sentimental")]
@@ -100,6 +109,9 @@ public class TaskManager : MonoBehaviour
         InitializeSentimentalAnalysis();
         currentTime = maxLevelTime;
 
+        // 🚀 ENVIAR ESTADO INICIAL DE TIEMPO AL INICIO
+        OnTimeUpdated?.Invoke(currentTime);
+
         Debug.Log($"🎯 TaskManager inicializado: {totalDirtSpots} manchas, {totalTrashItems} basuras");
     }
 
@@ -116,6 +128,9 @@ public class TaskManager : MonoBehaviour
         if (!timeIsUp && currentTime > 0 && !gameEnded)
         {
             currentTime -= Time.deltaTime;
+
+            // 🚀 DISPARAR EVENTO DE TIEMPO PARA UI CADA FRAME
+            OnTimeUpdated?.Invoke(currentTime);
 
             if (currentTime <= 0)
             {
@@ -167,17 +182,55 @@ public class TaskManager : MonoBehaviour
         // Enviamos el evento final ANTES de cambiar de escena.
         GameEvents.GameResult(won);
 
-        Time.timeScale = 1f;
+        // 🚀 INICIAMOS LA CORRUTINA PARA PAUSAR Y CONTAR TIEMPO REAL
+        StartCoroutine(EndGameSequence(sceneToLoad));
+    }
 
+    // 🚀 NUEVO: Coroutine para manejar la transición a créditos.
+    private IEnumerator EndGameSequence(string endSceneName)
+    {
+        // 1. Pausa el juego (efectivamente, pues vamos a una escena de UI)
+        Time.timeScale = 0f;
+
+        // 2. Carga la escena de Final (Buena o Mala)
         try
         {
-            SceneManager.LoadScene(sceneToLoad);
+            SceneManager.LoadScene(endSceneName);
         }
         catch (Exception ex)
         {
-            Debug.LogError($"❌ ERROR al cargar la escena '{sceneToLoad}'. Asegúrate de que la escena esté en File -> Build Settings. Error: {ex.Message}");
+            Debug.LogError($"❌ ERROR al cargar la escena '{endSceneName}'. Asegúrate de que la escena esté en File -> Build Settings. Error: {ex.Message}");
+            Time.timeScale = 1f;
+            yield break;
+        }
+
+        // 3. Espera el tiempo de visualización de la pantalla final (usando tiempo real)
+        float timer = 0f;
+        while (timer < endScreenDisplayTime)
+        {
+            timer += Time.unscaledDeltaTime; // Cuenta el tiempo real
+            yield return null;
+        }
+
+        // 4. Despausa y carga la escena de créditos
+        LoadCreditsScene();
+    }
+
+    // 🚀 NUEVO: Carga la escena de créditos.
+    private void LoadCreditsScene()
+    {
+        Time.timeScale = 1f; // Despausa el juego antes de cargar la escena
+
+        try
+        {
+            SceneManager.LoadScene(creditsSceneName);
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"❌ ERROR al cargar la escena de créditos '{creditsSceneName}'. Error: {ex.Message}");
         }
     }
+
 
     // =========================================================================
     // ✅ MÉTODO CheckFinalScore MODIFICADO PARA USAR EndGame(won)
@@ -301,6 +354,8 @@ public class TaskManager : MonoBehaviour
         int totalCleaned = cleanedDirtSpots + cleanedTrashItems;
         int totalItems = totalDirtSpots + totalTrashItems;
         GameEvents.Progress(totalCleaned, totalItems);
+        // 🚀 ENVIAR CONTEO DE BASURA A LA UI (de CleaningManager)
+        OnTrashCountUpdated?.Invoke(totalCleaned, totalItems);
 
         // Activar lista si es necesario
         if (remainingItemNames.Count <= itemThresholdToActivateList && remainingItemNames.Count > 0)
@@ -340,6 +395,14 @@ public class TaskManager : MonoBehaviour
             remainingItemNames.Remove(objectId);
             objectRegistry.Remove(objectId);
 
+            // 🚀 AÑADIDO: Destruir el objeto de basura si está en la escena, simulando el flujo de CleaningManager.
+            // Esto es necesario para TrashObject que se destruyen al ser limpiados/depositados
+            if (objectRegistry.TryGetValue(objectId, out GameObject trashGo))
+            {
+                Destroy(trashGo);
+                objectRegistry.Remove(objectId);
+            }
+
             CheckCompletion();
         }
     }
@@ -371,6 +434,8 @@ public class TaskManager : MonoBehaviour
         ValidateCounters();
 
         GameEvents.Progress(cleanedItems, totalCleanableItems);
+        // 🚀 DISPARAR EVENTO DE CONTEO DE BASURA A LA UI
+        OnTrashCountUpdated?.Invoke(cleanedItems, totalCleanableItems);
 
         if (remainingItemNames.Count <= itemThresholdToActivateList && remainingItemNames.Count > 0)
         {
@@ -448,8 +513,15 @@ public class TaskManager : MonoBehaviour
         remainingItemNames.Clear();
         objectRegistry.Clear();
 
+        // 🚀 AÑADIDO: Destruir los objetos de basura restantes para simular la limpieza total
+        foreach (var item in FindObjectsOfType<TrashObject>(true))
+        {
+            Destroy(item.gameObject);
+        }
+
         int total = totalDirtSpots + totalTrashItems;
         GameEvents.Progress(total, total);
+        OnTrashCountUpdated?.Invoke(total, total); // 🚀 AÑADIDO
 
         if (total > 0 && !gameEnded) CheckFinalScore();
     }
@@ -628,6 +700,7 @@ public class TaskManager : MonoBehaviour
         }
 
         GameEvents.Progress(cleanedDirtSpots + cleanedTrashItems, totalDirtSpots + totalTrashItems);
+        OnTrashCountUpdated?.Invoke(cleanedDirtSpots + cleanedTrashItems, totalDirtSpots + totalTrashItems); // 🚀 AÑADIDO
     }
 
     [ContextMenu("Reset Game State")]
@@ -635,6 +708,8 @@ public class TaskManager : MonoBehaviour
     {
         gameEnded = false;
         isCheckingFinalScore = false;
+        timeIsUp = false;
+        currentTime = maxLevelTime;
         Debug.Log("🔄 Estado del juego reseteado. Listo para nueva partida.");
     }
 }

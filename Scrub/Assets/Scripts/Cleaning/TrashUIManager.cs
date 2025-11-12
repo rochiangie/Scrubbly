@@ -2,11 +2,11 @@
 using UnityEngine.UI;
 using TMPro;
 using System;
+// Eliminamos using System.Collections; ya que no usamos corrutinas
 
 public class TrashUIManager : MonoBehaviour
 {
     // 📢 CRUCIAL: Referencia al GameObject del Panel COMPLETO.
-    // Aunque ya no controlamos su visibilidad, la necesitamos para saber qué objeto contiene los componentes.
     [Header("Panel Principal")]
     [SerializeField] private GameObject uiPanelGameObject;
 
@@ -15,17 +15,20 @@ public class TrashUIManager : MonoBehaviour
     [SerializeField] private Slider trashSlider;
     [SerializeField] private TMP_Text timerText;
 
-    // 🛑 ELIMINAMOS EL RETARDO: Ya no se usa para ocultar el panel.
+    // ELIMINAMOS TODA LA LÓGICA DE RETARDO
     [Header("Retardo")]
-    [Tooltip("El retardo ya no se usa, el panel estará siempre visible.")]
-    [SerializeField] private float hideDelay = 3f;
+    [Tooltip("La lógica de ocultamiento está deshabilitada. El panel permanece visible.")]
+    [SerializeField] private float hideDelay = 3f; // Se mantiene solo como campo, pero no se usa
 
     private CleaningManager manager;
 
     void Awake()
     {
-        // 🛑 ELIMINAMOS LA LÓGICA DE OCULTAR AL INICIO.
-        // El panel debe estar activo en el Editor de Unity.
+        // Aseguramos que el panel esté visible al inicio
+        if (uiPanelGameObject != null && !uiPanelGameObject.activeSelf)
+        {
+            uiPanelGameObject.SetActive(true); // <--- Asegura que el Canvas esté ACTIVO
+        }
     }
 
     void Start()
@@ -35,12 +38,6 @@ public class TrashUIManager : MonoBehaviour
         if (manager == null)
         {
             Debug.LogError("TrashUIManager no encontró el CleaningManager.");
-        }
-
-        // 📢 Configuración del Panel en el Editor
-        if (uiPanelGameObject != null && !uiPanelGameObject.activeSelf)
-        {
-            Debug.LogWarning("El Panel de UI está inactivo en el Editor. Actívalo manualmente para que sea visible.");
         }
     }
 
@@ -62,15 +59,13 @@ public class TrashUIManager : MonoBehaviour
         // 3. Limpieza y desuscripción.
         CleaningManager.OnTrashCountUpdated -= UpdateTrashUI;
         CleaningManager.OnTimeUpdated -= UpdateTimerUI;
-        // 🛑 Eliminamos CancelInvoke(nameof(HidePanel));
+        // Eliminamos la detención de la corrutina.
     }
 
-    // 🛑 Eliminamos el método HidePanel().
+    // 🛑 Eliminamos ScheduleHide() y HidePanelAfterDelay(float delay)
 
     private void UpdateTrashUI(int cleanedCount, int totalCount)
     {
-        // 🛑 ELIMINAMOS TODA LA LÓGICA DE ACTIVACIÓN/DESACTIVACIÓN DEL PANEL.
-
         // 1. Actualiza el Texto (Basura)
         if (trashCountText != null)
         {
