@@ -28,13 +28,19 @@ public class TrashObject : MonoBehaviour
             trashName = gameObject.name;
     }
 
+    // TrashObject.cs - SUGERENCIA DE MEJORA EN Start()
     void Start()
     {
-        // ✅ Verificar que estamos en la lista del TaskManager
-        if (TaskManager.Instance != null && !TaskManager.Instance.remainingItemNames.Contains(trashName))
+        // Solo si TaskManager existe, y asumiendo que debe manejar este objeto
+        if (TaskManager.Instance != null)
         {
-            Debug.LogWarning($"⚠️ TrashObject {trashName} no está en la lista del TaskManager. Agregando...");
-            TaskManager.Instance.remainingItemNames.Add(trashName);
+            // La responsabilidad de gestionar la lista inicial DEBERÍA estar en TaskManager 
+            // o en un script de Setup de Nivel, no en el objeto en sí. 
+            // Pero si decides mantenerlo aquí, esta verificación es suficiente:
+            if (!TaskManager.Instance.remainingItemNames.Contains(trashName))
+            {
+                TaskManager.Instance.remainingItemNames.Add(trashName);
+            }
         }
     }
 
