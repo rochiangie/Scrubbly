@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using UnityEngine.SceneManagement; // 🚀 Necesario para cambiar de escena
+using UnityEngine.SceneManagement;
 using System.Linq;
 using System;
 using System.Collections.Generic;
@@ -69,7 +69,7 @@ public class TaskManager : MonoBehaviour
     // === 7. DEBUG Y SEGUIMIENTO ===
     [Header("7. Debug y Seguimiento")]
     public List<GameObject> allCleanableObjects = new List<GameObject>();
-    public Dictionary<string, GameObject> objectRegistry = new Dictionary<string, GameObject>(); // Hice este campo público para que el Outliner pueda acceder a él.
+    public Dictionary<string, GameObject> objectRegistry = new Dictionary<string, GameObject>();
 
     // =========================================================================
     // AWAKE, START & UPDATE
@@ -83,7 +83,6 @@ public class TaskManager : MonoBehaviour
             return;
         }
         Instance = this;
-        // Mantenemos DontDestroyOnLoad para que persista al cambiar a la escena final.
         DontDestroyOnLoad(gameObject);
 
         GameEvents.OnMemorieDecided += HandleMemorieDecision;
@@ -94,6 +93,7 @@ public class TaskManager : MonoBehaviour
         gameEnded = false;
     }
 
+    // 🛑 CORRECCIÓN CLAVE: Sincronizar UI al inicio.
     void Start()
     {
         InitializeCleaningSystem();
@@ -101,6 +101,22 @@ public class TaskManager : MonoBehaviour
         currentTime = maxLevelTime;
 
         Debug.Log($"🎯 TaskManager inicializado: {totalDirtSpots} manchas, {totalTrashItems} basuras");
+
+        // 🚀 Lógica de sincronización inicial
+        var uiManager = FindObjectOfType<CleaningUIManager>();
+        int totalItems = totalDirtSpots + totalTrashItems;
+        int cleanedItems = cleanedDirtSpots + cleanedTrashItems;
+
+        if (uiManager != null)
+        {
+            // Llama directamente al método de la UI (más robusto para la inicialización)
+            uiManager.ForceUpdate(cleanedItems, totalItems);
+        }
+        else
+        {
+            // Si la UI no existe todavía, usa el evento (como fallback)
+            ForceInitialProgressUpdate();
+        }
     }
 
     void OnDestroy()
@@ -122,7 +138,6 @@ public class TaskManager : MonoBehaviour
                 currentTime = 0;
                 timeIsUp = true;
                 Debug.Log("¡TIEMPO AGOTADO! Transicionando a Final Malo.");
-                // 🚀 CARGAMOS ESCENA DE DERROTA POR TIEMPO
                 EndGame(false);
                 return;
             }
@@ -149,10 +164,6 @@ public class TaskManager : MonoBehaviour
     // 🚀 MÉTODOS DE FIN DE JUEGO Y TRANSICIÓN DE ESCENA 🚀
     // =========================================================================
 
-    /// <summary>
-    /// Carga la escena de destino (Final Bueno o Malo) y termina el juego.
-    /// </summary>
-    /// <param name="won">True si el juego terminó en victoria, False si es derrota.</param>
     private void EndGame(bool won)
     {
         if (gameEnded) return;
@@ -164,7 +175,6 @@ public class TaskManager : MonoBehaviour
 
         Debug.Log($"🎉 Juego Terminado: {result}. Transicionando a: {sceneToLoad}");
 
-        // Enviamos el evento final ANTES de cambiar de escena.
         GameEvents.GameResult(won);
 
         Time.timeScale = 1f;
@@ -180,7 +190,7 @@ public class TaskManager : MonoBehaviour
     }
 
     // =========================================================================
-    // ✅ MÉTODO CheckFinalScore MODIFICADO PARA USAR EndGame(won)
+    // ✅ MÉTODO CheckFinalScore
     // =========================================================================
 
     public void CheckFinalScore()
@@ -217,7 +227,6 @@ public class TaskManager : MonoBehaviour
                 won = false;
             }
 
-            // 🚀 LLAMAMOS AL NUEVO MÉTODO PARA TERMINAR EL JUEGO Y CARGAR LA ESCENA
             EndGame(won);
         }
         catch (System.Exception e)
@@ -232,7 +241,23 @@ public class TaskManager : MonoBehaviour
     }
 
     // =========================================================================
-    // ✅ RESTANTE DEL CÓDIGO
+    // 🚀 MÉTODOS DE SOPORTE PARA UI
+    // =========================================================================
+
+    /// <summary>
+    /// Fuerza el TaskManager a enviar el progreso actual a la UI (usando el evento).
+    /// </summary>
+    [ContextMenu("Force Initial Progress Update")]
+    public void ForceInitialProgressUpdate()
+    {
+        if (!gameEnded)
+        {
+            CheckCompletion();
+        }
+    }
+
+    // =========================================================================
+    // ✅ RESTANTE DEL CÓDIGO (Núcleo de Limpieza)
     // =========================================================================
 
     private void InitializeCleaningSystem()
@@ -297,11 +322,6 @@ public class TaskManager : MonoBehaviour
         // Verificar consistencia
         ValidateCounters();
 
-        // Actualizar UI inicial
-        int totalCleaned = cleanedDirtSpots + cleanedTrashItems;
-        int totalItems = totalDirtSpots + totalTrashItems;
-        GameEvents.Progress(totalCleaned, totalItems);
-
         // Activar lista si es necesario
         if (remainingItemNames.Count <= itemThresholdToActivateList && remainingItemNames.Count > 0)
         {
@@ -329,6 +349,8 @@ public class TaskManager : MonoBehaviour
 
     public void NotifyTrashCleaned(string itemName)
     {
+        Debug.Log($"🗑️ [NotifyTrashCleaned] llamado para: {itemName}");
+
         if (gameEnded) return;
 
         string objectId = FindObjectIdByName(itemName);
@@ -342,10 +364,16 @@ public class TaskManager : MonoBehaviour
 
             CheckCompletion();
         }
+        else
+        {
+            Debug.LogWarning($"⚠️ [NotifyTrashCleaned] No se encontró o ya estaba limpio: {itemName}");
+        }
     }
 
     public void NotifySpotCleaned(string itemName)
     {
+        Debug.Log($"🧼 [NotifySpotCleaned] llamado para: {itemName}");
+
         if (gameEnded) return;
 
         string objectId = FindObjectIdByName(itemName);
@@ -354,10 +382,16 @@ public class TaskManager : MonoBehaviour
         if (!string.IsNullOrEmpty(objectId) && remainingItemNames.Contains(objectId))
         {
             cleanedDirtSpots++;
+            Debug.Log($"✅ Contador DirtSpots incrementado a: {cleanedDirtSpots}");
+
             remainingItemNames.Remove(objectId);
             objectRegistry.Remove(objectId);
 
             CheckCompletion();
+        }
+        else
+        {
+            Debug.LogWarning($"⚠️ [NotifySpotCleaned] No se encontró o ya estaba limpio: {itemName}");
         }
     }
 
@@ -367,9 +401,13 @@ public class TaskManager : MonoBehaviour
 
         int totalCleanableItems = totalDirtSpots + totalTrashItems;
         int cleanedItems = cleanedDirtSpots + cleanedTrashItems;
+        int remainingItems = totalCleanableItems - cleanedItems;
 
         ValidateCounters();
 
+        Debug.Log($"📊 [PROGRESS CHECK] Limpiado: {cleanedItems} / Total: {totalCleanableItems}. Restantes: {remainingItems}");
+
+        // 🛑 Invocamos el evento de progreso TOTAL usando el método correcto (GameEvents.Progress)
         GameEvents.Progress(cleanedItems, totalCleanableItems);
 
         if (remainingItemNames.Count <= itemThresholdToActivateList && remainingItemNames.Count > 0)

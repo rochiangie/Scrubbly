@@ -5,7 +5,7 @@ using System.Collections;
 public class DirtSpot : MonoBehaviour
 {
     // ===============================================
-    //               VARIABLES PÚBLICAS Y PRIVADAS
+    //               VARIABLES PÚBLICAS Y PRIVADAS
     // ===============================================
 
     /// <summary>Bandera para indicar si este punto de suciedad ya ha sido limpiado.</summary>
@@ -39,7 +39,7 @@ public class DirtSpot : MonoBehaviour
     private bool alreadyNotified = false;
 
     // ===============================================
-    //               MÉTODOS DE UNITY
+    //               MÉTODOS DE UNITY
     // ===============================================
 
     void Awake()
@@ -60,16 +60,12 @@ public class DirtSpot : MonoBehaviour
 
     void Start()
     {
-        // ✅ Verificar que estamos en la lista del TaskManager
-        if (TaskManager.Instance != null && !TaskManager.Instance.remainingItemNames.Contains(gameObject.name))
-        {
-            Debug.LogWarning($"⚠️ DirtSpot {gameObject.name} no está en la lista del TaskManager. Agregando...");
-            TaskManager.Instance.remainingItemNames.Add(gameObject.name);
-        }
+        // ❌ ELIMINAMOS LÓGICA INCONSISTENTE DE AGREGARSE A LA LISTA DEL TASKMANAGER
+        // DEBEMOS ASUMIR QUE TASKMANAGER YA LO HIZO CORRECTAMENTE.
     }
 
     // ===============================================
-    //               LÓGICA DE LIMPIEZA
+    //               LÓGICA DE LIMPIEZA
     // ===============================================
 
     public bool CanBeCleanedBy(string toolId)
@@ -106,7 +102,7 @@ public class DirtSpot : MonoBehaviour
     }
 
     // ===============================================
-    //               DESTRUCCIÓN Y FINALIZACIÓN
+    //               DESTRUCCIÓN Y FINALIZACIÓN
     // ===============================================
 
     private void HandleDestruction()
@@ -116,7 +112,8 @@ public class DirtSpot : MonoBehaviour
         alreadyNotified = true; // ✅ EVITAR NOTIFICACIONES DUPLICADAS
         IsCleaned = true;
 
-        // 🛑 1. NOTIFICAR AL TASKMANAGER (CON VALIDACIÓN)
+        // 🛑 1. NOTIFICAR AL TASKMANAGER (USANDO gameObject.name)
+        // TaskManager buscará el objeto por su nombre.
         if (TaskManager.Instance != null)
         {
             TaskManager.Instance.NotifySpotCleaned(gameObject.name);
@@ -130,7 +127,7 @@ public class DirtSpot : MonoBehaviour
         // 2. LLAMADA CRÍTICA A SFX
         if (AudioManager.Instance != null)
         {
-            // AudioManager.Instance.PlayCleanSFX(); 
+            // AudioManager.Instance.PlayCleanSFX(); 
         }
 
         // 3. INSTANCIAR PARTÍCULAS
@@ -184,7 +181,7 @@ public class DirtSpot : MonoBehaviour
     }
 
     // ===============================================
-    //               APARIENCIA VISUAL
+    //               APARIENCIA VISUAL
     // ===============================================
 
     private void UpdateVisualAppearance()
@@ -218,5 +215,10 @@ public class DirtSpot : MonoBehaviour
     void OnMouseDown()
     {
         Debug.Log($"🧹 DirtSpot: {gameObject.name}, Salud: {currentHealth}/{maxHealth}, Limpiado: {IsCleaned}");
+    }
+
+    public string GetRequiredToolId()
+    {
+        return requiredToolId;
     }
 }
