@@ -1,55 +1,150 @@
-﻿// TrashCan.cs
+﻿using UnityEngine;
 
-using UnityEngine;
-
-public class TrashCan : MonoBehaviour
+public class TrashCan : MonoBehaviour, IInteractable
 {
-    private CleaningManager manager;
+    [Header("Trash Type - Tag Based")]
+    [Tooltip("Tag del tipo de basura que acepta este basurero (Vidrio, Plastico, Peligroso, Carton)")]
+    public string acceptedTrashTag = "Plastico";
 
-    void Start()
+    [Header("Visual Settings")]
+    [Tooltip("Color del basurero y su etiqueta")]
+    public Color binColor = Color.yellow;
+
+    [Tooltip("Nombre descriptivo del tipo de basura")]
+    public string displayName = "PLÁSTICO";
+
+    [Header("Animation Settings")]
+    public Animator animator;
+    public string openParamName = "IsOpened";
+    
+    [Tooltip("Si está activado, usa un parámetro separado para cerrar. Si no, usa solo IsOpened")]
+    public bool useSeparateCloseParam = false;
+    public string closeParamName = "IsClosed";
+    
+    [Header("Auto-Close Settings")]
+    [Tooltip("Tiempo en segundos antes de cerrar automáticamente")]
+    public float autoCloseDelay = 3f;
+    [Tooltip("Si está activado, el basurero se cierra automáticamente")]
+    public bool autoClose = true;
+
+    [Header("Label Settings")]
+    public Vector3 labelOffset = new Vector3(0, 2, 0);
+    public float labelDistance = 5f;
+
+    private bool isOpen = false;
+    private string labelText;
+    private float closeTimer = 0f;
+
+    private void Awake()
     {
-        // 1. Busca el Manager de limpieza en la escena.
-        manager = FindObjectOfType<CleaningManager>();
+        if (animator == null) animator = GetComponent<Animator>();
 
-        if (manager == null)
+        // Validar que el Animator tenga un Controller asignado
+        if (animator != null && animator.runtimeAnimatorController == null)
         {
-            Debug.LogError("El objeto 'Basurero' no puede encontrar el 'CleaningManager' en la escena. Asegúrate de que existe.");
+            Debug.LogWarning($"[TRASHCAN] ⚠️ {displayName}: El Animator no tiene un AnimatorController asignado. " +
+                           "Por favor asigna un Animator Controller en el Inspector.", gameObject);
         }
 
-        // 2. Verifica que el objeto tenga un Collider con Is Trigger para funcionar.
-        Collider col = GetComponent<Collider>();
-        if (col != null && !col.isTrigger)
+        // Configurar texto del label
+        labelText = $"{displayName}\n({acceptedTrashTag})";
+
+        Debug.Log($"[TRASHCAN] 🗑️ Basurero configurado: {displayName} | Acepta tag: '{acceptedTrashTag}'");
+    }
+
+    private void Update()
+    {
+        // Cierre automático
+        if (isOpen && autoClose && closeTimer > 0f)
         {
-            Debug.LogWarning("El componente TrashCan debe estar en un objeto con un Collider marcado como 'Is Trigger' para detectar entradas.");
+            closeTimer -= Time.deltaTime;
+            if (closeTimer <= 0f)
+            {
+                Close();
+            }
         }
     }
 
-    /// <summary>
-    /// Se llama cuando otro Collider entra en el trigger del basurero.
-    /// </summary>
-    void OnTriggerEnter(Collider other)
+    // Implementación de la interfaz IInteractable
+    public void Interact()
     {
-        // 1. Verifica si el objeto tiene el Tag de basura transportable ("Trash").
-        if (other.CompareTag("Trash"))
+        if (isOpen)
         {
-            // 2. Busca el componente Carryable en el objeto que colisionó.
-            Carryable carryable = other.GetComponent<Carryable>() ?? other.GetComponentInParent<Carryable>();
+            Close();
+        }
+        else
+        {
+            Open();
+        }
+    }
 
-            if (carryable != null && manager != null)
+    public void Open()
+    {
+        if (!isOpen)
+        {
+            isOpen = true;
+            closeTimer = autoCloseDelay;
+            
+            if (animator != null && animator.runtimeAnimatorController != null)
             {
-                // 3. Lógica CLAVE: Solo contamos la basura si *ya no está siendo transportada*.
-                if (!carryable.IsCarried)
+                animator.SetBool(openParamName, true);
+                
+                if (useSeparateCloseParam)
                 {
-                    Debug.Log($"🗑️ TrashCan detectó objeto suelto: {other.name}. Notificando al Manager.");
-                    // 4. Notificamos al Manager (El Manager verifica si ya lo contó y luego lo destruye).
-                    manager.TrashDeposited(other.gameObject);
-                }
-                else if (carryable.IsCarried)
-                {
-                    // Debug.Log para saber que el objeto no fue contado porque el jugador sigue sujetándolo.
-                    Debug.Log($"🗑️ TrashCan detectó objeto, pero sigue siendo transportado ({other.name}). Debe ser soltado primero.");
+                    animator.SetBool(closeParamName, false);
                 }
             }
+            
+            Debug.Log($"[TRASHCAN] 🗑️ {displayName} abierto");
+        }
+    }
+
+    public void Close()
+    {
+        if (isOpen)
+        {
+            isOpen = false;
+            closeTimer = 0f;
+            
+            if (animator != null && animator.runtimeAnimatorController != null)
+            {
+                animator.SetBool(openParamName, false);
+                
+                if (useSeparateCloseParam)
+                {
+                    animator.SetBool(closeParamName, true);
+                }
+            }
+            
+            Debug.Log($"[TRASHCAN] 🗑️ {displayName} cerrado");
+        }
+    }
+
+    void OnGUI()
+    {
+        // Mostrar cartel solo si el jugador está cerca
+        if (Camera.main == null) return;
+
+        float distance = Vector3.Distance(Camera.main.transform.position, transform.position);
+        if (distance > labelDistance) return;
+
+        Vector3 labelWorldPos = transform.position + labelOffset;
+        Vector3 screenPos = Camera.main.WorldToScreenPoint(labelWorldPos);
+
+        if (screenPos.z > 0)
+        {
+            // Fondo del cartel
+            GUI.color = new Color(0, 0, 0, 0.7f);
+            GUI.Box(new Rect(screenPos.x - 60, Screen.height - screenPos.y - 30, 120, 60), "");
+
+            // Texto del cartel
+            GUI.color = binColor;
+            GUIStyle style = new GUIStyle(GUI.skin.label);
+            style.alignment = TextAnchor.MiddleCenter;
+            style.fontSize = 14;
+            style.fontStyle = FontStyle.Bold;
+
+            GUI.Label(new Rect(screenPos.x - 60, Screen.height - screenPos.y - 30, 120, 60), labelText, style);
         }
     }
 }
