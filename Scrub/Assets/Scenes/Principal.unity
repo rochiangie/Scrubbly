@@ -1964,6 +1964,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Prefab_Bag_G
       objectReference: {fileID: 0}
+    - target: {fileID: 4741609313123174958, guid: fd9efd1339d6937448e34e62640f6621, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5355136136253121274, guid: fd9efd1339d6937448e34e62640f6621, type: 3}
       propertyPath: m_Enabled
       value: 1
@@ -2016,9 +2020,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1330125631714119511, guid: fd9efd1339d6937448e34e62640f6621, type: 3}
       insertIndex: -1
       addedObject: {fileID: 666852395}
-    - targetCorrespondingSourceObject: {fileID: 1330125631714119511, guid: fd9efd1339d6937448e34e62640f6621, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 666852396}
     - targetCorrespondingSourceObject: {fileID: 1330125631714119511, guid: fd9efd1339d6937448e34e62640f6621, type: 3}
       insertIndex: -1
       addedObject: {fileID: 666852397}
@@ -3758,7 +3759,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 279637489}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f66cac6c0758ad94c87aa13bae39d21b, type: 3}
   m_Name: 
@@ -8881,27 +8882,6 @@ MonoBehaviour:
   destroySound: {fileID: 8300000, guid: f73d53b69f06a77438bab6b0f4addac2, type: 3}
   destructionParticlesPrefab: {fileID: 100010, guid: 176790904455b214b92ac1cfd30fddc9, type: 3}
   destroyDelay: 0.1
---- !u!65 &666852396
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 666852392}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.42891717, y: 0.5294583, z: 0.5337639}
-  m_Center: {x: 0.002128601, y: 0.30484354, z: -0.014618874}
 --- !u!114 &666852397
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15531,6 +15511,10 @@ PrefabInstance:
       propertyPath: m_TagString
       value: Basura
       objectReference: {fileID: 0}
+    - target: {fileID: 6419755116024944770, guid: 9cd1746789b311d4c9e0add4969236f1, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8754486503592099014, guid: 9cd1746789b311d4c9e0add4969236f1, type: 3}
       propertyPath: m_Layer
       value: 3
@@ -15539,7 +15523,8 @@ PrefabInstance:
       propertyPath: m_TagString
       value: Basura
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6308124278835657291, guid: 9cd1746789b311d4c9e0add4969236f1, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
@@ -16666,11 +16651,16 @@ PrefabInstance:
       propertyPath: m_TagString
       value: Untagged
       objectReference: {fileID: 0}
+    - target: {fileID: 6731296115111566243, guid: 9264a8901c8699b428aa09cbcff139a4, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7454057244247582084, guid: 9264a8901c8699b428aa09cbcff139a4, type: 3}
       propertyPath: m_Layer
       value: 3
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5842154193435313204, guid: 9264a8901c8699b428aa09cbcff139a4, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
@@ -25857,7 +25847,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1758788899}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f66cac6c0758ad94c87aa13bae39d21b, type: 3}
   m_Name: 
