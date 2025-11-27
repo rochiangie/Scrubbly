@@ -60,7 +60,6 @@ public class TaskManager : MonoBehaviour
 
     // === 5. GESTIÓN DE HERRAMIENTAS Y ZONAS ===
     [Header("5. Gestión de Herramientas")]
-    // ⚠️ REQUIERE QUE LA CLASE ToolDescriptor EXISTA.
     public ToolDescriptor CurrentTool { get; private set; }
     public float damageMultiplier = 1f;
     public bool requireCorrectTool = true;
@@ -93,7 +92,6 @@ public class TaskManager : MonoBehaviour
         gameEnded = false;
     }
 
-    // 🛑 CORRECCIÓN CLAVE: Sincronizar UI al inicio.
     void Start()
     {
         InitializeCleaningSystem();
@@ -102,19 +100,16 @@ public class TaskManager : MonoBehaviour
 
         Debug.Log($"🎯 TaskManager inicializado: {totalDirtSpots} manchas, {totalTrashItems} basuras");
 
-        // 🚀 Lógica de sincronización inicial
         var uiManager = FindObjectOfType<CleaningUIManager>();
         int totalItems = totalDirtSpots + totalTrashItems;
         int cleanedItems = cleanedDirtSpots + cleanedTrashItems;
 
         if (uiManager != null)
         {
-            // Llama directamente al método de la UI (más robusto para la inicialización)
             uiManager.ForceUpdate(cleanedItems, totalItems);
         }
         else
         {
-            // Si la UI no existe todavía, usa el evento (como fallback)
             ForceInitialProgressUpdate();
         }
     }
@@ -128,7 +123,6 @@ public class TaskManager : MonoBehaviour
 
     void Update()
     {
-        // === LÓGICA DE TIEMPO ===
         if (!timeIsUp && currentTime > 0 && !gameEnded)
         {
             currentTime -= Time.deltaTime;
@@ -143,17 +137,9 @@ public class TaskManager : MonoBehaviour
             }
         }
 
-        // 🛑 SHORTCUTS (Mantenidos para Debug)
-        if (Input.GetKeyDown(KeyCode.L) && !gameEnded)
-        {
-            Debug.Log("DEBUG: Forzando la finalización de las tareas de limpieza.");
-            ForceCompleteCleaningTasks();
-        }
-        if (Input.GetKeyDown(KeyCode.I) && !gameEnded)
-        {
-            Debug.Log("DEBUG: Forzando el puntaje ideal de victoria.");
-            ForceSetIdealScore();
-        }
+        // Shortcuts de Debug
+        if (Input.GetKeyDown(KeyCode.L) && !gameEnded) ForceCompleteCleaningTasks();
+        if (Input.GetKeyDown(KeyCode.I) && !gameEnded) ForceSetIdealScore();
         if (Input.GetKeyDown(KeyCode.P)) DebugCleaningCount();
         if (Input.GetKeyDown(KeyCode.O)) DebugMissingObjects();
         if (Input.GetKeyDown(KeyCode.R) && !gameEnded) ForceResync();
@@ -161,7 +147,7 @@ public class TaskManager : MonoBehaviour
     }
 
     // =========================================================================
-    // 🚀 MÉTODOS DE FIN DE JUEGO Y TRANSICIÓN DE ESCENA 🚀
+    // 🚀 MÉTODOS DE FIN DE JUEGO
     // =========================================================================
 
     private void EndGame(bool won)
@@ -169,14 +155,11 @@ public class TaskManager : MonoBehaviour
         if (gameEnded) return;
 
         gameEnded = true;
-
         string sceneToLoad = won ? goodEndingSceneName : badEndingSceneName;
         string result = won ? "VICTORIA" : "DERROTA";
 
         Debug.Log($"🎉 Juego Terminado: {result}. Transicionando a: {sceneToLoad}");
-
         GameEvents.GameResult(won);
-
         Time.timeScale = 1f;
 
         try
@@ -185,19 +168,15 @@ public class TaskManager : MonoBehaviour
         }
         catch (Exception ex)
         {
-            Debug.LogError($"❌ ERROR al cargar la escena '{sceneToLoad}'. Asegúrate de que la escena esté en File -> Build Settings. Error: {ex.Message}");
+            Debug.LogError($"❌ ERROR al cargar la escena '{sceneToLoad}': {ex.Message}");
         }
     }
-
-    // =========================================================================
-    // ✅ MÉTODO CheckFinalScore
-    // =========================================================================
 
     public void CheckFinalScore()
     {
         if (isCheckingFinalScore || gameEnded)
         {
-            Debug.LogWarning("⚠️ CheckFinalScore ya está en ejecución o el juego terminó. Ignorando llamada.");
+            Debug.LogWarning("⚠️ CheckFinalScore ignorado (ya en ejecución o juego terminado).");
             return;
         }
 
@@ -205,27 +184,15 @@ public class TaskManager : MonoBehaviour
 
         try
         {
-            if (minBalanceForGoodEnding == 0 && maxAccumulationForGoodEnding == 0)
-            {
-                InitializeSentimentalAnalysis();
-            }
+            // --- LÓGICA DE VICTORIA SIMPLIFICADA ---
+            int totalItems = totalDirtSpots + totalTrashItems;
+            int cleanedItems = cleanedDirtSpots + cleanedTrashItems;
 
-            DebugGameResult();
+            // Ganamos si limpiamos todo
+            bool won = cleanedItems >= totalItems;
 
-            bool won = false;
-
-            if (accumulationScore > maxAccumulationForGoodEnding)
-            {
-                won = false;
-            }
-            else if (emotionalBalanceScore >= minBalanceForGoodEnding)
-            {
-                won = true;
-            }
-            else
-            {
-                won = false;
-            }
+            if (won) Debug.Log($"🏆 VICTORIA: {cleanedItems}/{totalItems} objetos limpiados.");
+            else Debug.LogWarning($"⚠️ Faltan objetos: {cleanedItems}/{totalItems}.");
 
             EndGame(won);
         }
@@ -241,43 +208,28 @@ public class TaskManager : MonoBehaviour
     }
 
     // =========================================================================
-    // 🚀 MÉTODOS DE SOPORTE PARA UI
+    // 🚀 MÉTODOS DE SOPORTE
     // =========================================================================
 
-    /// <summary>
-    /// Fuerza el TaskManager a enviar el progreso actual a la UI (usando el evento).
-    /// </summary>
     [ContextMenu("Force Initial Progress Update")]
     public void ForceInitialProgressUpdate()
     {
-        if (!gameEnded)
-        {
-            CheckCompletion();
-        }
+        if (!gameEnded) CheckCompletion();
     }
-
-    // =========================================================================
-    // ✅ RESTANTE DEL CÓDIGO (Núcleo de Limpieza)
-    // =========================================================================
 
     private void InitializeCleaningSystem()
     {
         Debug.Log("=== 🔄 INICIALIZANDO SISTEMA DE LIMPIEZA ===");
 
-        // Limpiar todo
         remainingItemNames.Clear();
         allCleanableObjects.Clear();
         objectRegistry.Clear();
         cleanedDirtSpots = 0;
         cleanedTrashItems = 0;
 
-        // Buscar todos los objetos limpiables
         var allDirtSpots = FindObjectsOfType<DirtSpot>(true);
         var allTrashObjects = FindObjectsOfType<TrashObject>(true);
 
-        Debug.Log($"📊 Encontrados: {allDirtSpots.Length} DirtSpots, {allTrashObjects.Length} TrashObjects");
-
-        // ✅ REGISTRAR DIRT SPOTS
         foreach (var dirt in allDirtSpots)
         {
             if (dirt != null && !dirt.IsCleaned)
@@ -290,13 +242,9 @@ public class TaskManager : MonoBehaviour
                     allCleanableObjects.Add(dirt.gameObject);
                 }
             }
-            else if (dirt != null && dirt.IsCleaned)
-            {
-                cleanedDirtSpots++;
-            }
+            else if (dirt != null && dirt.IsCleaned) cleanedDirtSpots++;
         }
 
-        // ✅ REGISTRAR TRASH OBJECTS
         foreach (var trash in allTrashObjects)
         {
             if (trash != null && !trash.IsCleaned)
@@ -309,20 +257,14 @@ public class TaskManager : MonoBehaviour
                     allCleanableObjects.Add(trash.gameObject);
                 }
             }
-            else if (trash != null && trash.IsCleaned)
-            {
-                cleanedTrashItems++;
-            }
+            else if (trash != null && trash.IsCleaned) cleanedTrashItems++;
         }
 
-        // Establecer totales CORRECTOS
         totalDirtSpots = allDirtSpots.Length;
         totalTrashItems = allTrashObjects.Length;
 
-        // Verificar consistencia
         ValidateCounters();
 
-        // Activar lista si es necesario
         if (remainingItemNames.Count <= itemThresholdToActivateList && remainingItemNames.Count > 0)
         {
             GameEvents.NotifyMissingItems(remainingItemNames);
@@ -339,18 +281,13 @@ public class TaskManager : MonoBehaviour
     {
         foreach (var id in objectRegistry.Keys)
         {
-            if (id.StartsWith(objectName) || id.Contains(objectName))
-            {
-                return id;
-            }
+            if (id.StartsWith(objectName) || id.Contains(objectName)) return id;
         }
         return null;
     }
 
     public void NotifyTrashCleaned(string itemName)
     {
-        Debug.Log($"🗑️ [NotifyTrashCleaned] llamado para: {itemName}");
-
         if (gameEnded) return;
 
         string objectId = FindObjectIdByName(itemName);
@@ -361,19 +298,12 @@ public class TaskManager : MonoBehaviour
             cleanedTrashItems++;
             remainingItemNames.Remove(objectId);
             objectRegistry.Remove(objectId);
-
             CheckCompletion();
-        }
-        else
-        {
-            Debug.LogWarning($"⚠️ [NotifyTrashCleaned] No se encontró o ya estaba limpio: {itemName}");
         }
     }
 
     public void NotifySpotCleaned(string itemName)
     {
-        Debug.Log($"🧼 [NotifySpotCleaned] llamado para: {itemName}");
-
         if (gameEnded) return;
 
         string objectId = FindObjectIdByName(itemName);
@@ -382,16 +312,9 @@ public class TaskManager : MonoBehaviour
         if (!string.IsNullOrEmpty(objectId) && remainingItemNames.Contains(objectId))
         {
             cleanedDirtSpots++;
-            Debug.Log($"✅ Contador DirtSpots incrementado a: {cleanedDirtSpots}");
-
             remainingItemNames.Remove(objectId);
             objectRegistry.Remove(objectId);
-
             CheckCompletion();
-        }
-        else
-        {
-            Debug.LogWarning($"⚠️ [NotifySpotCleaned] No se encontró o ya estaba limpio: {itemName}");
         }
     }
 
@@ -401,13 +324,9 @@ public class TaskManager : MonoBehaviour
 
         int totalCleanableItems = totalDirtSpots + totalTrashItems;
         int cleanedItems = cleanedDirtSpots + cleanedTrashItems;
-        int remainingItems = totalCleanableItems - cleanedItems;
-
+        
         ValidateCounters();
 
-        Debug.Log($"📊 [PROGRESS CHECK] Limpiado: {cleanedItems} / Total: {totalCleanableItems}. Restantes: {remainingItems}");
-
-        // 🛑 Invocamos el evento de progreso TOTAL usando el método correcto (GameEvents.Progress)
         GameEvents.Progress(cleanedItems, totalCleanableItems);
 
         if (remainingItemNames.Count <= itemThresholdToActivateList && remainingItemNames.Count > 0)
@@ -424,10 +343,7 @@ public class TaskManager : MonoBehaviour
 
     private void HandleAllDone()
     {
-        if (!gameEnded)
-        {
-            CheckFinalScore();
-        }
+        if (!gameEnded) CheckFinalScore();
     }
 
     private void ValidateCounters()
@@ -441,7 +357,6 @@ public class TaskManager : MonoBehaviour
         int actualCleanedTrash = currentTrashObjects.Count(t => t.IsCleaned);
 
         bool needsResync = false;
-
         if (totalDirtSpots != actualDirtSpots) needsResync = true;
         if (totalTrashItems != actualTrashObjects) needsResync = true;
         if (cleanedDirtSpots != actualCleanedDirt) needsResync = true;
@@ -465,14 +380,12 @@ public class TaskManager : MonoBehaviour
         {
             int value = memory.sentimentalValue;
             totalSentimentalValue += Mathf.Abs(value);
-
             if (value >= 0) totalPositiveMemoriesValue += value;
             else totalNegativeMemoriesValue += Mathf.Abs(value);
         }
 
         minBalanceForGoodEnding = Mathf.CeilToInt(totalPositiveMemoriesValue * balanceThresholdPercentage);
         maxAccumulationForGoodEnding = Mathf.FloorToInt(totalSentimentalValue * accumulationThresholdPercentage);
-
         GameEvents.SentimentalScore(emotionalBalanceScore, accumulationScore);
     }
 
@@ -521,7 +434,6 @@ public class TaskManager : MonoBehaviour
         }
 
         float damage = damageMultiplier * CurrentTool.ToolPower;
-
         if (requireCorrectTool && !closestDirt.CanBeCleanedBy(CurrentTool.ToolId)) return;
 
         closestDirt.CleanHit(damage);
@@ -532,7 +444,6 @@ public class TaskManager : MonoBehaviour
     private void HandleMemorieDecision(bool isKept, int sentimentalValue)
     {
         int absoluteValue = Mathf.Abs(sentimentalValue);
-
         if (isKept)
         {
             accumulationScore += absoluteValue;
@@ -543,7 +454,6 @@ public class TaskManager : MonoBehaviour
             if (sentimentalValue > 0) emotionalBalanceScore -= sentimentalValue;
             else emotionalBalanceScore += absoluteValue;
         }
-
         GameEvents.SentimentalScore(emotionalBalanceScore, accumulationScore);
     }
 
@@ -572,45 +482,17 @@ public class TaskManager : MonoBehaviour
         Debug.Log($"=== 🧹 RESUMEN DE LIMPIEZA ===");
         Debug.Log($"Estado juego: {(gameEnded ? "TERMINADO" : "EN CURSO")}");
         Debug.Log($"Progreso Total: {cleanedDirtSpots + cleanedTrashItems}/{totalDirtSpots + totalTrashItems}");
-        Debug.Log($"Dirt Spots: {cleanedDirtSpots}/{totalDirtSpots} (En escena: {currentDirt.Length})");
-        Debug.Log($"Trash Items: {cleanedTrashItems}/{totalTrashItems} (En escena: {currentTrash.Length})");
-        Debug.Log($"Items en remainingItemNames: {remainingItemNames.Count}");
-        Debug.Log($"Objetos en registry: {objectRegistry.Count}");
-
-        int expectedRemaining = (totalDirtSpots + totalTrashItems) - (cleanedDirtSpots + cleanedTrashItems);
-        Debug.Log($"Esperados en lista: {expectedRemaining} vs Actuales: {remainingItemNames.Count}");
+        Debug.Log($"Dirt Spots: {cleanedDirtSpots}/{totalDirtSpots}");
+        Debug.Log($"Trash Items: {cleanedTrashItems}/{totalTrashItems}");
     }
 
     [ContextMenu("Debug Missing Objects")]
     public void DebugMissingObjects()
     {
-        var allDirtSpots = FindObjectsOfType<DirtSpot>(true);
-        var allTrashObjects = FindObjectsOfType<TrashObject>(true);
-
-        Debug.Log($"=== 🔍 DEBUG DETALLADO ===");
-        Debug.Log($"DirtSpots en escena: {allDirtSpots.Length} (limpios: {allDirtSpots.Count(d => d.IsCleaned)})");
-        Debug.Log($"TrashObjects en escena: {allTrashObjects.Length} (limpios: {allTrashObjects.Count(t => t.IsCleaned)})");
-
-        Debug.Log($"=== ❌ DIRTSPOTS POR LIMPIAR ===");
-        foreach (var dirt in allDirtSpots)
+        Debug.Log($"=== ❌ OBJETOS FALTANTES ===");
+        foreach (var name in remainingItemNames)
         {
-            if (dirt != null && !dirt.IsCleaned)
-            {
-                string id = GenerateUniqueId(dirt.gameObject);
-                bool inList = remainingItemNames.Contains(id);
-                Debug.Log($"{(inList ? "✅" : "❌")} Dirt: {dirt.name} -> {id} (En lista: {inList})");
-            }
-        }
-
-        Debug.Log($"=== ❌ TRASHOBJECTS POR LIMPIAR ===");
-        foreach (var trash in allTrashObjects)
-        {
-            if (trash != null && !trash.IsCleaned)
-            {
-                string id = GenerateUniqueId(trash.gameObject);
-                bool inList = remainingItemNames.Contains(id);
-                Debug.Log($"{(inList ? "✅" : "❌")} Trash: {trash.name} -> {id} (En lista: {inList})");
-            }
+            Debug.Log($"Falta: {name}");
         }
     }
 
@@ -620,52 +502,14 @@ public class TaskManager : MonoBehaviour
         Debug.Log($"=== 🎮 DEBUG RESULTADO FINAL ===");
         Debug.Log($"Estado del juego: {(gameEnded ? "TERMINADO" : "EN CURSO")}");
         Debug.Log($"Limpieza: {cleanedDirtSpots + cleanedTrashItems}/{totalDirtSpots + totalTrashItems}");
-        Debug.Log($"Balance Emocional: {emotionalBalanceScore} / Mínimo requerido: {minBalanceForGoodEnding}");
-        Debug.Log($"Acumulación: {accumulationScore} / Límite máximo: {maxAccumulationForGoodEnding}");
     }
 
     [ContextMenu("Forzar Resincronización")]
     public void ForceResync()
     {
         if (gameEnded) return;
-
         Debug.Log("=== 🔄 FORZANDO RESINCRONIZACIÓN COMPLETA ===");
-
-        remainingItemNames.Clear();
-        objectRegistry.Clear();
-        allCleanableObjects.Clear();
-
-        var allDirtSpots = FindObjectsOfType<DirtSpot>(true);
-        var allTrashObjects = FindObjectsOfType<TrashObject>(true);
-
-        totalDirtSpots = allDirtSpots.Length;
-        totalTrashItems = allTrashObjects.Length;
-        cleanedDirtSpots = allDirtSpots.Count(d => d.IsCleaned);
-        cleanedTrashItems = allTrashObjects.Count(t => t.IsCleaned);
-
-        foreach (var dirt in allDirtSpots)
-        {
-            if (!dirt.IsCleaned)
-            {
-                string id = GenerateUniqueId(dirt.gameObject);
-                remainingItemNames.Add(id);
-                objectRegistry[id] = dirt.gameObject;
-                allCleanableObjects.Add(dirt.gameObject);
-            }
-        }
-
-        foreach (var trash in allTrashObjects)
-        {
-            if (!trash.IsCleaned)
-            {
-                string id = GenerateUniqueId(trash.gameObject);
-                remainingItemNames.Add(id);
-                objectRegistry[id] = trash.gameObject;
-                allCleanableObjects.Add(trash.gameObject);
-            }
-        }
-
-        GameEvents.Progress(cleanedDirtSpots + cleanedTrashItems, totalDirtSpots + totalTrashItems);
+        InitializeCleaningSystem();
     }
 
     [ContextMenu("Reset Game State")]
@@ -673,6 +517,6 @@ public class TaskManager : MonoBehaviour
     {
         gameEnded = false;
         isCheckingFinalScore = false;
-        Debug.Log("🔄 Estado del juego reseteado. Listo para nueva partida.");
+        Debug.Log("🔄 Estado del juego reseteado.");
     }
 }

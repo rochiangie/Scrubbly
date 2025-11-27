@@ -250,6 +250,9 @@ public class TrashCan : MonoBehaviour, IInteractable
 
         while (timer < suckDuration)
         {
+            // 🛡️ PROTECCIÓN: Si el objeto fue destruido externamente, detener la corrutina
+            if (trash == null) yield break;
+
             timer += Time.deltaTime;
             float t = timer / suckDuration;
             float curveT = suckCurve.Evaluate(t);
@@ -266,7 +269,10 @@ public class TrashCan : MonoBehaviour, IInteractable
             yield return null;
         }
 
-        // Finalmente destruir y sumar puntos
-        trash.EliminateTrash();
+        // Finalmente destruir y sumar puntos (Solo si sigue existiendo)
+        if (trash != null)
+        {
+            trash.EliminateTrash();
+        }
     }
 }
