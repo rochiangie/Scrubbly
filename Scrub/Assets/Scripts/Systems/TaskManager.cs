@@ -28,6 +28,16 @@ public class TaskManager : MonoBehaviour
     public int totalTrashItems = 0;
     public int cleanedTrashItems = 0;
 
+    [Header("1.1 Detalle por Tipo")]
+    public int totalGlass = 0;
+    public int cleanedGlass = 0;
+    public int totalPaper = 0; // Papel/Carton
+    public int cleanedPaper = 0;
+    public int totalPlastic = 0;
+    public int cleanedPlastic = 0;
+    public int totalHazardous = 0;
+    public int cleanedHazardous = 0;
+
     // === 2. CONTROL DE TIEMPO ===
     [Header("2. Control de Tiempo")]
     [Tooltip("Duración máxima del nivel en segundos.")]
@@ -226,6 +236,11 @@ public class TaskManager : MonoBehaviour
         objectRegistry.Clear();
         cleanedDirtSpots = 0;
         cleanedTrashItems = 0;
+        
+        totalGlass = 0; cleanedGlass = 0;
+        totalPaper = 0; cleanedPaper = 0;
+        totalPlastic = 0; cleanedPlastic = 0;
+        totalHazardous = 0; cleanedHazardous = 0;
 
         var allDirtSpots = FindObjectsOfType<DirtSpot>(true);
         var allTrashObjects = FindObjectsOfType<TrashObject>(true);
@@ -247,6 +262,12 @@ public class TaskManager : MonoBehaviour
 
         foreach (var trash in allTrashObjects)
         {
+            string tag = trash.tag;
+            if (tag == "Vidrio") totalGlass++;
+            else if (tag == "Carton" || tag == "Papel") totalPaper++;
+            else if (tag == "Plastico") totalPlastic++;
+            else if (tag == "Peligroso") totalHazardous++;
+
             if (trash != null && !trash.IsCleaned)
             {
                 string uniqueId = GenerateUniqueId(trash.gameObject);
@@ -257,7 +278,14 @@ public class TaskManager : MonoBehaviour
                     allCleanableObjects.Add(trash.gameObject);
                 }
             }
-            else if (trash != null && trash.IsCleaned) cleanedTrashItems++;
+            else if (trash != null && trash.IsCleaned) 
+            {
+                cleanedTrashItems++;
+                if (tag == "Vidrio") cleanedGlass++;
+                else if (tag == "Carton" || tag == "Papel") cleanedPaper++;
+                else if (tag == "Plastico") cleanedPlastic++;
+                else if (tag == "Peligroso") cleanedHazardous++;
+            }
         }
 
         totalDirtSpots = allDirtSpots.Length;
@@ -295,6 +323,15 @@ public class TaskManager : MonoBehaviour
 
         if (!string.IsNullOrEmpty(objectId) && remainingItemNames.Contains(objectId))
         {
+            if (objectRegistry.TryGetValue(objectId, out GameObject obj) && obj != null)
+            {
+                string tag = obj.tag;
+                if (tag == "Vidrio") cleanedGlass++;
+                else if (tag == "Carton" || tag == "Papel") cleanedPaper++;
+                else if (tag == "Plastico") cleanedPlastic++;
+                else if (tag == "Peligroso") cleanedHazardous++;
+            }
+
             cleanedTrashItems++;
             remainingItemNames.Remove(objectId);
             objectRegistry.Remove(objectId);
@@ -396,6 +433,12 @@ public class TaskManager : MonoBehaviour
 
         cleanedDirtSpots = totalDirtSpots;
         cleanedTrashItems = totalTrashItems;
+        
+        cleanedGlass = totalGlass;
+        cleanedPaper = totalPaper;
+        cleanedPlastic = totalPlastic;
+        cleanedHazardous = totalHazardous;
+
         remainingItemNames.Clear();
         objectRegistry.Clear();
 

@@ -1,6 +1,4 @@
-﻿// ARCHIVO: CleaningUIManager.cs
-
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System;
@@ -8,19 +6,37 @@ using System.Collections.Generic;
 
 public class CleaningUIManager : MonoBehaviour
 {
-    // ... (Variables de Header y UI se mantienen igual) ...
     [Header("Panel Principal")]
     [Tooltip("El GameObject que contiene todos los elementos de la UI de limpieza.")]
     [SerializeField] private GameObject uiPanelGameObject;
 
-    [Header("1. Progreso de Limpieza TOTAL")]
-    [Tooltip("ASIGNA AQUÍ EL SLIDER PRINCIPAL que muestra el progreso (Suciedad + Basura).")]
+    [Header("1. Progreso de Limpieza TOTAL (Opcional)")]
+    [Tooltip("Slider General (Suma todo)")]
     [SerializeField] private Slider totalProgressSlider;
-
-    [Tooltip("ASIGNA AQUÍ EL TEXTO que muestra la cuenta total (Ej: 13/14).")]
     [SerializeField] private TMP_Text totalProgressCountText;
 
-    [Header("2. Componentes de TIEMPO")]
+    [Header("2. Sliders por Categoría")]
+    [Tooltip("VIDRIO")]
+    [SerializeField] private Slider glassSlider;
+    [SerializeField] private TMP_Text glassText;
+
+    [Tooltip("PAPEL / CARTON")]
+    [SerializeField] private Slider paperSlider;
+    [SerializeField] private TMP_Text paperText;
+
+    [Tooltip("PLASTICO")]
+    [SerializeField] private Slider plasticSlider;
+    [SerializeField] private TMP_Text plasticText;
+
+    [Tooltip("PELIGROSOS")]
+    [SerializeField] private Slider hazardousSlider;
+    [SerializeField] private TMP_Text hazardousText;
+
+    [Tooltip("RESIDUOS (Manchas/Bolsas)")]
+    [SerializeField] private Slider residueSlider;
+    [SerializeField] private TMP_Text residueText;
+
+    [Header("3. Componentes de TIEMPO")]
     [SerializeField] private TMP_Text timerText;
 
     // =================================================================
@@ -29,9 +45,6 @@ public class CleaningUIManager : MonoBehaviour
 
     void OnEnable()
     {
-        // 🛑 CAMBIO A MODO DE PRUEBA: Usamos GameEvents.OnProgress si OnProgressUpdate falla.
-        // Si tienes un evento llamado OnProgress en GameEvents, esto funcionará.
-        // Si no tienes un evento llamado OnProgress, esto fallará.
         try
         {
             GameEvents.OnProgressUpdate += UpdateTotalCleaningUI;
@@ -44,11 +57,8 @@ public class CleaningUIManager : MonoBehaviour
 
     void OnDisable()
     {
-        // Limpieza y desuscripción.
         GameEvents.OnProgressUpdate -= UpdateTotalCleaningUI;
     }
-
-    // ... (El resto del código de Update, ForceUpdate y las funciones de actualización son idénticos a la versión anterior y correctos) ...
 
     void Update()
     {
@@ -66,20 +76,44 @@ public class CleaningUIManager : MonoBehaviour
 
     private void UpdateTotalCleaningUI(int cleanedCount, int totalCount)
     {
-        if (totalProgressSlider == null || totalProgressCountText == null)
+        // Actualizar UI Total (Existente)
+        if (totalProgressSlider != null)
         {
-            Debug.LogWarning("Faltan componentes de UI de Progreso Total asignados en el Inspector.");
-            return;
+            if (totalProgressSlider.maxValue != totalCount) totalProgressSlider.maxValue = totalCount;
+            totalProgressSlider.value = cleanedCount;
         }
 
-        int remaining = Mathf.Max(0, totalCount - cleanedCount);
-        totalProgressCountText.text = $"Limpieza: {cleanedCount} / {totalCount} ({remaining} Restantes)";
-
-        if (totalProgressSlider.maxValue != totalCount)
+        if (totalProgressCountText != null)
         {
-            totalProgressSlider.maxValue = totalCount;
+            int remaining = Mathf.Max(0, totalCount - cleanedCount);
+            totalProgressCountText.text = $"Total: {cleanedCount}/{totalCount}";
         }
-        totalProgressSlider.value = cleanedCount;
+
+        // Actualizar UI Detallada (Nueva)
+        if (TaskManager.Instance != null)
+        {
+            UpdateSpecificSlider(glassSlider, glassText, TaskManager.Instance.cleanedGlass, TaskManager.Instance.totalGlass, "Vidrio");
+            UpdateSpecificSlider(paperSlider, paperText, TaskManager.Instance.cleanedPaper, TaskManager.Instance.totalPaper, "Papel");
+            UpdateSpecificSlider(plasticSlider, plasticText, TaskManager.Instance.cleanedPlastic, TaskManager.Instance.totalPlastic, "Plastico");
+            UpdateSpecificSlider(hazardousSlider, hazardousText, TaskManager.Instance.cleanedHazardous, TaskManager.Instance.totalHazardous, "Peligrosos");
+            
+            // Residuos = DirtSpots
+            UpdateSpecificSlider(residueSlider, residueText, TaskManager.Instance.cleanedDirtSpots, TaskManager.Instance.totalDirtSpots, "Residuos");
+        }
+    }
+
+    private void UpdateSpecificSlider(Slider slider, TMP_Text text, int current, int total, string label)
+    {
+        if (slider != null)
+        {
+            if (slider.maxValue != total) slider.maxValue = total;
+            slider.value = current;
+        }
+        if (text != null)
+        {
+            int remaining = Mathf.Max(0, total - current);
+            text.text = $"{label}: {current}/{total} ({remaining} faltan)";
+        }
     }
 
     private void UpdateTimerUI(float timeRemaining)
