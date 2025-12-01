@@ -83,6 +83,13 @@ public class PlayerInteraction : MonoBehaviour
 
     void Update()
     {
+        // 🛡️ SEGURIDAD: Si el objeto que llevamos fue destruido externamente (ej. por un basurero), limpiar la referencia
+        if (carried != null && carried.gameObject == null) // Unity sobrecarga == null para detectar objetos destruidos
+        {
+            carried = null;
+            animCtrl?.SetHolding(false);
+        }
+
         DetectNearbyObjects();
         HandleMouseClickCleaning();
         HandleAttackAndToolUse();

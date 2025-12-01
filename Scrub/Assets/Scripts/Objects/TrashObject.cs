@@ -47,11 +47,11 @@ public class TrashObject : MonoBehaviour
 
         IsCleaned = true;
 
-        // 1. Notificar al TaskManager ANTES de destruir (capturando el tag primero)
+        // 1. Notificar al TaskManager ANTES de destruir
+        // Usamos la sobrecarga que acepta GameObject para que pueda leer el tag correctamente
         if (TaskManager.Instance != null)
         {
-            // Pasar el tag directamente para que TaskManager pueda actualizar el contador correcto
-            TaskManager.Instance.NotifyTrashCleanedWithTag(trashName, gameObject.tag);
+            TaskManager.Instance.NotifyTrashCleaned(gameObject);
             Debug.Log($"✅ Notificado TaskManager: {trashName} (Tag: {gameObject.tag})");
         }
 

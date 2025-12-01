@@ -2,62 +2,51 @@
 using UnityEngine.UI;
 using TMPro;
 using System;
-using System.Collections.Generic;
 
 public class CleaningUIManager : MonoBehaviour
 {
     [Header("Panel Principal")]
-    [Tooltip("El GameObject que contiene todos los elementos de la UI de limpieza.")]
     [SerializeField] private GameObject uiPanelGameObject;
 
-    [Header("1. Progreso de Limpieza TOTAL (Opcional)")]
-    [Tooltip("Slider General (Suma todo)")]
+    [Header("1. Progreso de Limpieza TOTAL")]
     [SerializeField] private Slider totalProgressSlider;
     [SerializeField] private TMP_Text totalProgressCountText;
 
     [Header("2. Sliders por Categoría")]
-    [Tooltip("VIDRIO")]
     [SerializeField] private Slider glassSlider;
     [SerializeField] private TMP_Text glassText;
 
-    [Tooltip("PAPEL / CARTON")]
     [SerializeField] private Slider paperSlider;
     [SerializeField] private TMP_Text paperText;
 
-    [Tooltip("PLASTICO")]
     [SerializeField] private Slider plasticSlider;
     [SerializeField] private TMP_Text plasticText;
 
-    [Tooltip("PELIGROSOS")]
     [SerializeField] private Slider hazardousSlider;
     [SerializeField] private TMP_Text hazardousText;
 
-    [Tooltip("RESIDUOS (Manchas/Bolsas)")]
     [SerializeField] private Slider residueSlider;
     [SerializeField] private TMP_Text residueText;
 
     [Header("3. Componentes de TIEMPO")]
     [SerializeField] private TMP_Text timerText;
 
-    // =================================================================
-    // 🚀 INICIALIZACIÓN Y EVENTOS
-    // =================================================================
+    // Memoria para evitar actualizaciones innecesarias
+    private int lastGlass = -1, lastGlassTotal = -1;
+    private int lastPaper = -1, lastPaperTotal = -1;
+    private int lastPlastic = -1, lastPlasticTotal = -1;
+    private int lastHazardous = -1, lastHazardousTotal = -1;
+    private int lastResidue = -1, lastResidueTotal = -1;
+    private int lastTotalCleaned = -1, lastTotalCount = -1;
 
     void OnEnable()
     {
-        try
-        {
-            GameEvents.OnProgressUpdate += UpdateTotalCleaningUI;
-        }
-        catch
-        {
-            Debug.LogError("Error al intentar suscribirse a OnProgressUpdate. Verifique el nombre del evento en GameEvents.cs.");
-        }
+        GameEvents.OnProgressUpdate += UpdateUI;
     }
 
     void OnDisable()
     {
-        GameEvents.OnProgressUpdate -= UpdateTotalCleaningUI;
+        GameEvents.OnProgressUpdate -= UpdateUI;
     }
 
     void Update()
@@ -70,48 +59,105 @@ public class CleaningUIManager : MonoBehaviour
 
     public void ForceUpdate(int cleaned, int total)
     {
-        Debug.Log($"✅ [UI FORCE UPDATE] Recibida la sincronización inicial: {cleaned}/{total}");
-        UpdateTotalCleaningUI(cleaned, total);
+        // Reseteamos la memoria para forzar la actualización
+        lastGlass = -1; 
+        UpdateUI(cleaned, total);
     }
 
-    private void UpdateTotalCleaningUI(int cleanedCount, int totalCount)
+    // Este método se llama cada vez que cambia ALGO en el progreso
+    private void UpdateUI(int globalCleaned, int globalTotal)
     {
-        // Actualizar UI Total (Existente)
-        if (totalProgressSlider != null)
+        if (TaskManager.Instance == null) return;
+
+        // 1. Actualizar Slider Global (Solo si cambió)
+        if (globalCleaned != lastTotalCleaned || globalTotal != lastTotalCount)
         {
-            if (totalProgressSlider.maxValue != totalCount) totalProgressSlider.maxValue = totalCount;
-            totalProgressSlider.value = cleanedCount;
+            UpdateSlider(totalProgressSlider, totalProgressCountText, globalCleaned, globalTotal, "Total");
+            lastTotalCleaned = globalCleaned;
+            lastTotalCount = globalTotal;
         }
 
-        if (totalProgressCountText != null)
+        // 2. Actualizar Vidrio (Solo si cambió)
+        int currentGlass = TaskManager.Instance.cleanedGlass;
+        int totalGlass = TaskManager.Instance.totalGlass;
+        if (currentGlass != lastGlass || totalGlass != lastGlassTotal)
         {
-            int remaining = Mathf.Max(0, totalCount - cleanedCount);
-            totalProgressCountText.text = $"Total: {cleanedCount}/{totalCount}";
+            UpdateSlider(glassSlider, glassText, currentGlass, totalGlass, "Vidrio");
+            lastGlass = currentGlass;
+            lastGlassTotal = totalGlass;
         }
 
-        // Actualizar UI Detallada (Nueva)
-        if (TaskManager.Instance != null)
+        // 3. Actualizar Papel
+        int currentPaper = TaskManager.Instance.cleanedPaper;
+        int totalPaper = TaskManager.Instance.totalPaper;
+        if (currentPaper != lastPaper || totalPaper != lastPaperTotal)
         {
-            UpdateSpecificSlider(glassSlider, glassText, TaskManager.Instance.cleanedGlass, TaskManager.Instance.totalGlass, "Vidrio");
-            UpdateSpecificSlider(paperSlider, paperText, TaskManager.Instance.cleanedPaper, TaskManager.Instance.totalPaper, "Papel / cartón");
-            UpdateSpecificSlider(plasticSlider, plasticText, TaskManager.Instance.cleanedPlastic, TaskManager.Instance.totalPlastic, "Plásticos");
-            UpdateSpecificSlider(hazardousSlider, hazardousText, TaskManager.Instance.cleanedHazardous, TaskManager.Instance.totalHazardous, "Peligrosos");
+            UpdateSlider(paperSlider, paperText, currentPaper, totalPaper, "Papel / cartón");
+            lastPaper = currentPaper;
+            lastPaperTotal = totalPaper;
+        }
+
+        // 4. Actualizar Plástico
+        int currentPlastic = TaskManager.Instance.cleanedPlastic;
+        int totalPlastic = TaskManager.Instance.totalPlastic;
+        if (currentPlastic != lastPlastic || totalPlastic != lastPlasticTotal)
+        {
+            UpdateSlider(plasticSlider, plasticText, currentPlastic, totalPlastic, "Plásticos");
+            lastPlastic = currentPlastic;
+            lastPlasticTotal = totalPlastic;
+        }
+
+        // 5. Actualizar Peligrosos
+        int currentHazardous = TaskManager.Instance.cleanedHazardous;
+        int totalHazardous = TaskManager.Instance.totalHazardous;
+        if (currentHazardous != lastHazardous || totalHazardous != lastHazardousTotal)
+        {
+            UpdateSlider(hazardousSlider, hazardousText, currentHazardous, totalHazardous, "Peligrosos");
+            lastHazardous = currentHazardous;
+            lastHazardousTotal = totalHazardous;
+        }
+
+        // 6. Actualizar Residuos (Manchas + Bolsas)
+        int currentResidue = TaskManager.Instance.cleanedDirtSpots + TaskManager.Instance.cleanedBolsas;
+        int totalResidue = TaskManager.Instance.totalDirtSpots + TaskManager.Instance.totalBolsas;
+        if (currentResidue != lastResidue || totalResidue != lastResidueTotal)
+        {
+            UpdateSlider(residueSlider, residueText, currentResidue, totalResidue, "Residuos/bolsas");
+            lastResidue = currentResidue;
+            lastResidueTotal = totalResidue;
+        }
+    }
+
+    private void UpdateSlider(Slider slider, TMP_Text text, int current, int total, string label)
+    {
+        if (slider != null)
+        {
+            // Asegurar que el maxValue sea correcto y mayor a 0
+            float newMax = Mathf.Max(1, total);
             
-            // Residues = DirtSpots + Bolsas
-            UpdateSpecificSlider(residueSlider, residueText, 
+            // Solo asignar si es diferente para evitar "dirty flags" internos de Unity UI
+            if (Mathf.Abs(slider.maxValue - newMax) > 0.01f) 
+            {
+                slider.maxValue = newMax;
+            }
+
+            slider.value = current;
+        }
+
+        if (text != null)
+        {
+            text.text = $"{label}: {current}/{total}";
+        }
+    }
+
+    private void UpdateTimerUI(float timeRemaining)
+    {
+        if (timerText != null)
+        {
             int minutes = Mathf.FloorToInt(timeRemaining / 60f);
             int seconds = Mathf.FloorToInt(timeRemaining % 60f);
-
             timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
-
-            if (timeRemaining <= 30f)
-            {
-                timerText.color = Color.red;
-            }
-            else
-            {
-                timerText.color = Color.white;
-            }
+            timerText.color = timeRemaining <= 30f ? Color.red : Color.white;
         }
     }
 }

@@ -106,11 +106,12 @@ public class TaskManager : MonoBehaviour
 
     void Start()
     {
+        // SIEMPRE inicializar para llenar el registro de objetos
         InitializeCleaningSystem();
         InitializeSentimentalAnalysis();
         currentTime = maxLevelTime;
 
-        Debug.Log($"🎯 TaskManager inicializado: {totalDirtSpots} manchas, {totalTrashItems} basuras");
+        Debug.Log($"🎯 TaskManager START: {totalDirtSpots} manchas, {totalTrashItems} basuras. (Vidrio: {totalGlass}, Papel: {totalPaper}, Plastico: {totalPlastic})");
 
         var uiManager = FindObjectOfType<CleaningUIManager>();
         int totalItems = totalDirtSpots + totalTrashItems;
@@ -119,10 +120,6 @@ public class TaskManager : MonoBehaviour
         if (uiManager != null)
         {
             uiManager.ForceUpdate(cleanedItems, totalItems);
-        }
-        else
-        {
-            ForceInitialProgressUpdate();
         }
     }
 
@@ -361,29 +358,62 @@ public class TaskManager : MonoBehaviour
         return null;
     }
 
+    // ✅ SOBRECARGA: Acepta GameObject para leer el tag antes de destruir
+    public void NotifyTrashCleaned(GameObject trashObj)
+    {
+        if (gameEnded || trashObj == null) return;
+
+        string tag = trashObj.tag;
+        string itemName = trashObj.name;
+
+        // Llamamos a la lógica interna pasando el tag explícitamente
+        ProcessTrashCleaned(itemName, tag);
+    }
+
+    // Método original (string) - Mantenido por compatibilidad
     public void NotifyTrashCleaned(string itemName)
     {
         if (gameEnded) return;
 
+        // Intentamos buscar el objeto para obtener su tag
+        string tag = "Untagged";
+        string objectId = FindObjectIdByName(itemName);
+        if (string.IsNullOrEmpty(objectId)) objectId = objectRegistry.Keys.FirstOrDefault(key => key.Contains(itemName));
+
+        if (!string.IsNullOrEmpty(objectId) && objectRegistry.TryGetValue(objectId, out GameObject obj) && obj != null)
+        {
+            tag = obj.tag;
+        }
+
+        ProcessTrashCleaned(itemName, tag);
+    }
+
+    // Lógica centralizada de limpieza
+    private void ProcessTrashCleaned(string itemName, string tag)
+    {
         string objectId = FindObjectIdByName(itemName);
         if (string.IsNullOrEmpty(objectId)) objectId = objectRegistry.Keys.FirstOrDefault(key => key.Contains(itemName));
 
         if (!string.IsNullOrEmpty(objectId) && remainingItemNames.Contains(objectId))
         {
-            if (objectRegistry.TryGetValue(objectId, out GameObject obj) && obj != null)
-            {
-                string tag = obj.tag;
-                if (tag == "Vidrio") cleanedGlass++;
-                else if (tag == "Papeles") cleanedPaper++;
-                else if (tag == "Plastico") cleanedPlastic++;
-                else if (tag == "Peligrosos") cleanedHazardous++;
-                else if (tag == "Bolsas" || tag == "Trash") cleanedBolsas++;
-            }
+            // Incrementar contadores basados en el tag
+            if (tag == "Vidrio") cleanedGlass++;
+            else if (tag == "Papeles") cleanedPaper++;
+            else if (tag == "Plastico") cleanedPlastic++;
+            else if (tag == "Peligrosos") cleanedHazardous++;
+            else if (tag == "Bolsas" || tag == "Trash") cleanedBolsas++;
+
+            Debug.Log($"📊 [{tag}] Limpiado → V:{cleanedGlass}/{totalGlass} P:{cleanedPaper}/{totalPaper} Pl:{cleanedPlastic}/{totalPlastic} Pe:{cleanedHazardous}/{totalHazardous} B:{cleanedBolsas}/{totalBolsas}");
 
             cleanedTrashItems++;
             remainingItemNames.Remove(objectId);
             objectRegistry.Remove(objectId);
             CheckCompletion();
+        }
+        else
+        {
+            // Si no está en la lista (ej. ya limpiado), solo logueamos warning pero no error
+            Debug.LogWarning($"⚠️ Objeto {itemName} (Tag: {tag}) procesado pero no encontrado en lista de pendientes (¿Ya limpiado?).");
         }
     }
 
