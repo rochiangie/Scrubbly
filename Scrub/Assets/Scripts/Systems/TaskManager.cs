@@ -113,7 +113,7 @@ public class TaskManager : MonoBehaviour
 
         Debug.Log($"🎯 TaskManager START: {totalDirtSpots} manchas, {totalTrashItems} basuras. (Vidrio: {totalGlass}, Papel: {totalPaper}, Plastico: {totalPlastic})");
 
-        var uiManager = FindObjectOfType<CleaningUIManager>();
+        var uiManager = FindFirstObjectByType<CleaningUIManager>();
         int totalItems = totalDirtSpots + totalTrashItems;
         int cleanedItems = cleanedDirtSpots + cleanedTrashItems;
 
@@ -175,7 +175,7 @@ public class TaskManager : MonoBehaviour
 
     private void ForceCleanTrashByCategory(string[] tags)
     {
-        var allTrash = FindObjectsOfType<TrashObject>();
+        var allTrash = FindObjectsByType<TrashObject>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
         foreach (var trash in allTrash)
         {
             if (trash != null && !trash.IsCleaned && System.Array.Exists(tags, t => t == trash.tag))
@@ -187,7 +187,7 @@ public class TaskManager : MonoBehaviour
 
     private void ForceCleanResidues()
     {
-        var allDirt = FindObjectsOfType<DirtSpot>();
+        var allDirt = FindObjectsByType<DirtSpot>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
         foreach (var dirt in allDirt)
         {
             if (dirt != null && !dirt.IsCleaned)
@@ -284,8 +284,8 @@ public class TaskManager : MonoBehaviour
         totalHazardous = 0; cleanedHazardous = 0;
         totalBolsas = 0; cleanedBolsas = 0;
 
-        var allDirtSpots = FindObjectsOfType<DirtSpot>(true);
-        var allTrashObjects = FindObjectsOfType<TrashObject>(true);
+        var allDirtSpots = FindObjectsByType<DirtSpot>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        var allTrashObjects = FindObjectsByType<TrashObject>(FindObjectsInactive.Include, FindObjectsSortMode.None);
 
         foreach (var dirt in allDirtSpots)
         {
@@ -308,7 +308,7 @@ public class TaskManager : MonoBehaviour
             if (tag == "Vidrio") totalGlass++;
             else if (tag == "Papeles") totalPaper++; // Solo Papeles, cartón usa el mismo tag
             else if (tag == "Plastico") totalPlastic++;
-            else if (tag == "Peligrosos") totalHazardous++;
+            else if (tag == "Peligrosos" || tag == "Peligroso") totalHazardous++;
             else if (tag == "Bolsas" || tag == "Trash") totalBolsas++;
 
             if (trash != null && !trash.IsCleaned)
@@ -400,7 +400,7 @@ public class TaskManager : MonoBehaviour
             if (tag == "Vidrio") cleanedGlass++;
             else if (tag == "Papeles") cleanedPaper++;
             else if (tag == "Plastico") cleanedPlastic++;
-            else if (tag == "Peligrosos") cleanedHazardous++;
+            else if (tag == "Peligrosos" || tag == "Peligroso") cleanedHazardous++;
             else if (tag == "Bolsas" || tag == "Trash") cleanedBolsas++;
 
             Debug.Log($"📊 [{tag}] Limpiado → V:{cleanedGlass}/{totalGlass} P:{cleanedPaper}/{totalPaper} Pl:{cleanedPlastic}/{totalPlastic} Pe:{cleanedHazardous}/{totalHazardous} B:{cleanedBolsas}/{totalBolsas}");
@@ -463,30 +463,13 @@ public class TaskManager : MonoBehaviour
 
     private void ValidateCounters()
     {
-        var currentDirtSpots = FindObjectsOfType<DirtSpot>(true);
-        var currentTrashObjects = FindObjectsOfType<TrashObject>(true);
-
-        int actualDirtSpots = currentDirtSpots.Length;
-        int actualTrashObjects = currentTrashObjects.Length;
-        int actualCleanedDirt = currentDirtSpots.Count(d => d.IsCleaned);
-        int actualCleanedTrash = currentTrashObjects.Count(t => t.IsCleaned);
-
-        bool needsResync = false;
-        if (totalDirtSpots != actualDirtSpots) needsResync = true;
-        if (totalTrashItems != actualTrashObjects) needsResync = true;
-        if (cleanedDirtSpots != actualCleanedDirt) needsResync = true;
-        if (cleanedTrashItems != actualCleanedTrash) needsResync = true;
-
-        if (needsResync && !gameEnded)
-        {
-            Debug.Log("🔄 Se detectaron inconsistencias, forzando resincronización...");
-            ForceResync();
-        }
+        // Se ha eliminado la validación agresiva para evitar parpadeos en la UI
+        // cuando se destruyen objetos correctamente.
     }
 
     private void InitializeSentimentalAnalysis()
     {
-        MemorieObject[] memories = FindObjectsOfType<MemorieObject>();
+        MemorieObject[] memories = FindObjectsByType<MemorieObject>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
         totalSentimentalValue = 0;
         totalPositiveMemoriesValue = 0;
         totalNegativeMemoriesValue = 0;
@@ -598,8 +581,8 @@ public class TaskManager : MonoBehaviour
     [ContextMenu("Debug Cleaning Count")]
     public void DebugCleaningCount()
     {
-        var currentDirt = FindObjectsOfType<DirtSpot>(true);
-        var currentTrash = FindObjectsOfType<TrashObject>(true);
+        var currentDirt = FindObjectsByType<DirtSpot>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        var currentTrash = FindObjectsByType<TrashObject>(FindObjectsInactive.Include, FindObjectsSortMode.None);
 
         Debug.Log($"=== 🧹 RESUMEN DE LIMPIEZA ===");
         Debug.Log($"Estado juego: {(gameEnded ? "TERMINADO" : "EN CURSO")}");
