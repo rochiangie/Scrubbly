@@ -1,7 +1,6 @@
-﻿// Carryable.cs - FINAL Y CORREGIDO CON AJUSTE DE ESCALA
+﻿using UnityEngine;
 
-using UnityEngine;
-
+[RequireComponent(typeof(Rigidbody))]
 public class Carryable : MonoBehaviour
 {
     // 📢 NUEVO: Propiedad para rastrear el estado de transporte.
@@ -28,15 +27,15 @@ public class Carryable : MonoBehaviour
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        // Check is technically redundant due to RequireComponent, but good for safety if component was removed in editor somehow
+        if (rb == null)
+        {
+            Debug.LogWarning($"⚠️ Carryable en {gameObject.name} no tenía Rigidbody. Se añadió automáticamente.");
+            rb = gameObject.AddComponent<Rigidbody>();
+        }
+
         carryableCollider = GetComponent<Collider>();
-        if (rb != null)
-        {
-            originalMode = rb.collisionDetectionMode;
-        }
-        else
-        {
-            Debug.LogError($"Carryable en {gameObject.name} requiere un Rigidbody.");
-        }
+        originalMode = rb.collisionDetectionMode;
 
         // 📢 NUEVO: Guardamos la escala LOCAL inicial.
         originalLocalScale = transform.localScale;

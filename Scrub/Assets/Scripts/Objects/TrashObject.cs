@@ -30,12 +30,9 @@ public class TrashObject : MonoBehaviour
 
     void Start()
     {
-        // ✅ Verificar que estamos en la lista del TaskManager
-        if (TaskManager.Instance != null && !TaskManager.Instance.remainingItemNames.Contains(trashName))
-        {
-            Debug.LogWarning($"⚠️ TrashObject {trashName} no está en la lista del TaskManager. Agregando...");
-            TaskManager.Instance.remainingItemNames.Add(trashName);
-        }
+        // La validación se ha eliminado porque TaskManager usa IDs únicos (Nombre + Posición)
+        // y TrashObject usa solo el nombre, causando falsos positivos.
+        // TaskManager ya escanea todos los objetos en su Start().
     }
 
     /// <summary>

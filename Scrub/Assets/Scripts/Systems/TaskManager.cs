@@ -31,12 +31,14 @@ public class TaskManager : MonoBehaviour
     [Header("1.1 Detalle por Tipo")]
     public int totalGlass = 0;
     public int cleanedGlass = 0;
-    public int totalPaper = 0; // Papel/Carton
+    public int totalPaper = 0; // Papeles (incluye cartón)
     public int cleanedPaper = 0;
     public int totalPlastic = 0;
     public int cleanedPlastic = 0;
-    public int totalHazardous = 0;
+    public int totalHazardous = 0; // Peligrosos
     public int cleanedHazardous = 0;
+    public int totalBolsas = 0; // Bolsas + Trash
+    public int cleanedBolsas = 0;
 
     // === 2. CONTROL DE TIEMPO ===
     [Header("2. Control de Tiempo")]
@@ -148,12 +150,54 @@ public class TaskManager : MonoBehaviour
         }
 
         // Shortcuts de Debug
-        if (Input.GetKeyDown(KeyCode.L) && !gameEnded) ForceCompleteCleaningTasks();
+        if (Input.GetKeyDown(KeyCode.L) && !gameEnded && !Input.GetKey(KeyCode.Tab)) ForceCompleteCleaningTasks();
         if (Input.GetKeyDown(KeyCode.I) && !gameEnded) ForceSetIdealScore();
         if (Input.GetKeyDown(KeyCode.P)) DebugCleaningCount();
         if (Input.GetKeyDown(KeyCode.O)) DebugMissingObjects();
         if (Input.GetKeyDown(KeyCode.R) && !gameEnded) ForceResync();
         if (Input.GetKeyDown(KeyCode.Y)) DebugGameResult();
+
+        CheckDebugShortcuts();
+    }
+
+    private void CheckDebugShortcuts()
+    {
+        if (Input.GetKey(KeyCode.Tab))
+        {
+            if (Input.GetKeyDown(KeyCode.L)) ForceCleanTrashByCategory(new string[] { "Papeles" });
+            if (Input.GetKeyDown(KeyCode.K)) ForceCleanTrashByCategory(new string[] { "Papeles" });
+            if (Input.GetKeyDown(KeyCode.J)) ForceCleanTrashByCategory(new string[] { "Vidrio" });
+            if (Input.GetKeyDown(KeyCode.H)) ForceCleanTrashByCategory(new string[] { "Peligrosos" });
+            if (Input.GetKeyDown(KeyCode.G)) 
+            {
+                ForceCleanResidues();
+                ForceCleanTrashByCategory(new string[] { "Bolsas", "Trash" });
+            }
+        }
+    }
+
+    private void ForceCleanTrashByCategory(string[] tags)
+    {
+        var allTrash = FindObjectsOfType<TrashObject>();
+        foreach (var trash in allTrash)
+        {
+            if (trash != null && !trash.IsCleaned && System.Array.Exists(tags, t => t == trash.tag))
+            {
+                trash.CleanTrash();
+            }
+        }
+    }
+
+    private void ForceCleanResidues()
+    {
+        var allDirt = FindObjectsOfType<DirtSpot>();
+        foreach (var dirt in allDirt)
+        {
+            if (dirt != null && !dirt.IsCleaned)
+            {
+                dirt.CleanHit(9999f);
+            }
+        }
     }
 
     // =========================================================================
@@ -241,6 +285,7 @@ public class TaskManager : MonoBehaviour
         totalPaper = 0; cleanedPaper = 0;
         totalPlastic = 0; cleanedPlastic = 0;
         totalHazardous = 0; cleanedHazardous = 0;
+        totalBolsas = 0; cleanedBolsas = 0;
 
         var allDirtSpots = FindObjectsOfType<DirtSpot>(true);
         var allTrashObjects = FindObjectsOfType<TrashObject>(true);
@@ -264,9 +309,10 @@ public class TaskManager : MonoBehaviour
         {
             string tag = trash.tag;
             if (tag == "Vidrio") totalGlass++;
-            else if (tag == "Carton" || tag == "Papel") totalPaper++;
+            else if (tag == "Papeles") totalPaper++; // Solo Papeles, cartón usa el mismo tag
             else if (tag == "Plastico") totalPlastic++;
-            else if (tag == "Peligroso") totalHazardous++;
+            else if (tag == "Peligrosos") totalHazardous++;
+            else if (tag == "Bolsas" || tag == "Trash") totalBolsas++;
 
             if (trash != null && !trash.IsCleaned)
             {
@@ -282,9 +328,10 @@ public class TaskManager : MonoBehaviour
             {
                 cleanedTrashItems++;
                 if (tag == "Vidrio") cleanedGlass++;
-                else if (tag == "Carton" || tag == "Papel") cleanedPaper++;
+                else if (tag == "Papeles") cleanedPaper++;
                 else if (tag == "Plastico") cleanedPlastic++;
-                else if (tag == "Peligroso") cleanedHazardous++;
+                else if (tag == "Peligrosos") cleanedHazardous++;
+                else if (tag == "Bolsas" || tag == "Trash") cleanedBolsas++;
             }
         }
 
@@ -327,9 +374,10 @@ public class TaskManager : MonoBehaviour
             {
                 string tag = obj.tag;
                 if (tag == "Vidrio") cleanedGlass++;
-                else if (tag == "Carton" || tag == "Papel") cleanedPaper++;
+                else if (tag == "Papeles") cleanedPaper++;
                 else if (tag == "Plastico") cleanedPlastic++;
-                else if (tag == "Peligroso") cleanedHazardous++;
+                else if (tag == "Peligrosos") cleanedHazardous++;
+                else if (tag == "Bolsas" || tag == "Trash") cleanedBolsas++;
             }
 
             cleanedTrashItems++;
@@ -438,6 +486,7 @@ public class TaskManager : MonoBehaviour
         cleanedPaper = totalPaper;
         cleanedPlastic = totalPlastic;
         cleanedHazardous = totalHazardous;
+        cleanedBolsas = totalBolsas;
 
         remainingItemNames.Clear();
         objectRegistry.Clear();

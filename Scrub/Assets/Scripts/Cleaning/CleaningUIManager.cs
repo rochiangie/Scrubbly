@@ -93,12 +93,15 @@ public class CleaningUIManager : MonoBehaviour
         if (TaskManager.Instance != null)
         {
             UpdateSpecificSlider(glassSlider, glassText, TaskManager.Instance.cleanedGlass, TaskManager.Instance.totalGlass, "Vidrio");
-            UpdateSpecificSlider(paperSlider, paperText, TaskManager.Instance.cleanedPaper, TaskManager.Instance.totalPaper, "Papel");
-            UpdateSpecificSlider(plasticSlider, plasticText, TaskManager.Instance.cleanedPlastic, TaskManager.Instance.totalPlastic, "Plastico");
+            UpdateSpecificSlider(paperSlider, paperText, TaskManager.Instance.cleanedPaper, TaskManager.Instance.totalPaper, "Papel / cartón");
+            UpdateSpecificSlider(plasticSlider, plasticText, TaskManager.Instance.cleanedPlastic, TaskManager.Instance.totalPlastic, "Plásticos");
             UpdateSpecificSlider(hazardousSlider, hazardousText, TaskManager.Instance.cleanedHazardous, TaskManager.Instance.totalHazardous, "Peligrosos");
             
-            // Residuos = DirtSpots
-            UpdateSpecificSlider(residueSlider, residueText, TaskManager.Instance.cleanedDirtSpots, TaskManager.Instance.totalDirtSpots, "Residuos");
+            // Residues = DirtSpots + Bolsas
+            UpdateSpecificSlider(residueSlider, residueText, 
+                TaskManager.Instance.cleanedDirtSpots + TaskManager.Instance.cleanedBolsas, 
+                TaskManager.Instance.totalDirtSpots + TaskManager.Instance.totalBolsas, 
+                "Residuos/bolsas");
         }
     }
 
@@ -112,7 +115,7 @@ public class CleaningUIManager : MonoBehaviour
         if (text != null)
         {
             int remaining = Mathf.Max(0, total - current);
-            text.text = $"{label}: {current}/{total} ({remaining} faltan)";
+            text.text = $"{label}: {current}/{total}";
         }
     }
 

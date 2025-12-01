@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 
 public class TrashCan : MonoBehaviour, IInteractable
 {
     [Header("Trash Type - Tag Based")]
-    [Tooltip("Tag del tipo de basura que acepta este basurero (Vidrio, Plastico, Peligroso, Carton)")]
-    public string acceptedTrashTag = "Plastico";
+    [Tooltip("Tags del tipo de basura que acepta este basurero (puede aceptar múltiples variaciones)")]
+    public string[] acceptedTrashTags = new string[] { "Plastico" };
 
     [Header("Visual Settings")]
     [Tooltip("Color del basurero y su etiqueta")]
@@ -47,9 +48,10 @@ public class TrashCan : MonoBehaviour, IInteractable
         }
 
         // Configurar texto del label
-        labelText = $"{displayName}\n({acceptedTrashTag})";
+        string tagsDisplay = string.Join(", ", acceptedTrashTags);
+        labelText = $"{displayName}\n({tagsDisplay})";
 
-        Debug.Log($"[TRASHCAN] 🗑️ Basurero configurado: {displayName} | Acepta tag: '{acceptedTrashTag}'");
+        Debug.Log($"[TRASHCAN] 🗑️ Basurero configurado: {displayName} | Acepta tags: '{tagsDisplay}'");
     }
 
     private void Update()
@@ -157,6 +159,9 @@ public class TrashCan : MonoBehaviour, IInteractable
     public float suckDuration = 0.5f; // Duración de la animación de absorción
     public AnimationCurve suckCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
 
+    // Set para evitar procesar el mismo objeto múltiples veces mientras se anima
+    private HashSet<int> processedTrashIds = new HashSet<int>();
+
     private void OnTriggerEnter(Collider other)
     {
         ProcessTrashCollision(other);
@@ -181,6 +186,9 @@ public class TrashCan : MonoBehaviour, IInteractable
 
         if (trash != null && !trash.IsCleaned)
         {
+            // Evitar procesar si ya está en la lista de procesados
+            if (processedTrashIds.Contains(trash.GetInstanceID())) return;
+
             // 2. Verificar si el jugador lo está sosteniendo
             if (carryable != null && carryable.IsCarried)
             {
@@ -195,9 +203,27 @@ public class TrashCan : MonoBehaviour, IInteractable
             }
 
             // 3. Verificar Tag (Soporta tag en el objeto, en el padre o en la raíz)
-            bool isCorrectTag = other.CompareTag(acceptedTrashTag) || 
-                                (other.transform.parent != null && other.transform.parent.CompareTag(acceptedTrashTag)) ||
-                                other.transform.root.CompareTag(acceptedTrashTag);
+            bool isCorrectTag = false;
+            
+            // Debug: Mostrar el tag del objeto
+            string objectTag = other.tag;
+            string parentTag = other.transform.parent != null ? other.transform.parent.tag : "null";
+            string rootTag = other.transform.root.tag;
+            
+            Debug.Log($"[TRASHCAN DEBUG] Objeto: {other.name} | Tag: '{objectTag}' | Parent Tag: '{parentTag}' | Root Tag: '{rootTag}'");
+            Debug.Log($"[TRASHCAN DEBUG] Buscando tags: {string.Join(", ", acceptedTrashTags)}");
+            
+            foreach (string acceptedTag in acceptedTrashTags)
+            {
+                if (other.CompareTag(acceptedTag) || 
+                    (other.transform.parent != null && other.transform.parent.CompareTag(acceptedTag)) ||
+                    other.transform.root.CompareTag(acceptedTag))
+                {
+                    isCorrectTag = true;
+                    Debug.Log($"[TRASHCAN DEBUG] ✅ Match encontrado con tag: '{acceptedTag}'");
+                    break;
+                }
+            }
 
             if (isCorrectTag)
             {
@@ -206,6 +232,9 @@ public class TrashCan : MonoBehaviour, IInteractable
 
                 Debug.Log($"[TRASHCAN] ✅ Absorbiendo basura: {trash.name}");
                 
+                // Marcar como procesado inmediatamente
+                processedTrashIds.Add(trash.GetInstanceID());
+
                 // 4. Iniciar efecto de absorción
                 StartCoroutine(SuckAndDestroy(trash));
 
@@ -215,17 +244,16 @@ public class TrashCan : MonoBehaviour, IInteractable
             }
             else
             {
-                // Opcional: Feedback de rechazo (sonido de error, etc)
-                // Debug.Log($"[TRASHCAN] ❌ Objeto rechazado: {other.name}");
+                Debug.LogWarning($"[TRASHCAN] ❌ Objeto rechazado: {other.name} (Tag: '{objectTag}' no coincide con {string.Join(", ", acceptedTrashTags)})");
             }
         }
     }
 
     private System.Collections.IEnumerator SuckAndDestroy(TrashObject trash)
     {
-        // Marcar como "limpiado" para que no se procese de nuevo
-        // (Nota: trash.IsCleaned se setea en trash.EliminateTrash(), pero podemos usar un flag local o confiar en la corrutina)
-        
+        // Doble check de seguridad
+        if (trash == null || trash.IsCleaned) yield break;
+
         // Desactivar físicas para controlarlo manualmente
         Rigidbody rb = trash.GetComponent<Rigidbody>();
         if (rb != null)
@@ -269,10 +297,13 @@ public class TrashCan : MonoBehaviour, IInteractable
             yield return null;
         }
 
-        // Finalmente destruir y sumar puntos (Solo si sigue existiendo)
-        if (trash != null)
+        // Finalmente destruir y sumar puntos (Solo si sigue existiendo y no ha sido limpiado por otro proceso)
+        if (trash != null && !trash.IsCleaned)
         {
             trash.EliminateTrash();
         }
+        
+        // Limpiar ID del set (aunque el objeto se destruya, es buena práctica)
+        if (trash != null) processedTrashIds.Remove(trash.GetInstanceID());
     }
 }
