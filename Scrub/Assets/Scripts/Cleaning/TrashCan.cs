@@ -46,16 +46,15 @@ public class TrashCan : MonoBehaviour, IInteractable
             Debug.LogWarning($"[TRASHCAN] ⚠️ {displayName}: El Animator no tiene un AnimatorController asignado.", gameObject);
         }
 
-        // 🛡️ AUTO-CONFIGURACIÓN DE SEGURIDAD
-        // Si la lista está vacía o solo tiene "Trash", agregamos los tags comunes para evitar frustración
-        if (acceptedTrashTags == null || acceptedTrashTags.Length == 0 || (acceptedTrashTags.Length == 1 && acceptedTrashTags[0] == "Trash"))
+        // Validar que haya tags configurados
+        if (acceptedTrashTags == null || acceptedTrashTags.Length == 0)
         {
-            Debug.LogWarning($"[TRASHCAN] ⚠️ {displayName} tenía configuración de tags incompleta. Auto-agregando tags comunes.");
-            acceptedTrashTags = new string[] { "Vidrio", "Plastico", "Papeles", "Peligrosos", "Bolsas", "Trash", "Residuos" };
+            Debug.LogError($"[TRASHCAN] ❌ {displayName} NO tiene tags configurados. Este basurero NO aceptará ninguna basura. Por favor configura 'acceptedTrashTags' en el Inspector.", gameObject);
+            acceptedTrashTags = new string[0]; // Array vacío para evitar null reference
         }
 
         // Configurar texto del label
-        string tagsDisplay = string.Join(", ", acceptedTrashTags);
+        string tagsDisplay = acceptedTrashTags.Length > 0 ? string.Join(", ", acceptedTrashTags) : "SIN CONFIGURAR";
         labelText = $"{displayName}\n({tagsDisplay})";
 
         Debug.Log($"[TRASHCAN] 🗑️ Basurero configurado: {displayName} | Acepta tags: '{tagsDisplay}'");
