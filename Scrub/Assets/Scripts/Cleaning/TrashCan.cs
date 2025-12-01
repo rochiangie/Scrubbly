@@ -5,7 +5,7 @@ public class TrashCan : MonoBehaviour, IInteractable
 {
     [Header("Trash Type - Tag Based")]
     [Tooltip("Tags del tipo de basura que acepta este basurero (puede aceptar múltiples variaciones)")]
-    public string[] acceptedTrashTags = new string[] { "Plastico" };
+    public string[] acceptedTrashTags = new string[] { "Plastico", "Residuos", "Vidrio", "Peligrosos", "Papeles" };
 
     [Header("Visual Settings")]
     [Tooltip("Color del basurero y su etiqueta")]

@@ -99,30 +99,6 @@ public class CleaningUIManager : MonoBehaviour
             
             // Residues = DirtSpots + Bolsas
             UpdateSpecificSlider(residueSlider, residueText, 
-                TaskManager.Instance.cleanedDirtSpots + TaskManager.Instance.cleanedBolsas, 
-                TaskManager.Instance.totalDirtSpots + TaskManager.Instance.totalBolsas, 
-                "Residuos/bolsas");
-        }
-    }
-
-    private void UpdateSpecificSlider(Slider slider, TMP_Text text, int current, int total, string label)
-    {
-        if (slider != null)
-        {
-            if (slider.maxValue != total) slider.maxValue = total;
-            slider.value = current;
-        }
-        if (text != null)
-        {
-            int remaining = Mathf.Max(0, total - current);
-            text.text = $"{label}: {current}/{total}";
-        }
-    }
-
-    private void UpdateTimerUI(float timeRemaining)
-    {
-        if (timerText != null)
-        {
             int minutes = Mathf.FloorToInt(timeRemaining / 60f);
             int seconds = Mathf.FloorToInt(timeRemaining % 60f);
 

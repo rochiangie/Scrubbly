@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class TrashObject : MonoBehaviour
 {
@@ -7,9 +6,8 @@ public class TrashObject : MonoBehaviour
     public string trashName;
 
     [Header("Efectos de Destrucción")]
-    // Usaremos estas variables para los efectos.
-    public AudioClip destroySound;          // El clip de audio para el sonido de destrucción
-    public GameObject destructionParticlesPrefab; // La Prefab del sistema de partículas
+    public AudioClip destroySound;
+    public GameObject destructionParticlesPrefab;
     public float destroyDelay = 0.1f;
 
     public bool IsCleaned { get; private set; } = false;
@@ -30,21 +28,15 @@ public class TrashObject : MonoBehaviour
 
     void Start()
     {
-        // La validación se ha eliminado porque TaskManager usa IDs únicos (Nombre + Posición)
-        // y TrashObject usa solo el nombre, causando falsos positivos.
-        // TaskManager ya escanea todos los objetos en su Start().
+        // TaskManager ya escanea todos los objetos en su Start()
     }
 
-    /// <summary>
-    /// Llamado cuando el jugador interactúa con esta basura
-    /// </summary>
     public void EliminateTrash()
     {
         Debug.Log($"🆘 EliminateTrash() llamado en {trashName}");
-        CleanTrash(); // Llama al método principal de limpieza
+        CleanTrash();
     }
 
-    // ✅ MÉTODO PRINCIPAL DE LIMPIEZA
     public void CleanTrash()
     {
         if (IsCleaned)
@@ -55,42 +47,34 @@ public class TrashObject : MonoBehaviour
 
         IsCleaned = true;
 
-        // 1. Notificar al TaskManager
+        // 1. Notificar al TaskManager ANTES de destruir (capturando el tag primero)
         if (TaskManager.Instance != null)
         {
-            TaskManager.Instance.NotifyTrashCleaned(trashName);
-            Debug.Log($"✅ Notificado TaskManager: {trashName}");
+            // Pasar el tag directamente para que TaskManager pueda actualizar el contador correcto
+            TaskManager.Instance.NotifyTrashCleanedWithTag(trashName, gameObject.tag);
+            Debug.Log($"✅ Notificado TaskManager: {trashName} (Tag: {gameObject.tag})");
         }
-
-        // --- INICIO DE EFECTOS (SONIDO Y PARTÍCULAS) ---
 
         // 2. Reproducir Sonido
         if (destroySound != null)
         {
-            // Reproduce el sonido una sola vez en la posición del objeto
             AudioSource.PlayClipAtPoint(destroySound, transform.position);
         }
 
         // 3. Instanciar Partículas
         if (destructionParticlesPrefab != null)
         {
-            // Crea las partículas en la posición de la basura
             Instantiate(destructionParticlesPrefab, transform.position, Quaternion.identity);
         }
 
-        // --- FIN DE EFECTOS ---
-
         // 4. Desactivar Componentes de Interacción
-        // Esto previene interacciones adicionales mientras esperamos la destrucción
         if (trashRenderer != null) trashRenderer.enabled = false;
         if (trashCollider != null) trashCollider.enabled = false;
 
         // 5. Destruir
-        // Usamos destroyDelay para permitir que los efectos se inicien antes de que el objeto desaparezca
         Destroy(gameObject, destroyDelay);
     }
 
-    // ✅ Para debug
     void OnMouseDown()
     {
         Debug.Log($"🗑️ TrashObject: {trashName}, Limpiado: {IsCleaned}");

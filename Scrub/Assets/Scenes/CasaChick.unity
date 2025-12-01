@@ -3686,9 +3686,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   acceptedTrashTags:
-  - Vidrio
+  - Papeles
   binColor: {r: 0.055278778, g: 0, b: 1, a: 1}
-  displayName: Vidrio
+  displayName: "PAPEL / CART\xD3N"
   animator: {fileID: 1820817402}
   openParamName: IsOpened
   useSeparateCloseParam: 0
@@ -19859,7 +19859,7 @@ MonoBehaviour:
   acceptedTrashTags:
   - Plastico
   binColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
-  displayName: Plastico
+  displayName: "PL\xC1STICO"
   animator: {fileID: 1835448292}
   openParamName: IsOpened
   useSeparateCloseParam: 0
@@ -31868,9 +31868,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   acceptedTrashTags:
-  - Pleigrosos
+  - Peligrosos
   binColor: {r: 1, g: 0, b: 0.015686275, a: 1}
-  displayName: Peligrosos
+  displayName: PELIGROSOS
   animator: {fileID: 711938091}
   openParamName: IsOpened
   useSeparateCloseParam: 0
@@ -60599,9 +60599,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   acceptedTrashTags:
-  - Pepeles
+  - Vidrio
   binColor: {r: 0.042846855, g: 0.9083557, b: 0.15121746, a: 1}
-  displayName: Papeles
+  displayName: VIDRIO
   animator: {fileID: 542808346}
   openParamName: IsOpened
   useSeparateCloseParam: 0
