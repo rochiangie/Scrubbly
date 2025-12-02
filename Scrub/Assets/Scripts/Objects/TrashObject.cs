@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 
 public class TrashObject : MonoBehaviour
 {
@@ -14,12 +15,12 @@ public class TrashObject : MonoBehaviour
 
     private bool alreadyNotified = false;
     private Renderer trashRenderer;
-    private Collider trashCollider;
+    private Collider[] trashColliders; // Array para guardar todos los colliders.
 
     void Awake()
     {
         trashRenderer = GetComponent<Renderer>();
-        trashCollider = GetComponent<Collider>();
+        trashColliders = GetComponents<Collider>();
         alreadyNotified = false;
 
         if (string.IsNullOrEmpty(trashName))
@@ -28,6 +29,8 @@ public class TrashObject : MonoBehaviour
 
     void Start()
     {
+        // === MODIFICACIÓN CLAVE: Llamar a la función de debug aquí ===
+        DebugTaggedObjects();
         // TaskManager ya escanea todos los objetos en su Start()
     }
 
@@ -48,7 +51,6 @@ public class TrashObject : MonoBehaviour
         IsCleaned = true;
 
         // 1. Notificar al TaskManager ANTES de destruir
-        // Usamos la sobrecarga que acepta GameObject para que pueda leer el tag correctamente
         if (TaskManager.Instance != null)
         {
             TaskManager.Instance.NotifyTrashCleaned(gameObject);
@@ -69,11 +71,48 @@ public class TrashObject : MonoBehaviour
 
         // 4. Desactivar Componentes de Interacción
         if (trashRenderer != null) trashRenderer.enabled = false;
-        if (trashCollider != null) trashCollider.enabled = false;
+
+        // Desactivar todos los colliders
+        if (trashColliders != null)
+        {
+            foreach (Collider col in trashColliders)
+            {
+                if (col != null)
+                {
+                    col.enabled = false;
+                }
+            }
+        }
 
         // 5. Destruir
         Destroy(gameObject, destroyDelay);
     }
+
+    // === FUNCIÓN DE DEBUGGING ===
+    public void DebugTaggedObjects()
+    {
+        // --- 1. Buscar objetos con el tag "Vidrio" ---
+        GameObject[] vidrioObjects = GameObject.FindGameObjectsWithTag("Vidrio");
+        Debug.Log($"--- 🔍 OBJETOS CON TAG: VIDRIO ({vidrioObjects.Length}) ---");
+        foreach (GameObject go in vidrioObjects)
+        {
+            Debug.Log($"[VIDRIO] Encontrado: {go.name} en posición: {go.transform.position}");
+        }
+
+        // --- 2. Buscar objetos con el tag "Peligroso" ---
+        GameObject[] peligrosoObjects = GameObject.FindGameObjectsWithTag("Peligroso");
+        Debug.Log($"--- 🔍 OBJETOS CON TAG: PELIGROSO ({peligrosoObjects.Length}) ---");
+        foreach (GameObject go in peligrosoObjects)
+        {
+            Debug.Log($"[PELIGROSO] Encontrado: {go.name} en posición: {go.transform.position}");
+        }
+
+        if (vidrioObjects.Length == 0 && peligrosoObjects.Length == 0)
+        {
+            Debug.LogWarning("⚠️ No se encontraron objetos con los tags 'Vidrio' o 'Peligroso'. Asegúrate de que los tags están definidos correctamente en Unity.");
+        }
+    }
+    // ============================
 
     void OnMouseDown()
     {
