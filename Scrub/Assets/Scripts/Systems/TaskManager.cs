@@ -284,8 +284,9 @@ public class TaskManager : MonoBehaviour
         totalHazardous = 0; cleanedHazardous = 0;
         totalBolsas = 0; cleanedBolsas = 0;
 
-        var allDirtSpots = FindObjectsByType<DirtSpot>(FindObjectsInactive.Include, FindObjectsSortMode.None);
-        var allTrashObjects = FindObjectsByType<TrashObject>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        // ✅ SOLO OBJETOS ACTIVOS
+        var allDirtSpots = FindObjectsByType<DirtSpot>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+        var allTrashObjects = FindObjectsByType<TrashObject>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
 
         foreach (var dirt in allDirtSpots)
         {
@@ -306,7 +307,7 @@ public class TaskManager : MonoBehaviour
         {
             string tag = trash.tag;
             if (tag == "Vidrio") totalGlass++;
-            else if (tag == "Papeles") totalPaper++; // Solo Papeles, cartón usa el mismo tag
+            else if (tag == "Papeles") totalPaper++;
             else if (tag == "Plastico") totalPlastic++;
             else if (tag == "Peligrosos" || tag == "Peligroso") totalHazardous++;
             else if (tag == "Bolsas" || tag == "Trash") totalBolsas++;
@@ -327,7 +328,7 @@ public class TaskManager : MonoBehaviour
                 if (tag == "Vidrio") cleanedGlass++;
                 else if (tag == "Papeles") cleanedPaper++;
                 else if (tag == "Plastico") cleanedPlastic++;
-                else if (tag == "Peligrosos") cleanedHazardous++;
+                else if (tag == "Peligrosos" || tag == "Peligroso") cleanedHazardous++;
                 else if (tag == "Bolsas" || tag == "Trash") cleanedBolsas++;
             }
         }
@@ -581,8 +582,8 @@ public class TaskManager : MonoBehaviour
     [ContextMenu("Debug Cleaning Count")]
     public void DebugCleaningCount()
     {
-        var currentDirt = FindObjectsByType<DirtSpot>(FindObjectsInactive.Include, FindObjectsSortMode.None);
-        var currentTrash = FindObjectsByType<TrashObject>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        var currentDirt = FindObjectsByType<DirtSpot>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+        var currentTrash = FindObjectsByType<TrashObject>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
 
         Debug.Log($"=== 🧹 RESUMEN DE LIMPIEZA ===");
         Debug.Log($"Estado juego: {(gameEnded ? "TERMINADO" : "EN CURSO")}");
