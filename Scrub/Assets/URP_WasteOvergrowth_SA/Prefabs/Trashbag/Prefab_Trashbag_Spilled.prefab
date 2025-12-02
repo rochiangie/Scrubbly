@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 6731296115111566243}
   - component: {fileID: 5842154193435313204}
   - component: {fileID: 6835504615107281362}
+  - component: {fileID: 3685425274829993685}
   m_Layer: 3
   m_Name: Prefab_Trashbag_Spilled
   m_TagString: Trash
@@ -119,6 +120,22 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.43, y: 0.67, z: 0.47}
   m_Center: {x: 0, y: 0.29, z: 0}
+--- !u!114 &3685425274829993685
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4792798994960597699}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dee3e8a67a58f8a4ba2088c49239d4e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  trashName: Trash
+  destroySound: {fileID: 0}
+  destructionParticlesPrefab: {fileID: 0}
+  destroyDelay: 0.1
 --- !u!1001 &4850202237526956223
 PrefabInstance:
   m_ObjectHideFlags: 0
