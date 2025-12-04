@@ -200,7 +200,10 @@ public class PlayerInteraction : MonoBehaviour
                 GameObject hitObject = hit.collider.gameObject;
 
                 // 1. Prioridad: Recoger Objeto o Herramienta
-                if (carried == null && !heldItemSlot.HasTool)
+                // 🔒 RESTRICCIÓN: Solo permitir recoger si NO se tiene nada en las manos
+                bool isHandsFree = (carried == null && (heldItemSlot == null || !heldItemSlot.HasTool));
+                
+                if (isHandsFree)
                 {
                     Carryable clickCarryable = hitObject.GetComponentInParent<Carryable>();
 
@@ -340,6 +343,7 @@ public class PlayerInteraction : MonoBehaviour
         bool isPaused = toolPanelIdea != null && Time.timeScale == 0;
 
         // 1. Recoger
+        // 🔒 RESTRICCIÓN: Solo permitir recoger si NO se tiene nada en las manos
         if (nearbyCarryable != null && carried == null && !heldItemSlot.HasTool)
         {
             ToolDescriptor td = nearbyCarryable.GetComponent<ToolDescriptor>() ?? nearbyCarryable.GetComponentInParent<ToolDescriptor>();
