@@ -7077,6 +7077,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   holdPoint: {fileID: 1560366960154808273}
   animCtrl: {fileID: 0}
+  toolTag: CleaningTool
   mouseInteractionDistance: 2
   clickCleaningRadius: 0.5
   dirtLayer:
