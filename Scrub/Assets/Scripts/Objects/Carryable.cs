@@ -16,7 +16,7 @@ public class Carryable : MonoBehaviour
     public float scaleFactorOnPickup = 0.5f; // Ajusta este valor en el Inspector (0.5 es un buen inicio)
 
     private Rigidbody rb;
-    private Collider carryableCollider;
+    private Collider[] carryableColliders;
     private CollisionDetectionMode originalMode;
     // Guardaremos los colliders del jugador para deshacer la ignorancia
     private Collider[] playerCollidersReference;
@@ -34,7 +34,7 @@ public class Carryable : MonoBehaviour
             rb = gameObject.AddComponent<Rigidbody>();
         }
 
-        carryableCollider = GetComponent<Collider>();
+        carryableColliders = GetComponentsInChildren<Collider>();
         originalMode = rb.collisionDetectionMode;
 
         // 📢 NUEVO: Guardamos la escala LOCAL inicial.
@@ -62,13 +62,12 @@ public class Carryable : MonoBehaviour
         // 📢 CORRECCIÓN DE ESCALA: Aplicamos la nueva escala al recoger.
         transform.localScale = originalLocalScale * scaleFactorOnPickup;
 
-        // 3. Ignorar Colisiones entre Player y Carryable
-        if (carryableCollider != null && playerCollidersReference != null)
+        // 3. Desactivar todos los Colliders (para evitar colisiones mientras se transporta)
+        foreach (Collider col in carryableColliders)
         {
-            foreach (var playerCol in playerCollidersReference)
+            if (col != null)
             {
-                // Ignorar colisiones para que el objeto no "empuje" al jugador
-                Physics.IgnoreCollision(carryableCollider, playerCol, true);
+                col.enabled = false;
             }
         }
 
@@ -84,15 +83,15 @@ public class Carryable : MonoBehaviour
     /// <param name="force">Magnitud de la fuerza (usualmente dropForce de CleaningController).</param>
     public void Drop(Vector3 direction, float force)
     {
-        // 1. Deshacer Ignorar Colisiones
-        if (carryableCollider != null && playerCollidersReference != null)
+        // 1. Reactivar todos los Colliders
+        foreach (Collider col in carryableColliders)
         {
-            foreach (var playerCol in playerCollidersReference)
+            if (col != null)
             {
-                Physics.IgnoreCollision(carryableCollider, playerCol, false);
+                col.enabled = true;
             }
-            playerCollidersReference = null;
         }
+        playerCollidersReference = null;
 
         // 2. Restaurar físicas
         rb.useGravity = true;
