@@ -59,16 +59,20 @@ public class GameUIController : MonoBehaviour
             }
         }
 
-        // 2. Iniciar la corrutina para esperar y cargar el menú
-        StartCoroutine(WaitAndLoadMenu(waitTimeBeforeMenu));
+        // 🛑 DESACTIVADO: Ahora el GameEndController maneja la transición a créditos
+        // El panel se queda esperando hasta que el usuario presione un botón
+        // StartCoroutine(WaitAndLoadMenu(waitTimeBeforeMenu));
+        
+        Debug.Log("[UI] Panel mostrado. Esperando interacción del usuario (botón).");
     }
 
     // ===============================================
-    // CORRUTINA DE ESPERA Y CARGA
+    // CORRUTINA DE ESPERA Y CARGA (DESACTIVADA)
     // ===============================================
 
     /// <summary>
     /// Espera un tiempo real, despausa el juego y carga la escena del menú.
+    /// NOTA: Esta corrutina ya NO se llama automáticamente.
     /// </summary>
     private IEnumerator WaitAndLoadMenu(float waitTime)
     {
@@ -84,8 +88,8 @@ public class GameUIController : MonoBehaviour
     }
 
     /// <summary>
-    /// Función de utilidad, aunque ahora la carga es automática.
-    /// Mantenida por si se usa en un botón 'Saltar espera'.
+    /// Función de utilidad para cargar el menú principal.
+    /// Puede usarse en un botón si es necesario.
     /// </summary>
     public void LoadMainMenu()
     {
