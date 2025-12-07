@@ -62,25 +62,29 @@ public class PlayerInteraction : MonoBehaviour
     [Tooltip("Escala del puntero")]
     [SerializeField] private float pointerScale = 0.15f;
     
-    [Header("Colores del Puntero")]
-    [Tooltip("Color cuando apunta a un objeto recogible (Carryable)")]
-    [SerializeField] private Color carryableColor = Color.green;
-    [Tooltip("Color cuando apunta a una herramienta")]
-    [SerializeField] private Color toolColor = Color.cyan;
-    [Tooltip("Color cuando apunta a basura")]
-    [SerializeField] private Color trashColor = Color.yellow;
-    [Tooltip("Color cuando apunta a una mancha de suciedad")]
-    [SerializeField] private Color dirtColor = new Color(1f, 0.5f, 0f); // Naranja
-    [Tooltip("Color cuando apunta a un objeto interactuable (puerta, etc)")]
-    [SerializeField] private Color interactableColor = Color.blue;
-    [Tooltip("Color cuando apunta a un recuerdo (Memorie)")]
+    [Header("Colores Generales")]
     [SerializeField] private Color memorieColor = new Color(1f, 0f, 1f); // Magenta
-    [Tooltip("Color por defecto")]
+    [SerializeField] private Color toolColor = Color.cyan;
+    [SerializeField] private Color interactableColor = Color.blue;
     [SerializeField] private Color defaultColor = Color.white;
+
+    [Header("Colores de Residuos")]
+    [SerializeField] private Color glassColor = new Color(0f, 1f, 1f); // Cyan/Celeste
+    [SerializeField] private Color plasticColor = new Color(1f, 1f, 0f); // Amarillo
+    [SerializeField] private Color paperColor = new Color(0.6f, 0.4f, 0.2f); // Marrón claro
+    [SerializeField] private Color hazardousColor = new Color(1f, 0f, 0f); // Rojo
+    [SerializeField] private Color organicColor = new Color(0.4f, 1f, 0.4f); // Verde claro (Organico)
+    [SerializeField] private Color bagsColor = new Color(0.8f, 0.8f, 0.8f); // Gris claro (Bolsas)
+    [SerializeField] private Color dirtSpotColor = new Color(0.5f, 0.25f, 0f); // Marrón oscuro (Manchas)
 
     [Header("Tags de Objetos")]
     [SerializeField] private string memorieTag = "Memorie";
-    [SerializeField] private string trashTag = "Basura";
+    [SerializeField] private string glassTag = "Vidrio";
+    [SerializeField] private string plasticTag = "Plastico";
+    [SerializeField] private string paperTag = "Papeles";
+    [SerializeField] private string hazardousTag = "Peligrosos";
+    [SerializeField] private string organicTag = "Organico";
+    [SerializeField] private string bagsTag = "Bolsas";
 
     private Camera mainCamera;
 
@@ -274,18 +278,25 @@ public class PlayerInteraction : MonoBehaviour
         // 🎨 DETERMINAR Y APLICAR COLOR SEGÚN EL TIPO DE OBJETO
         Color targetColor = defaultColor;
         
+        // 1. Recuerdos (Prioridad Alta)
         if (hitObject.CompareTag(memorieTag))
         {
             targetColor = memorieColor;
         }
-        else if (hitObject.CompareTag(trashTag))
-        {
-            targetColor = trashColor;
-        }
+        // 2. Tipos de Basura Específicos
+        else if (hitObject.CompareTag(glassTag)) targetColor = glassColor;
+        else if (hitObject.CompareTag(plasticTag)) targetColor = plasticColor;
+        else if (hitObject.CompareTag(paperTag)) targetColor = paperColor;
+        else if (hitObject.CompareTag(hazardousTag)) targetColor = hazardousColor;
+        else if (hitObject.CompareTag(organicTag)) targetColor = organicColor;
+        else if (hitObject.CompareTag(bagsTag)) targetColor = bagsColor;
+        
+        // 3. Manchas de Suciedad
         else if (hitObject.GetComponent<DirtSpot>() != null)
         {
-            targetColor = dirtColor;
+            targetColor = dirtSpotColor;
         }
+        // 4. Otros Objetos
         else
         {
             Carryable carryable = hitObject.GetComponentInParent<Carryable>();
@@ -296,9 +307,10 @@ public class PlayerInteraction : MonoBehaviour
                 {
                     targetColor = toolColor;
                 }
+                // Si es un carryable genérico que no cayó en los tags de basura anteriores
                 else
                 {
-                    targetColor = carryableColor;
+                    targetColor = defaultColor; 
                 }
             }
             else
@@ -393,7 +405,12 @@ public class PlayerInteraction : MonoBehaviour
                 if (activeTool == null) return;
 
                 // 3. Destruir Basura
-                if (hitObject.CompareTag(trashTag))
+                // Nota: Aquí podrías querer actualizar para usar los nuevos tags si es necesario, 
+                // pero por ahora mantenemos la lógica existente si funciona.
+                // Si necesitas que funcione con TODOS los tags de basura, avísame.
+                if (hitObject.CompareTag(organicTag) || hitObject.CompareTag(glassTag) || 
+                    hitObject.CompareTag(plasticTag) || hitObject.CompareTag(paperTag) || 
+                    hitObject.CompareTag(hazardousTag) || hitObject.CompareTag(bagsTag))
                 {
                     if (activeTool.ToolId == trashDestructionToolId)
                     {

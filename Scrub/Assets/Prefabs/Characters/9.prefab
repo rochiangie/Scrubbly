@@ -7099,11 +7099,11 @@ MonoBehaviour:
   pointerScale: 0.15
   carryableColor: {r: 0, g: 1, b: 0, a: 1}
   toolColor: {r: 0, g: 1, b: 1, a: 1}
-  trashColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
-  dirtColor: {r: 1, g: 0.5, b: 0, a: 1}
-  interactableColor: {r: 0, g: 0, b: 1, a: 1}
-  memorieColor: {r: 1, g: 0, b: 1, a: 1}
-  defaultColor: {r: 1, g: 1, b: 1, a: 1}
+  trashColor: {r: 1, g: 1, b: 1, a: 1}
+  dirtColor: {r: 0.6886792, g: 0.4850333, b: 0.20465466, a: 1}
+  interactableColor: {r: 0, g: 1, b: 0.08179021, a: 1}
+  memorieColor: {r: 0, g: 0.02520442, b: 1, a: 1}
+  defaultColor: {r: 0.9430377, g: 0.9811321, b: 0.11569952, a: 1}
   memorieTag: Memorie
   trashTag: Basura
 --- !u!114 &-7078733372346190777
