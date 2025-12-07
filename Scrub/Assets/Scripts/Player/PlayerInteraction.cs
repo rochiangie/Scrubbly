@@ -54,6 +54,14 @@ public class PlayerInteraction : MonoBehaviour
     public float interactionRange = 3.0f;
     public LayerMask interactableLayer;
 
+    [Header("Puntero Visual")]
+    [Tooltip("GameObject que se mostrará en el punto donde apunta el raycast")]
+    [SerializeField] private GameObject raycastPointer;
+    [Tooltip("Distancia del puntero desde la superficie")]
+    [SerializeField] private float pointerOffset = 0.01f;
+    [Tooltip("Escala del puntero")]
+    [SerializeField] private float pointerScale = 0.1f;
+
     [Header("Tags de Objetos")]
     [SerializeField] private string memorieTag = "Memorie";
     [SerializeField] private string trashTag = "Basura";
@@ -125,6 +133,9 @@ public class PlayerInteraction : MonoBehaviour
             GameObject hitObject = hit.collider.gameObject;
             currentRaycastHitObject = hitObject;
 
+            // 🎯 ACTUALIZAR PUNTERO VISUAL
+            UpdateRaycastPointer(hit);
+
             // 🔴 LÓGICA DE OUTLINE
             HandleOutline(hitObject);
 
@@ -145,6 +156,12 @@ public class PlayerInteraction : MonoBehaviour
         }
         else
         {
+            // Si no golpeamos nada, ocultar puntero
+            if (raycastPointer != null)
+            {
+                raycastPointer.SetActive(false);
+            }
+
             // Si no golpeamos nada, limpiar outline
             if (currentOutline != null)
             {
@@ -179,6 +196,33 @@ public class PlayerInteraction : MonoBehaviour
                 currentOutline = null;
             }
         }
+    }
+
+    // =========================================================================
+    // 🎯 ACTUALIZACIÓN DEL PUNTERO VISUAL
+    // =========================================================================
+    private void UpdateRaycastPointer(RaycastHit hit)
+    {
+        if (raycastPointer == null) return;
+
+        // Activar el puntero
+        if (!raycastPointer.activeSelf)
+        {
+            raycastPointer.SetActive(true);
+        }
+
+        // Posicionar el puntero en el punto de impacto con un pequeño offset
+        raycastPointer.transform.position = hit.point + hit.normal * pointerOffset;
+
+        // Hacer que el puntero mire hacia la cámara (billboard effect)
+        if (mainCamera != null)
+        {
+            raycastPointer.transform.LookAt(mainCamera.transform);
+            raycastPointer.transform.Rotate(0, 180, 0); // Voltear para que mire hacia la cámara
+        }
+
+        // Aplicar escala
+        raycastPointer.transform.localScale = Vector3.one * pointerScale;
     }
 
     // =========================================================================
