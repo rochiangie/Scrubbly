@@ -54,13 +54,25 @@ public class PlayerInteraction : MonoBehaviour
     public float interactionRange = 3.0f;
     public LayerMask interactableLayer;
 
-    [Header("Puntero Visual")]
-    [Tooltip("GameObject que se mostrará en el punto donde apunta el raycast")]
-    [SerializeField] private GameObject raycastPointer;
-    [Tooltip("Distancia del puntero desde la superficie")]
-    [SerializeField] private float pointerOffset = 0.01f;
-    [Tooltip("Escala del puntero")]
-    [SerializeField] private float pointerScale = 0.1f;
+    [Header("Crosshair UI Estático")]
+    [Tooltip("Imagen UI del crosshair (debe estar en un Canvas, centrado en la pantalla)")]
+    [SerializeField] private UnityEngine.UI.Image crosshairImage;
+    
+    [Header("Colores del Crosshair")]
+    [Tooltip("Color cuando apunta a un objeto recogible (Carryable)")]
+    [SerializeField] private Color carryableColor = Color.green;
+    [Tooltip("Color cuando apunta a una herramienta")]
+    [SerializeField] private Color toolColor = Color.cyan;
+    [Tooltip("Color cuando apunta a basura")]
+    [SerializeField] private Color trashColor = Color.yellow;
+    [Tooltip("Color cuando apunta a una mancha de suciedad")]
+    [SerializeField] private Color dirtColor = new Color(1f, 0.5f, 0f); // Naranja
+    [Tooltip("Color cuando apunta a un objeto interactuable (puerta, etc)")]
+    [SerializeField] private Color interactableColor = Color.blue;
+    [Tooltip("Color cuando apunta a un recuerdo (Memorie)")]
+    [SerializeField] private Color memorieColor = new Color(1f, 0f, 1f); // Magenta
+    [Tooltip("Color por defecto")]
+    [SerializeField] private Color defaultColor = Color.white;
 
     [Header("Tags de Objetos")]
     [SerializeField] private string memorieTag = "Memorie";
@@ -133,8 +145,8 @@ public class PlayerInteraction : MonoBehaviour
             GameObject hitObject = hit.collider.gameObject;
             currentRaycastHitObject = hitObject;
 
-            // 🎯 ACTUALIZAR PUNTERO VISUAL
-            UpdateRaycastPointer(hit);
+            // 🎯 ACTUALIZAR COLOR DEL CROSSHAIR
+            UpdateCrosshairColor(hitObject);
 
             // 🔴 LÓGICA DE OUTLINE
             HandleOutline(hitObject);
@@ -156,10 +168,10 @@ public class PlayerInteraction : MonoBehaviour
         }
         else
         {
-            // Si no golpeamos nada, ocultar puntero
-            if (raycastPointer != null)
+            // Si no golpeamos nada, volver al color por defecto
+            if (crosshairImage != null)
             {
-                raycastPointer.SetActive(false);
+                crosshairImage.color = defaultColor;
             }
 
             // Si no golpeamos nada, limpiar outline
@@ -199,30 +211,58 @@ public class PlayerInteraction : MonoBehaviour
     }
 
     // =========================================================================
-    // 🎯 ACTUALIZACIÓN DEL PUNTERO VISUAL
+    // 🎯 ACTUALIZACIÓN DEL COLOR DEL CROSSHAIR
     // =========================================================================
-    private void UpdateRaycastPointer(RaycastHit hit)
+    private void UpdateCrosshairColor(GameObject hitObject)
     {
-        if (raycastPointer == null) return;
-
-        // Activar el puntero
-        if (!raycastPointer.activeSelf)
+        if (crosshairImage == null) return;
+        
+        // 🎨 DETERMINAR COLOR SEGÚN EL TIPO DE OBJETO
+        Color targetColor = defaultColor;
+        
+        // Verificar tipo de objeto en orden de prioridad
+        if (hitObject.CompareTag(memorieTag))
         {
-            raycastPointer.SetActive(true);
+            targetColor = memorieColor;
         }
-
-        // Posicionar el puntero en el punto de impacto con un pequeño offset
-        raycastPointer.transform.position = hit.point + hit.normal * pointerOffset;
-
-        // Hacer que el puntero mire hacia la cámara (billboard effect)
-        if (mainCamera != null)
+        else if (hitObject.CompareTag(trashTag))
         {
-            raycastPointer.transform.LookAt(mainCamera.transform);
-            raycastPointer.transform.Rotate(0, 180, 0); // Voltear para que mire hacia la cámara
+            targetColor = trashColor;
         }
-
-        // Aplicar escala
-        raycastPointer.transform.localScale = Vector3.one * pointerScale;
+        else if (hitObject.GetComponent<DirtSpot>() != null)
+        {
+            targetColor = dirtColor;
+        }
+        else
+        {
+            // Verificar si es un objeto recogible
+            Carryable carryable = hitObject.GetComponentInParent<Carryable>();
+            if (carryable != null)
+            {
+                // Verificar si es una herramienta
+                ToolDescriptor tool = carryable.GetComponent<ToolDescriptor>() ?? carryable.GetComponentInParent<ToolDescriptor>();
+                if (tool != null)
+                {
+                    targetColor = toolColor;
+                }
+                else
+                {
+                    targetColor = carryableColor;
+                }
+            }
+            else
+            {
+                // Verificar si es interactuable (puerta, etc)
+                IInteractable interactable = hitObject.GetComponentInParent<IInteractable>();
+                if (interactable != null)
+                {
+                    targetColor = interactableColor;
+                }
+            }
+        }
+        
+        // Aplicar el color al crosshair UI
+        crosshairImage.color = targetColor;
     }
 
     // =========================================================================
