@@ -493,58 +493,8 @@ public class PlayerInteraction : MonoBehaviour
     // =========================================================================
     void TryGeneralInteract()
     {
-        if (heldItemSlot == null) return;
-        bool isPaused = toolPanelIdea != null && Time.timeScale == 0;
-
-        // 1. Recoger
-        // 🔒 RESTRICCIÓN: Solo permitir recoger si NO se tiene nada en las manos
-        if (nearbyCarryable != null && carried == null && !heldItemSlot.HasTool)
-        {
-            ToolDescriptor td = nearbyCarryable.GetComponent<ToolDescriptor>() ?? nearbyCarryable.GetComponentInParent<ToolDescriptor>();
-
-            if (nearbyCarryable.CompareTag(memorieTag))
-            {
-                MemorieObject mObject = nearbyCarryable.GetComponent<MemorieObject>();
-                if (mObject != null && toolPanelIdea != null)
-                {
-                    mObject.StartDecisionProcess(toolPanelIdea);
-                    nearbyCarryable = null;
-                    animCtrl?.TriggerInteract();
-                    return;
-                }
-            }
-
-            if (td != null || !nearbyCarryable.CompareTag(memorieTag))
-            {
-                if (!holdPoint)
-                {
-                    var hp = new GameObject("HoldPoint").transform;
-                    hp.SetParent(transform);
-                    hp.localPosition = new Vector3(0, 1.2f, 0.6f);
-                    holdPoint = hp;
-                }
-
-                if (td != null)
-                {
-                    heldItemSlot.EquipToolPrefab(td.gameObject, holdPoint);
-                    Destroy(nearbyCarryable.gameObject);
-                }
-                else
-                {
-                    nearbyCarryable.PickUp(holdPoint, playerColliders);
-                    carried = nearbyCarryable;
-                }
-
-                nearbyCarryable = null;
-                animCtrl?.SetHolding(td != null || carried != null);
-                animCtrl?.TriggerInteract();
-
-                if (toolPanelIdea != null && isPaused) toolPanelIdea.SetIsPaused(false);
-                return;
-            }
-        }
-
-        // 2. Interacción General (Puertas, etc)
+        // 1. Interacción General (Puertas, Interruptores, etc)
+        // Nota: Los objetos (Carryables) ahora se recogen SOLO con Click Izquierdo.
         if (currentDoorInteractable != null)
         {
             currentDoorInteractable.Interact();

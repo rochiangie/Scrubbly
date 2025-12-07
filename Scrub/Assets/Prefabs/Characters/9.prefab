@@ -7097,15 +7097,24 @@ MonoBehaviour:
   raycastPointer: {fileID: 7915641273827192530}
   pointerOffset: 0.02
   pointerScale: 0.15
-  carryableColor: {r: 0, g: 1, b: 0, a: 1}
-  toolColor: {r: 0, g: 1, b: 1, a: 1}
-  trashColor: {r: 1, g: 1, b: 1, a: 1}
-  dirtColor: {r: 0.6886792, g: 0.4850333, b: 0.20465466, a: 1}
-  interactableColor: {r: 0, g: 1, b: 0.08179021, a: 1}
   memorieColor: {r: 0, g: 0.02520442, b: 1, a: 1}
+  toolColor: {r: 0, g: 1, b: 1, a: 1}
+  interactableColor: {r: 0, g: 1, b: 0.08179021, a: 1}
   defaultColor: {r: 0.9430377, g: 0.9811321, b: 0.11569952, a: 1}
+  glassColor: {r: 0, g: 1, b: 1, a: 1}
+  plasticColor: {r: 1, g: 1, b: 0, a: 1}
+  paperColor: {r: 0.6, g: 0.4, b: 0.2, a: 1}
+  hazardousColor: {r: 1, g: 0, b: 0, a: 1}
+  organicColor: {r: 0.4, g: 1, b: 0.4, a: 1}
+  bagsColor: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+  dirtSpotColor: {r: 0.5, g: 0.25, b: 0, a: 1}
   memorieTag: Memorie
-  trashTag: Basura
+  glassTag: Vidrio
+  plasticTag: Plastico
+  paperTag: Papeles
+  hazardousTag: Peligrosos
+  organicTag: Organico
+  bagsTag: Bolsas
 --- !u!114 &-7078733372346190777
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9160,7 +9169,7 @@ RectTransform:
   m_GameObject: {fileID: 7915641273827192530}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 1.579}
-  m_LocalScale: {x: 0.0400775, y: 0.0400775, z: 0.0400775}
+  m_LocalScale: {x: 0.01386401, y: 0.01386401, z: 0.01386401}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5829839737267163605}
