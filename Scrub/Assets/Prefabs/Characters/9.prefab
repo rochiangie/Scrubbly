@@ -7094,7 +7094,9 @@ MonoBehaviour:
   interactableLayer:
     serializedVersion: 2
     m_Bits: 137
-  crosshairImage: {fileID: 97973359599409009}
+  raycastPointer: {fileID: 7915641273827192530}
+  pointerOffset: 0.02
+  pointerScale: 0.15
   carryableColor: {r: 0, g: 1, b: 0, a: 1}
   toolColor: {r: 0, g: 1, b: 1, a: 1}
   trashColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
@@ -9165,7 +9167,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.055, y: 1.6}
+  m_AnchoredPosition: {x: 0.1134, y: 1.6}
   m_SizeDelta: {x: 1, y: 1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!212 &1072120087950726650
