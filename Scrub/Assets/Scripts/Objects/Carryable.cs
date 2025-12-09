@@ -15,6 +15,11 @@ public class Carryable : MonoBehaviour
     [Tooltip("Factor de escala para aplicar al ser recogido. 1.0 = sin cambio.")]
     public float scaleFactorOnPickup = 0.5f; // Ajusta este valor en el Inspector (0.5 es un buen inicio)
 
+    // 📢 NUEVO: Punto de agarre personalizado (opcional)
+    [Header("Configuración de Agarre")]
+    [Tooltip("Asigna un objeto hijo vacío que represente dónde debe agarrarse este objeto.")]
+    [SerializeField] private Transform customGripPoint;
+
     private Rigidbody rb;
     private Collider[] carryableColliders;
     private CollisionDetectionMode originalMode;
@@ -56,13 +61,30 @@ public class Carryable : MonoBehaviour
 
         // 2. Jerarquía
         transform.SetParent(parent, true);
-        transform.localPosition = Vector3.zero;
-        transform.localRotation = Quaternion.identity;
 
         // 📢 CORRECCIÓN DE ESCALA: Aplicamos la nueva escala al recoger.
         transform.localScale = originalLocalScale * scaleFactorOnPickup;
 
-        // 3. Desactivar todos los Colliders (para evitar colisiones mientras se transporta)
+        // 3. Posicionamiento (Usando Custom Grip Point si existe)
+        if (customGripPoint != null)
+        {
+            // Queremos que el customGripPoint coincida con el parent (HoldPoint) en posición y rotación.
+            // Primero alineamos la rotación
+            transform.rotation = parent.rotation * Quaternion.Inverse(customGripPoint.localRotation);
+            
+            // Luego alineamos la posición: movemos el objeto para que el grip point esté en el origen del padre
+            // Calculamos la diferencia entre el objeto y su grip point en espacio mundial
+            Vector3 gripOffset = customGripPoint.position - transform.position;
+            transform.position = parent.position - gripOffset;
+        }
+        else
+        {
+            // Comportamiento por defecto: centrar en el pivote
+            transform.localPosition = Vector3.zero;
+            transform.localRotation = Quaternion.identity;
+        }
+
+        // 4. Desactivar todos los Colliders (para evitar colisiones mientras se transporta)
         foreach (Collider col in carryableColliders)
         {
             if (col != null)
@@ -71,7 +93,7 @@ public class Carryable : MonoBehaviour
             }
         }
 
-        // 4. Actualizar estado
+        // 5. Actualizar estado
         IsCarried = true;
     }
 
