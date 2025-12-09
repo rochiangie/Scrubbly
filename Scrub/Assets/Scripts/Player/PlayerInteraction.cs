@@ -20,6 +20,9 @@ public class PlayerInteraction : MonoBehaviour
     private UIPauseController toolPanelIdea;
     private CleaningController cleaningController;
     private Carryable carried;
+    
+    // 📢 NUEVO: Lista para apilar orgánicos
+    private List<Carryable> organicStack = new List<Carryable>();
 
     public string toolTag = "CleaningTool";
 
@@ -122,10 +125,19 @@ public class PlayerInteraction : MonoBehaviour
     void Update()
     {
         // 🛡️ SEGURIDAD: Si el objeto que llevamos fue destruido externamente (ej. por un basurero), limpiar la referencia
-        if (carried != null && carried.gameObject == null) // Unity sobrecarga == null para detectar objetos destruidos
+        if (carried != null && carried.gameObject == null) 
         {
             carried = null;
-            animCtrl?.SetHolding(false);
+            // Limpiar también el stack si el principal murió
+            organicStack.RemoveAll(x => x == null || x.gameObject == null);
+            if (organicStack.Count == 0) animCtrl?.SetHolding(false);
+            else carried = organicStack[organicStack.Count - 1]; // Recuperar el siguiente si queda alguno
+        }
+        // Limpieza extra del stack por seguridad
+        if (organicStack.Count > 0)
+        {
+            organicStack.RemoveAll(x => x == null || x.gameObject == null);
+            if (organicStack.Count == 0 && carried == null) animCtrl?.SetHolding(false);
         }
 
         DetectNearbyObjects();
@@ -349,13 +361,41 @@ public class PlayerInteraction : MonoBehaviour
                 GameObject hitObject = hit.collider.gameObject;
 
                 // 1. Prioridad: Recoger Objeto o Herramienta
-                // 🔒 RESTRICCIÓN: Solo permitir recoger si NO se tiene nada en las manos
-                bool isHandsFree = (carried == null && (heldItemSlot == null || !heldItemSlot.HasTool));
                 
-                if (isHandsFree)
-                {
-                    Carryable clickCarryable = hitObject.GetComponentInParent<Carryable>();
+                Carryable clickCarryable = hitObject.GetComponentInParent<Carryable>();
+                
+                // LÓGICA DE APILAMIENTO ORGÁNICO
+                bool isHandsFree = (carried == null && (heldItemSlot == null || !heldItemSlot.HasTool));
+                bool isOrganicStackable = false;
 
+                // Debug para entender qué pasa
+                if (clickCarryable != null)
+                {
+                    // Debug.Log($"[Intento Recoger] Objeto: {clickCarryable.name}, Tag: {clickCarryable.tag}. Manos Libres: {isHandsFree}. Carried: {(carried != null ? carried.name : "null")}");
+                }
+
+                // Chequear si podemos apilar (Ya tenemos uno, es orgánico, el nuevo es orgánico, y tenemos menos de 5)
+                if (carried != null && clickCarryable != null)
+                {
+                    // Aseguramos comparación de strings segura
+                    bool carriedIsOrganic = carried.CompareTag(organicTag);
+                    bool newIsOrganic = clickCarryable.CompareTag(organicTag);
+
+                    if (carriedIsOrganic && newIsOrganic)
+                    {
+                        if (organicStack.Count < 5)
+                        {
+                            isOrganicStackable = true;
+                        }
+                        else
+                        {
+                            Debug.Log("Stack lleno (Max 5).");
+                        }
+                    }
+                }
+
+                if (isHandsFree || isOrganicStackable)
+                {
                     if (clickCarryable != null)
                     {
                         ToolDescriptor td = clickCarryable.GetComponent<ToolDescriptor>() ?? clickCarryable.GetComponentInParent<ToolDescriptor>();
@@ -382,13 +422,37 @@ public class PlayerInteraction : MonoBehaviour
 
                         if (td != null)
                         {
+                            // Las herramientas NO se apilan
+                            if (organicStack.Count > 0) 
+                            {
+                                Debug.Log("No puedes recoger herramienta con manos ocupadas.");
+                                return; 
+                            }
+                            
                             heldItemSlot.EquipToolPrefab(td.gameObject, holdPoint);
                             Destroy(clickCarryable.gameObject);
                         }
                         else
                         {
+                            // RECOGER OBJETO (Normal o Stack)
                             clickCarryable.PickUp(holdPoint, playerColliders);
-                            carried = clickCarryable;
+                            
+                            if (isOrganicStackable)
+                            {
+                                // Posicionamiento visual del stack (un poco aleatorio o hacia arriba para que se vea el bulto)
+                                float stackOffset = organicStack.Count * 0.15f; // 15cm más arriba por cada item
+                                clickCarryable.transform.localPosition = new Vector3(0, stackOffset, stackOffset * 0.5f);
+                                clickCarryable.transform.localRotation = Quaternion.Euler(UnityEngine.Random.Range(0, 360), UnityEngine.Random.Range(0, 360), 0);
+                            }
+                            else
+                            {
+                                // Primer objeto
+                                organicStack.Clear(); // Asegurar limpieza
+                            }
+
+                            organicStack.Add(clickCarryable);
+                            carried = clickCarryable; // Carried siempre es el último recogido (o el principal, no importa mucho mientras no sea null)
+                            Debug.Log($"Recogido: {clickCarryable.name}. Stack actual: {organicStack.Count}");
                         }
 
                         if (toolPanelIdea != null && isPaused) toolPanelIdea.SetIsPaused(false);
@@ -405,9 +469,6 @@ public class PlayerInteraction : MonoBehaviour
                 if (activeTool == null) return;
 
                 // 3. Destruir Basura
-                // Nota: Aquí podrías querer actualizar para usar los nuevos tags si es necesario, 
-                // pero por ahora mantenemos la lógica existente si funciona.
-                // Si necesitas que funcione con TODOS los tags de basura, avísame.
                 if (hitObject.CompareTag(organicTag) || hitObject.CompareTag(glassTag) || 
                     hitObject.CompareTag(plasticTag) || hitObject.CompareTag(paperTag) || 
                     hitObject.CompareTag(hazardousTag) || hitObject.CompareTag(bagsTag))
@@ -465,7 +526,7 @@ public class PlayerInteraction : MonoBehaviour
     // =========================================================================
     void TryDropOrDestroy()
     {
-        if (heldItemSlot == null && carried == null) return;
+        if (heldItemSlot == null && carried == null && organicStack.Count == 0) return;
 
         // 1. Destruir Herramienta
         if (heldItemSlot != null && heldItemSlot.HasTool)
@@ -477,10 +538,38 @@ public class PlayerInteraction : MonoBehaviour
             return;
         }
 
-        // 2. Soltar Objeto
-        if (carried != null)
+        // 2. Soltar Objeto (Manejo de Stack)
+        if (organicStack.Count > 0)
         {
-            carried.Drop(); // Usamos el método Drop del Carryable
+            // Soltar el ÚLTIMO objeto añadido (LIFO)
+            Carryable itemToDrop = organicStack[organicStack.Count - 1];
+            
+            if (itemToDrop != null)
+            {
+                itemToDrop.Drop();
+                Debug.Log($"Objeto {itemToDrop.name} soltado del stack.");
+            }
+            
+            organicStack.RemoveAt(organicStack.Count - 1);
+
+            // Actualizar 'carried'
+            if (organicStack.Count > 0)
+            {
+                carried = organicStack[organicStack.Count - 1]; // El nuevo 'carried' es el anterior en la pila
+            }
+            else
+            {
+                carried = null; // Manos vacías
+                animCtrl?.SetHolding(false);
+            }
+            
+            animCtrl?.TriggerInteract();
+            return;
+        }
+        // Fallback por si carried existe pero no está en stack (ej. otros objetos)
+        else if (carried != null)
+        {
+            carried.Drop(); 
             Debug.Log($"Objeto {carried.name} soltado.");
             carried = null;
             animCtrl?.SetHolding(false);

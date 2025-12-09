@@ -10,7 +10,7 @@ public class AutoClosePanel : MonoBehaviour
     [Tooltip("Tiempo en segundos que el panel permanecerá visible.")]
     [SerializeField] private float displayDuration = 10f;
 
-    void Start()
+    void Awake()
     {
         // Si no se asignó un panel manualmente, asumimos que este script está adjunto al panel mismo
         if (infoPanel == null)
@@ -18,9 +18,12 @@ public class AutoClosePanel : MonoBehaviour
             infoPanel = gameObject;
         }
 
-        // 1. Mostrar el panel al inicio
+        // 1. Mostrar el panel al inicio (Inmediatamente)
         infoPanel.SetActive(true);
+    }
 
+    void Start()
+    {
         // 2. Iniciar la cuenta regresiva para cerrarlo
         StartCoroutine(ClosePanelAfterDelay());
     }

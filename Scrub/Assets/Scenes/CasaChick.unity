@@ -18557,7 +18557,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2408490969388210608, guid: 19dcef84c0b682947afb0c82e8b327a8, type: 3}
       propertyPath: maxLevelTime
-      value: 750
+      value: 600
       objectReference: {fileID: 0}
     - target: {fileID: 2408490969388210608, guid: 19dcef84c0b682947afb0c82e8b327a8, type: 3}
       propertyPath: badEndingSceneName
@@ -51508,10 +51508,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Bienvenid@ a CasaChick.\nMovete con las flechas\n(o WASD) y recog\xE9
-    la basura:\nclasific\xE1 cada objeto en el tacho del color correcto.\nObjetivo:
-    reciclar todo antes de que el piso explote en desorden.\nPresiona ENTER para
-    PAUSA\n\xBFListx? \xA1A limpiar!"
+  m_text: "Bienvenid@ a Trash Dash.\nPresiona ENTER para PAUSA\nMovete con las flechas\n(o
+    WASD) y recog\xE9 la basura:\nclasific\xE1 cada objeto en el tacho del color
+    correcto.\nObjetivo: reciclar todo antes de que el tiempo termine.\n\xBFListx?
+    \xA1A limpiar!"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -72387,7 +72387,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1245413025
 RectTransform:
   m_ObjectHideFlags: 0

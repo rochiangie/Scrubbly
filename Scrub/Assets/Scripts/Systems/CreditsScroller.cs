@@ -66,6 +66,11 @@ public class CreditsScroller : MonoBehaviour
     private void ReturnToMenu()
     {
         Debug.Log("Créditos terminados. Volviendo al menú...");
+        
+        // 🔓 DESBLOQUEAR CURSOR (Importante al volver de gameplay)
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+
         // Verifica que la escena exista en Build Settings antes de cargar
         SceneManager.LoadScene(mainMenuSceneName);
     }

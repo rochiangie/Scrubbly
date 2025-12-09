@@ -4,17 +4,12 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Toggle))]
 public class ToggleSpriteChanger : MonoBehaviour
 {
-    [Header("Sprites ON (Música Sonando)")]
-    public Sprite onNormal;
-    public Sprite onHighlighted;
-    public Sprite onPressed;
-    public Sprite onSelected;
+    [Header("Sprites")]
+    [Tooltip("Sprite cuando el Toggle está ACTIVADO (ON/Música sonando)")]
+    public Sprite onSprite;
 
-    [Header("Sprites OFF (Muteado)")]
-    public Sprite offNormal;
-    public Sprite offHighlighted;
-    public Sprite offPressed;
-    public Sprite offSelected;
+    [Tooltip("Sprite cuando el Toggle está DESACTIVADO (OFF/Muteado)")]
+    public Sprite offSprite;
 
     [Header("Referencia Visual")]
     [Tooltip("La imagen que cambiará. Si se deja vacío, usará la imagen de este mismo objeto.")]
@@ -30,37 +25,35 @@ public class ToggleSpriteChanger : MonoBehaviour
 
     void Start()
     {
+        // 1. Suscribirse al evento
         toggle.onValueChanged.AddListener(UpdateSpriteState);
+
+        // 2. Actualizar visualmente al inicio
         UpdateSpriteState(toggle.isOn);
+    }
+
+    // Usamos LateUpdate para "ganarle" al sistema de UI de Unity si intenta cambiar el sprite
+    void LateUpdate()
+    {
+        UpdateVisuals();
     }
 
     public void UpdateSpriteState(bool isOn)
     {
-        if (targetImage == null || toggle == null) return;
+        // Solo guardamos el estado, el cambio visual real ocurre en LateUpdate
+        // para asegurar que persista.
+    }
 
-        // 1. Cambiar el Sprite Base (Normal)
-        targetImage.sprite = isOn ? onNormal : offNormal;
+    private void UpdateVisuals()
+    {
+        if (targetImage == null) return;
 
-        // 2. Configurar el SpriteState para las transiciones (Highlighted, Pressed, Selected)
-        SpriteState newState = new SpriteState();
-        
-        if (isOn)
+        Sprite desiredSprite = toggle.isOn ? onSprite : offSprite;
+
+        // Solo asignamos si es diferente para no sobrecargar
+        if (targetImage.sprite != desiredSprite && desiredSprite != null)
         {
-            newState.highlightedSprite = onHighlighted;
-            newState.pressedSprite = onPressed;
-            newState.selectedSprite = onSelected;
+            targetImage.sprite = desiredSprite;
         }
-        else
-        {
-            newState.highlightedSprite = offHighlighted;
-            newState.pressedSprite = offPressed;
-            newState.selectedSprite = offSelected;
-        }
-
-        toggle.spriteState = newState;
-        
-        // Forzar actualización visual si el botón ya está en un estado (ej: Selected)
-        // Esto es un truco para que Unity refresque el estado visual inmediatamente
-        toggle.targetGraphic.SetAllDirty();
     }
 }
