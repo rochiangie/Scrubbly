@@ -2,6 +2,7 @@
 using UnityEngine.UI;
 using TMPro;
 using System;
+using System.Collections;
 
 public class CleaningUIManager : MonoBehaviour
 {
@@ -25,23 +26,32 @@ public class CleaningUIManager : MonoBehaviour
     [SerializeField] private Slider hazardousSlider;
     [SerializeField] private TMP_Text hazardousText;
 
+    [SerializeField] private Slider organicSlider;
+    [SerializeField] private TMP_Text organicText;
+
     [SerializeField] private Slider residueSlider;
     [SerializeField] private TMP_Text residueText;
 
     [Header("3. Componentes de TIEMPO")]
     [SerializeField] private TMP_Text timerText;
 
+    [Header("4. Notificaciones")]
+    [SerializeField] private TMP_Text notificationText;
+    [SerializeField] private float notificationDuration = 3f;
+
     // Memoria para evitar actualizaciones innecesarias
     private int lastGlass = -1, lastGlassTotal = -1;
     private int lastPaper = -1, lastPaperTotal = -1;
     private int lastPlastic = -1, lastPlasticTotal = -1;
     private int lastHazardous = -1, lastHazardousTotal = -1;
+    private int lastOrganic = -1, lastOrganicTotal = -1;
     private int lastResidue = -1, lastResidueTotal = -1;
     private int lastTotalCleaned = -1, lastTotalCount = -1;
 
     void OnEnable()
     {
         GameEvents.OnProgressUpdate += UpdateUI;
+        if (notificationText != null) notificationText.text = ""; // Limpiar al inicio
     }
 
     void OnDisable()
@@ -77,54 +87,43 @@ public class CleaningUIManager : MonoBehaviour
             lastTotalCount = globalTotal;
         }
 
-        // 2. Actualizar Vidrio (Solo si cambió)
-        int currentGlass = TaskManager.Instance.cleanedGlass;
-        int totalGlass = TaskManager.Instance.totalGlass;
-        if (currentGlass != lastGlass || totalGlass != lastGlassTotal)
-        {
-            UpdateSlider(glassSlider, glassText, currentGlass, totalGlass, "Vidrio");
-            lastGlass = currentGlass;
-            lastGlassTotal = totalGlass;
-        }
+        // 2. Actualizar Vidrio
+        CheckCategoryUpdate(ref lastGlass, ref lastGlassTotal, TaskManager.Instance.cleanedGlass, TaskManager.Instance.totalGlass, glassSlider, glassText, "Vidrio");
 
         // 3. Actualizar Papel
-        int currentPaper = TaskManager.Instance.cleanedPaper;
-        int totalPaper = TaskManager.Instance.totalPaper;
-        if (currentPaper != lastPaper || totalPaper != lastPaperTotal)
-        {
-            UpdateSlider(paperSlider, paperText, currentPaper, totalPaper, "Papel / cartón");
-            lastPaper = currentPaper;
-            lastPaperTotal = totalPaper;
-        }
+        CheckCategoryUpdate(ref lastPaper, ref lastPaperTotal, TaskManager.Instance.cleanedPaper, TaskManager.Instance.totalPaper, paperSlider, paperText, "Papel / cartón");
 
         // 4. Actualizar Plástico
-        int currentPlastic = TaskManager.Instance.cleanedPlastic;
-        int totalPlastic = TaskManager.Instance.totalPlastic;
-        if (currentPlastic != lastPlastic || totalPlastic != lastPlasticTotal)
-        {
-            UpdateSlider(plasticSlider, plasticText, currentPlastic, totalPlastic, "Plásticos");
-            lastPlastic = currentPlastic;
-            lastPlasticTotal = totalPlastic;
-        }
+        CheckCategoryUpdate(ref lastPlastic, ref lastPlasticTotal, TaskManager.Instance.cleanedPlastic, TaskManager.Instance.totalPlastic, plasticSlider, plasticText, "Plásticos");
 
         // 5. Actualizar Peligrosos
-        int currentHazardous = TaskManager.Instance.cleanedHazardous;
-        int totalHazardous = TaskManager.Instance.totalHazardous;
-        if (currentHazardous != lastHazardous || totalHazardous != lastHazardousTotal)
-        {
-            UpdateSlider(hazardousSlider, hazardousText, currentHazardous, totalHazardous, "Peligrosos");
-            lastHazardous = currentHazardous;
-            lastHazardousTotal = totalHazardous;
-        }
+        CheckCategoryUpdate(ref lastHazardous, ref lastHazardousTotal, TaskManager.Instance.cleanedHazardous, TaskManager.Instance.totalHazardous, hazardousSlider, hazardousText, "Peligrosos");
 
-        // 6. Actualizar Residuos (Manchas + Bolsas)
-        int currentResidue = TaskManager.Instance.cleanedDirtSpots + TaskManager.Instance.cleanedBolsas;
-        int totalResidue = TaskManager.Instance.totalDirtSpots + TaskManager.Instance.totalBolsas;
-        if (currentResidue != lastResidue || totalResidue != lastResidueTotal)
+        // 6. Actualizar Orgánicos (NUEVO)
+        // Usamos 'cleanedBolsas' como proxy para Orgánicos si no hay variable específica, o asumimos que TaskManager agrupa ahí.
+        // Si 'Organico' es un tag separado, asegúrate de que TaskManager lo cuente.
+        CheckCategoryUpdate(ref lastOrganic, ref lastOrganicTotal, TaskManager.Instance.cleanedBolsas, TaskManager.Instance.totalBolsas, organicSlider, organicText, "Orgánicos");
+
+        // 7. Actualizar Residuos (Manchas)
+        int currentResidue = TaskManager.Instance.cleanedDirtSpots;
+        int totalResidue = TaskManager.Instance.totalDirtSpots;
+        CheckCategoryUpdate(ref lastResidue, ref lastResidueTotal, currentResidue, totalResidue, residueSlider, residueText, "Manchas");
+    }
+
+    private void CheckCategoryUpdate(ref int lastVal, ref int lastTotal, int current, int total, Slider slider, TMP_Text text, string label)
+    {
+        if (current != lastVal || total != lastTotal)
         {
-            UpdateSlider(residueSlider, residueText, currentResidue, totalResidue, "Residuos/bolsas");
-            lastResidue = currentResidue;
-            lastResidueTotal = totalResidue;
+            UpdateSlider(slider, text, current, total, label);
+            
+            // Notificación de completado (solo si acabamos de llegar al total y el total es > 0)
+            if (current >= total && total > 0 && lastVal < total && lastVal != -1)
+            {
+                ShowCompletionNotification(label);
+            }
+
+            lastVal = current;
+            lastTotal = total;
         }
     }
 
@@ -159,5 +158,23 @@ public class CleaningUIManager : MonoBehaviour
             timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
             timerText.color = timeRemaining <= 30f ? Color.red : Color.white;
         }
+    }
+
+    private void ShowCompletionNotification(string categoryName)
+    {
+        if (notificationText != null)
+        {
+            StopCoroutine("HideNotificationRoutine");
+            notificationText.text = $"¡{categoryName} Completado!";
+            notificationText.gameObject.SetActive(true);
+            StartCoroutine(HideNotificationRoutine());
+        }
+        Debug.Log($"[UI] 🎉 Categoría completada: {categoryName}");
+    }
+
+    private IEnumerator HideNotificationRoutine()
+    {
+        yield return new WaitForSeconds(notificationDuration);
+        if (notificationText != null) notificationText.gameObject.SetActive(false);
     }
 }
