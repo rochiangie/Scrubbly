@@ -537,6 +537,13 @@ public class PlayerInteraction : MonoBehaviour
 
                                 GameObject newBag = Instantiate(trashBagPrefab, spawnPos, Quaternion.identity);
                                 
+                                // ✅ FIX: Asegurar que el objeto tenga el nombre y tag correctos para que TaskManager lo detecte como Bolsa
+                                newBag.name = "Bolsa_Residuo_Generada_" + System.Guid.NewGuid().ToString().Substring(0, 4);
+                                if (string.IsNullOrEmpty(newBag.tag) || newBag.tag == "Untagged" || newBag.tag == bagsTag)
+                                {
+                                    newBag.tag = "RTrash"; // Forzamos RTrash como pidió el usuario
+                                }
+                                
                                 // Registrar la nueva bolsa en el TaskManager
                                 if (TaskManager.Instance != null)
                                 {

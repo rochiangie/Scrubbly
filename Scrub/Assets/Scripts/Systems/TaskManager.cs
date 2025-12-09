@@ -17,9 +17,9 @@ public class TaskManager : MonoBehaviour
     // 🚀 AÑADIDO: ESCENAS DE FIN DE JUEGO
     [Header("8. Escenas de Fin de Juego")]
     [Tooltip("Nombre de la escena de 'Final Bueno' (Victoria)")]
-    public string goodEndingSceneName = "GoodEndingScene";
+    public string goodEndingSceneName = "Credits";
     [Tooltip("Nombre de la escena de 'Final Malo' (Derrota)")]
-    public string badEndingSceneName = "BadEndingScene";
+    public string badEndingSceneName = "Credits";
 
     // === 1. PROGRESO DE LIMPIEZA DUAL ===
     [Header("1. Progreso de Limpieza Dual")]
@@ -83,6 +83,9 @@ public class TaskManager : MonoBehaviour
     [Header("7. Debug y Seguimiento")]
     public List<GameObject> allCleanableObjects = new List<GameObject>();
     public Dictionary<string, GameObject> objectRegistry = new Dictionary<string, GameObject>();
+
+    // 🆕 VARIABLE PARA PRE-CÁLCULO DE BOLSAS (ELIMINADA POR PETICIÓN)
+    private int pendingExpectedBolsas = 0;
 
     // =========================================================================
     // AWAKE, START & UPDATE
@@ -170,7 +173,7 @@ public class TaskManager : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.G)) 
             {
                 ForceCleanResidues();
-                ForceCleanTrashByCategory(new string[] { "Bolsas", "Trash" });
+                ForceCleanTrashByCategory(new string[] { "RTrash", "Bolsas", "Trash" });
             }
         }
     }
@@ -308,13 +311,26 @@ public class TaskManager : MonoBehaviour
 
         foreach (var trash in allTrashObjects)
         {
+            // 🛡️ FILTRO DE JERARQUÍA: Si este objeto es hijo de otro TrashObject, lo ignoramos.
+            // Esto evita contar meshes o colliders hijos como objetos separados.
+            if (trash.transform.parent != null && trash.transform.parent.GetComponent<TrashObject>() != null)
+            {
+                continue; 
+            }
+
             string tag = trash.tag;
-            if (tag == "Vidrio") totalGlass++;
-            else if (tag == "Papeles") totalPaper++;
-            else if (tag == "Plastico") totalPlastic++;
-            else if (tag == "Peligrosos" || tag == "Peligroso") totalHazardous++;
-            else if (tag == "Bolsas" || tag == "Trash") totalBolsas++;
-            else if (tag == "Organico") totalOrganic++; // NUEVO
+            
+            // ✅ FILTRO DE TAGS: Aceptamos RTrash, Bolsas y Trash, pero ignoramos hijos (arriba)
+            bool isValid = false;
+
+            if (tag == "Vidrio") { totalGlass++; isValid = true; }
+            else if (tag == "Papeles") { totalPaper++; isValid = true; }
+            else if (tag == "Plastico") { totalPlastic++; isValid = true; }
+            else if (tag == "Peligrosos" || tag == "Peligroso") { totalHazardous++; isValid = true; }
+            else if (tag == "RTrash" || tag == "Bolsas" || tag == "Trash") { totalBolsas++; isValid = true; } // Aceptamos todos los tags de bolsas
+            else if (tag == "Organico") { totalOrganic++; isValid = true; }
+
+            if (!isValid) continue; // Ignoramos objetos sin tag válido
 
             if (trash != null && !trash.IsCleaned)
             {
@@ -333,13 +349,18 @@ public class TaskManager : MonoBehaviour
                 else if (tag == "Papeles") cleanedPaper++;
                 else if (tag == "Plastico") cleanedPlastic++;
                 else if (tag == "Peligrosos" || tag == "Peligroso") cleanedHazardous++;
-                else if (tag == "Bolsas" || tag == "Trash") cleanedBolsas++;
-                else if (tag == "Organico") cleanedOrganic++; // NUEVO
+                else if (tag == "RTrash" || tag == "Bolsas" || tag == "Trash") cleanedBolsas++;
+                else if (tag == "Organico") cleanedOrganic++;
             }
         }
 
+        // 🆕 LÓGICA DE PRE-CÁLCULO ELIMINADA POR PETICIÓN DEL USUARIO
+        // Solo contamos las bolsas que existen físicamente.
+        pendingExpectedBolsas = 0;
+
         totalDirtSpots = allDirtSpots.Length;
-        totalTrashItems = allTrashObjects.Length;
+        // totalTrashItems ya incluye las bolsas pre-calculadas si aplica
+        if (totalTrashItems < allTrashObjects.Length) totalTrashItems = allTrashObjects.Length; // Safety check
 
         ValidateCounters();
 
@@ -377,21 +398,30 @@ public class TaskManager : MonoBehaviour
         remainingItemNames.Add(uniqueId);
         allCleanableObjects.Add(obj);
 
-        // Actualizar totales
+        string tag = obj.tag;
+        bool isBag = (tag == "RTrash" || tag == "Bolsas" || tag == "Trash"); 
+
+        // Lógica de consumo eliminada: Siempre sumamos si es una bolsa nueva
         totalTrashItems++;
         
-        string tag = obj.tag;
         if (tag == "Vidrio") totalGlass++;
         else if (tag == "Papeles") totalPaper++;
         else if (tag == "Plastico") totalPlastic++;
         else if (tag == "Peligrosos" || tag == "Peligroso") totalHazardous++;
-        else if (tag == "Bolsas" || tag == "Trash") totalBolsas++;
+        else if (isBag) totalBolsas++;
         else if (tag == "Organico") totalOrganic++;
 
-        Debug.Log($"➕ Nuevo item registrado: {obj.name} ({tag}). Totales actualizados.");
+        Debug.Log($"➕ Nuevo item registrado: {obj.name} ({tag}). Totales: {cleanedBolsas}/{totalBolsas}");
         
         // Notificar a la UI (CheckCompletion llama a ProgressUpdate)
         CheckCompletion(); 
+        
+        // Forzar actualización de UI específica si es necesario
+        var uiManager = FindFirstObjectByType<CleaningUIManager>();
+        if (uiManager != null)
+        {
+            uiManager.ForceUpdate(cleanedDirtSpots + cleanedTrashItems, totalDirtSpots + totalTrashItems);
+        }
     }
 
     // ✅ SOBRECARGA: Acepta GameObject para leer el tag antes de destruir
@@ -437,7 +467,7 @@ public class TaskManager : MonoBehaviour
             else if (tag == "Papeles") cleanedPaper++;
             else if (tag == "Plastico") cleanedPlastic++;
             else if (tag == "Peligrosos" || tag == "Peligroso") cleanedHazardous++;
-            else if (tag == "Bolsas" || tag == "Trash") cleanedBolsas++;
+            else if (tag == "RTrash" || tag == "Bolsas" || tag == "Trash") cleanedBolsas++;
             else if (tag == "Organico") cleanedOrganic++; // NUEVO
 
             Debug.Log($"📊 [{tag}] Limpiado → V:{cleanedGlass}/{totalGlass} P:{cleanedPaper}/{totalPaper} Pl:{cleanedPlastic}/{totalPlastic} Pe:{cleanedHazardous}/{totalHazardous} B:{cleanedBolsas}/{totalBolsas} O:{cleanedOrganic}/{totalOrganic}");
