@@ -39,11 +39,13 @@ public class TaskManager : MonoBehaviour
     public int cleanedHazardous = 0;
     public int totalBolsas = 0; // Bolsas + Trash
     public int cleanedBolsas = 0;
+    public int totalOrganic = 0; // NUEVO
+    public int cleanedOrganic = 0; // NUEVO
 
     // === 2. CONTROL DE TIEMPO ===
     [Header("2. Control de Tiempo")]
     [Tooltip("Duración máxima del nivel en segundos.")]
-    public float maxLevelTime = 600f;
+    public float maxLevelTime = 900f; // 15 minutos (Updated in previous steps)
     public float currentTime;
     public bool timeIsUp = false;
 
@@ -111,7 +113,7 @@ public class TaskManager : MonoBehaviour
         InitializeSentimentalAnalysis();
         currentTime = maxLevelTime;
 
-        Debug.Log($"🎯 TaskManager START: {totalDirtSpots} manchas, {totalTrashItems} basuras. (Vidrio: {totalGlass}, Papel: {totalPaper}, Plastico: {totalPlastic})");
+        Debug.Log($"🎯 TaskManager START: {totalDirtSpots} manchas, {totalTrashItems} basuras. (Vidrio: {totalGlass}, Papel: {totalPaper}, Plastico: {totalPlastic}, Organico: {totalOrganic})");
 
         var uiManager = FindFirstObjectByType<CleaningUIManager>();
         int totalItems = totalDirtSpots + totalTrashItems;
@@ -283,6 +285,7 @@ public class TaskManager : MonoBehaviour
         totalPlastic = 0; cleanedPlastic = 0;
         totalHazardous = 0; cleanedHazardous = 0;
         totalBolsas = 0; cleanedBolsas = 0;
+        totalOrganic = 0; cleanedOrganic = 0; // NUEVO
 
         // ✅ SOLO OBJETOS ACTIVOS
         var allDirtSpots = FindObjectsByType<DirtSpot>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
@@ -311,6 +314,7 @@ public class TaskManager : MonoBehaviour
             else if (tag == "Plastico") totalPlastic++;
             else if (tag == "Peligrosos" || tag == "Peligroso") totalHazardous++;
             else if (tag == "Bolsas" || tag == "Trash") totalBolsas++;
+            else if (tag == "Organico") totalOrganic++; // NUEVO
 
             if (trash != null && !trash.IsCleaned)
             {
@@ -330,6 +334,7 @@ public class TaskManager : MonoBehaviour
                 else if (tag == "Plastico") cleanedPlastic++;
                 else if (tag == "Peligrosos" || tag == "Peligroso") cleanedHazardous++;
                 else if (tag == "Bolsas" || tag == "Trash") cleanedBolsas++;
+                else if (tag == "Organico") cleanedOrganic++; // NUEVO
             }
         }
 
@@ -403,8 +408,9 @@ public class TaskManager : MonoBehaviour
             else if (tag == "Plastico") cleanedPlastic++;
             else if (tag == "Peligrosos" || tag == "Peligroso") cleanedHazardous++;
             else if (tag == "Bolsas" || tag == "Trash") cleanedBolsas++;
+            else if (tag == "Organico") cleanedOrganic++; // NUEVO
 
-            Debug.Log($"📊 [{tag}] Limpiado → V:{cleanedGlass}/{totalGlass} P:{cleanedPaper}/{totalPaper} Pl:{cleanedPlastic}/{totalPlastic} Pe:{cleanedHazardous}/{totalHazardous} B:{cleanedBolsas}/{totalBolsas}");
+            Debug.Log($"📊 [{tag}] Limpiado → V:{cleanedGlass}/{totalGlass} P:{cleanedPaper}/{totalPaper} Pl:{cleanedPlastic}/{totalPlastic} Pe:{cleanedHazardous}/{totalHazardous} B:{cleanedBolsas}/{totalBolsas} O:{cleanedOrganic}/{totalOrganic}");
 
             cleanedTrashItems++;
             remainingItemNames.Remove(objectId);
@@ -501,6 +507,7 @@ public class TaskManager : MonoBehaviour
         cleanedPlastic = totalPlastic;
         cleanedHazardous = totalHazardous;
         cleanedBolsas = totalBolsas;
+        cleanedOrganic = totalOrganic; // NUEVO
 
         remainingItemNames.Clear();
         objectRegistry.Clear();

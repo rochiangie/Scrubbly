@@ -367,27 +367,13 @@ public class PlayerInteraction : MonoBehaviour
                 
                 Carryable clickCarryable = hitObject.GetComponentInParent<Carryable>();
 
-                // Restaurar variables necesarias
-                bool isHandsFree = (carried == null && (heldItemSlot == null || !heldItemSlot.HasTool));
+                // Verificar si las manos están realmente libres (incluyendo CleaningController)
+                bool isCleaningControllerBusy = cleaningController != null && cleaningController.CarriedItems.Count > 0;
+                bool isHandsFree = (carried == null && (heldItemSlot == null || !heldItemSlot.HasTool) && !isCleaningControllerBusy);
+                
+                // El usuario solicitó explícitamente NO permitir recoger más de un objeto a la vez.
+                // La excepción es el Tacho, pero eso se maneja con Click Derecho.
                 bool isOrganicStackable = false;
-
-                if (carried != null && clickCarryable != null)
-                {
-                    bool carriedIsOrganic = carried.CompareTag(organicTag);
-                    bool newIsOrganic = clickCarryable.CompareTag(organicTag);
-
-                    if (carriedIsOrganic && newIsOrganic)
-                    {
-                        if (organicStack.Count < 5)
-                        {
-                            isOrganicStackable = true;
-                        }
-                        else
-                        {
-                            Debug.Log("Stack lleno (Max 5).");
-                        }
-                    }
-                }
 
                 if (isHandsFree || isOrganicStackable)
                 {

@@ -99,15 +99,12 @@ public class CleaningUIManager : MonoBehaviour
         // 5. Actualizar Peligrosos
         CheckCategoryUpdate(ref lastHazardous, ref lastHazardousTotal, TaskManager.Instance.cleanedHazardous, TaskManager.Instance.totalHazardous, hazardousSlider, hazardousText, "Peligrosos");
 
-        // 6. Actualizar Orgánicos (NUEVO)
-        // Usamos 'cleanedBolsas' como proxy para Orgánicos si no hay variable específica, o asumimos que TaskManager agrupa ahí.
-        // Si 'Organico' es un tag separado, asegúrate de que TaskManager lo cuente.
-        CheckCategoryUpdate(ref lastOrganic, ref lastOrganicTotal, TaskManager.Instance.cleanedBolsas, TaskManager.Instance.totalBolsas, organicSlider, organicText, "Orgánicos");
+        // 6. Actualizar Orgánicos (AHORA USA LA VARIABLE CORRECTA)
+        CheckCategoryUpdate(ref lastOrganic, ref lastOrganicTotal, TaskManager.Instance.cleanedOrganic, TaskManager.Instance.totalOrganic, organicSlider, organicText, "Orgánicos");
 
-        // 7. Actualizar Residuos (Manchas)
-        int currentResidue = TaskManager.Instance.cleanedDirtSpots;
-        int totalResidue = TaskManager.Instance.totalDirtSpots;
-        CheckCategoryUpdate(ref lastResidue, ref lastResidueTotal, currentResidue, totalResidue, residueSlider, residueText, "Manchas");
+        // 7. Actualizar Residuos (ANTES MANCHAS, AHORA BOLSAS)
+        // Usamos 'cleanedBolsas' y 'totalBolsas' para este slider.
+        CheckCategoryUpdate(ref lastResidue, ref lastResidueTotal, TaskManager.Instance.cleanedBolsas, TaskManager.Instance.totalBolsas, residueSlider, residueText, "Residuos");
     }
 
     private void CheckCategoryUpdate(ref int lastVal, ref int lastTotal, int current, int total, Slider slider, TMP_Text text, string label)
