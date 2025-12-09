@@ -15613,6 +15613,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultDropForce: 3
   scaleFactorOnPickup: 0.5
+  customGripPoint: {fileID: 0}
 --- !u!54 &190059718
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -20843,6 +20844,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultDropForce: 3
   scaleFactorOnPickup: 0.5
+  customGripPoint: {fileID: 0}
 --- !u!54 &333008417
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -23417,6 +23419,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultDropForce: 3
   scaleFactorOnPickup: 0.5
+  customGripPoint: {fileID: 0}
 --- !u!54 &397962113
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -24675,6 +24678,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultDropForce: 3
   scaleFactorOnPickup: 0.5
+  customGripPoint: {fileID: 0}
 --- !u!114 &415318545
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25552,6 +25556,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultDropForce: 3
   scaleFactorOnPickup: 0.5
+  customGripPoint: {fileID: 0}
 --- !u!65 &450264677
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -27150,6 +27155,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultDropForce: 3
   scaleFactorOnPickup: 0.5
+  customGripPoint: {fileID: 0}
 --- !u!54 &478716271
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -32584,6 +32590,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultDropForce: 3
   scaleFactorOnPickup: 0.5
+  customGripPoint: {fileID: 0}
 --- !u!114 &619415519
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -33247,6 +33254,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultDropForce: 3
   scaleFactorOnPickup: 0.5
+  customGripPoint: {fileID: 0}
 --- !u!54 &623872548
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -48412,6 +48420,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultDropForce: 3
   scaleFactorOnPickup: 0.5
+  customGripPoint: {fileID: 0}
 --- !u!54 &797717459
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -48651,6 +48660,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultDropForce: 3
   scaleFactorOnPickup: 0.5
+  customGripPoint: {fileID: 0}
 --- !u!114 &798745418
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -50475,6 +50485,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultDropForce: 3
   scaleFactorOnPickup: 0.5
+  customGripPoint: {fileID: 0}
 --- !u!114 &839951668
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -51536,6 +51547,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultDropForce: 3
   scaleFactorOnPickup: 0.5
+  customGripPoint: {fileID: 0}
 --- !u!65 &863942532
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -54041,6 +54053,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultDropForce: 3
   scaleFactorOnPickup: 0.5
+  customGripPoint: {fileID: 0}
 --- !u!54 &929946347
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -58177,6 +58190,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultDropForce: 3
   scaleFactorOnPickup: 0.5
+  customGripPoint: {fileID: 0}
 --- !u!65 &1050747614
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -58511,6 +58525,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultDropForce: 3
   scaleFactorOnPickup: 0.5
+  customGripPoint: {fileID: 0}
 --- !u!65 &1067212625
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -59705,6 +59720,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultDropForce: 3
   scaleFactorOnPickup: 0.5
+  customGripPoint: {fileID: 0}
 --- !u!54 &1091625719
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -62207,6 +62223,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultDropForce: 3
   scaleFactorOnPickup: 0.5
+  customGripPoint: {fileID: 0}
 --- !u!54 &1093497758
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -62623,6 +62640,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultDropForce: 3
   scaleFactorOnPickup: 0.5
+  customGripPoint: {fileID: 0}
 --- !u!65 &1113852246
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -63075,6 +63093,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultDropForce: 3
   scaleFactorOnPickup: 0.5
+  customGripPoint: {fileID: 0}
 --- !u!114 &1122788152
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -63736,6 +63755,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultDropForce: 3
   scaleFactorOnPickup: 0.5
+  customGripPoint: {fileID: 0}
 --- !u!114 &1138628897
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -66394,6 +66414,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultDropForce: 3
   scaleFactorOnPickup: 0.5
+  customGripPoint: {fileID: 0}
 --- !u!54 &1191959203
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -67502,6 +67523,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultDropForce: 3
   scaleFactorOnPickup: 0.5
+  customGripPoint: {fileID: 0}
 --- !u!54 &1203500326
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -67989,6 +68011,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultDropForce: 3
   scaleFactorOnPickup: 0.5
+  customGripPoint: {fileID: 0}
 --- !u!54 &1212771772
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -68655,6 +68678,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultDropForce: 3
   scaleFactorOnPickup: 0.5
+  customGripPoint: {fileID: 0}
 --- !u!54 &1224844556
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -74028,6 +74052,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultDropForce: 3
   scaleFactorOnPickup: 0.5
+  customGripPoint: {fileID: 0}
 --- !u!114 &1293491080
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -76033,6 +76058,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultDropForce: 3
   scaleFactorOnPickup: 0.5
+  customGripPoint: {fileID: 0}
 --- !u!114 &1345827791
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -76393,6 +76419,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultDropForce: 3
   scaleFactorOnPickup: 0.5
+  customGripPoint: {fileID: 0}
 --- !u!54 &1351033817
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -77125,6 +77152,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultDropForce: 3
   scaleFactorOnPickup: 0.5
+  customGripPoint: {fileID: 0}
 --- !u!54 &1359830661
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -80373,6 +80401,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultDropForce: 3
   scaleFactorOnPickup: 0.5
+  customGripPoint: {fileID: 0}
 --- !u!54 &1447652200
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -90147,6 +90176,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultDropForce: 3
   scaleFactorOnPickup: 0.5
+  customGripPoint: {fileID: 0}
 --- !u!54 &1457188805
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -92266,6 +92296,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultDropForce: 3
   scaleFactorOnPickup: 0.5
+  customGripPoint: {fileID: 0}
 --- !u!54 &1467372089
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -96019,6 +96050,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultDropForce: 3
   scaleFactorOnPickup: 0.5
+  customGripPoint: {fileID: 0}
 --- !u!54 &1537240922
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -97426,6 +97458,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultDropForce: 3
   scaleFactorOnPickup: 0.5
+  customGripPoint: {fileID: 0}
 --- !u!54 &1559136195
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -98131,6 +98164,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultDropForce: 3
   scaleFactorOnPickup: 0.5
+  customGripPoint: {fileID: 0}
 --- !u!114 &1567330033
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -98721,6 +98755,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultDropForce: 3
   scaleFactorOnPickup: 0.5
+  customGripPoint: {fileID: 0}
 --- !u!54 &1597043684
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -98899,6 +98934,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultDropForce: 3
   scaleFactorOnPickup: 0.5
+  customGripPoint: {fileID: 0}
 --- !u!65 &1598244364
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -99927,6 +99963,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultDropForce: 3
   scaleFactorOnPickup: 0.5
+  customGripPoint: {fileID: 0}
 --- !u!114 &1601346490
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -101750,6 +101787,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultDropForce: 3
   scaleFactorOnPickup: 0.5
+  customGripPoint: {fileID: 0}
 --- !u!54 &1633401038
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -105308,6 +105346,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultDropForce: 3
   scaleFactorOnPickup: 0.5
+  customGripPoint: {fileID: 0}
 --- !u!54 &1678453657
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -105418,6 +105457,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultDropForce: 3
   scaleFactorOnPickup: 0.5
+  customGripPoint: {fileID: 0}
 --- !u!65 &1680580268
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -106439,6 +106479,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultDropForce: 3
   scaleFactorOnPickup: 0.5
+  customGripPoint: {fileID: 0}
 --- !u!54 &1693182634
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -107440,6 +107481,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultDropForce: 3
   scaleFactorOnPickup: 0.5
+  customGripPoint: {fileID: 0}
 --- !u!54 &1712040193
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -107523,6 +107565,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultDropForce: 3
   scaleFactorOnPickup: 0.5
+  customGripPoint: {fileID: 0}
 --- !u!54 &1712405024
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -108335,6 +108378,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultDropForce: 3
   scaleFactorOnPickup: 0.5
+  customGripPoint: {fileID: 0}
 --- !u!114 &1723902419
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -108616,6 +108660,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultDropForce: 3
   scaleFactorOnPickup: 0.5
+  customGripPoint: {fileID: 0}
 --- !u!114 &1731200103
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -110056,6 +110101,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultDropForce: 3
   scaleFactorOnPickup: 0.5
+  customGripPoint: {fileID: 0}
 --- !u!114 &1756282197
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -110328,6 +110374,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultDropForce: 3
   scaleFactorOnPickup: 0.5
+  customGripPoint: {fileID: 0}
 --- !u!54 &1759669230
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -111369,6 +111416,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultDropForce: 3
   scaleFactorOnPickup: 0.5
+  customGripPoint: {fileID: 0}
 --- !u!54 &1779213949
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -111803,6 +111851,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultDropForce: 3
   scaleFactorOnPickup: 0.5
+  customGripPoint: {fileID: 0}
 --- !u!114 &1789321542
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -112017,6 +112066,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultDropForce: 3
   scaleFactorOnPickup: 0.5
+  customGripPoint: {fileID: 0}
 --- !u!114 &1791804444
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -112427,6 +112477,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultDropForce: 3
   scaleFactorOnPickup: 0.5
+  customGripPoint: {fileID: 0}
 --- !u!114 &1795132955
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -113108,6 +113159,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultDropForce: 3
   scaleFactorOnPickup: 0.5
+  customGripPoint: {fileID: 1446065760}
 --- !u!54 &1804073738
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -115228,6 +115280,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultDropForce: 3
   scaleFactorOnPickup: 0.5
+  customGripPoint: {fileID: 0}
 --- !u!54 &1841650047
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -115395,6 +115448,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultDropForce: 3
   scaleFactorOnPickup: 0.5
+  customGripPoint: {fileID: 0}
 --- !u!54 &1846709656
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -117418,6 +117472,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultDropForce: 3
   scaleFactorOnPickup: 0.5
+  customGripPoint: {fileID: 0}
 --- !u!54 &1894304236
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -120695,6 +120750,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultDropForce: 3
   scaleFactorOnPickup: 0.5
+  customGripPoint: {fileID: 0}
 --- !u!54 &1963177429
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -122180,6 +122236,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultDropForce: 3
   scaleFactorOnPickup: 0.5
+  customGripPoint: {fileID: 0}
 --- !u!54 &2001115082
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -122395,6 +122452,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultDropForce: 3
   scaleFactorOnPickup: 0.5
+  customGripPoint: {fileID: 0}
 --- !u!114 &2005576535
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -123561,6 +123619,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultDropForce: 3
   scaleFactorOnPickup: 0.5
+  customGripPoint: {fileID: 0}
 --- !u!54 &2023387939
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -124909,6 +124968,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultDropForce: 3
   scaleFactorOnPickup: 0.5
+  customGripPoint: {fileID: 0}
 --- !u!54 &2050959285
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -126085,6 +126145,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultDropForce: 3
   scaleFactorOnPickup: 0.5
+  customGripPoint: {fileID: 0}
 --- !u!54 &2074100873
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -127614,6 +127675,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultDropForce: 3
   scaleFactorOnPickup: 0.5
+  customGripPoint: {fileID: 0}
 --- !u!54 &2085212332
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -128251,6 +128313,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultDropForce: 3
   scaleFactorOnPickup: 0.5
+  customGripPoint: {fileID: 0}
 --- !u!114 &2111982138
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -128790,6 +128853,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultDropForce: 3
   scaleFactorOnPickup: 0.5
+  customGripPoint: {fileID: 0}
 --- !u!54 &2127484957
 Rigidbody:
   m_ObjectHideFlags: 0

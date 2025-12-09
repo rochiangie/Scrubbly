@@ -1166,7 +1166,11 @@ PrefabInstance:
     - target: {fileID: 4369316475369108643, guid: 71f750719f4b576438d2eb186a11fddc, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 3d426991361ce4540bc920afcd62ecb8, type: 3}
+      objectReference: {fileID: 21300000, guid: 3afb423083ea39a4aafce02473a50b7a, type: 3}
+    - target: {fileID: 4517480061249714825, guid: 71f750719f4b576438d2eb186a11fddc, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 35.4
+      objectReference: {fileID: 0}
     - target: {fileID: 7410037496131021377, guid: 71f750719f4b576438d2eb186a11fddc, type: 3}
       propertyPath: m_Name
       value: CanvasManuPpal
@@ -1277,7 +1281,9 @@ PrefabInstance:
       objectReference: {fileID: 635330957}
     m_RemovedComponents:
     - {fileID: 7452400897270990332, guid: 71f750719f4b576438d2eb186a11fddc, type: 3}
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 9099469683833640074, guid: 71f750719f4b576438d2eb186a11fddc, type: 3}
+    - {fileID: 4071900412126291094, guid: 71f750719f4b576438d2eb186a11fddc, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 71f750719f4b576438d2eb186a11fddc, type: 3}
