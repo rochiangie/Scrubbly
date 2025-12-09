@@ -7166,7 +7166,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de73acfa817aa2448ad7fc3beee6b35c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mouseSensitivity: 500
+  mouseSensitivity: 1000
   upLimit: 85
   downLimit: -85
   headLookTarget: {fileID: 8024181741271369109}
