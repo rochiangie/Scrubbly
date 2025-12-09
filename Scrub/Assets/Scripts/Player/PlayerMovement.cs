@@ -60,11 +60,13 @@ public class PlayerMovement : MonoBehaviour
         // 1. Detección de suelo
         isGrounded = Physics.CheckSphere(groundCheck.position, groundRadius, groundMask);
 
-        // 2. Manejo de Input de salto
+        // 2. Manejo de Input de salto (DESHABILITADO)
+        /*
         if (isGrounded && Input.GetKeyDown(jumpKey))
         {
             jumpScheduled = true;
         }
+        */
 
         // 📢 NUEVO: Manejo de Input para correr
         isRunning = Input.GetKey(runKey);
@@ -72,12 +74,13 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        // === Lógica de Salto y Animación ===
+        // === Lógica de Salto y Animación (DESHABILITADO) ===
+        /*
         if (jumpScheduled)
         {
             // La línea 'rb.linearVelocity' es un error tipográfico en el original, debería ser 'rb.velocity'.
             // Usaremos rb.velocity en lugar de rb.linearVelocity.
-            rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
+            rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
 
             if (animator != null)
@@ -87,6 +90,7 @@ public class PlayerMovement : MonoBehaviour
 
             jumpScheduled = false;
         }
+        */
 
         // === Lógica de Movimiento: 4 direcciones (WASD) ===
 

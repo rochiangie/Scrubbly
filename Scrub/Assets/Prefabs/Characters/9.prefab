@@ -2584,6 +2584,37 @@ Transform:
   - {fileID: 3751832897670366122}
   m_Father: {fileID: 4395424985885341995}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &3151370334078865495
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4948714471933473791}
+  m_Layer: 8
+  m_Name: bolsas
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4948714471933473791
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3151370334078865495}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.406, z: -0.891}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5829839737267163605}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3271801611473149830
 GameObject:
   m_ObjectHideFlags: 0
@@ -6857,6 +6888,7 @@ Transform:
   - {fileID: 6019499508111766820}
   - {fileID: 3054350451539037967}
   - {fileID: 6286572330991311958}
+  - {fileID: 4948714471933473791}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!205 &5389045497737169333
@@ -7008,10 +7040,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c50ef5c07a8de847a02795800aa0050, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 5
-  runSpeed: 10
+  moveSpeed: 2
+  runSpeed: 7
   runKey: 304
-  jumpForce: 6
+  jumpForce: 2
   jumpKey: 32
   animator: {fileID: 0}
   groundCheck: {fileID: 8922863829636425187}
@@ -7080,43 +7112,33 @@ MonoBehaviour:
   holdPoint: {fileID: 1560366960154808273}
   animCtrl: {fileID: 0}
   trashBagPrefab: {fileID: 7583541553860696135, guid: 9508a39a6a039304193233b2db412090, type: 3}
+  trashBagSpawnPoint: {fileID: 4948714471933473791}
   toolTag: Tacho
-  mouseInteractionDistance: 2
+  interactionRange: 5
   clickCleaningRadius: 0.5
   dirtLayer:
     serializedVersion: 2
     m_Bits: 8
+  interactableLayer:
+    serializedVersion: 2
+    m_Bits: 137
   clickCleaningEffect: {fileID: 0}
   generalInteractKey: 101
   pickupKey: 113
   attackKey: 102
   scorePanelToggleKey: 271
   trashDestructionToolId: Escoba
-  interactionRange: 5
-  interactableLayer:
-    serializedVersion: 2
-    m_Bits: 137
-  raycastPointer: {fileID: 7915641273827192530}
-  pointerOffset: 0.02
-  pointerScale: 0.08
-  memorieColor: {r: 0, g: 0.02520442, b: 1, a: 1}
-  toolColor: {r: 0, g: 1, b: 1, a: 1}
-  interactableColor: {r: 0, g: 1, b: 0.08179021, a: 1}
-  defaultColor: {r: 1, g: 1, b: 1, a: 1}
-  glassColor: {r: 0, g: 1, b: 1, a: 1}
-  plasticColor: {r: 1, g: 1, b: 0, a: 1}
-  paperColor: {r: 0.6, g: 0.4, b: 0.2, a: 1}
-  hazardousColor: {r: 1, g: 0, b: 0, a: 1}
-  organicColor: {r: 0.4, g: 1, b: 0.4, a: 1}
-  bagsColor: {r: 0.8, g: 0.8, b: 0.8, a: 1}
-  dirtSpotColor: {r: 0.5, g: 0.25, b: 0, a: 1}
-  memorieTag: Memorie
+  organicTag: Organico
   glassTag: Vidrio
   plasticTag: Plastico
   paperTag: Papeles
   hazardousTag: Peligrosos
-  organicTag: Organico
   bagsTag: Bolsas
+  raycastPointer: {fileID: 7915641273827192530}
+  pointerScale: 0.08
+  defaultColor: {r: 1, g: 1, b: 1, a: 1}
+  interactColor: {r: 0, g: 1, b: 0, a: 1}
+  attackColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!114 &-7078733372346190777
 MonoBehaviour:
   m_ObjectHideFlags: 0

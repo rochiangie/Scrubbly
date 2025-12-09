@@ -45,7 +45,7 @@ public class TaskManager : MonoBehaviour
     // === 2. CONTROL DE TIEMPO ===
     [Header("2. Control de Tiempo")]
     [Tooltip("Duración máxima del nivel en segundos.")]
-    public float maxLevelTime = 900f; // 15 minutos (Updated in previous steps)
+    public float maxLevelTime = 900f; // 15 minutos
     public float currentTime;
     public bool timeIsUp = false;
 
@@ -362,6 +362,36 @@ public class TaskManager : MonoBehaviour
             if (id.StartsWith(objectName) || id.Contains(objectName)) return id;
         }
         return null;
+    }
+
+    // ✅ NUEVO: Registrar items generados dinámicamente (ej. Bolsas de basura)
+    public void RegisterNewTrashItem(GameObject obj)
+    {
+        if (gameEnded || obj == null) return;
+
+        string uniqueId = GenerateUniqueId(obj);
+        if (objectRegistry.ContainsKey(uniqueId)) return; // Ya existe
+
+        // Registrar
+        objectRegistry[uniqueId] = obj;
+        remainingItemNames.Add(uniqueId);
+        allCleanableObjects.Add(obj);
+
+        // Actualizar totales
+        totalTrashItems++;
+        
+        string tag = obj.tag;
+        if (tag == "Vidrio") totalGlass++;
+        else if (tag == "Papeles") totalPaper++;
+        else if (tag == "Plastico") totalPlastic++;
+        else if (tag == "Peligrosos" || tag == "Peligroso") totalHazardous++;
+        else if (tag == "Bolsas" || tag == "Trash") totalBolsas++;
+        else if (tag == "Organico") totalOrganic++;
+
+        Debug.Log($"➕ Nuevo item registrado: {obj.name} ({tag}). Totales actualizados.");
+        
+        // Notificar a la UI (CheckCompletion llama a ProgressUpdate)
+        CheckCompletion(); 
     }
 
     // ✅ SOBRECARGA: Acepta GameObject para leer el tag antes de destruir

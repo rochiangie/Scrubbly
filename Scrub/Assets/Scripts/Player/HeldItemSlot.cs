@@ -3,13 +3,9 @@ using UnityEngine;
 public class HeldItemSlot : MonoBehaviour
 {
     // --- REFERENCIAS PÚBLICAS (YA NO SE USAN PARA EQUIPAMIENTO RÁPIDO) ---
-    // 🚨 Puedes eliminar tool1Prefab y tool2Prefab si no los necesitas para nada más.
     [Header("Tool Prefabs para Equipamiento Rápido")]
-    public GameObject tool1Prefab; // Dejamos por si los quieres usar para el spawn
-    public GameObject tool2Prefab; // Dejamos por si los quieres usar para el spawn
-
-    // 🚨 YA NO NECESITAMOS ESTA VARIABLE AQUÍ, SE PASA POR PARÁMETRO
-    // public Transform handSocket; 
+    public GameObject tool1Prefab; 
+    public GameObject tool2Prefab; 
 
     // --- DECLARACIONES PRIVADAS CRÍTICAS ---
     private GameObject currentToolObject;
@@ -19,8 +15,6 @@ public class HeldItemSlot : MonoBehaviour
     // --- PROPIEDADES PÚBLICAS (Para que PlayerInteraction acceda) ---
     public ToolDescriptor CurrentTool => currentToolDescriptor;
     public bool HasTool => currentToolObject != null;
-
-    // ... (Start() permanece vacío o con tu lógica de inicialización) ...
 
     // =========================================================================
     // EQUIPAMIENTO: Recibe el prefab a instanciar Y el punto donde instanciar.
@@ -47,18 +41,27 @@ public class HeldItemSlot : MonoBehaviour
         }
     }
 
-    // 🚨 ELIMINAMOS COMPLETAMENTE EquipQuickTool() 🚨
+    // ✅ NUEVO: Equipar una herramienta que YA existe en la escena (recogida del suelo)
+    public void EquipExistingTool(GameObject toolObject, Transform targetHandSocket)
+    {
+        DestroyCurrentTool(); // Destruir lo anterior si había algo
 
-    // =========================================================================
-    // DESTRUCCIÓN (Corregida)
-    // =========================================================================
+        currentHandSocket = targetHandSocket;
+        currentToolObject = toolObject;
 
-    // EN HeldItemSlot.cs
+        // Parentar al socket
+        currentToolObject.transform.SetParent(currentHandSocket);
+        currentToolObject.transform.localPosition = Vector3.zero;
+        currentToolObject.transform.localRotation = Quaternion.identity;
 
-    // EN HeldItemSlot.cs
+        // Desactivar físicas si las tiene
+        Rigidbody rb = currentToolObject.GetComponent<Rigidbody>();
+        if (rb != null) rb.isKinematic = true;
+        Collider col = currentToolObject.GetComponent<Collider>();
+        if (col != null) col.enabled = false;
 
-    // ... (Resto de tu código) ...
-
+        currentToolDescriptor = currentToolObject.GetComponent<ToolDescriptor>() ?? currentToolObject.GetComponentInParent<ToolDescriptor>();
+    }
 
     public void DestroyCurrentTool()
     {
@@ -71,8 +74,7 @@ public class HeldItemSlot : MonoBehaviour
         // 🚨 Limpiamos TODAS las referencias
         currentToolObject = null;
         currentToolDescriptor = null;
-        // currentHandSocket = null; // Si usas esta variable, límpiala también
-
+        
         Debug.Log("HeldItemSlot: Herramienta destruida y referencias limpiadas.");
     }
 }

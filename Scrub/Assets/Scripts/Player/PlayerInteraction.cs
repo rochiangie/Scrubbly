@@ -21,12 +21,14 @@ public class PlayerInteraction : MonoBehaviour
     private CleaningController cleaningController;
     private Carryable carried;
     
-    // 📢 NUEVO: Lista para apilar orgánicos
+    // 📢 NUEVO: Lista para apilar orgánicos (Deshabilitada por diseño actual, pero mantenida por compatibilidad)
     private List<Carryable> organicStack = new List<Carryable>();
 
     [Header("Tacho Recolector")]
     [Tooltip("Prefab de la bolsa de basura que se genera al llenar el tacho.")]
     public GameObject trashBagPrefab;
+    [Tooltip("Punto donde aparecerá la bolsa generada. Si es null, aparece frente al jugador.")]
+    public Transform trashBagSpawnPoint; // ✅ NUEVO
     private int currentOrganicInBin = 0;
 
     public string toolTag = "CleaningTool";
@@ -43,9 +45,10 @@ public class PlayerInteraction : MonoBehaviour
     private Collider[] playerColliders;
 
     [Header("Limpieza con Mouse")]
-    [SerializeField] private float mouseInteractionDistance = 2.0f;
+    [SerializeField] private float interactionRange = 3.0f; // Unificado
     [SerializeField] private float clickCleaningRadius = 0.5f;
     [SerializeField] private LayerMask dirtLayer;
+    [SerializeField] private LayerMask interactableLayer;
     [SerializeField] private ParticleSystem clickCleaningEffect;
 
     [Header("Input Keys")]
@@ -58,50 +61,27 @@ public class PlayerInteraction : MonoBehaviour
     [Tooltip("ID del ToolDescriptor que PUEDE destruir objetos con el Tag 'Basura'.")]
     [SerializeField] private string trashDestructionToolId = "Escoba";
 
-    [Header("Detección Raycast")]
-    public float interactionRange = 3.0f;
-    public LayerMask interactableLayer;
-
-    [Header("Puntero Raycast 3D")]
-    [Tooltip("GameObject con SpriteRenderer que se mostrará donde apunta el raycast")]
-    [SerializeField] private GameObject raycastPointer;
-    [Tooltip("Distancia del puntero desde la superficie")]
-    [SerializeField] private float pointerOffset = 0.02f;
-    [Tooltip("Escala del puntero")]
-    [SerializeField] private float pointerScale = 0.15f;
-    
-    [Header("Colores Generales")]
-    [SerializeField] private Color memorieColor = new Color(1f, 0f, 1f); // Magenta
-    [SerializeField] private Color toolColor = Color.cyan;
-    [SerializeField] private Color interactableColor = Color.blue;
-    [SerializeField] private Color defaultColor = Color.white;
-
-    [Header("Colores de Residuos")]
-    [SerializeField] private Color glassColor = new Color(0f, 1f, 1f); // Cyan/Celeste
-    [SerializeField] private Color plasticColor = new Color(1f, 1f, 0f); // Amarillo
-    [SerializeField] private Color paperColor = new Color(0.6f, 0.4f, 0.2f); // Marrón claro
-    [SerializeField] private Color hazardousColor = new Color(1f, 0f, 0f); // Rojo
-    [SerializeField] private Color organicColor = new Color(0.4f, 1f, 0.4f); // Verde claro (Organico)
-    [SerializeField] private Color bagsColor = new Color(0.8f, 0.8f, 0.8f); // Gris claro (Bolsas)
-    [SerializeField] private Color dirtSpotColor = new Color(0.5f, 0.25f, 0f); // Marrón oscuro (Manchas)
-
-    [Header("Tags de Objetos")]
-    [SerializeField] private string memorieTag = "Memorie";
+    [Header("Tags")]
+    [SerializeField] private string organicTag = "Organico";
     [SerializeField] private string glassTag = "Vidrio";
     [SerializeField] private string plasticTag = "Plastico";
     [SerializeField] private string paperTag = "Papeles";
     [SerializeField] private string hazardousTag = "Peligrosos";
-    [SerializeField] private string organicTag = "Organico";
     [SerializeField] private string bagsTag = "Bolsas";
 
-    private Camera mainCamera;
-
-    // 🔴 VARIABLE PARA OUTLINE
-    private Outline currentOutline;
-    
-    // 🎨 COMPONENTE DEL PUNTERO
+    // Puntero Visual
+    [Header("Visual Feedback")]
+    [SerializeField] private GameObject raycastPointer;
+    [SerializeField] private float pointerScale = 0.1f;
+    [SerializeField] private Color defaultColor = Color.white;
+    [SerializeField] private Color interactColor = Color.green;
+    [SerializeField] private Color attackColor = Color.red;
     private SpriteRenderer pointerSpriteRenderer;
+    private Outline currentOutline;
 
+    // =========================================================================
+    // AWAKE & UPDATE
+    // =========================================================================
     void Awake()
     {
         heldItemSlot = GetComponent<HeldItemSlot>();
@@ -115,30 +95,24 @@ public class PlayerInteraction : MonoBehaviour
         playerRigidbody = GetComponent<Rigidbody>();
         playerColliders = GetComponentsInChildren<Collider>();
 
-        mainCamera = Camera.main;
-        if (mainCamera == null)
-            Debug.LogError("PlayerInteraction: No se encontró la cámara principal.");
-        
-        // Inicializar componente del puntero
         if (raycastPointer != null)
         {
             pointerSpriteRenderer = raycastPointer.GetComponent<SpriteRenderer>();
-            raycastPointer.SetActive(false); // Desactivar al inicio
+            raycastPointer.SetActive(false);
         }
     }
 
     void Update()
     {
-        // 🛡️ SEGURIDAD: Si el objeto que llevamos fue destruido externamente (ej. por un basurero), limpiar la referencia
+        // 🛡️ SEGURIDAD: Si el objeto que llevamos fue destruido externamente
         if (carried != null && carried.gameObject == null) 
         {
             carried = null;
-            // Limpiar también el stack si el principal murió
             organicStack.RemoveAll(x => x == null || x.gameObject == null);
             if (organicStack.Count == 0) animCtrl?.SetHolding(false);
-            else carried = organicStack[organicStack.Count - 1]; // Recuperar el siguiente si queda alguno
+            else carried = organicStack[organicStack.Count - 1];
         }
-        // Limpieza extra del stack por seguridad
+        
         if (organicStack.Count > 0)
         {
             organicStack.RemoveAll(x => x == null || x.gameObject == null);
@@ -158,7 +132,7 @@ public class PlayerInteraction : MonoBehaviour
     }
 
     // =========================================================================
-    // 🔍 LÓGICA DE DETECCIÓN (RAYCAST + OUTLINE)
+    // 🔍 DETECCIÓN Y RAYCAST
     // =========================================================================
     private void DetectNearbyObjects()
     {
@@ -167,13 +141,12 @@ public class PlayerInteraction : MonoBehaviour
         currentDoorInteractable = null;
         currentRaycastHitObject = null;
 
-        if (mainCamera == null) return;
+        if (Camera.main == null) return;
 
         RaycastHit hit;
-        Vector3 rayOrigin = mainCamera.transform.position;
-        Vector3 rayDirection = mainCamera.transform.forward;
+        Vector3 rayOrigin = Camera.main.transform.position;
+        Vector3 rayDirection = Camera.main.transform.forward;
 
-        // 🔴 VISUALIZACIÓN DEBUG: Dibuja una línea roja en la ventana Scene
         Debug.DrawRay(rayOrigin, rayDirection * interactionRange, Color.red);
 
         if (Physics.Raycast(rayOrigin, rayDirection, out hit, interactionRange, interactableLayer))
@@ -181,15 +154,11 @@ public class PlayerInteraction : MonoBehaviour
             GameObject hitObject = hit.collider.gameObject;
             currentRaycastHitObject = hitObject;
 
-            // 🎯 ACTUALIZAR PUNTERO
             UpdateRaycastPointer(hit, hitObject);
-
-            // 🔴 LÓGICA DE OUTLINE
             HandleOutline(hitObject);
 
             Transform rootTransform = hit.collider.transform.root;
             
-            // Siempre detectamos carryables cercanos
             Carryable c = rootTransform.GetComponent<Carryable>() ?? hitObject.GetComponentInParent<Carryable>();
             if (c != null) nearbyCarryable = c;
 
@@ -201,152 +170,72 @@ public class PlayerInteraction : MonoBehaviour
         }
         else
         {
-            // Si no golpeamos nada, posicionar el puntero a distancia fija
             if (raycastPointer != null)
             {
-                if (!raycastPointer.activeSelf)
-                {
-                    raycastPointer.SetActive(true);
-                }
+                if (!raycastPointer.activeSelf) raycastPointer.SetActive(true);
                 
-                // Posicionar a distancia fija en la dirección de la cámara
                 Vector3 targetPosition = rayOrigin + rayDirection * interactionRange;
                 raycastPointer.transform.position = targetPosition;
-                
-                // Hacer que mire hacia la cámara
-                if (mainCamera != null)
-                {
-                    raycastPointer.transform.LookAt(mainCamera.transform);
-                    raycastPointer.transform.Rotate(0, 180, 0);
-                }
-                
-                // Aplicar escala y color por defecto
+                raycastPointer.transform.LookAt(Camera.main.transform);
+                raycastPointer.transform.Rotate(0, 180, 0);
                 raycastPointer.transform.localScale = Vector3.one * pointerScale;
-                if (pointerSpriteRenderer != null)
-                {
-                    pointerSpriteRenderer.color = defaultColor;
-                }
+                if (pointerSpriteRenderer != null) pointerSpriteRenderer.color = defaultColor;
             }
 
-            // Si no golpeamos nada, limpiar outline
             if (currentOutline != null)
             {
                 currentOutline.enabled = false;
                 currentOutline = null;
             }
+        }
+    }
+
+    private void UpdateRaycastPointer(RaycastHit hit, GameObject hitObject)
+    {
+        if (raycastPointer == null) return;
+
+        raycastPointer.SetActive(true);
+        raycastPointer.transform.position = hit.point;
+        raycastPointer.transform.LookAt(Camera.main.transform);
+        raycastPointer.transform.Rotate(0, 180, 0);
+
+        float distance = hit.distance;
+        float scale = pointerScale * (1 + distance * 0.1f);
+        raycastPointer.transform.localScale = Vector3.one * scale;
+
+        if (pointerSpriteRenderer != null)
+        {
+            if (hitObject.GetComponent<IInteractable>() != null || hitObject.GetComponentInParent<IInteractable>() != null)
+                pointerSpriteRenderer.color = interactColor;
+            else if (hitObject.GetComponent<IAttackable>() != null || hitObject.GetComponentInParent<IAttackable>() != null)
+                pointerSpriteRenderer.color = attackColor;
+            else
+                pointerSpriteRenderer.color = defaultColor;
         }
     }
 
     private void HandleOutline(GameObject hitObject)
     {
-        // Buscar componente Outline en el objeto golpeado o sus padres
         Outline outline = hitObject.GetComponent<Outline>() ?? hitObject.GetComponentInParent<Outline>();
+        
+        if (currentOutline != null && currentOutline != outline)
+        {
+            currentOutline.enabled = false;
+        }
 
-        // Si el objeto golpeado es diferente al que ya tenemos resaltado
-        if (currentOutline != outline)
+        if (outline != null)
         {
-            // Desactivar el anterior si existe
-            if (currentOutline != null)
-            {
-                currentOutline.enabled = false;
-            }
-
-            // Activar el nuevo si existe
-            if (outline != null)
-            {
-                outline.enabled = true;
-                currentOutline = outline;
-            }
-            else
-            {
-                currentOutline = null;
-            }
+            outline.enabled = true;
+            currentOutline = outline;
         }
-    }
-
-    // =========================================================================
-    // 🎯 ACTUALIZACIÓN DEL PUNTERO RAYCAST
-    // =========================================================================
-    private void UpdateRaycastPointer(RaycastHit hit, GameObject hitObject)
-    {
-        if (raycastPointer == null) return;
-        
-        // Activar el puntero
-        if (!raycastPointer.activeSelf)
-        {
-            raycastPointer.SetActive(true);
-        }
-        
-        // Posicionar el puntero en el punto de impacto con offset
-        raycastPointer.transform.position = hit.point + hit.normal * pointerOffset;
-        
-        // Hacer que el puntero mire hacia la cámara (billboard)
-        if (mainCamera != null)
-        {
-            raycastPointer.transform.LookAt(mainCamera.transform);
-            raycastPointer.transform.Rotate(0, 180, 0);
-        }
-        
-        // Aplicar escala
-        raycastPointer.transform.localScale = Vector3.one * pointerScale;
-        
-        // 🎨 DETERMINAR Y APLICAR COLOR SEGÚN EL TIPO DE OBJETO
-        Color targetColor = defaultColor;
-        
-        // 1. Recuerdos (Prioridad Alta)
-        if (hitObject.CompareTag(memorieTag))
-        {
-            targetColor = memorieColor;
-        }
-        // 2. Tipos de Basura Específicos
-        else if (hitObject.CompareTag(glassTag)) targetColor = glassColor;
-        else if (hitObject.CompareTag(plasticTag)) targetColor = plasticColor;
-        else if (hitObject.CompareTag(paperTag)) targetColor = paperColor;
-        else if (hitObject.CompareTag(hazardousTag)) targetColor = hazardousColor;
-        else if (hitObject.CompareTag(organicTag)) targetColor = organicColor;
-        else if (hitObject.CompareTag(bagsTag)) targetColor = bagsColor;
-        
-        // 3. Manchas de Suciedad
-        else if (hitObject.GetComponent<DirtSpot>() != null)
-        {
-            targetColor = dirtSpotColor;
-        }
-        // 4. Otros Objetos
         else
         {
-            Carryable carryable = hitObject.GetComponentInParent<Carryable>();
-            if (carryable != null)
-            {
-                ToolDescriptor tool = carryable.GetComponent<ToolDescriptor>() ?? carryable.GetComponentInParent<ToolDescriptor>();
-                if (tool != null)
-                {
-                    targetColor = toolColor;
-                }
-                // Si es un carryable genérico que no cayó en los tags de basura anteriores
-                else
-                {
-                    targetColor = defaultColor; 
-                }
-            }
-            else
-            {
-                IInteractable interactable = hitObject.GetComponentInParent<IInteractable>();
-                if (interactable != null)
-                {
-                    targetColor = interactableColor;
-                }
-            }
-        }
-        
-        // Aplicar color al sprite
-        if (pointerSpriteRenderer != null)
-        {
-            pointerSpriteRenderer.color = targetColor;
+            currentOutline = null;
         }
     }
 
     // =========================================================================
-    // 🖱️ LIMPIEZA CON CLICK
+    // 🖱️ CLICK IZQUIERDO (RECOGER / LIMPIAR)
     // =========================================================================
     private void HandleMouseClickCleaning()
     {
@@ -354,16 +243,14 @@ public class PlayerInteraction : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0) && Time.timeScale > 0)
         {
-            if (mainCamera == null) return;
+            if (Camera.main == null) return;
 
-            Ray ray = mainCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
+            Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
             RaycastHit hit;
 
-            if (Physics.Raycast(ray, out hit, mouseInteractionDistance))
+            if (Physics.Raycast(ray, out hit, interactionRange))
             {
                 GameObject hitObject = hit.collider.gameObject;
-
-                // 1. Prioridad: Recoger Objeto o Herramienta
                 
                 Carryable clickCarryable = hitObject.GetComponentInParent<Carryable>();
 
@@ -373,80 +260,63 @@ public class PlayerInteraction : MonoBehaviour
                 
                 // El usuario solicitó explícitamente NO permitir recoger más de un objeto a la vez.
                 // La excepción es el Tacho, pero eso se maneja con Click Derecho.
-                bool isOrganicStackable = false;
+                bool isOrganicStackable = false; 
 
                 if (isHandsFree || isOrganicStackable)
                 {
                     if (clickCarryable != null)
                     {
+                        // 1.1 Si es herramienta -> Equipar
                         ToolDescriptor td = clickCarryable.GetComponent<ToolDescriptor>() ?? clickCarryable.GetComponentInParent<ToolDescriptor>();
-
-                        if (clickCarryable.CompareTag(memorieTag))
-                        {
-                            MemorieObject mObject = clickCarryable.GetComponentInParent<MemorieObject>();
-                            if (mObject != null && toolPanelIdea != null)
-                            {
-                                mObject.StartDecisionProcess(toolPanelIdea);
-                                animCtrl?.TriggerInteract();
-                                if (toolPanelIdea != null && isPaused) toolPanelIdea.SetIsPaused(false);
-                                return;
-                            }
-                        }
-
-                        if (!holdPoint)
-                        {
-                            var hp = new GameObject("HoldPoint").transform;
-                            hp.SetParent(transform);
-                            hp.localPosition = new Vector3(0, 1.2f, 0.6f);
-                            holdPoint = hp;
-                        }
-
                         if (td != null)
                         {
-                            // Las herramientas NO se apilan
-                            if (organicStack.Count > 0) 
+                            if (heldItemSlot != null)
                             {
-                                Debug.Log("No puedes recoger herramienta con manos ocupadas.");
-                                return; 
+                                heldItemSlot.EquipExistingTool(td.gameObject, holdPoint);
+                                animCtrl?.SetHolding(true);
+                                animCtrl?.TriggerInteract();
                             }
-                            
-                            heldItemSlot.EquipToolPrefab(td.gameObject, holdPoint);
-                            Destroy(clickCarryable.gameObject);
+                            return;
+                        }
+
+                        // 1.2 Si es objeto normal -> Recoger
+                        if (cleaningController != null)
+                        {
+                            cleaningController.RegisterCarryable(clickCarryable);
+                            // Sincronizar estado local
+                            carried = clickCarryable; 
+                            if (isOrganicStackable) organicStack.Add(clickCarryable);
+                            else organicStack.Clear(); // Reset si no es stackable
                         }
                         else
                         {
-                            // RECOGER OBJETO (Normal o Stack)
+                            // Fallback simple si no hay CleaningController
                             clickCarryable.PickUp(holdPoint, playerColliders);
-                            
-                            if (isOrganicStackable)
-                            {
-                                // Posicionamiento visual del stack (un poco aleatorio o hacia arriba para que se vea el bulto)
-                                float stackOffset = organicStack.Count * 0.15f; // 15cm más arriba por cada item
-                                clickCarryable.transform.localPosition = new Vector3(0, stackOffset, stackOffset * 0.5f);
-                                clickCarryable.transform.localRotation = Quaternion.Euler(UnityEngine.Random.Range(0, 360), UnityEngine.Random.Range(0, 360), 0);
-                            }
-                            else
-                            {
-                                // Primer objeto
-                                organicStack.Clear(); // Asegurar limpieza
-                            }
-
-                            organicStack.Add(clickCarryable);
-                            carried = clickCarryable; // Carried siempre es el último recogido (o el principal, no importa mucho mientras no sea null)
-                            Debug.Log($"Recogido: {clickCarryable.name}. Stack actual: {organicStack.Count}");
+                            carried = clickCarryable;
                         }
-
-                        if (toolPanelIdea != null && isPaused) toolPanelIdea.SetIsPaused(false);
-
-                        animCtrl?.SetHolding(td != null || carried != null);
+                        
+                        animCtrl?.SetHolding(true);
                         animCtrl?.TriggerInteract();
                         return;
                     }
                 }
 
-                // 2. Herramienta Activa
-                if (heldItemSlot == null) return;
-                ToolDescriptor activeTool = heldItemSlot.CurrentTool;
+                // 2. Interacción con Memorias
+                MemorieObject memorie = hitObject.GetComponent<MemorieObject>();
+                if (memorie != null)
+                {
+                    if (toolPanelIdea != null)
+                    {
+                        memorie.StartDecisionProcess(toolPanelIdea);
+                        animCtrl?.TriggerInteract();
+                    }
+                    return;
+                }
+
+                // Si tenemos herramienta activa, intentar usarla
+                ToolDescriptor activeTool = null;
+                if (heldItemSlot != null && heldItemSlot.HasTool) activeTool = heldItemSlot.CurrentTool;
+                
                 if (activeTool == null) return;
 
                 // 3. Destruir Basura
@@ -522,7 +392,6 @@ public class PlayerInteraction : MonoBehaviour
         // 2. Soltar Objeto (Manejo de Stack)
         if (organicStack.Count > 0)
         {
-            // Soltar el ÚLTIMO objeto añadido (LIFO)
             Carryable itemToDrop = organicStack[organicStack.Count - 1];
             
             if (itemToDrop != null)
@@ -533,21 +402,19 @@ public class PlayerInteraction : MonoBehaviour
             
             organicStack.RemoveAt(organicStack.Count - 1);
 
-            // Actualizar 'carried'
             if (organicStack.Count > 0)
             {
-                carried = organicStack[organicStack.Count - 1]; // El nuevo 'carried' es el anterior en la pila
+                carried = organicStack[organicStack.Count - 1];
             }
             else
             {
-                carried = null; // Manos vacías
+                carried = null;
                 animCtrl?.SetHolding(false);
             }
             
             animCtrl?.TriggerInteract();
             return;
         }
-        // Fallback por si carried existe pero no está en stack (ej. otros objetos)
         else if (carried != null)
         {
                 carried.Drop(); 
@@ -614,39 +481,69 @@ public class PlayerInteraction : MonoBehaviour
         {
             if (Input.GetMouseButtonDown(1)) // Click Derecho
             {
-                if (mainCamera == null) return;
-                Ray ray = mainCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
+                if (Camera.main == null) return;
+                Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
                 RaycastHit hit;
 
                 // Usamos interactionRange (3.0f) para mayor alcance
                 if (Physics.Raycast(ray, out hit, interactionRange))
                 {
                     GameObject hitObject = hit.collider.gameObject;
-                    // Debug.Log($"[Tacho] Raycast golpeó: {hitObject.name} (Tag: {hitObject.tag})");
                     
                     Carryable clickCarryable = hitObject.GetComponentInParent<Carryable>();
 
                     if (clickCarryable != null && clickCarryable.CompareTag(organicTag))
                     {
-                        // 1. "Meter" orgánico en el tacho
+                        // 1. Notificar al TaskManager ANTES de destruir (para que cuente como limpiado)
+                        if (TaskManager.Instance != null)
+                        {
+                            TaskManager.Instance.NotifyTrashCleaned(clickCarryable.gameObject);
+                        }
+
+                        // 2. "Meter" orgánico en el tacho
                         Destroy(clickCarryable.gameObject);
                         currentOrganicInBin++;
 
                         Debug.Log($"[Tacho] ♻️ Orgánico recolectado. Total: {currentOrganicInBin}/5");
 
-                        // 2. Feedback
+                        // 3. Feedback
                         if (clickCleaningEffect != null) Instantiate(clickCleaningEffect, hit.point, Quaternion.identity);
                         if (AudioManager.Instance != null) AudioManager.Instance.PlayPickupSFX();
                         animCtrl?.TriggerInteract();
 
-                        // 3. Generar Bolsa
-                        if (currentOrganicInBin >= 5)
+                        // 4. Generar Bolsa
+                        // Condición: Llegamos a 5 O es el último orgánico del nivel
+                        bool isLastOrganic = false;
+                        if (TaskManager.Instance != null)
+                        {
+                            isLastOrganic = (TaskManager.Instance.cleanedOrganic >= TaskManager.Instance.totalOrganic);
+                        }
+
+                        if (currentOrganicInBin >= 5 || (isLastOrganic && currentOrganicInBin > 0))
                         {
                             if (trashBagPrefab != null)
                             {
-                                Vector3 spawnPos = transform.position + transform.forward * 1.0f + Vector3.up * 0.5f;
-                                Instantiate(trashBagPrefab, spawnPos, Quaternion.identity);
-                                Debug.Log("[Tacho] 🎒 ¡Bolsa Generada!");
+                                // Determinar posición de spawn
+                                Vector3 spawnPos;
+                                if (trashBagSpawnPoint != null)
+                                {
+                                    spawnPos = trashBagSpawnPoint.position;
+                                }
+                                else
+                                {
+                                    // Fallback: Frente al jugador
+                                    spawnPos = transform.position + transform.forward * 1.0f + Vector3.up * 0.5f;
+                                }
+
+                                GameObject newBag = Instantiate(trashBagPrefab, spawnPos, Quaternion.identity);
+                                
+                                // Registrar la nueva bolsa en el TaskManager
+                                if (TaskManager.Instance != null)
+                                {
+                                    TaskManager.Instance.RegisterNewTrashItem(newBag);
+                                }
+
+                                Debug.Log($"[Tacho] 🎒 ¡Bolsa Generada en {(trashBagSpawnPoint != null ? "Punto Fijo" : "Frente al Jugador")}! (Items: {currentOrganicInBin})");
                             }
                             currentOrganicInBin = 0;
                         }
