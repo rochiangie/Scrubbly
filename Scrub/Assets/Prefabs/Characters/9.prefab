@@ -6960,7 +6960,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rb: {fileID: 9162677935126176981}
   playerBody: {fileID: 9138288601656680539}
-  heldItemSlot: {fileID: 0}
+  heldItemSlot: {fileID: 7064050676137280339}
   speedSmooth: 8
   cleaningLayerIndex: 1
   cleanKey: 114
@@ -6968,6 +6968,7 @@ MonoBehaviour:
   validToolIds:
   - Sponge
   - Escoba
+  - Tacho
 --- !u!54 &9162677935126176981
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -7078,7 +7079,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   holdPoint: {fileID: 1560366960154808273}
   animCtrl: {fileID: 0}
-  toolTag: CleaningTool
+  trashBagPrefab: {fileID: 7583541553860696135, guid: 9508a39a6a039304193233b2db412090, type: 3}
+  toolTag: Tacho
   mouseInteractionDistance: 2
   clickCleaningRadius: 0.5
   dirtLayer:

@@ -24,6 +24,11 @@ public class PlayerInteraction : MonoBehaviour
     // 📢 NUEVO: Lista para apilar orgánicos
     private List<Carryable> organicStack = new List<Carryable>();
 
+    [Header("Tacho Recolector")]
+    [Tooltip("Prefab de la bolsa de basura que se genera al llenar el tacho.")]
+    public GameObject trashBagPrefab;
+    private int currentOrganicInBin = 0;
+
     public string toolTag = "CleaningTool";
 
     // ***************************************************************
@@ -142,6 +147,7 @@ public class PlayerInteraction : MonoBehaviour
 
         DetectNearbyObjects();
         HandleMouseClickCleaning();
+        HandleRightClickInteraction(); // 🖱️ Click Derecho (Tacho)
         HandleAttackAndToolUse();
 
         if (Input.GetKeyDown(pickupKey))
@@ -182,13 +188,10 @@ public class PlayerInteraction : MonoBehaviour
             HandleOutline(hitObject);
 
             Transform rootTransform = hit.collider.transform.root;
-            bool isHoldingSomething = (carried != null || (heldItemSlot != null && heldItemSlot.HasTool));
-
-            if (!isHoldingSomething)
-            {
-                Carryable c = rootTransform.GetComponent<Carryable>() ?? hitObject.GetComponentInParent<Carryable>();
-                if (c != null) nearbyCarryable = c;
-            }
+            
+            // Siempre detectamos carryables cercanos
+            Carryable c = rootTransform.GetComponent<Carryable>() ?? hitObject.GetComponentInParent<Carryable>();
+            if (c != null) nearbyCarryable = c;
 
             IAttackable a = hitObject.GetComponentInParent<IAttackable>();
             if (a != null) nearbyAttackable = a;
@@ -363,21 +366,13 @@ public class PlayerInteraction : MonoBehaviour
                 // 1. Prioridad: Recoger Objeto o Herramienta
                 
                 Carryable clickCarryable = hitObject.GetComponentInParent<Carryable>();
-                
-                // LÓGICA DE APILAMIENTO ORGÁNICO
+
+                // Restaurar variables necesarias
                 bool isHandsFree = (carried == null && (heldItemSlot == null || !heldItemSlot.HasTool));
                 bool isOrganicStackable = false;
 
-                // Debug para entender qué pasa
-                if (clickCarryable != null)
-                {
-                    // Debug.Log($"[Intento Recoger] Objeto: {clickCarryable.name}, Tag: {clickCarryable.tag}. Manos Libres: {isHandsFree}. Carried: {(carried != null ? carried.name : "null")}");
-                }
-
-                // Chequear si podemos apilar (Ya tenemos uno, es orgánico, el nuevo es orgánico, y tenemos menos de 5)
                 if (carried != null && clickCarryable != null)
                 {
-                    // Aseguramos comparación de strings segura
                     bool carriedIsOrganic = carried.CompareTag(organicTag);
                     bool newIsOrganic = clickCarryable.CompareTag(organicTag);
 
@@ -569,11 +564,109 @@ public class PlayerInteraction : MonoBehaviour
         // Fallback por si carried existe pero no está en stack (ej. otros objetos)
         else if (carried != null)
         {
-            carried.Drop(); 
-            Debug.Log($"Objeto {carried.name} soltado.");
-            carried = null;
-            animCtrl?.SetHolding(false);
-            animCtrl?.TriggerInteract();
+                carried.Drop(); 
+                Debug.Log($"Objeto {carried.name} soltado.");
+                carried = null;
+                animCtrl?.SetHolding(false);
+                animCtrl?.TriggerInteract();
+        }
+    }
+
+    // =========================================================================
+    // 🖱️ INTERACCIÓN CLICK DERECHO (TACHO)
+    // =========================================================================
+    private void HandleRightClickInteraction()
+    {
+        // 1. Determinar si tenemos un Tacho (ya sea como Carryable o como Tool)
+        bool isHoldingTacho = false;
+
+        // Caso A: Es un objeto normal (Carryable)
+        if (carried != null && carried.CompareTag("Tacho"))
+        {
+            isHoldingTacho = true;
+        }
+        // Caso B: Es una herramienta equipada (HeldItemSlot)
+        else if (heldItemSlot != null && heldItemSlot.HasTool)
+        {
+            // DEBUG: Ver qué herramienta tenemos realmente
+            if (Input.GetMouseButtonDown(1))
+            {
+                 Debug.Log($"[RightClick] Herramienta actual (HeldItemSlot): '{heldItemSlot.CurrentTool.name}', Tag: '{heldItemSlot.CurrentTool.tag}'");
+            }
+
+            if (heldItemSlot.CurrentTool.CompareTag("Tacho"))
+            {
+                isHoldingTacho = true;
+            }
+        }
+        // Caso C: Es un objeto gestionado por CleaningController (Conflict Resolution)
+        else if (cleaningController != null && cleaningController.CarriedItems.Count > 0)
+        {
+             Carryable ccItem = cleaningController.CurrentCarryable;
+             
+             // DEBUG: Ver qué tiene CleaningController
+             if (Input.GetMouseButtonDown(1))
+             {
+                 Debug.Log($"[RightClick] Objeto en CleaningController: '{ccItem.name}', Tag: '{ccItem.tag}'");
+             }
+
+             if (ccItem != null && ccItem.CompareTag("Tacho"))
+             {
+                 isHoldingTacho = true;
+             }
+        }
+
+        // DEBUG: Diagnóstico al hacer click derecho
+        if (Input.GetMouseButtonDown(1))
+        {
+            if (isHoldingTacho) Debug.Log("[RightClick] ✅ Tacho detectado en mano.");
+            else Debug.Log("[RightClick] ❌ No se detectó Tacho (ni como objeto, ni herramienta, ni en CleaningController).");
+        }
+
+        // 2. Ejecutar lógica si tenemos el Tacho
+        if (isHoldingTacho)
+        {
+            if (Input.GetMouseButtonDown(1)) // Click Derecho
+            {
+                if (mainCamera == null) return;
+                Ray ray = mainCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
+                RaycastHit hit;
+
+                // Usamos interactionRange (3.0f) para mayor alcance
+                if (Physics.Raycast(ray, out hit, interactionRange))
+                {
+                    GameObject hitObject = hit.collider.gameObject;
+                    // Debug.Log($"[Tacho] Raycast golpeó: {hitObject.name} (Tag: {hitObject.tag})");
+                    
+                    Carryable clickCarryable = hitObject.GetComponentInParent<Carryable>();
+
+                    if (clickCarryable != null && clickCarryable.CompareTag(organicTag))
+                    {
+                        // 1. "Meter" orgánico en el tacho
+                        Destroy(clickCarryable.gameObject);
+                        currentOrganicInBin++;
+
+                        Debug.Log($"[Tacho] ♻️ Orgánico recolectado. Total: {currentOrganicInBin}/5");
+
+                        // 2. Feedback
+                        if (clickCleaningEffect != null) Instantiate(clickCleaningEffect, hit.point, Quaternion.identity);
+                        if (AudioManager.Instance != null) AudioManager.Instance.PlayPickupSFX();
+                        animCtrl?.TriggerInteract();
+
+                        // 3. Generar Bolsa
+                        if (currentOrganicInBin >= 5)
+                        {
+                            if (trashBagPrefab != null)
+                            {
+                                Vector3 spawnPos = transform.position + transform.forward * 1.0f + Vector3.up * 0.5f;
+                                Instantiate(trashBagPrefab, spawnPos, Quaternion.identity);
+                                Debug.Log("[Tacho] 🎒 ¡Bolsa Generada!");
+                            }
+                            currentOrganicInBin = 0;
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -583,7 +676,6 @@ public class PlayerInteraction : MonoBehaviour
     void TryGeneralInteract()
     {
         // 1. Interacción General (Puertas, Interruptores, etc)
-        // Nota: Los objetos (Carryables) ahora se recogen SOLO con Click Izquierdo.
         if (currentDoorInteractable != null)
         {
             currentDoorInteractable.Interact();
@@ -595,6 +687,7 @@ public class PlayerInteraction : MonoBehaviour
     {
         currentDoorInteractable = interactable;
     }
+
     public void ClearCurrentInteractable()
     {
         currentDoorInteractable = null;
