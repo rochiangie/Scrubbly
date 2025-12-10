@@ -311,9 +311,9 @@ public class TaskManager : MonoBehaviour
 
         foreach (var trash in allTrashObjects)
         {
-            // 🛡️ FILTRO DE JERARQUÍA: Si este objeto es hijo de otro TrashObject, lo ignoramos.
-            // Esto evita contar meshes o colliders hijos como objetos separados.
-            if (trash.transform.parent != null && trash.transform.parent.GetComponent<TrashObject>() != null)
+            // 🛡️ FILTRO DE JERARQUÍA MEJORADO: Si este objeto tiene CUALQUIER padre con TrashObject, lo ignoramos.
+            // Esto evita contar partes hijas (meshes, colliders) incluso en jerarquías profundas.
+            if (trash.transform.parent != null && trash.transform.parent.GetComponentInParent<TrashObject>() != null)
             {
                 continue; 
             }
@@ -662,10 +662,18 @@ public class TaskManager : MonoBehaviour
     [ContextMenu("Debug Missing Objects")]
     public void DebugMissingObjects()
     {
-        Debug.Log($"=== ❌ OBJETOS FALTANTES ===");
+        Debug.Log($"=== ❌ OBJETOS FALTANTES ({remainingItemNames.Count}) ===");
         foreach (var name in remainingItemNames)
         {
-            Debug.Log($"Falta: {name}");
+            string objectId = name;
+            if (objectRegistry.TryGetValue(objectId, out GameObject obj) && obj != null)
+            {
+                Debug.Log($"🔍 Faltante: {obj.name} [Tag: {obj.tag}] - Pos: {obj.transform.position}");
+            }
+            else
+            {
+                Debug.Log($"❓ Faltante (Obj perdido): {name}");
+            }
         }
     }
 
