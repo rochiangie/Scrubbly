@@ -3,69 +3,42 @@ using UnityEngine.SceneManagement;
 
 public class MenuMusicPlayer : MonoBehaviour
 {
-    public static MenuMusicPlayer Instance;
+    // NO necesitamos que sea Singleton ni DontDestroyOnLoad si AudioManager ya lo es.
+    // Lo simplificamos para que solo sirva de "disparador" si es necesario.
 
     [Header("Música del Menú")]
-    public AudioClip menuMusic;
-    public float menuMusicVolume = 0.3f;
+    public float menuMusicVolume = 0.3f; // Este valor ya no se usa, AudioManager tiene el control
 
-    private AudioSource audioSource;
-
-    void Awake()
-    {
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-            InitializeAudio();
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
+    // El AudioSource y AudioClip son redundantes si AudioManager los maneja.
 
     void Start()
     {
-        SceneManager.sceneLoaded += OnSceneLoaded;
-        PlayMenuMusic();
-    }
-
-    void OnDestroy()
-    {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
-    }
-
-    private void InitializeAudio()
-    {
-        audioSource = gameObject.AddComponent<AudioSource>();
-        audioSource.loop = true;
-        audioSource.playOnAwake = false;
-        audioSource.volume = menuMusicVolume;
-    }
-
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        string sceneName = scene.name.ToLower();
-        Debug.Log($"[MENU MUSIC] Escena cargada: {sceneName}");
-
-        // Detener música de menú en gameplay
-
-        if (audioSource.clip != menuMusic || !audioSource.isPlaying)
+        // 🚨 CORRECCIÓN: Llamamos al AudioManager Singleton para reproducir la música.
+        if (AudioManager.Instance != null)
         {
-            audioSource.Stop();
-            audioSource.clip = menuMusic;
-            audioSource.Play();
-            Debug.Log("[MENU MUSIC] 🎵 Reproduciendo música de menú");
+            AudioManager.Instance.PlayMenuMusic();
+            // Ya no necesitamos suscribirnos a sceneLoaded aquí, AudioManager ya lo hace.
+        }
+        else
+        {
+            Debug.LogError("[MENU MUSIC PLAYER] ❌ AudioManager.Instance es nulo. La música no se reproducirá.");
         }
     }
 
+    // Eliminamos Awake, OnDestroy, InitializeAudio, OnSceneLoaded y StopMenuMusic 
+    // ya que AudioManager maneja todos esos eventos y lógica de volumen.
+
+    // Si solo quieres que el objeto exista y NO haga nada (lo cual es redundante):
+
+    /*
     public void StopMenuMusic()
     {
-        if (audioSource != null && audioSource.isPlaying)
+        if (AudioManager.Instance != null)
         {
-            audioSource.Stop();
-            Debug.Log("[MENU MUSIC] Música de menú detenida");
+            // Nota: Asume que existe un método StopMusic en AudioManager
+            // De lo contrario, usa StopCharacterMusic o PlayMenuMusic para forzar el cambio
+            // AudioManager.Instance.StopMusic(); 
         }
     }
+    */
 }
