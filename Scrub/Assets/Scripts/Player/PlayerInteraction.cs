@@ -33,6 +33,9 @@ public class PlayerInteraction : MonoBehaviour
 
     public string toolTag = "CleaningTool";
 
+
+   
+
     // ***************************************************************
     // 🗑️ VARIABLES DE DETECCIÓN
     // ***************************************************************
@@ -266,6 +269,10 @@ public class PlayerInteraction : MonoBehaviour
                 {
                     if (clickCarryable != null)
                     {
+                        // ✨ SI EL OBJETO TIENE PANEL, SE OCULTA
+                        ObjetoInfo info = clickCarryable.GetComponentInChildren<ObjetoInfo>();
+                        if (info != null)
+                            info.OcultarPanel();
                         // 1.1 Si es herramienta -> Equipar
                         ToolDescriptor td = clickCarryable.GetComponent<ToolDescriptor>() ?? clickCarryable.GetComponentInParent<ToolDescriptor>();
                         if (td != null)
@@ -276,6 +283,8 @@ public class PlayerInteraction : MonoBehaviour
                                 animCtrl?.SetHolding(true);
                                 animCtrl?.TriggerInteract();
                             }
+                            
+
                             return;
                         }
 
@@ -288,6 +297,7 @@ public class PlayerInteraction : MonoBehaviour
                             if (isOrganicStackable) organicStack.Add(clickCarryable);
                             else organicStack.Clear(); // Reset si no es stackable
                         }
+                        
                         else
                         {
                             // Fallback simple si no hay CleaningController
@@ -298,6 +308,7 @@ public class PlayerInteraction : MonoBehaviour
                         animCtrl?.SetHolding(true);
                         animCtrl?.TriggerInteract();
                         return;
+
                     }
                 }
 
@@ -434,7 +445,7 @@ public class PlayerInteraction : MonoBehaviour
         bool isHoldingTacho = false;
 
         // Caso A: Es un objeto normal (Carryable)
-        if (carried != null && carried.CompareTag("Tacho"))
+        if (carried != null && (carried.CompareTag("Tacho") || carried.CompareTag("Tacho2")))
         {
             isHoldingTacho = true;
         }

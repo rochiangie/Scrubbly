@@ -62600,7 +62600,7 @@ GameObject:
   - component: {fileID: 881327237}
   - component: {fileID: 881327239}
   - component: {fileID: 881327238}
-  m_Layer: 3
+  m_Layer: 10
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -63554,7 +63554,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4000011018076642, guid: 0ed008a5c5ee53c49a715afe02ba2651, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -4.33315
+      value: -4.466
       objectReference: {fileID: 0}
     - target: {fileID: 4000011018076642, guid: 0ed008a5c5ee53c49a715afe02ba2651, type: 3}
       propertyPath: m_LocalPosition.y
@@ -113219,7 +113219,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   infoPanel: {fileID: 1245413024}
-  displayDuration: 10
+  displayDuration: 1
 --- !u!1001 &1479998025
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -136757,7 +136757,7 @@ GameObject:
   - component: {fileID: 1786412503}
   - component: {fileID: 1786412502}
   - component: {fileID: 1786412504}
-  m_Layer: 3
+  m_Layer: 10
   m_Name: PanelINfoTacho
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -143118,6 +143118,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1030988940, guid: abc00000000014017700628883095783, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1845357590}
+    - targetCorrespondingSourceObject: {fileID: 1030988940, guid: abc00000000014017700628883095783, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1845357591}
   m_SourcePrefab: {fileID: 100100000, guid: abc00000000014017700628883095783, type: 3}
 --- !u!4 &1845357580 stripped
 Transform:
@@ -143206,6 +143209,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   infoPanel: {fileID: 1786412500}
   isPickedUp: 0
+--- !u!114 &1845357591
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1845357581}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44fef5ff92983ab489fba79b88540c89, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  infoPanel: {fileID: 1786412500}
 --- !u!1 &1846709652 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1030990280, guid: abc00000000010852538934778764189, type: 3}
