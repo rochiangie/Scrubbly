@@ -57,7 +57,7 @@ public class TrashCan : MonoBehaviour, IInteractable
         string tagsDisplay = acceptedTrashTags.Length > 0 ? string.Join(", ", acceptedTrashTags) : "SIN CONFIGURAR";
         labelText = $"{displayName}\n({tagsDisplay})";
 
-        Debug.Log($"[TRASHCAN] 🗑️ Basurero configurado: {displayName} | Acepta tags: '{tagsDisplay}'");
+        //Debug.Log($"[TRASHCAN] 🗑️ Basurero configurado: {displayName} | Acepta tags: '{tagsDisplay}'");
     }
 
     private void Update()

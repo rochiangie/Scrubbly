@@ -15,8 +15,13 @@ public class Carryable : MonoBehaviour
     [Tooltip("Factor de escala para aplicar al ser recogido. 1.0 = sin cambio.")]
     public float scaleFactorOnPickup = 0.5f; // Ajusta este valor en el Inspector (0.5 es un buen inicio)
 
+    // 📢 NUEVO: Punto de agarre personalizado (opcional)
+    [Header("Configuración de Agarre")]
+    [Tooltip("Asigna un objeto hijo vacío que represente dónde debe agarrarse este objeto.")]
+    [SerializeField] private Transform customGripPoint;
+
     private Rigidbody rb;
-    private Collider carryableCollider;
+    private Collider[] carryableColliders;
     private CollisionDetectionMode originalMode;
     // Guardaremos los colliders del jugador para deshacer la ignorancia
     private Collider[] playerCollidersReference;
@@ -34,7 +39,7 @@ public class Carryable : MonoBehaviour
             rb = gameObject.AddComponent<Rigidbody>();
         }
 
-        carryableCollider = GetComponent<Collider>();
+        carryableColliders = GetComponentsInChildren<Collider>();
         originalMode = rb.collisionDetectionMode;
 
         // 📢 NUEVO: Guardamos la escala LOCAL inicial.
@@ -56,23 +61,39 @@ public class Carryable : MonoBehaviour
 
         // 2. Jerarquía
         transform.SetParent(parent, true);
-        transform.localPosition = Vector3.zero;
-        transform.localRotation = Quaternion.identity;
 
         // 📢 CORRECCIÓN DE ESCALA: Aplicamos la nueva escala al recoger.
         transform.localScale = originalLocalScale * scaleFactorOnPickup;
 
-        // 3. Ignorar Colisiones entre Player y Carryable
-        if (carryableCollider != null && playerCollidersReference != null)
+        // 3. Posicionamiento (Usando Custom Grip Point si existe)
+        if (customGripPoint != null)
         {
-            foreach (var playerCol in playerCollidersReference)
+            // Queremos que el customGripPoint coincida con el parent (HoldPoint) en posición y rotación.
+            // Primero alineamos la rotación
+            transform.rotation = parent.rotation * Quaternion.Inverse(customGripPoint.localRotation);
+            
+            // Luego alineamos la posición: movemos el objeto para que el grip point esté en el origen del padre
+            // Calculamos la diferencia entre el objeto y su grip point en espacio mundial
+            Vector3 gripOffset = customGripPoint.position - transform.position;
+            transform.position = parent.position - gripOffset;
+        }
+        else
+        {
+            // Comportamiento por defecto: centrar en el pivote
+            transform.localPosition = Vector3.zero;
+            transform.localRotation = Quaternion.identity;
+        }
+
+        // 4. Desactivar todos los Colliders (para evitar colisiones mientras se transporta)
+        foreach (Collider col in carryableColliders)
+        {
+            if (col != null)
             {
-                // Ignorar colisiones para que el objeto no "empuje" al jugador
-                Physics.IgnoreCollision(carryableCollider, playerCol, true);
+                col.enabled = false;
             }
         }
 
-        // 4. Actualizar estado
+        // 5. Actualizar estado
         IsCarried = true;
     }
 
@@ -84,15 +105,15 @@ public class Carryable : MonoBehaviour
     /// <param name="force">Magnitud de la fuerza (usualmente dropForce de CleaningController).</param>
     public void Drop(Vector3 direction, float force)
     {
-        // 1. Deshacer Ignorar Colisiones
-        if (carryableCollider != null && playerCollidersReference != null)
+        // 1. Reactivar todos los Colliders
+        foreach (Collider col in carryableColliders)
         {
-            foreach (var playerCol in playerCollidersReference)
+            if (col != null)
             {
-                Physics.IgnoreCollision(carryableCollider, playerCol, false);
+                col.enabled = true;
             }
-            playerCollidersReference = null;
         }
+        playerCollidersReference = null;
 
         // 2. Restaurar físicas
         rb.useGravity = true;

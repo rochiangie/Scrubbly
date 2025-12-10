@@ -93,29 +93,29 @@ public class TrashObject : MonoBehaviour
     {
         // --- 1. Buscar objetos con el tag "Vidrio" ---
         GameObject[] vidrioObjects = GameObject.FindGameObjectsWithTag("Vidrio");
-        Debug.Log($"--- 🔍 OBJETOS CON TAG: VIDRIO ({vidrioObjects.Length}) ---");
+        //Debug.Log($"--- 🔍 OBJETOS CON TAG: VIDRIO ({vidrioObjects.Length}) ---");
         foreach (GameObject go in vidrioObjects)
         {
-            Debug.Log($"[VIDRIO] Encontrado: {go.name} en posición: {go.transform.position}");
+            //Debug.Log($"[VIDRIO] Encontrado: {go.name} en posición: {go.transform.position}");
         }
 
         // --- 2. Buscar objetos con el tag "Peligroso" ---
         GameObject[] peligrosoObjects = GameObject.FindGameObjectsWithTag("Peligroso");
-        Debug.Log($"--- 🔍 OBJETOS CON TAG: PELIGROSO ({peligrosoObjects.Length}) ---");
+        //Debug.Log($"--- 🔍 OBJETOS CON TAG: PELIGROSO ({peligrosoObjects.Length}) ---");
         foreach (GameObject go in peligrosoObjects)
         {
-            Debug.Log($"[PELIGROSO] Encontrado: {go.name} en posición: {go.transform.position}");
+            //Debug.Log($"[PELIGROSO] Encontrado: {go.name} en posición: {go.transform.position}");
         }
 
         if (vidrioObjects.Length == 0 && peligrosoObjects.Length == 0)
         {
-            Debug.LogWarning("⚠️ No se encontraron objetos con los tags 'Vidrio' o 'Peligroso'. Asegúrate de que los tags están definidos correctamente en Unity.");
+            //Debug.LogWarning("⚠️ No se encontraron objetos con los tags 'Vidrio' o 'Peligroso'. Asegúrate de que los tags están definidos correctamente en Unity.");
         }
     }
     // ============================
 
     void OnMouseDown()
     {
-        Debug.Log($"🗑️ TrashObject: {trashName}, Limpiado: {IsCleaned}");
+        //Debug.Log($"🗑️ TrashObject: {trashName}, Limpiado: {IsCleaned}");
     }
 }

@@ -122,13 +122,13 @@ public class CleaningManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Termina el juego, muestra el panel correspondiente y programa la transición de escena.
+    /// Termina el juego, muestra el panel correspondiente.
     /// </summary>
     private void EndGame(bool success)
     {
         isGameOver = true;
 
-        // 1. Mostrar el panel y configurar la UI (sin pausar el juego aún)
+        // 1. Mostrar el panel y configurar la UI
         GameObject activePanel = success ? victoryPanel : defeatPanel;
         GameObject inactivePanel = success ? defeatPanel : victoryPanel;
         if (inactivePanel != null) inactivePanel.SetActive(false);
@@ -136,19 +136,23 @@ public class CleaningManager : MonoBehaviour
         if (activePanel != null)
         {
             activePanel.SetActive(true);
-            Debug.Log($"FIN DEL JUEGO: {(success ? "VICTORIA" : "DERROTA")}");
+            Debug.Log($"[CleaningManager] FIN DEL JUEGO: {(success ? "VICTORIA" : "DERROTA")}");
 
-            // 2. INICIAMOS LA CORRUTINA PARA PAUSAR Y CONTAR TIEMPO REAL
-            StartCoroutine(EndGameSequence());
+            // 🛑 DESACTIVADO: Ahora el panel se queda esperando hasta que el usuario presione un botón
+            // StartCoroutine(EndGameSequence());
+            
+            // Pausar el juego y esperar interacción del usuario
+            Time.timeScale = 0f;
+            Debug.Log("[CleaningManager] Panel mostrado. Esperando interacción del usuario.");
         }
         else
         {
-            Debug.LogError($"El panel de {(success ? "VICTORIA" : "DERROTA")} no está asignado.");
-            LoadCreditsScene();
+            Debug.LogError($"[CleaningManager] El panel de {(success ? "VICTORIA" : "DERROTA")} no está asignado.");
         }
     }
 
-    // Coroutine para manejar el tiempo de visualización de la pantalla final sin escala.
+    // 🛑 DESACTIVADO: Coroutine para manejar el tiempo de visualización de la pantalla final sin escala.
+    /*
     private IEnumerator EndGameSequence()
     {
         // 1. Pausa el juego para el jugador
@@ -165,8 +169,12 @@ public class CleaningManager : MonoBehaviour
         // 3. Despausa y carga la escena
         LoadCreditsScene();
     }
+    */
 
-    private void LoadCreditsScene()
+    /// <summary>
+    /// Método público para cargar créditos (puede ser llamado por un botón)
+    /// </summary>
+    public void LoadCreditsScene()
     {
         Time.timeScale = 1f; // Despausa el juego antes de cargar la escena
         SceneManager.LoadScene(creditsSceneName);

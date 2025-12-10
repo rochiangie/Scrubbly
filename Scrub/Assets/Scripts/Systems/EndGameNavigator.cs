@@ -17,6 +17,7 @@ public class EndGameNavigator : MonoBehaviour
 
     void Awake()
     {
+        Debug.Log("[EndGameNavigator] Awake - Inicializando...");
         // Asegurar que los paneles estén ocultos al inicio
         if (victoryPanel != null) victoryPanel.SetActive(false);
         if (defeatPanel != null) defeatPanel.SetActive(false);
@@ -25,11 +26,13 @@ public class EndGameNavigator : MonoBehaviour
     void OnEnable()
     {
         // 🛑 LÍNEA CLAVE: Suscribirse al evento que dispara el TaskManager
+        Debug.Log("[EndGameNavigator] Suscribiéndose a GameEvents.OnGameResult");
         GameEvents.OnGameResult += HandleGameResult;
     }
 
     void OnDisable()
     {
+        Debug.Log("[EndGameNavigator] Desuscribiéndose de GameEvents.OnGameResult");
         GameEvents.OnGameResult -= HandleGameResult;
     }
 
@@ -38,17 +41,24 @@ public class EndGameNavigator : MonoBehaviour
     /// </summary>
     private void HandleGameResult(bool won)
     {
-        Debug.Log($"[EndGameNavigator] Resultado Final Recibido: {(won ? "VICTORIA" : "DERROTA")}. Activando panel.");
+        Debug.Log($"[EndGameNavigator] ========== RESULTADO: {(won ? "VICTORIA ✅" : "DERROTA ❌")} ==========");
 
-        // 1. Despausar el tiempo
-        Time.timeScale = 1f;
+        // 1. Pausar el juego
+        Time.timeScale = 0f;
+        Debug.Log("[EndGameNavigator] ⏸️ Juego pausado");
 
-        // 2. Mostrar la UI de Resultado
+        // 2. Mostrar el panel correspondiente
         if (won)
         {
             if (victoryPanel != null)
             {
                 victoryPanel.SetActive(true);
+                Debug.Log("[EndGameNavigator] ✅ Panel de VICTORIA activado");
+                Debug.Log("[EndGameNavigator] ⏳ Esperando que el usuario presione un botón...");
+            }
+            else
+            {
+                Debug.LogError("[EndGameNavigator] ❌ victoryPanel no está asignado!");
             }
         }
         else
@@ -56,21 +66,38 @@ public class EndGameNavigator : MonoBehaviour
             if (defeatPanel != null)
             {
                 defeatPanel.SetActive(true);
+                Debug.Log("[EndGameNavigator] ❌ Panel de DERROTA activado");
+                Debug.Log("[EndGameNavigator] ⏳ Esperando que el usuario presione un botón...");
+            }
+            else
+            {
+                Debug.LogError("[EndGameNavigator] ❌ defeatPanel no está asignado!");
             }
         }
 
-        // Si usas un script para bloquear el mouse, puedes llamarlo aquí:
-        // MouseLookController.Instance?.SetControlsActive(false); 
+        // 🛑 NO SE CARGA NINGUNA ESCENA AUTOMÁTICAMENTE
+        // Los botones en los paneles deben configurarse para llamar a:
+        // - EndGameNavigator.GoToCredits() para ir a créditos
+        // - EndGameNavigator.GoToMainMenu() para volver al menú
     }
 
-    // Método público para usar en el botón "Volver al Menú Principal"
+    /// <summary>
+    /// Método público para volver al menú principal (llamar desde un botón)
+    /// </summary>
     public void GoToMainMenu()
     {
-        if (string.IsNullOrEmpty(menuSceneName))
-        {
-            Debug.LogError("Nombre de escena de menú no asignado.");
-            return;
-        }
+        Debug.Log("[EndGameNavigator] 🏠 Volviendo al menú principal...");
+        Time.timeScale = 1f;
         SceneManager.LoadScene(menuSceneName);
+    }
+
+    /// <summary>
+    /// Método público para ir a créditos (llamar desde un botón)
+    /// </summary>
+    public void GoToCredits()
+    {
+        Debug.Log("[EndGameNavigator] 🎬 Yendo a créditos...");
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("Credits");
     }
 }
