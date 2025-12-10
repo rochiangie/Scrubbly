@@ -170,7 +170,7 @@ public class TaskManager : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.K)) ForceCleanTrashByCategory(new string[] { "Papeles" });
             if (Input.GetKeyDown(KeyCode.J)) ForceCleanTrashByCategory(new string[] { "Vidrio" });
             if (Input.GetKeyDown(KeyCode.H)) ForceCleanTrashByCategory(new string[] { "Peligrosos" });
-            if (Input.GetKeyDown(KeyCode.G)) 
+            if (Input.GetKeyDown(KeyCode.G))
             {
                 ForceCleanResidues();
                 ForceCleanTrashByCategory(new string[] { "RTrash", "Bolsas", "Trash" });
@@ -282,7 +282,7 @@ public class TaskManager : MonoBehaviour
         objectRegistry.Clear();
         cleanedDirtSpots = 0;
         cleanedTrashItems = 0;
-        
+
         totalGlass = 0; cleanedGlass = 0;
         totalPaper = 0; cleanedPaper = 0;
         totalPlastic = 0; cleanedPlastic = 0;
@@ -315,11 +315,11 @@ public class TaskManager : MonoBehaviour
             // Esto evita contar partes hijas (meshes, colliders) incluso en jerarquías profundas.
             if (trash.transform.parent != null && trash.transform.parent.GetComponentInParent<TrashObject>() != null)
             {
-                continue; 
+                continue;
             }
 
             string tag = trash.tag;
-            
+
             // ✅ FILTRO DE TAGS: Aceptamos RTrash, Bolsas y Trash, pero ignoramos hijos (arriba)
             bool isValid = false;
 
@@ -342,7 +342,7 @@ public class TaskManager : MonoBehaviour
                     allCleanableObjects.Add(trash.gameObject);
                 }
             }
-            else if (trash != null && trash.IsCleaned) 
+            else if (trash != null && trash.IsCleaned)
             {
                 cleanedTrashItems++;
                 if (tag == "Vidrio") cleanedGlass++;
@@ -376,6 +376,53 @@ public class TaskManager : MonoBehaviour
         return $"{obj.name}_({pos.x:F0},{pos.y:F0},{pos.z:F0})";
     }
 
+    // ✅ NUEVO MÉTODO CRÍTICO: Encontrar ID por objeto con coincidencia flexible
+    private string FindStableIdByObject(GameObject obj)
+    {
+        if (obj == null) return null;
+
+        string objName = obj.name;
+
+        // Primero: Buscar coincidencia exacta por nombre en el registro
+        foreach (var entry in objectRegistry)
+        {
+            if (entry.Value == obj)
+            {
+                Debug.Log($"✅ Encontrado ID por referencia de objeto: {entry.Key}");
+                return entry.Key;
+            }
+        }
+
+        // Segundo: Buscar por nombre (coincidencia parcial)
+        foreach (var entry in objectRegistry)
+        {
+            if (entry.Key.Contains(objName) || objName.Contains(entry.Key))
+            {
+                Debug.Log($"🔍 Encontrado ID por nombre coincidente: {entry.Key} para {objName}");
+                return entry.Key;
+            }
+        }
+
+        // Tercero: Buscar por posición aproximada (último recurso)
+        Vector3 objPos = obj.transform.position;
+        foreach (var entry in objectRegistry)
+        {
+            if (entry.Value != null)
+            {
+                Vector3 regPos = entry.Value.transform.position;
+                float distance = Vector3.Distance(objPos, regPos);
+                if (distance < 1.0f) // Menos de 1 unidad de distancia
+                {
+                    Debug.Log($"📍 Encontrado ID por posición cercana: {entry.Key} (distancia: {distance:F2})");
+                    return entry.Key;
+                }
+            }
+        }
+
+        Debug.LogWarning($"⚠️ No se encontró ID estable para objeto: {objName}");
+        return null;
+    }
+
     private string FindObjectIdByName(string objectName)
     {
         foreach (var id in objectRegistry.Keys)
@@ -399,11 +446,11 @@ public class TaskManager : MonoBehaviour
         allCleanableObjects.Add(obj);
 
         string tag = obj.tag;
-        bool isBag = (tag == "RTrash" || tag == "Bolsas" || tag == "Trash"); 
+        bool isBag = (tag == "RTrash" || tag == "Bolsas" || tag == "Trash");
 
         // Lógica de consumo eliminada: Siempre sumamos si es una bolsa nueva
         totalTrashItems++;
-        
+
         if (tag == "Vidrio") totalGlass++;
         else if (tag == "Papeles") totalPaper++;
         else if (tag == "Plastico") totalPlastic++;
@@ -412,10 +459,10 @@ public class TaskManager : MonoBehaviour
         else if (tag == "Organico") totalOrganic++;
 
         Debug.Log($"➕ Nuevo item registrado: {obj.name} ({tag}). Totales: {cleanedBolsas}/{totalBolsas}");
-        
+
         // Notificar a la UI (CheckCompletion llama a ProgressUpdate)
-        CheckCompletion(); 
-        
+        CheckCompletion();
+
         // Forzar actualización de UI específica si es necesario
         var uiManager = FindFirstObjectByType<CleaningUIManager>();
         if (uiManager != null)
@@ -432,8 +479,16 @@ public class TaskManager : MonoBehaviour
         string tag = trashObj.tag;
         string itemName = trashObj.name;
 
-        // Llamamos a la lógica interna pasando el tag explícitamente
-        ProcessTrashCleaned(itemName, tag);
+        // 🆕 USAR EL MÉTODO DE ID ESTABLE
+        string objectId = FindStableIdByObject(trashObj);
+
+        if (string.IsNullOrEmpty(objectId))
+        {
+            // Si no encontramos por objeto, intentamos por nombre como respaldo
+            objectId = FindObjectIdByName(itemName);
+        }
+
+        ProcessTrashCleanedInternal(objectId, tag, itemName);
     }
 
     // Método original (string) - Mantenido por compatibilidad
@@ -444,21 +499,33 @@ public class TaskManager : MonoBehaviour
         // Intentamos buscar el objeto para obtener su tag
         string tag = "Untagged";
         string objectId = FindObjectIdByName(itemName);
-        if (string.IsNullOrEmpty(objectId)) objectId = objectRegistry.Keys.FirstOrDefault(key => key.Contains(itemName));
 
         if (!string.IsNullOrEmpty(objectId) && objectRegistry.TryGetValue(objectId, out GameObject obj) && obj != null)
         {
             tag = obj.tag;
         }
 
-        ProcessTrashCleaned(itemName, tag);
+        ProcessTrashCleanedInternal(objectId, tag, itemName);
     }
 
-    // Lógica centralizada de limpieza
-    private void ProcessTrashCleaned(string itemName, string tag)
+    // ✅ Lógica centralizada mejorada
+    private void ProcessTrashCleanedInternal(string objectId, string tag, string itemName)
     {
-        string objectId = FindObjectIdByName(itemName);
-        if (string.IsNullOrEmpty(objectId)) objectId = objectRegistry.Keys.FirstOrDefault(key => key.Contains(itemName));
+        if (string.IsNullOrEmpty(objectId))
+        {
+            Debug.LogWarning($"⚠️ Objeto {itemName} (Tag: {tag}) no encontrado en registro. Buscando coincidencias...");
+
+            // Último intento: buscar cualquier objeto con el mismo nombre
+            foreach (var key in objectRegistry.Keys.ToList())
+            {
+                if (key.Contains(itemName))
+                {
+                    objectId = key;
+                    Debug.Log($"🔍 Coincidencia encontrada por nombre: {key}");
+                    break;
+                }
+            }
+        }
 
         if (!string.IsNullOrEmpty(objectId) && remainingItemNames.Contains(objectId))
         {
@@ -506,7 +573,7 @@ public class TaskManager : MonoBehaviour
 
         int totalCleanableItems = totalDirtSpots + totalTrashItems;
         int cleanedItems = cleanedDirtSpots + cleanedTrashItems;
-        
+
         ValidateCounters();
 
         GameEvents.Progress(cleanedItems, totalCleanableItems);
@@ -561,7 +628,7 @@ public class TaskManager : MonoBehaviour
 
         cleanedDirtSpots = totalDirtSpots;
         cleanedTrashItems = totalTrashItems;
-        
+
         cleanedGlass = totalGlass;
         cleanedPaper = totalPaper;
         cleanedPlastic = totalPlastic;
