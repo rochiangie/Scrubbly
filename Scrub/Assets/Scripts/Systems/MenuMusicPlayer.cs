@@ -50,22 +50,6 @@ public class MenuMusicPlayer : MonoBehaviour
         Debug.Log($"[MENU MUSIC] Escena cargada: {sceneName}");
 
         // Detener música de menú en gameplay
-        if (sceneName.Contains("lore") || sceneName.Contains("principal") || sceneName.Contains("gameplay"))
-        {
-            Debug.Log("[MENU MUSIC] 🛑 Deteniendo música de menú");
-            StopMenuMusic();
-            Destroy(gameObject, 1f);
-        }
-        // Continuar en menú/selección
-        else if ((sceneName.Contains("menu") || sceneName.Contains("seleccion")) && !audioSource.isPlaying)
-        {
-            PlayMenuMusic();
-        }
-    }
-
-    public void PlayMenuMusic()
-    {
-        if (menuMusic == null) return;
 
         if (audioSource.clip != menuMusic || !audioSource.isPlaying)
         {
