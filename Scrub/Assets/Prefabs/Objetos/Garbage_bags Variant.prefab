@@ -143,8 +143,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f66cac6c0758ad94c87aa13bae39d21b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultDropForce: 3
-  scaleFactorOnPickup: 0.5
+  defaultDropForce: 5
+  scaleFactorOnPickup: 0.8
   customGripPoint: {fileID: 0}
 --- !u!65 &3339002343777861870
 BoxCollider:
